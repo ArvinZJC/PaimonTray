@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PaimonTray (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PaimonTray (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
