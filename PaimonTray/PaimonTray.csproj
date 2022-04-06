@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
@@ -12,17 +12,21 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DefaultLanguage>en-GB</DefaultLanguage>
+    <RepositoryUrl>https://github.com/ArvinZJC/PaimonTray</RepositoryUrl>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <PackageLicenseExpression> GPL-3.0-or-later</PackageLicenseExpression>
+    <Authors>ArvinZJC</Authors>
+    <Description>Paimon's now in your Windows "system tray"!</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/ArvinZJC/PaimonTray</PackageProjectUrl>
+    <PackageTags>desktop-app;dotnet6;genshin-impact;paimon;tray-app;windows;winui3</PackageTags>
+    <Copyright>© $(Authors) 2022</Copyright>
+    <Version>1.0.0-alpha.1</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <ApplicationIcon>Assets\AppIcon\AppIcon.ico</ApplicationIcon>
+    <PackageIcon>AppIcon.png</PackageIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
@@ -35,5 +39,17 @@
        package has not yet been restored -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\AppIcon\AppIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>
