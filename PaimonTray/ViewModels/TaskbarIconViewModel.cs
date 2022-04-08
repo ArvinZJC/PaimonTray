@@ -1,5 +1,6 @@
-﻿using System.Windows.Input;
-using Microsoft.UI.Xaml.Input;
+﻿using Microsoft.UI.Xaml.Input;
+using PaimonTray.Helpers;
+using System.Windows.Input;
 
 namespace PaimonTray.ViewModels
 {
@@ -11,7 +12,9 @@ namespace PaimonTray.ViewModels
         /// <summary>
         /// The command to exit the app.
         /// </summary>
+#pragma warning disable CA1822 // Mark members as static
         public ICommand ExitAppCommand
+#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
@@ -21,28 +24,23 @@ namespace PaimonTray.ViewModels
         } // end property ExitAppCommand
 
         /// <summary>
-        /// The command to show or hide the main window.
+        /// The command to show the main window.
         /// </summary>
-        public ICommand ToggleMainWindowVisibilityCommand
+#pragma warning disable CA1822 // Mark members as static
+        public ICommand ShowMainWindowCommand
+#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
                 XamlUICommand command = new();
 
-                command.ExecuteRequested += (sender, e) =>
+                command.ExecuteRequested += (_, e) =>
                 {
-                    var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-                    Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
-                    Microsoft.UI.Windowing.AppWindow appWindow =
-                        Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-                    if (appWindow != null)
-                    {
-                        appWindow.Title = "Test";
-                    }
+                    if (e.Parameter is MainWindowHelper mainWindowHelper)
+                        mainWindowHelper.Show();
                 };
                 return command;
             } // end get
-        } // end property ToggleMainWindowVisibilityCommand
+        } // end property ShowMainWindowCommand
     } // end class TaskbarIconViewModel
 } // end namespace PaimonTray.ViewModels

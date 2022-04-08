@@ -1,5 +1,5 @@
-﻿using H.NotifyIcon;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
+using PaimonTray.Windows;
 
 namespace PaimonTray
 {
@@ -10,7 +10,10 @@ namespace PaimonTray
     {
         #region Properties
 
-        public static TaskbarIcon TaskbarIconApp { get; private set; }
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        public static Window MainWindow { get; private set; }
 
         #endregion Properties
 
@@ -36,7 +39,8 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            TaskbarIconApp = (TaskbarIcon)Resources["TaskbarIconApp"];
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
         } // end method OnLaunched
 
         #endregion Event Handlers

@@ -1,23 +1,12 @@
 ﻿<Application
     x:Class="PaimonTray.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:tb="using:H.NotifyIcon"
-    xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
-            <tb:TaskbarIcon
-                DoubleClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
-                LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
-                IconSource="Assets/AppIcon/AppIcon.ico"
-                x:Key="TaskbarIconApp">
-                <tb:TaskbarIcon.DataContext>
-                    <vm:TaskbarIconViewModel x:Name="TaskbarIconViewModel" />
-                </tb:TaskbarIcon.DataContext>
-            </tb:TaskbarIcon>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
