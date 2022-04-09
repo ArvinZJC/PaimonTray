@@ -7,14 +7,38 @@
     xmlns:tb="using:H.NotifyIcon"
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <StackPanel>
+    <StackPanel
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
         <StackPanel.DataContext>
             <vm:TaskbarIconViewModel x:Name="TaskbarIconViewModel" />
         </StackPanel.DataContext>
+        <StackPanel.Resources>
+            <MenuFlyout x:Name="MenuFlyoutApp">
+                <MenuFlyoutItem Text="Settings" />
+                <MenuFlyoutItem
+                    Text="Exit"
+                    Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
+                    CommandParameter="{x:Bind TaskbarIconApp}" />
+            </MenuFlyout>
+        </StackPanel.Resources>
         <tb:TaskbarIcon
-            DoubleClickCommand="{x:Bind TaskbarIconViewModel.ShowMainWindowCommand}"
-            LeftClickCommand="{x:Bind TaskbarIconViewModel.ShowMainWindowCommand}"
+            x:Name="TaskbarIconApp"
+            ContextFlyout="{StaticResource MenuFlyoutApp}"
+            DoubleClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
+            LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
             IconSource="../Assets/AppIcon/AppIcon.ico"
-            x:Name="TaskbarIconApp" />
+            MenuActivation="RightClick" />
+        <Button
+            Content="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
+        <Button
+            Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
+            CommandParameter="{x:Bind TaskbarIconApp}"
+            Content="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:Name="Button2" />
     </StackPanel>
 </Window>

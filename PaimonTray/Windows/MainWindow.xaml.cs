@@ -1,4 +1,6 @@
-﻿using PaimonTray.Helpers;
+﻿using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using WinRT.Interop;
 
 namespace PaimonTray.Windows
 {
@@ -15,13 +17,28 @@ namespace PaimonTray.Windows
         public MainWindow()
         {
             InitializeComponent();
-            Activated += (_, _) =>
-            {
-                MainWindowHelper mainWindowHelper = new();
 
-                TaskbarIconApp.DoubleClickCommandParameter = mainWindowHelper;
-                TaskbarIconApp.LeftClickCommandParameter = mainWindowHelper;
-            };
+            var mainAppWindow =
+                AppWindow.GetFromWindowId(
+                    Win32Interop.GetWindowIdFromWindow(
+                        WindowNative.GetWindowHandle(this))); // Get AppWindow from Window.
+
+            if (mainAppWindow == null) return;
+
+            mainAppWindow.IsShownInSwitchers = false;
+
+            var mainAppWindowOverlappedPresenter = mainAppWindow.Presenter as OverlappedPresenter;
+
+            if (mainAppWindowOverlappedPresenter != null)
+            {
+                mainAppWindowOverlappedPresenter.IsAlwaysOnTop = true;
+                mainAppWindowOverlappedPresenter.IsMaximizable = false;
+                mainAppWindowOverlappedPresenter.IsMinimizable = false;
+                mainAppWindowOverlappedPresenter.IsResizable = false;
+            } // end if
+
+            TaskbarIconApp.DoubleClickCommandParameter = mainAppWindow;
+            TaskbarIconApp.LeftClickCommandParameter = mainAppWindow;
         } // end constructor MainWindow
 
         #endregion Constructors

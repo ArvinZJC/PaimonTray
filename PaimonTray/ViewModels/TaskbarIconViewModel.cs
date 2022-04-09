@@ -1,5 +1,7 @@
-﻿using Microsoft.UI.Xaml.Input;
-using PaimonTray.Helpers;
+﻿using H.NotifyIcon;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using System.Windows.Input;
 
 namespace PaimonTray.ViewModels
@@ -19,6 +21,14 @@ namespace PaimonTray.ViewModels
             get
             {
                 XamlUICommand command = new();
+
+                command.ExecuteRequested += (_, e) =>
+                {
+                    if (e.Parameter is TaskbarIcon taskBarIconApp)
+                        taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
+
+                    Application.Current.Exit();
+                };
                 return command;
             } // end get
         } // end property ExitAppCommand
@@ -27,7 +37,7 @@ namespace PaimonTray.ViewModels
         /// The command to show the main window.
         /// </summary>
 #pragma warning disable CA1822 // Mark members as static
-        public ICommand ShowMainWindowCommand
+        public ICommand ToggleMainWindowVisibilityCommand
 #pragma warning restore CA1822 // Mark members as static
         {
             get
@@ -36,11 +46,15 @@ namespace PaimonTray.ViewModels
 
                 command.ExecuteRequested += (_, e) =>
                 {
-                    if (e.Parameter is MainWindowHelper mainWindowHelper)
-                        mainWindowHelper.Show();
+                    if (e.Parameter is not AppWindow mainAppWindow) return;
+
+                    if (mainAppWindow.IsVisible)
+                        mainAppWindow.Hide();
+                    else
+                        mainAppWindow.Show();
                 };
                 return command;
             } // end get
-        } // end property ShowMainWindowCommand
+        } // end property ToggleMainWindowVisibilityCommand
     } // end class TaskbarIconViewModel
 } // end namespace PaimonTray.ViewModels

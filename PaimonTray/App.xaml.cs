@@ -8,15 +8,6 @@ namespace PaimonTray
     /// </summary>
     public partial class App
     {
-        #region Properties
-
-        /// <summary>
-        /// The main window.
-        /// </summary>
-        public static Window MainWindow { get; private set; }
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -39,8 +30,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
+            new MainWindow().Activate();
         } // end method OnLaunched
 
         #endregion Event Handlers
