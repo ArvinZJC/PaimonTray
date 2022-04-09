@@ -8,6 +8,7 @@
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel
+        Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
         HorizontalAlignment="Center"
         SizeChanged="StackPanelRoot_OnSizeChanged"
         VerticalAlignment="Center">
