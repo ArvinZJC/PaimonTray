@@ -8,8 +8,9 @@
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
+        HorizontalAlignment="Center"
+        SizeChanged="StackPanelRoot_OnSizeChanged"
+        VerticalAlignment="Center">
         <StackPanel.DataContext>
             <vm:TaskbarIconViewModel x:Name="TaskbarIconViewModel" />
         </StackPanel.DataContext>
@@ -29,16 +30,17 @@
             LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
             IconSource="../Assets/AppIcon/AppIcon.ico"
             MenuActivation="RightClick" />
-        <Button
-            Content="1"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
-        <Button
-            Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
-            CommandParameter="{x:Bind TaskbarIconApp}"
-            Content="2"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            x:Name="Button2" />
+        <TextBlock
+            Height="400"
+            Text="Data Area"
+            Width="300" />
+        <TextBlock Text="Separator" />
+        <ListView>
+            <Button Content="Settings" />
+            <Button
+                Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
+                CommandParameter="{x:Bind TaskbarIconApp}"
+                Content="Exit" />
+        </ListView>
     </StackPanel>
 </Window>

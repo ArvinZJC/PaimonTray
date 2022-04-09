@@ -46,12 +46,12 @@ namespace PaimonTray.ViewModels
 
                 command.ExecuteRequested += (_, e) =>
                 {
-                    if (e.Parameter is not AppWindow mainAppWindow) return;
+                    if (e.Parameter is not AppWindow appWindowMain) return;
 
-                    if (mainAppWindow.IsVisible)
-                        mainAppWindow.Hide();
+                    if (appWindowMain.IsVisible)
+                        appWindowMain.Hide();
                     else
-                        mainAppWindow.Show();
+                        appWindowMain.Show();
                 };
                 return command;
             } // end get

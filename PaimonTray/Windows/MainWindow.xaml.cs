@@ -1,5 +1,8 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using System;
+using Windows.Graphics;
 using WinRT.Interop;
 
 namespace PaimonTray.Windows
@@ -9,6 +12,16 @@ namespace PaimonTray.Windows
     /// </summary>
     public sealed partial class MainWindow
     {
+        #region Fields
+
+        private int _stackPanelRootHeight;
+        private int _stackPanelRootWidth;
+
+        private readonly AppWindow _appWindow;
+        private readonly WindowId _windowId;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -17,30 +30,49 @@ namespace PaimonTray.Windows
         public MainWindow()
         {
             InitializeComponent();
+            _windowId = Win32Interop.GetWindowIdFromWindow(WindowNative.GetWindowHandle(this));
+            _appWindow = AppWindow.GetFromWindowId(_windowId); // Get AppWindow from Window.
 
-            var mainAppWindow =
-                AppWindow.GetFromWindowId(
-                    Win32Interop.GetWindowIdFromWindow(
-                        WindowNative.GetWindowHandle(this))); // Get AppWindow from Window.
+            if (_appWindow == null) return;
 
-            if (mainAppWindow == null) return;
+            _appWindow.IsShownInSwitchers = false;
 
-            mainAppWindow.IsShownInSwitchers = false;
+            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
 
-            var mainAppWindowOverlappedPresenter = mainAppWindow.Presenter as OverlappedPresenter;
-
-            if (mainAppWindowOverlappedPresenter != null)
+            if (appWindowOverlappedPresenter != null)
             {
-                mainAppWindowOverlappedPresenter.IsAlwaysOnTop = true;
-                mainAppWindowOverlappedPresenter.IsMaximizable = false;
-                mainAppWindowOverlappedPresenter.IsMinimizable = false;
-                mainAppWindowOverlappedPresenter.IsResizable = false;
+                appWindowOverlappedPresenter.IsAlwaysOnTop = true;
+                appWindowOverlappedPresenter.IsMaximizable = false;
+                appWindowOverlappedPresenter.IsMinimizable = false;
+                appWindowOverlappedPresenter.IsResizable = false;
+                appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
             } // end if
 
-            TaskbarIconApp.DoubleClickCommandParameter = mainAppWindow;
-            TaskbarIconApp.LeftClickCommandParameter = mainAppWindow;
+            TaskbarIconApp.DoubleClickCommandParameter = _appWindow;
+            TaskbarIconApp.LeftClickCommandParameter = _appWindow;
         } // end constructor MainWindow
 
         #endregion Constructors
+
+        #region Event Handlers
+
+#pragma warning disable IDE0060 // Remove unused parameter
+        private void StackPanelRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
+#pragma warning restore IDE0060 // Remove unused parameter
+        {
+            if (_stackPanelRootHeight > 0 && _stackPanelRootWidth > 0) return;
+
+            var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
+
+            _stackPanelRootHeight = (int)Math.Ceiling(e.NewSize.Height);
+            _stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
+            _appWindow.MoveAndResize(new RectInt32
+            {
+                Height = _stackPanelRootHeight, Width = _stackPanelRootWidth,
+                X = (workArea.Width - _stackPanelRootWidth - 12), Y = (workArea.Height - _stackPanelRootHeight - 12)
+            });
+        } // end method StackPanelRoot_OnSizeChanged
+
+        #endregion Event Handlers
     } // end class MainWindow
 } // end namespace PaimonTray.Windows
