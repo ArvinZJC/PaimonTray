@@ -4,15 +4,21 @@ using PaimonTray.Windows;
 namespace PaimonTray
 {
     /// <summary>
-    /// Provide application-specific behaviour to supplement the default App class.
+    /// Provide application-specific behaviour to supplement the default <see cref="App"/> class.
     /// </summary>
     public partial class App
     {
+        #region Properties
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        public Window MainWindow { get; private set; }
+        #endregion Properties
+        
         #region Constructors
 
         /// <summary>
         /// Initialise the singleton application object.
-        /// This is the 1st line of authored code executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
@@ -30,7 +36,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            _ = new MainWindow();
+            MainWindow = new MainWindow();
         } // end method OnLaunched
 
         #endregion Event Handlers

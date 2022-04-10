@@ -11,6 +11,8 @@ namespace PaimonTray.ViewModels
     /// </summary>
     internal class TaskbarIconViewModel
     {
+        #region Properties
+
         /// <summary>
         /// The command to exit the app.
         /// </summary>
@@ -56,5 +58,7 @@ namespace PaimonTray.ViewModels
                 return command;
             } // end get
         } // end property ToggleMainWindowVisibilityCommand
+
+        #endregion Properties
     } // end class TaskbarIconViewModel
 } // end namespace PaimonTray.ViewModels

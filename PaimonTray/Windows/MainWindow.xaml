@@ -39,6 +39,10 @@
         <ListView>
             <Button Content="Settings" />
             <Button
+                x:Name="ButtonHide"
+                Command="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
+                Content="Hide"/>
+            <Button
                 Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
                 CommandParameter="{x:Bind TaskbarIconApp}"
                 Content="Exit" />

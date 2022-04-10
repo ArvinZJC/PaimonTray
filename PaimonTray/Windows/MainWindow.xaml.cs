@@ -1,10 +1,10 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using PaimonTray.Helpers;
 using System;
 using Windows.ApplicationModel;
 using Windows.Graphics;
-using WinRT.Interop;
 
 namespace PaimonTray.Windows
 {
@@ -16,9 +16,8 @@ namespace PaimonTray.Windows
         #region Fields
 
         private bool _isFirstLoad = true; // A flag indicating if it is the first time the window is loaded.
-
-        private readonly AppWindow _appWindow;
-        private readonly WindowId _windowId;
+        private AppWindow _appWindow;
+        private WindowId _windowId;
 
         #endregion Fields
 
@@ -30,29 +29,39 @@ namespace PaimonTray.Windows
         public MainWindow()
         {
             InitializeComponent();
-            _windowId = Win32Interop.GetWindowIdFromWindow(WindowNative.GetWindowHandle(this));
-            _appWindow = AppWindow.GetFromWindowId(_windowId); // Get AppWindow from Window.
+            CustomiseWindow();
 
-            if (_appWindow == null) return;
-
-            _appWindow.IsShownInSwitchers = false;
-
-            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
-
-            if (appWindowOverlappedPresenter != null)
-            {
-                appWindowOverlappedPresenter.IsAlwaysOnTop = true;
-                appWindowOverlappedPresenter.IsMaximizable = false;
-                appWindowOverlappedPresenter.IsMinimizable = false;
-                appWindowOverlappedPresenter.IsResizable = false;
-                appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
-            } // end if
-
+            ButtonHide.CommandParameter = _appWindow; // TODO
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
         } // end constructor MainWindow
 
         #endregion Constructors
+
+        #region Methods
+
+        // Customise the window.
+        private void CustomiseWindow()
+        {
+            _windowId = WindowManagementHelper.GetWindowId(this);
+            _appWindow = WindowManagementHelper.GetAppWindow(_windowId);
+
+            if (_appWindow == null) return; // TODO: need logging.
+
+            _appWindow.IsShownInSwitchers = false;
+
+            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
+
+            if (appWindowOverlappedPresenter == null) return; // TODO: need logging.
+
+            appWindowOverlappedPresenter.IsAlwaysOnTop = true;
+            appWindowOverlappedPresenter.IsMaximizable = false;
+            appWindowOverlappedPresenter.IsMinimizable = false;
+            appWindowOverlappedPresenter.IsResizable = false;
+            appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
+        } // end method CustomiseWindow
+
+        #endregion Methods
 
         #region Event Handlers
 
