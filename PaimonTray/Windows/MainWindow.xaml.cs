@@ -59,14 +59,14 @@ namespace PaimonTray.Windows
             _windowId = WindowManagementHelper.GetWindowId(this);
             _appWindow = WindowManagementHelper.GetAppWindow(_windowId);
 
-            if (_appWindow == null) return; // TODO: need logging.
+            if (_appWindow == null) return;
 
             _appWindow.Destroying += AppWindow_OnDestroying;
             _appWindow.IsShownInSwitchers = false;
 
             var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
 
-            if (appWindowOverlappedPresenter == null) return; // TODO: need logging.
+            if (appWindowOverlappedPresenter == null) return;
 
             appWindowOverlappedPresenter.IsAlwaysOnTop = true;
             appWindowOverlappedPresenter.IsMaximizable = false;
