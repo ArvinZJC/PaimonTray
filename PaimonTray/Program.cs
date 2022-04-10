@@ -17,7 +17,7 @@ namespace PaimonTray
         /// <summary>
         /// The main entry point for the app.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">The main entry point arguments.</param>
         [STAThread]
         static void
             Main(string[] args) // Note: STAThread is required for the app to run in the background. The error of defining more than 1 entry point can be ignored.
@@ -35,6 +35,17 @@ namespace PaimonTray
         } // end Main
 
         #region Methods
+
+        [DllImport("ole32.dll")]
+        private static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwMilliseconds, ulong nHandles,
+            IntPtr[] pHandles, out uint dwIndex);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        private static extern IntPtr CreateEvent(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState,
+            string lpName);
+
+        [DllImport("kernel32.dll")]
+        private static extern bool SetEvent(IntPtr hEvent);
 
         // Decide if the app should be redirected to the new app instance.
         private static bool DecideRedirection()
@@ -60,17 +71,6 @@ namespace PaimonTray
 
             return isRedirection;
         } // end method DecideRedirection
-
-        [DllImport("ole32.dll")]
-        private static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwMilliseconds, ulong nHandles,
-            IntPtr[] pHandles, out uint dwIndex);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateEvent(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState,
-            string lpName);
-
-        [DllImport("kernel32.dll")]
-        private static extern bool SetEvent(IntPtr hEvent);
 
         // Redirect the activation on another thread, and use a non-blocking wait method to wait for the redirection to complete.
         private static void RedirectActivation(AppActivationArguments args, AppInstance appInstance)
