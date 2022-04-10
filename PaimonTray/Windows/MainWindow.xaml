@@ -28,9 +28,10 @@
             x:Name="TaskbarIconApp"
             ContextFlyout="{StaticResource MenuFlyoutApp}"
             LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
-            IconSource="../Assets/AppIcon/AppIcon.ico"
+            IconSource="ms-appx:///Assets/AppIcon/AppIcon.ico"
             MenuActivation="RightClick"
-            NoLeftClickDelay="True" />
+            NoLeftClickDelay="True"
+            Visibility="Collapsed" />
         <TextBlock
             Height="400"
             Text="Data Area"

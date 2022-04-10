@@ -1,10 +1,12 @@
-﻿using Microsoft.UI;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using PaimonTray.Helpers;
 using System;
 using Windows.ApplicationModel;
 using Windows.Graphics;
+using Windows.UI.Notifications;
 
 namespace PaimonTray.Windows
 {
@@ -34,6 +36,17 @@ namespace PaimonTray.Windows
             ButtonHide.CommandParameter = _appWindow; // TODO
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
+            TaskbarIconApp.Visibility = Visibility.Visible;
+
+            new ToastContentBuilder()
+                .AddText("Paimon's now in your \"system tray\"!")
+                .AddText(
+                    "If the icon doesn't appear in the taskbar corner, you can find it in the taskbar corner overflow menu and move it to the taskbar corner by system settings or by dragging and dropping.")
+                .Show(toast =>
+                {
+                    toast.Group = Package.Current.DisplayName;
+                    toast.Tag = "TaskbarIconApp_Ready"; // TODO: make tag a constant.
+                });
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -48,6 +61,7 @@ namespace PaimonTray.Windows
 
             if (_appWindow == null) return; // TODO: need logging.
 
+            _appWindow.Destroying += AppWindow_OnDestroying;
             _appWindow.IsShownInSwitchers = false;
 
             var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
@@ -64,6 +78,13 @@ namespace PaimonTray.Windows
         #endregion Methods
 
         #region Event Handlers
+
+        // Handle the AppWindow destroying event.
+        private static void AppWindow_OnDestroying(object sender, object e)
+        {
+            ToastNotificationManager.History.Remove("TaskbarIconApp_Ready",
+                Package.Current.DisplayName); // TODO: make tag a constant.
+        } // end method AppWindow_OnDestroying
 
 #pragma warning disable IDE0060 // Remove unused parameter
         // Handle the root stack panel's size changed event.
