@@ -49,7 +49,6 @@ namespace PaimonTray.Windows
                 appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
             } // end if
 
-            TaskbarIconApp.DoubleClickCommandParameter = _appWindow;
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
         } // end constructor MainWindow

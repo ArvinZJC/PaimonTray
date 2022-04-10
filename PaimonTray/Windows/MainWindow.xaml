@@ -27,10 +27,10 @@
         <tb:TaskbarIcon
             x:Name="TaskbarIconApp"
             ContextFlyout="{StaticResource MenuFlyoutApp}"
-            DoubleClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
             LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
             IconSource="../Assets/AppIcon/AppIcon.ico"
-            MenuActivation="RightClick" />
+            MenuActivation="RightClick"
+            NoLeftClickDelay="True" />
         <TextBlock
             Height="400"
             Text="Data Area"
