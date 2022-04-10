@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
+using Windows.ApplicationModel;
 using Windows.Graphics;
 using WinRT.Interop;
 
@@ -50,6 +51,7 @@ namespace PaimonTray.Windows
 
             TaskbarIconApp.DoubleClickCommandParameter = _appWindow;
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
+            TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -71,6 +73,7 @@ namespace PaimonTray.Windows
                 Height = _stackPanelRootHeight, Width = _stackPanelRootWidth,
                 X = (workArea.Width - _stackPanelRootWidth - 12), Y = (workArea.Height - _stackPanelRootHeight - 12)
             });
+            Activate(); // Activate the window here to prevent being flicked when moving and resizing.
         } // end method StackPanelRoot_OnSizeChanged
 
         #endregion Event Handlers

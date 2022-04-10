@@ -30,7 +30,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            new MainWindow().Activate();
+            _ = new MainWindow();
         } // end method OnLaunched
 
         #endregion Event Handlers
