@@ -15,8 +15,7 @@ namespace PaimonTray.Windows
     {
         #region Fields
 
-        private int _stackPanelRootHeight;
-        private int _stackPanelRootWidth;
+        private bool _isFirstLoad = true; // A flag indicating if it is the first time the window is loaded.
 
         private readonly AppWindow _appWindow;
         private readonly WindowId _windowId;
@@ -58,21 +57,25 @@ namespace PaimonTray.Windows
         #region Event Handlers
 
 #pragma warning disable IDE0060 // Remove unused parameter
+        // Handle the root stack panel's size changed event.
         private void StackPanelRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            if (_stackPanelRootHeight > 0 && _stackPanelRootWidth > 0) return;
-
+            var stackPanelRootHeight = (int)Math.Ceiling(e.NewSize.Height);
+            var stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
             var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
 
-            _stackPanelRootHeight = (int)Math.Ceiling(e.NewSize.Height);
-            _stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
             _appWindow.MoveAndResize(new RectInt32
             {
-                Height = _stackPanelRootHeight, Width = _stackPanelRootWidth,
-                X = (workArea.Width - _stackPanelRootWidth - 12), Y = (workArea.Height - _stackPanelRootHeight - 12)
+                Height = stackPanelRootHeight, Width = stackPanelRootWidth,
+                X = (workArea.Width - stackPanelRootWidth - 12),
+                Y = (workArea.Height - stackPanelRootHeight - 12) // TODO: make 12 a constant.
             });
+
+            if (!_isFirstLoad) return;
+
             Activate(); // Activate the window here to prevent being flicked when moving and resizing.
+            _isFirstLoad = false;
         } // end method StackPanelRoot_OnSizeChanged
 
         #endregion Event Handlers
