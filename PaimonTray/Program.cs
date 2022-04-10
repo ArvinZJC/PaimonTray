@@ -50,26 +50,16 @@ namespace PaimonTray
         // Decide if the app should be redirected to the new app instance.
         private static bool DecideRedirection()
         {
-            var isRedirection = false;
+            var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.DisplayName);
 
-            try
+            if (appInstance.IsCurrent)
             {
-                var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.DisplayName);
+                appInstance.Activated += AppInstance_OnActivated;
+                return false;
+            } // end if
 
-                if (appInstance.IsCurrent)
-                    appInstance.Activated += AppInstance_OnActivated;
-                else
-                {
-                    isRedirection = true;
-                    RedirectActivation(AppInstance.GetCurrent().GetActivatedEventArgs(), appInstance);
-                } // end if...else
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message); // TODO: need logging.
-            } // end try...catch
-
-            return isRedirection;
+            RedirectActivation(AppInstance.GetCurrent().GetActivatedEventArgs(), appInstance);
+            return true;
         } // end method DecideRedirection
 
         // Redirect the activation on another thread, and use a non-blocking wait method to wait for the redirection to complete.
