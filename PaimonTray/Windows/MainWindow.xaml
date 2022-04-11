@@ -38,9 +38,7 @@
             Width="300">
             <TextBlock Text="Data Area" />
         </ListView>
-        <TextBlock
-            HorizontalAlignment="Center"
-            Text="Separator" />
+        <NavigationViewItemSeparator />
         <Grid
             Padding="4, 0"
             RowDefinitions="Auto, Auto, Auto"
