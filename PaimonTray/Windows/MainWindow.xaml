@@ -10,6 +10,7 @@
     <StackPanel
         Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
         HorizontalAlignment="Center"
+        Padding="2, 6"
         SizeChanged="StackPanelRoot_OnSizeChanged"
         VerticalAlignment="Center">
         <StackPanel.DataContext>
@@ -32,21 +33,43 @@
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
             Visibility="Collapsed" />
+        <ListView
+            SelectionMode="None"
+            Width="300">
+            <TextBlock Text="Data Area" />
+        </ListView>
         <TextBlock
-            Height="400"
-            Text="Data Area"
-            Width="300" />
-        <TextBlock Text="Separator" />
-        <ListView>
-            <Button Content="Settings" />
+            HorizontalAlignment="Center"
+            Text="Separator" />
+        <Grid
+            Padding="4, 0"
+            RowDefinitions="Auto, Auto, Auto"
+            RowSpacing="4">
+            <Button
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Content="Settings"
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"/>
             <Button
                 x:Name="ButtonHide"
+                Background="Transparent"
+                BorderBrush="Transparent"
                 Command="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
-                Content="Hide"/>
+                Content="Hide"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left" />
             <Button
+                Background="Transparent"
+                BorderBrush="Transparent"
                 Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
                 CommandParameter="{x:Bind TaskbarIconApp}"
-                Content="Exit" />
-        </ListView>
+                Content="Exit"
+                Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left" />
+        </Grid>
     </StackPanel>
 </Window>
