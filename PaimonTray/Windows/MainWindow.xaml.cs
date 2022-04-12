@@ -33,7 +33,9 @@ namespace PaimonTray.Windows
             InitializeComponent();
             CustomiseWindow();
 
-            ButtonHide.CommandParameter = _appWindow; // TODO
+            MenuFlyoutItemIconHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
+            MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
+            MenuFlyoutItemMoreHide.CommandParameter = _appWindow; // TODO
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
             TaskbarIconApp.Visibility = Visibility.Visible;

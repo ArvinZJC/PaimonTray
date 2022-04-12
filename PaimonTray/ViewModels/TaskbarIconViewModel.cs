@@ -13,10 +13,10 @@ namespace PaimonTray.ViewModels
     {
         #region Properties
 
+#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// The command to exit the app.
         /// </summary>
-#pragma warning disable CA1822 // Mark members as static
         public ICommand ExitAppCommand
 #pragma warning restore CA1822 // Mark members as static
         {
@@ -35,10 +35,10 @@ namespace PaimonTray.ViewModels
             } // end get
         } // end property ExitAppCommand
 
+#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// The command to show the main window.
         /// </summary>
-#pragma warning disable CA1822 // Mark members as static
         public ICommand ToggleMainWindowVisibilityCommand
 #pragma warning restore CA1822 // Mark members as static
         {
