@@ -26,27 +26,6 @@
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Settings" />
-                    <MenuFlyoutSubItem
-                        Icon="Help"
-                        Text="Help">
-                        <MenuFlyoutItem
-                            x:Name="MenuFlyoutItemIconHelpHome"
-                            Icon="Home" />
-                        <MenuFlyoutItem Text="User manual">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon
-                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                    Glyph="&#xE82D;"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Github repo" />
-                        <MenuFlyoutItem Text="Gitee repo (backup)" />
-                        <MenuFlyoutItem Text="View issues" />
-                        <MenuFlyoutItem Text="Release notes" />
-                        <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Show logs in Explorer" />
-                    </MenuFlyoutSubItem>
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
