@@ -14,11 +14,11 @@
         SizeChanged="StackPanelRoot_OnSizeChanged"
         VerticalAlignment="Center">
         <StackPanel.DataContext>
-            <vm:TaskbarIconViewModel x:Name="TaskbarIconViewModel" />
+            <vm:MainWindowViewModel x:Name="MainWindowViewModel" />
         </StackPanel.DataContext>
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
-            LeftClickCommand="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
+            LeftClickCommand="{x:Bind MainWindowViewModel.ToggleMainWindowVisibilityCommand}"
             IconSource="ms-appx:///Assets/AppIcon/AppIcon.ico"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
@@ -28,9 +28,9 @@
                     <MenuFlyoutItem Text="Settings" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
-                        Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
+                        Command="{x:Bind MainWindowViewModel.ExitAppCommand}"
                         CommandParameter="{x:Bind TaskbarIconApp}"
-                        Text="Exit"/>
+                        Text="Exit" />
                 </MenuFlyout>
             </ni:TaskbarIcon.ContextFlyout>
         </ni:TaskbarIcon>
@@ -70,29 +70,43 @@
                                 Text="Help">
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMoreHelpHome"
-                                    Icon="Home" />
-                                <MenuFlyoutItem Text="User manual">
+                                    Icon="Home"
+                                    IsEnabled="False"/>
+                                <MenuFlyoutItem
+                                    IsEnabled="False"
+                                    Text="User manual">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon
                                             FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                            Glyph="&#xE82D;"/>
+                                            Glyph="&#xE82D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Github repo" />
-                                <MenuFlyoutItem Text="Gitee repo (backup)" />
-                                <MenuFlyoutItem Text="View issues" />
-                                <MenuFlyoutItem Text="Release notes" />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind MainWindowViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    CommandParameter="https://github.com/ArvinZJC/PaimonTray"
+                                    Text="Github repo" />
+                                <MenuFlyoutItem
+                                    IsEnabled="False"
+                                    Text="Gitee repo (backup)" />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind MainWindowViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    CommandParameter="https://github.com/ArvinZJC/PaimonTray/issues"
+                                    Text="View issues" />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind MainWindowViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    CommandParameter="https://github.com/ArvinZJC/PaimonTray/releases"
+                                    Text="Release notes" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem Text="Show logs in Explorer" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
                                 x:Name="MenuFlyoutItemMoreHide"
-                                Command="{x:Bind TaskbarIconViewModel.ToggleMainWindowVisibilityCommand}"
+                                Command="{x:Bind MainWindowViewModel.ToggleMainWindowVisibilityCommand}"
                                 Text="Hide" />
                             <MenuFlyoutItem
-                                Command="{x:Bind TaskbarIconViewModel.ExitAppCommand}"
+                                Command="{x:Bind MainWindowViewModel.ExitAppCommand}"
                                 CommandParameter="{x:Bind TaskbarIconApp}"
                                 Text="Exit" />
                         </MenuFlyout>

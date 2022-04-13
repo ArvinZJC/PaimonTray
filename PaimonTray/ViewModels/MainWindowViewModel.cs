@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace PaimonTray.ViewModels
@@ -9,7 +10,7 @@ namespace PaimonTray.ViewModels
     /// <summary>
     /// The taskbar icon view model.
     /// </summary>
-    internal class TaskbarIconViewModel
+    internal class MainWindowViewModel
     {
         #region Properties
 
@@ -22,18 +23,33 @@ namespace PaimonTray.ViewModels
         {
             get
             {
-                XamlUICommand command = new();
+                XamlUICommand xamlUiCommand = new();
 
-                command.ExecuteRequested += (_, e) =>
+                xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
                     Application.Current.Exit();
                 };
-                return command;
+                return xamlUiCommand;
             } // end get
         } // end property ExitAppCommand
+
+        public ICommand OpenLinksInDefaultBrowserCommand
+        {
+            get
+            {
+                XamlUICommand xamlUiCommand = new();
+
+                xamlUiCommand.ExecuteRequested += (_, e) =>
+                {
+                    if (e.Parameter is string link)
+                        Process.Start(new ProcessStartInfo { FileName = link, UseShellExecute = true });
+                };
+                return xamlUiCommand;
+            } // end get
+        } // end property OpenLinksInDefaultBrowserCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
@@ -44,9 +60,9 @@ namespace PaimonTray.ViewModels
         {
             get
             {
-                XamlUICommand command = new();
+                XamlUICommand xamlUiCommand = new();
 
-                command.ExecuteRequested += (_, e) =>
+                xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
                     if (e.Parameter is not AppWindow appWindowMain) return;
 
@@ -55,10 +71,10 @@ namespace PaimonTray.ViewModels
                     else
                         appWindowMain.Show();
                 };
-                return command;
+                return xamlUiCommand;
             } // end get
         } // end property ToggleMainWindowVisibilityCommand
 
         #endregion Properties
-    } // end class TaskbarIconViewModel
+    } // end class MainWindowViewModel
 } // end namespace PaimonTray.ViewModels
