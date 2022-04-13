@@ -71,7 +71,7 @@
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMoreHelpHome"
                                     Icon="Home"
-                                    IsEnabled="False"/>
+                                    IsEnabled="False" />
                                 <MenuFlyoutItem
                                     IsEnabled="False"
                                     Text="User manual">
@@ -85,7 +85,7 @@
                                 <MenuFlyoutItem
                                     Command="{x:Bind MainWindowViewModel.OpenLinksInDefaultBrowserCommand}"
                                     CommandParameter="https://github.com/ArvinZJC/PaimonTray"
-                                    Text="Github repo" />
+                                    Text="GitHub repo" />
                                 <MenuFlyoutItem
                                     IsEnabled="False"
                                     Text="Gitee repo (backup)" />
@@ -98,7 +98,9 @@
                                     CommandParameter="https://github.com/ArvinZJC/PaimonTray/releases"
                                     Text="Release notes" />
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Show logs in Explorer" />
+                                <MenuFlyoutItem
+                                    IsEnabled="False"
+                                    Text="Show logs in Explorer" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
