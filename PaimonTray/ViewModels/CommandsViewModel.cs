@@ -30,6 +30,7 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
                     Log.Information("Exit the app requested.");
+                    ((App)Application.Current).MainWin?.AppWin?.Hide(); // Hide the main window first to avoid the uneven window closing process.
 
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.

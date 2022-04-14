@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Windowing;
+﻿using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using PaimonTray.Helpers;
 using Serilog;
@@ -10,6 +11,12 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class SettingsWindow
     {
+        #region Fields
+
+        private AppWindow _appWin;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -28,15 +35,26 @@ namespace PaimonTray.Views
         // Customise the window.
         private void CustomiseWindow()
         {
-            var appWin = WindowManagementHelper.GetAppWindow(this);
+            _appWin = WindowManagementHelper.GetAppWindow(this);
 
-            if (appWin == null)
+            if (_appWin == null)
             {
                 Log.Warning("The settings window's AppWindow is null.");
                 return;
             } // end if
 
-            appWin.Closing += AppWin_OnClosing;
+            _appWin.Closing += AppWin_OnClosing;
+
+            if (AppWindowTitleBar.IsCustomizationSupported())
+            {
+                _appWin.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+                _appWin.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                _appWin.TitleBar.ExtendsContentIntoTitleBar = true;
+            }
+            else
+            {
+                ExtendsContentIntoTitleBar = true;
+            } // end if...else
         } // end method CustomiseWindow
 
         #endregion Methods
@@ -44,8 +62,9 @@ namespace PaimonTray.Views
         #region Event Handlers
 
         // Handle the AppWindow closing event.
-        private static void AppWin_OnClosing(object sender, AppWindowClosingEventArgs e)
+        private void AppWin_OnClosing(object sender, AppWindowClosingEventArgs e)
         {
+            _appWin.Hide(); // Hide the main window first to avoid the uneven window closing process.
             ((App)Application.Current).SettingsWin = null;
         } // end method AppWin_OnClosing
 
