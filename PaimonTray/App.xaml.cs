@@ -21,7 +21,12 @@ namespace PaimonTray
         /// <summary>
         /// The main window.
         /// </summary>
-        public Window MainWindow { get; private set; }
+        public MainWindow MainWin { get; private set; }
+
+        /// <summary>
+        /// The settings window.
+        /// </summary>
+        public SettingsWindow SettingsWin { get; set; }
 
         #endregion Properties
 
@@ -69,7 +74,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
+            MainWin = new MainWindow();
         } // end method OnLaunched
 
         #endregion Event Handlers

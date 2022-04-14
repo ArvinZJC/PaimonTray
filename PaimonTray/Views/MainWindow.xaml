@@ -63,6 +63,7 @@
                                 Text="New user" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
+                                Command="{x:Bind CommandsViewModel.OpenSettingsWindowCommand}"
                                 Icon="Setting"
                                 Text="Settings" />
                             <MenuFlyoutSubItem

@@ -19,10 +19,18 @@ namespace PaimonTray.Views
         #region Fields
 
         private bool _isFirstLoad = true; // A flag indicating if it is the first time the window is loaded.
-        private AppWindow _appWindow;
         private WindowId _windowId;
 
         #endregion Fields
+
+        #region Properties
+
+        /// <summary>
+        /// The main window's <see cref="AppWindow"/>.
+        /// </summary>
+        public AppWindow AppWin { get; private set; }
+
+        #endregion Properties
 
         #region Constructors
 
@@ -35,8 +43,8 @@ namespace PaimonTray.Views
             CustomiseWindow();
 
             MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
-            MenuFlyoutItemMoreHide.CommandParameter = _appWindow; // TODO
-            TaskbarIconApp.LeftClickCommandParameter = _appWindow;
+            MenuFlyoutItemMoreHide.CommandParameter = AppWin; // TODO
+            TaskbarIconApp.LeftClickCommandParameter = AppWin;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
             TaskbarIconApp.Visibility = Visibility.Visible;
 
@@ -59,18 +67,18 @@ namespace PaimonTray.Views
         private void CustomiseWindow()
         {
             _windowId = WindowManagementHelper.GetWindowId(this);
-            _appWindow = WindowManagementHelper.GetAppWindow(_windowId);
+            AppWin = WindowManagementHelper.GetAppWindow(_windowId);
 
-            if (_appWindow == null)
+            if (AppWin == null)
             {
                 Log.Warning("The main window's AppWindow is null.");
                 return;
             } // end if
 
-            _appWindow.Destroying += AppWindow_OnDestroying;
-            _appWindow.IsShownInSwitchers = false;
+            AppWin.Destroying += AppWin_OnDestroying;
+            AppWin.IsShownInSwitchers = false;
 
-            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
+            var appWindowOverlappedPresenter = AppWin.Presenter as OverlappedPresenter;
 
             if (appWindowOverlappedPresenter == null)
             {
@@ -90,11 +98,11 @@ namespace PaimonTray.Views
         #region Event Handlers
 
         // Handle the AppWindow destroying event.
-        private static void AppWindow_OnDestroying(object sender, object e)
+        private static void AppWin_OnDestroying(object sender, object e)
         {
             ToastNotificationManager.History.Remove("TaskbarIconApp_Ready",
                 Package.Current.DisplayName); // TODO: make tag a constant.
-        } // end method AppWindow_OnDestroying
+        } // end method AppWin_OnDestroying
 
 #pragma warning disable IDE0060 // Remove unused parameter
         // Handle the root stack panel's size changed event.
@@ -105,7 +113,7 @@ namespace PaimonTray.Views
             var stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
             var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
 
-            _appWindow.MoveAndResize(new RectInt32
+            AppWin.MoveAndResize(new RectInt32
             {
                 Height = stackPanelRootHeight, Width = stackPanelRootWidth,
                 X = (workArea.Width - stackPanelRootWidth - 12),

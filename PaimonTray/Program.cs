@@ -1,8 +1,6 @@
 ﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
-using PaimonTray.Helpers;
-using Serilog;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -82,21 +80,7 @@ namespace PaimonTray
         // Handle the app instance activation event.
         private static void AppInstance_OnActivated(object sender, AppActivationArguments args)
         {
-            if (((App)Application.Current).MainWindow == null)
-            {
-                Log.Warning("The main window is null.");
-                return;
-            } // end if
-
-            var appWindow = WindowManagementHelper.GetAppWindow(((App)Application.Current).MainWindow);
-
-            if (appWindow == null)
-            {
-                Log.Warning("The main window's AppWindow is null.");
-                return;
-            } // end if
-
-            appWindow.Show();
+            ((App)Application.Current).MainWin?.AppWin?.Show();
         } // end method AppInstance_OnActivated
 
         #endregion Event Handlers

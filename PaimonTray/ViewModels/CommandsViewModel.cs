@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -59,6 +60,28 @@ namespace PaimonTray.ViewModels
                 return xamlUiCommand;
             } // end get
         } // end property OpenLinksInDefaultBrowserCommand
+
+#pragma warning disable CA1822 // Mark members as static
+        /// <summary>
+        /// The command to open the settings window.
+        /// </summary>
+        public ICommand OpenSettingsWindowCommand
+#pragma warning restore CA1822 // Mark members as static
+        {
+            get
+            {
+                XamlUICommand xamlUiCommand = new();
+
+                xamlUiCommand.ExecuteRequested += (_, _) =>
+                {
+                    if (((App)Application.Current).SettingsWin == null)
+                        ((App)Application.Current).SettingsWin = new SettingsWindow();
+
+                    ((App)Application.Current).SettingsWin.Activate();
+                };
+                return xamlUiCommand;
+            } // end get
+        } // end property OpenSettingsWindowCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
