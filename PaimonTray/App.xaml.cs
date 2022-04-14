@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
-using PaimonTray.Windows;
+using PaimonTray.Views;
 
 namespace PaimonTray
 {
@@ -9,12 +9,14 @@ namespace PaimonTray
     public partial class App
     {
         #region Properties
+
         /// <summary>
         /// The main window.
         /// </summary>
         public Window MainWindow { get; private set; }
+
         #endregion Properties
-        
+
         #region Constructors
 
         /// <summary>

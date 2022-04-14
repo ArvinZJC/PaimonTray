@@ -10,7 +10,7 @@ namespace PaimonTray.ViewModels
     /// <summary>
     /// The taskbar icon view model.
     /// </summary>
-    internal class MainWindowViewModel
+    internal class CommandsViewModel
     {
         #region Properties
 
@@ -36,7 +36,12 @@ namespace PaimonTray.ViewModels
             } // end get
         } // end property ExitAppCommand
 
+#pragma warning disable CA1822 // Mark members as static
+        /// <summary>
+        /// The command to open links in the default browser.
+        /// </summary>
         public ICommand OpenLinksInDefaultBrowserCommand
+#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
@@ -76,5 +81,5 @@ namespace PaimonTray.ViewModels
         } // end property ToggleMainWindowVisibilityCommand
 
         #endregion Properties
-    } // end class MainWindowViewModel
+    } // end class CommandsViewModel
 } // end namespace PaimonTray.ViewModels

@@ -17,10 +17,9 @@ namespace PaimonTray
         /// <summary>
         /// The main entry point for the app.
         /// </summary>
-        /// <param name="args">The main entry point arguments.</param>
         [STAThread]
         static void
-            Main(string[] args) // Note: STAThread is required for the app to run in the background. The error of defining more than 1 entry point can be ignored.
+            Main() // Note: STAThread is required for the app to run in the background. The error of defining more than 1 entry point can be ignored.
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             WinRT.ComWrappersSupport.InitializeComWrappers();

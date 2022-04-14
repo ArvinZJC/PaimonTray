@@ -8,7 +8,7 @@ using Windows.ApplicationModel;
 using Windows.Graphics;
 using Windows.UI.Notifications;
 
-namespace PaimonTray.Windows
+namespace PaimonTray.Views
 {
     /// <summary>
     /// The main window to show the retrieved Genshin data.
@@ -32,7 +32,7 @@ namespace PaimonTray.Windows
         {
             InitializeComponent();
             CustomiseWindow();
-            
+
             MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
             MenuFlyoutItemMoreHide.CommandParameter = _appWindow; // TODO
             TaskbarIconApp.LeftClickCommandParameter = _appWindow;
@@ -111,4 +111,4 @@ namespace PaimonTray.Windows
 
         #endregion Event Handlers
     } // end class MainWindow
-} // end namespace PaimonTray.Windows
+} // end namespace PaimonTray.Views

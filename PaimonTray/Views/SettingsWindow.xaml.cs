@@ -1,4 +1,4 @@
-﻿namespace PaimonTray.Windows
+﻿namespace PaimonTray.Views
 {
     /// <summary>
     /// The settings window.
@@ -17,4 +17,4 @@
 
         #endregion Constructors
     } // end class SettingsWindow
-} // end namespace PaimonTray.Windows
+} // end namespace PaimonTray.Views
