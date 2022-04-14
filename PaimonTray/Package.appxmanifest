@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="3d2debd2-c36d-43de-91d0-d08c0fc277e2"
+    Name="com.isarvin.PaimonTray"
     Publisher="CN=Arvin Zhao"
     Version="1.0.0.0" />
 

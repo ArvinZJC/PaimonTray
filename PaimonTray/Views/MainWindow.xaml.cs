@@ -3,6 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using PaimonTray.Helpers;
+using Serilog;
 using System;
 using Windows.ApplicationModel;
 using Windows.Graphics;
@@ -60,14 +61,22 @@ namespace PaimonTray.Views
             _windowId = WindowManagementHelper.GetWindowId(this);
             _appWindow = WindowManagementHelper.GetAppWindow(_windowId);
 
-            if (_appWindow == null) return;
+            if (_appWindow == null)
+            {
+                Log.Warning("The main window's AppWindow is null.");
+                return;
+            } // end if
 
             _appWindow.Destroying += AppWindow_OnDestroying;
             _appWindow.IsShownInSwitchers = false;
 
             var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
 
-            if (appWindowOverlappedPresenter == null) return;
+            if (appWindowOverlappedPresenter == null)
+            {
+                Log.Warning("The main window's AppWindow's presenter is null.");
+                return;
+            } // end if
 
             appWindowOverlappedPresenter.IsAlwaysOnTop = true;
             appWindowOverlappedPresenter.IsMaximizable = false;

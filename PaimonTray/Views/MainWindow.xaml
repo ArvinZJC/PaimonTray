@@ -99,7 +99,7 @@
                                     Text="Release notes" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
-                                    IsEnabled="False"
+                                    Command="{x:Bind CommandsViewModel.ShowLogsInExplorerCommand}"
                                     Text="Show logs in Explorer" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />

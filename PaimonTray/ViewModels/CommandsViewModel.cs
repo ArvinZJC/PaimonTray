@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -27,9 +28,12 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
+                    Log.Information("Exit the app requested.");
+
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
+                    Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
                 return xamlUiCommand;
@@ -55,6 +59,26 @@ namespace PaimonTray.ViewModels
                 return xamlUiCommand;
             } // end get
         } // end property OpenLinksInDefaultBrowserCommand
+
+#pragma warning disable CA1822 // Mark members as static
+        /// <summary>
+        /// The command to show logs in Explorer.
+        /// </summary>
+        public ICommand ShowLogsInExplorerCommand
+#pragma warning restore CA1822 // Mark members as static
+        {
+            get
+            {
+                XamlUICommand xamlUiCommand = new();
+
+                xamlUiCommand.ExecuteRequested += (_, _) =>
+                {
+                    Process.Start(new ProcessStartInfo
+                        { FileName = ((App)Application.Current).LogsDirectory, UseShellExecute = true });
+                };
+                return xamlUiCommand;
+            } // end get
+        } // end property ShowLogsInExplorerCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
