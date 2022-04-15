@@ -25,7 +25,9 @@
             Visibility="Collapsed">
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Settings" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind CommandsViewModel.OpenSettingsWindowCommand}"
+                        Text="Settings" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind CommandsViewModel.ExitAppCommand}"
@@ -42,10 +44,11 @@
             PaneDisplayMode="LeftCompact">
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                    Content="User 1"
-                    Icon="Contact" />
+                    Content="Account 1"
+                    Icon="Contact"
+                    IsSelected="True"/>
                 <NavigationViewItem
-                    Content="New user"
+                    Content="New account"
                     Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
@@ -60,7 +63,7 @@
                         <MenuFlyout>
                             <MenuFlyoutItem
                                 Icon="AddFriend"
-                                Text="New user" />
+                                Text="New account" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
                                 Command="{x:Bind CommandsViewModel.OpenSettingsWindowCommand}"
@@ -117,12 +120,14 @@
                     <SymbolIcon Symbol="More" />
                 </Button>
             </NavigationView.PaneFooter>
-            <ListView
-                Height="300"
-                SelectionMode="None"
-                Width="300">
-                <ListViewItem Content="Data" />
-            </ListView>
+            <Frame>
+                <ListView
+                    Height="300"
+                    SelectionMode="None"
+                    Width="300">
+                    <ListViewItem Content="Data" />
+                </ListView>
+            </Frame>
         </NavigationView>
     </StackPanel>
 </Window>

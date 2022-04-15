@@ -6,6 +6,8 @@ using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
+using Windows.ApplicationModel;
+using Windows.UI.Notifications;
 
 namespace PaimonTray.ViewModels
 {
@@ -30,11 +32,15 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
                     Log.Information("Exit the app requested.");
-                    ((App)Application.Current).MainWin?.AppWin?.Hide(); // Hide the main window first to avoid the uneven window closing process.
+
+                    // Hide the windows first to avoid any uneven window closing process.
+                    ((App)Application.Current).MainWin?.AppWin?.Hide();
+                    ((App)Application.Current).SettingsWin?.AppWin?.Hide();
 
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
+                    ToastNotificationManager.History.Remove("TaskbarIconApp_Ready", Package.Current.DisplayName);
                     Log.CloseAndFlush();
                     Application.Current.Exit();
                 };

@@ -7,7 +7,6 @@ using Serilog;
 using System;
 using Windows.ApplicationModel;
 using Windows.Graphics;
-using Windows.UI.Notifications;
 
 namespace PaimonTray.Views
 {
@@ -68,6 +67,7 @@ namespace PaimonTray.Views
         {
             _windowId = WindowManagementHelper.GetWindowId(this);
             AppWin = WindowManagementHelper.GetAppWindow(_windowId);
+            Title = Package.Current.DisplayName;
 
             if (AppWin == null)
             {
@@ -75,7 +75,6 @@ namespace PaimonTray.Views
                 return;
             } // end if
 
-            AppWin.Destroying += AppWin_OnDestroying;
             AppWin.IsShownInSwitchers = false;
 
             var appWindowOverlappedPresenter = AppWin.Presenter as OverlappedPresenter;
@@ -97,17 +96,8 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the AppWindow destroying event.
-        private static void AppWin_OnDestroying(object sender, object e)
-        {
-            ToastNotificationManager.History.Remove("TaskbarIconApp_Ready",
-                Package.Current.DisplayName); // TODO: make tag a constant.
-        } // end method AppWin_OnDestroying
-
-#pragma warning disable IDE0060 // Remove unused parameter
         // Handle the root stack panel's size changed event.
         private void StackPanelRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
-#pragma warning restore IDE0060 // Remove unused parameter
         {
             var stackPanelRootHeight = (int)Math.Ceiling(e.NewSize.Height);
             var stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
