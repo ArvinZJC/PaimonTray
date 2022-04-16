@@ -41,11 +41,8 @@ namespace PaimonTray.Views
             InitializeComponent();
             CustomiseWindow();
 
-            MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
+            MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site";
             MenuFlyoutItemMoreHelpShowLogs.CommandParameter = ((App)Application.Current).LogsDirectory;
-            MenuFlyoutItemMoreHide.CommandParameter = AppWin; // TODO
-            TaskbarIconApp.LeftClickCommandParameter = AppWin;
-            TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
             TaskbarIconApp.Visibility = Visibility.Visible;
 
             new ToastContentBuilder()
@@ -55,7 +52,7 @@ namespace PaimonTray.Views
                 .Show(toast =>
                 {
                     toast.Group = Package.Current.DisplayName;
-                    toast.Tag = "TaskbarIconApp_Ready"; // TODO: make tag a constant.
+                    toast.Tag = AppConstantsHelper.NotificationTagTaskbarIconAppReady;
                 });
         } // end constructor MainWindow
 
@@ -107,8 +104,8 @@ namespace PaimonTray.Views
             AppWin.MoveAndResize(new RectInt32
             {
                 Height = stackPanelRootHeight, Width = stackPanelRootWidth,
-                X = (workArea.Width - stackPanelRootWidth - 12),
-                Y = (workArea.Height - stackPanelRootHeight - 12) // TODO: make 12 a constant.
+                X = workArea.Width - stackPanelRootWidth - AppConstantsHelper.MainWindowPositionOffset,
+                Y = workArea.Height - stackPanelRootHeight - AppConstantsHelper.MainWindowPositionOffset
             });
 
             if (!_isFirstLoad) return;

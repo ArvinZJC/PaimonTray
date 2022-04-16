@@ -3,6 +3,7 @@
     x:Class="PaimonTray.Views.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Activated="SettingsWindow_OnActivated">
@@ -30,7 +31,7 @@
                 <Image
                     Height="16"
                     Margin="16,0"
-                    Source="ms-appx:///Assets/AppIcon/AppIcon.ico"
+                    Source="{x:Bind h:AppConstantsHelper.AppIconPath}"
                     Width="16" />
                 <TextBlock
                     x:Name="TextBlockWindowTitle"
@@ -53,11 +54,11 @@
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     x:Name="NavigationViewItemRootAboutApp"
-                    Tag="AboutApp">
+                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAboutApp}">
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
-                            Glyph="&#xE946;" />
+                            Glyph="{x:Bind h:AppConstantsHelper.GlyphInfo}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.FooterMenuItems>
@@ -65,17 +66,17 @@
                 <NavigationViewItem
                     Content="General"
                     IsSelected="True"
-                    Tag="GeneralSettings">
+                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagGeneralSettings}">
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
-                            Glyph="&#xE90F;" />
+                            Glyph="{x:Bind h:AppConstantsHelper.GlyphRepair}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem
                     Content="Accounts"
                     Icon="People"
-                    Tag="AccountsSettings" />
+                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAccountsSettings}" />
             </NavigationView.MenuItems>
             <Frame
                 x:Name="FrameRoot"

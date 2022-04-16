@@ -60,7 +60,7 @@ namespace PaimonTray.Views
 
             AppWin.Destroying += AppWin_OnDestroying;
             AppWin.SetIcon((await StorageFile.GetFileFromApplicationUriAsync(
-                new Uri("ms-appx:///Assets/AppIcon/AppIcon.ico"))).Path);
+                new Uri(AppConstantsHelper.AppIconPath))).Path);
 
             // Customise the title bar.
             if (AppWindowTitleBar.IsCustomizationSupported())
@@ -82,7 +82,8 @@ namespace PaimonTray.Views
 
             var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
 
-            AppWin.Move(new PointInt32((workArea.Width - AppWin.Size.Width) / 2, (workArea.Height - AppWin.Size.Height) / 2));
+            AppWin.Move(new PointInt32((workArea.Width - AppWin.Size.Width) / 2,
+                (workArea.Height - AppWin.Size.Height) / 2));
         } // end method CustomiseWindowAsync
 
         #endregion Methods
@@ -116,15 +117,15 @@ namespace PaimonTray.Views
 
             switch (((NavigationViewItem)args.SelectedItem).Tag)
             {
-                case "AboutApp":
+                case AppConstantsHelper.NavigationViewItemTagAboutApp:
                     pageType = typeof(AboutAppPage);
                     break;
 
-                case "AccountsSettings":
+                case AppConstantsHelper.NavigationViewItemTagAccountsSettings:
                     pageType = typeof(AccountsSettingsPage);
                     break;
 
-                case "GeneralSettings":
+                case AppConstantsHelper.NavigationViewItemTagGeneralSettings:
                     pageType = typeof(GeneralSettingsPage);
                     break;
 

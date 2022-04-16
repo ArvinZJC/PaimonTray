@@ -2,6 +2,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using PaimonTray.Helpers;
 using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
@@ -40,7 +41,8 @@ namespace PaimonTray.ViewModels
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
-                    ToastNotificationManager.History.Remove("TaskbarIconApp_Ready", Package.Current.DisplayName);
+                    ToastNotificationManager.History.Remove(AppConstantsHelper.NotificationTagTaskbarIconAppReady,
+                        Package.Current.DisplayName);
                     Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
