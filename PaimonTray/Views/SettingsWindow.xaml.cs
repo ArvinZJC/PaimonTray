@@ -3,6 +3,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using PaimonTray.Helpers;
 using Serilog;
 using System;
@@ -80,15 +81,8 @@ namespace PaimonTray.Views
             } // end if...else
 
             var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
-            var windowHeight = workArea.Height * 2 / 3;
-            var windowWidth = workArea.Width * 2 / 3;
 
-            AppWin.MoveAndResize(new RectInt32
-            {
-                Height = windowHeight, Width = windowWidth,
-                X = (workArea.Width - windowWidth) / 2,
-                Y = (workArea.Height - windowHeight) / 2
-            });
+            AppWin.Move(new PointInt32((workArea.Width - AppWin.Size.Width) / 2, (workArea.Height - AppWin.Size.Height) / 2));
         } // end method CustomiseWindowAsync
 
         #endregion Methods
@@ -141,7 +135,7 @@ namespace PaimonTray.Views
                     break;
             } // end switch-case
 
-            FrameRoot.Navigate(pageType);
+            FrameRoot.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
             NavigationViewRoot.Header = ((NavigationViewItem)args.SelectedItem).Content;
         } // end method NavigationViewRoot_OnSelectionChanged
 
