@@ -17,7 +17,7 @@ namespace PaimonTray.Views
     {
         #region Fields
 
-        private bool _isFirstLoad = true; // A flag indicating if it is the first time the window is loaded.
+        private bool _isFirstLoad = true; // A flag indicating if it is the 1st time the window is loaded.
         private WindowId _windowId;
 
         #endregion Fields
@@ -34,7 +34,7 @@ namespace PaimonTray.Views
         #region Constructors
 
         /// <summary>
-        /// Initialise the main window.
+        /// Initialise the main window. No need to activate it manually for the 1st time.
         /// </summary>
         public MainWindow()
         {

@@ -46,6 +46,11 @@
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\AboutAppPage.xaml" />
+    <None Remove="Views\AccountsSettingsPage.xaml" />
+    <None Remove="Views\GeneralSettingsPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.29" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.2" />
@@ -71,6 +76,15 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <Page Update="Views\AboutAppPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\AccountsSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\GeneralSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Windows\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

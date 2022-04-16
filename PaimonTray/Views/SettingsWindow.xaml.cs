@@ -7,6 +7,7 @@ using PaimonTray.Helpers;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
+using Windows.Graphics;
 using Windows.Storage;
 
 namespace PaimonTray.Views
@@ -28,14 +29,14 @@ namespace PaimonTray.Views
         #region Constructors
 
         /// <summary>
-        /// Initialise the settings window.
+        /// Initialise the settings window. No need to activate it for the 1st time.
         /// </summary>
         public SettingsWindow()
         {
             InitializeComponent();
             CustomiseWindowAsync();
 
-            NavigationViewItemRootAbout.Content = $"About {Package.Current.DisplayName}";
+            NavigationViewItemRootAboutApp.Content = $"About {Package.Current.DisplayName}";
         } // end constructor SettingsWindow
 
         #endregion Constructors
@@ -45,7 +46,9 @@ namespace PaimonTray.Views
         // Customise the window.
         private async void CustomiseWindowAsync()
         {
-            AppWin = WindowManagementHelper.GetAppWindow(this);
+            var windowId = WindowManagementHelper.GetWindowId(this);
+
+            AppWin = WindowManagementHelper.GetAppWindow(windowId);
             Title = $"Settings - {Package.Current.DisplayName}";
 
             if (AppWin == null)
@@ -54,7 +57,6 @@ namespace PaimonTray.Views
                 return;
             } // end if
 
-            AppWin.Closing += AppWin_OnClosing;
             AppWin.Destroying += AppWin_OnDestroying;
             AppWin.SetIcon((await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri("ms-appx:///Assets/AppIcon/AppIcon.ico"))).Path);
@@ -76,17 +78,22 @@ namespace PaimonTray.Views
                 ExtendsContentIntoTitleBar = true;
                 SetTitleBar(GridTitleBar);
             } // end if...else
+
+            var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
+            var windowHeight = workArea.Height * 2 / 3;
+            var windowWidth = workArea.Width * 2 / 3;
+
+            AppWin.MoveAndResize(new RectInt32
+            {
+                Height = windowHeight, Width = windowWidth,
+                X = (workArea.Width - windowWidth) / 2,
+                Y = (workArea.Height - windowHeight) / 2
+            });
         } // end method CustomiseWindowAsync
 
         #endregion Methods
 
         #region Event Handlers
-
-        // Handle the AppWindow's closing event.
-        private static void AppWin_OnClosing(AppWindow sender, AppWindowClosingEventArgs e)
-        {
-            ((App)Application.Current).SettingsWin = null;
-        } // end method AppWin_OnClosing
 
         // Handle the AppWindow's destroying event.
         private static void AppWin_OnDestroying(object sender, object e)
@@ -100,6 +107,43 @@ namespace PaimonTray.Views
         {
             NavigationViewRoot.IsPaneToggleButtonVisible = args.DisplayMode != NavigationViewDisplayMode.Expanded;
         } // end method NavigationViewRoot_OnDisplayModeChanged
+
+        // Handle the root navigation view's loaded event.
+        private void NavigationViewRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Activate();
+        } // end method NavigationViewRoot_OnLoaded
+
+        // Handle the root navigation view's selection changed event.
+        private void NavigationViewRoot_OnSelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            Type pageType;
+
+            switch (((NavigationViewItem)args.SelectedItem).Tag)
+            {
+                case "AboutApp":
+                    pageType = typeof(AboutAppPage);
+                    break;
+
+                case "AccountsSettings":
+                    pageType = typeof(AccountsSettingsPage);
+                    break;
+
+                case "GeneralSettings":
+                    pageType = typeof(GeneralSettingsPage);
+                    break;
+
+                default:
+                    pageType = typeof(GeneralSettingsPage);
+                    Log.Warning(
+                        $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {((NavigationViewItem)args.SelectedItem).Content}, tag: {((NavigationViewItem)args.SelectedItem).Tag})");
+                    break;
+            } // end switch-case
+
+            FrameRoot.Navigate(pageType);
+            NavigationViewRoot.Header = ((NavigationViewItem)args.SelectedItem).Content;
+        } // end method NavigationViewRoot_OnSelectionChanged
 
         // Handle the window's activated event.
         private void SettingsWindow_OnActivated(object sender, WindowActivatedEventArgs args)

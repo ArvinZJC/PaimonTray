@@ -43,20 +43,43 @@
             x:Name="NavigationViewRoot"
             DisplayModeChanged="NavigationViewRoot_OnDisplayModeChanged"
             Grid.Row="1"
+            Header="General"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
-            IsTabStop="False">
+            IsTabStop="False"
+            Loaded="NavigationViewRoot_OnLoaded"
+            SelectionChanged="NavigationViewRoot_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="NavigationViewItemRootAbout" />
+                <NavigationViewItem
+                    x:Name="NavigationViewItemRootAboutApp"
+                    Tag="AboutApp">
+                    <NavigationViewItem.Icon>
+                        <FontIcon
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE946;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.FooterMenuItems>
             <NavigationView.MenuItems>
                 <NavigationViewItem
+                    Content="General"
+                    IsSelected="True"
+                    Tag="GeneralSettings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE90F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem
                     Content="Accounts"
                     Icon="People"
-                    IsSelected="True" />
+                    Tag="AccountsSettings" />
             </NavigationView.MenuItems>
-            <Frame></Frame>
+            <Frame
+                x:Name="FrameRoot"
+                IsNavigationStackEnabled="False" />
         </NavigationView>
     </Grid>
 </Window>

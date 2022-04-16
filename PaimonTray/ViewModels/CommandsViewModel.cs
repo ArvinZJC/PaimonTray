@@ -82,7 +82,10 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
                     if (((App)Application.Current).SettingsWin == null)
+                    {
                         ((App)Application.Current).SettingsWin = new SettingsWindow();
+                        return;
+                    } // end if
 
                     ((App)Application.Current).SettingsWin.Activate();
                 };
