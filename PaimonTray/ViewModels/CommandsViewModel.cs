@@ -50,9 +50,9 @@ namespace PaimonTray.ViewModels
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// The command to open links in the default browser.
+        /// The command to open a specific link in the default program.
         /// </summary>
-        public ICommand OpenLinksInDefaultBrowserCommand
+        public ICommand OpenLinkInDefaultCommand
 #pragma warning restore CA1822 // Mark members as static
         {
             get
@@ -66,13 +66,13 @@ namespace PaimonTray.ViewModels
                 };
                 return xamlUiCommand;
             } // end get
-        } // end property OpenLinksInDefaultBrowserCommand
+        } // end property OpenLinkInDefaultCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// The command to open the settings window.
+        /// The command to open or activate the settings window.
         /// </summary>
-        public ICommand OpenSettingsWindowCommand
+        public ICommand ShowSettingsWindowCommand
 #pragma warning restore CA1822 // Mark members as static
         {
             get
@@ -88,31 +88,11 @@ namespace PaimonTray.ViewModels
                 };
                 return xamlUiCommand;
             } // end get
-        } // end property OpenSettingsWindowCommand
+        } // end property ShowSettingsWindowCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// The command to show logs in Explorer.
-        /// </summary>
-        public ICommand ShowLogsInExplorerCommand
-#pragma warning restore CA1822 // Mark members as static
-        {
-            get
-            {
-                XamlUICommand xamlUiCommand = new();
-
-                xamlUiCommand.ExecuteRequested += (_, _) =>
-                {
-                    Process.Start(new ProcessStartInfo
-                        { FileName = ((App)Application.Current).LogsDirectory, UseShellExecute = true });
-                };
-                return xamlUiCommand;
-            } // end get
-        } // end property ShowLogsInExplorerCommand
-
-#pragma warning disable CA1822 // Mark members as static
-        /// <summary>
-        /// The command to show the main window.
+        /// The command to show or hide the main window.
         /// </summary>
         public ICommand ToggleMainWindowVisibilityCommand
 #pragma warning restore CA1822 // Mark members as static

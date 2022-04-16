@@ -42,6 +42,7 @@ namespace PaimonTray.Views
             CustomiseWindow();
 
             MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site"; // TODO
+            MenuFlyoutItemMoreHelpShowLogs.CommandParameter = ((App)Application.Current).LogsDirectory;
             MenuFlyoutItemMoreHide.CommandParameter = AppWin; // TODO
             TaskbarIconApp.LeftClickCommandParameter = AppWin;
             TaskbarIconApp.ToolTipText = Package.Current.DisplayName;

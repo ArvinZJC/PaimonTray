@@ -26,7 +26,7 @@
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
-                        Command="{x:Bind CommandsViewModel.OpenSettingsWindowCommand}"
+                        Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}"
                         Text="Settings" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
@@ -46,7 +46,7 @@
                 <NavigationViewItem
                     Content="Account 1"
                     Icon="Contact"
-                    IsSelected="True"/>
+                    IsSelected="True" />
                 <NavigationViewItem
                     Content="New account"
                     Icon="Add" />
@@ -66,7 +66,7 @@
                                 Text="New account" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
-                                Command="{x:Bind CommandsViewModel.OpenSettingsWindowCommand}"
+                                Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}"
                                 Icon="Setting"
                                 Text="Settings" />
                             <MenuFlyoutSubItem
@@ -87,23 +87,24 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind CommandsViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="https://github.com/ArvinZJC/PaimonTray"
                                     Text="GitHub repo" />
                                 <MenuFlyoutItem
                                     IsEnabled="False"
                                     Text="Gitee repo (backup)" />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind CommandsViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="https://github.com/ArvinZJC/PaimonTray/issues"
                                     Text="View issues" />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind CommandsViewModel.OpenLinksInDefaultBrowserCommand}"
+                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="https://github.com/ArvinZJC/PaimonTray/releases"
                                     Text="Release notes" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
-                                    Command="{x:Bind CommandsViewModel.ShowLogsInExplorerCommand}"
+                                    x:Name="MenuFlyoutItemMoreHelpShowLogs"
+                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     Text="Show logs in Explorer" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
