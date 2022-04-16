@@ -63,6 +63,8 @@ namespace PaimonTray.Views
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
                 AppWin.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+                AppWin.TitleBar.ButtonHoverBackgroundColor =
+                    ((SolidColorBrush)Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color;
                 AppWin.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 AppWin.TitleBar.ExtendsContentIntoTitleBar = true;
                 GridColumnTitleBarLeftPadding.Width = new GridLength(AppWin.TitleBar.LeftInset);
