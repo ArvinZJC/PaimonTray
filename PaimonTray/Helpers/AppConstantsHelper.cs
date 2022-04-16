@@ -27,17 +27,17 @@
         /// <summary>
         /// The code of the glyph Dictionary.
         /// </summary>
-        public const string GlyphDictionary = "&#xE82D;";
+        public const string GlyphDictionary = "\xE82D";
 
         /// <summary>
         /// The code of the glyph Info.
         /// </summary>
-        public const string GlyphInfo = "&#xE946;";
+        public const string GlyphInfo = "\xE946";
 
         /// <summary>
         /// The code of the glyph Repair.
         /// </summary>
-        public const string GlyphRepair = "&#xE90F;";
+        public const string GlyphRepair = "\xE90F";
 
         /// <summary>
         /// The main window position offset.
