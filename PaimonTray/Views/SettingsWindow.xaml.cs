@@ -36,8 +36,6 @@ namespace PaimonTray.Views
         {
             InitializeComponent();
             CustomiseWindowAsync();
-
-            NavigationViewItemRootAboutApp.Content = $"About {Package.Current.DisplayName}";
         } // end constructor SettingsWindow
 
         #endregion Constructors
@@ -101,6 +99,9 @@ namespace PaimonTray.Views
             NavigationViewDisplayModeChangedEventArgs args)
         {
             NavigationViewRoot.IsPaneToggleButtonVisible = args.DisplayMode != NavigationViewDisplayMode.Expanded;
+            ScrollViewerRoot.Padding = args.DisplayMode == NavigationViewDisplayMode.Minimal
+                ? new Thickness(18, 18, 18, 0)
+                : new Thickness(56, 18, 56, 0);
         } // end method NavigationViewRoot_OnDisplayModeChanged
 
         // Handle the root navigation view's loaded event.

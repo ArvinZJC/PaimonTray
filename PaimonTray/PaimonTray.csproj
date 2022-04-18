@@ -20,7 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/ArvinZJC/PaimonTray</PackageProjectUrl>
     <PackageTags>desktop-app;dotnet6;genshin-impact;paimon;tray-app;windows;winui3</PackageTags>
-    <Copyright>© $(Authors) 2022</Copyright>
+    <Copyright>© 2022 $(Authors)</Copyright>
     <Version>1.0.0-alpha.1</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>

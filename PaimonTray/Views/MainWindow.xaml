@@ -93,10 +93,10 @@
                                 <MenuFlyoutItem
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}"
-                                    Text="GitHub repo" />
+                                    Text="GitHub repository" />
                                 <MenuFlyoutItem
                                     IsEnabled="False"
-                                    Text="Gitee repo (backup)" />
+                                    Text="Gitee repository (backup)" />
                                 <MenuFlyoutItem
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}"

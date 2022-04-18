@@ -53,7 +53,7 @@
             SelectionChanged="NavigationViewRoot_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
-                    x:Name="NavigationViewItemRootAboutApp"
+                    Content="About"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAboutApp}">
                     <NavigationViewItem.Icon>
                         <FontIcon
@@ -78,9 +78,13 @@
                     Icon="People"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAccountsSettings}" />
             </NavigationView.MenuItems>
-            <Frame
-                x:Name="FrameRoot"
-                IsNavigationStackEnabled="False" />
+            <ScrollViewer
+                x:Name="ScrollViewerRoot"
+                HorizontalScrollBarVisibility="Auto">
+                <Frame
+                    x:Name="FrameRoot"
+                    IsNavigationStackEnabled="False" />
+            </ScrollViewer>
         </NavigationView>
     </Grid>
 </Window>

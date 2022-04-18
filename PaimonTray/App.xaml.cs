@@ -59,7 +59,9 @@ namespace PaimonTray
 
             LogsDirectory = Path.Combine(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path, "Logs");
             Log.Logger = loggerConfig.WriteTo.Async(a =>
-                a.File(Path.Combine(LogsDirectory, "log_" + (Package.Current.IsDevelopmentMode ? "dev_" : "") + ".log"),
+                a.File(
+                    Path.Combine(LogsDirectory,
+                        "log_" + (Package.Current.IsDevelopmentMode ? "dev_" : string.Empty) + ".log"),
                     rollingInterval: RollingInterval.Day)).CreateLogger();
         } // end method ConfigLogger
 
