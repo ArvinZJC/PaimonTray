@@ -15,6 +15,16 @@
         public const string AppIconPath = "ms-appx:///Assets/AppIcon/AppIcon.ico";
 
         /// <summary>
+        /// The app icon source URL.
+        /// </summary>
+        public const string AppIconSourceUrl = "https://www.pixiv.net/en/artworks/92415888";
+
+        /// <summary>
+        /// The URL of the GitHub repository inspiring the app.
+        /// </summary>
+        public const string GitHubRepoInspirationUrl = "https://github.com/spencerwooo/PaimonMenuBar";
+
+        /// <summary>
         /// The app's GitHub repository's issues URL.
         /// </summary>
         public const string GitHubRepoIssuesUrl = "https://github.com/ArvinZJC/PaimonTray/issues";

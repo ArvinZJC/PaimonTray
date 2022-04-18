@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel
             Grid.Row="0"
@@ -36,11 +37,21 @@
         <TextBlock
             x:Name="TextBlockCopyright"
             Grid.Row="2" />
+        <RichTextBlock Grid.Row="3">
+            <Paragraph>
+                Inspired by
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">PaimonMenuBar</Hyperlink>
+            </Paragraph>
+            <Paragraph>
+                App icon credited to
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.AppIconSourceUrl}">Chawong</Hyperlink>
+            </Paragraph>
+        </RichTextBlock>
         <HyperlinkButton
             Content="License"
-            Grid.Row="3"
-            NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoLicenseUrl}"/>
-        <StackPanel Grid.Row="4">
+            Grid.Row="4"
+            NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoLicenseUrl}" />
+        <StackPanel Grid.Row="5">
             <HyperlinkButton
                 x:Name="HyperlinkButtonHome"
                 IsEnabled="False" />
@@ -48,7 +59,7 @@
                 Content="User manual"
                 IsEnabled="False" />
         </StackPanel>
-        <StackPanel Grid.Row="5">
+        <StackPanel Grid.Row="6">
             <HyperlinkButton
                 Content="GitHub repository"
                 NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}" />
