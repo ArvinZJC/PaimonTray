@@ -5,7 +5,12 @@
         #region Fields
 
         /// <summary>
-        /// The path to the app icon.
+        /// The path to the app icon image (.png).
+        /// </summary>
+        public const string AppIconImagePath = "ms-appx:///Assets/AppIcon/AppIcon.png";
+
+        /// <summary>
+        /// The path to the app icon (.ico).
         /// </summary>
         public const string AppIconPath = "ms-appx:///Assets/AppIcon/AppIcon.ico";
 
@@ -13,6 +18,11 @@
         /// The app's GitHub repository's issues URL.
         /// </summary>
         public const string GitHubRepoIssuesUrl = "https://github.com/ArvinZJC/PaimonTray/issues";
+
+        /// <summary>
+        /// The URL of the app license on GitHub.
+        /// </summary>
+        public const string GitHubRepoLicenseUrl = "https://github.com/ArvinZJC/PaimonTray/blob/main/LICENSE";
 
         /// <summary>
         /// The app's GitHub repository's releases URL.
@@ -63,6 +73,16 @@
         /// The app's task bar icon ready notification tag.
         /// </summary>
         public const string NotificationTagTaskbarIconAppReady = "TaskbarIconApp_Ready";
+
+        /// <summary>
+        /// The minimum beta revision version.
+        /// </summary>
+        public const int RevisionVersionBetaMin = 100;
+
+        /// <summary>
+        /// The stable revision version.
+        /// </summary>
+        public const int RevisionVersionStable = 200;
 
         #endregion Fields
     } // end class AppConstantsHelper
