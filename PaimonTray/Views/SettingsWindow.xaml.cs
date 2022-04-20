@@ -65,7 +65,8 @@ namespace PaimonTray.Views
             {
                 AppWin.TitleBar.ButtonBackgroundColor = Colors.Transparent;
                 AppWin.TitleBar.ButtonHoverBackgroundColor =
-                    ((SolidColorBrush)Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color;
+                    (Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"] as SolidColorBrush)
+                    ?.Color;
                 AppWin.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 AppWin.TitleBar.ExtendsContentIntoTitleBar = true;
                 GridColumnTitleBarLeftPadding.Width = new GridLength(AppWin.TitleBar.LeftInset);
@@ -116,7 +117,7 @@ namespace PaimonTray.Views
         {
             Type pageType;
 
-            switch (((NavigationViewItem)args.SelectedItem).Tag)
+            switch ((args.SelectedItem as NavigationViewItem)?.Tag)
             {
                 case AppConstantsHelper.NavigationViewItemTagAboutApp:
                     pageType = typeof(AboutAppPage);
@@ -133,12 +134,12 @@ namespace PaimonTray.Views
                 default:
                     pageType = typeof(GeneralSettingsPage);
                     Log.Warning(
-                        $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {((NavigationViewItem)args.SelectedItem).Content}, tag: {((NavigationViewItem)args.SelectedItem).Tag})");
+                        $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {(args.SelectedItem as NavigationViewItem)?.Content}, tag: {(args.SelectedItem as NavigationViewItem)?.Tag})");
                     break;
             } // end switch-case
 
             FrameRoot.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
-            NavigationViewRoot.Header = ((NavigationViewItem)args.SelectedItem).Content;
+            NavigationViewRoot.Header = (args.SelectedItem as NavigationViewItem)?.Content;
         } // end method NavigationViewRoot_OnSelectionChanged
 
         // Handle the window's activated event.
@@ -146,10 +147,10 @@ namespace PaimonTray.Views
         {
             if (args.WindowActivationState == WindowActivationState.Deactivated)
                 TextBlockWindowTitle.Foreground =
-                    (SolidColorBrush)Application.Current.Resources["WindowCaptionForegroundDisabled"];
+                    Application.Current.Resources["WindowCaptionForegroundDisabled"] as SolidColorBrush;
             else
                 TextBlockWindowTitle.Foreground =
-                    (SolidColorBrush)Application.Current.Resources["WindowCaptionForeground"];
+                    Application.Current.Resources["WindowCaptionForeground"] as SolidColorBrush;
         } // end method SettingsWindow_OnActivated
 
         #endregion Event Handlers

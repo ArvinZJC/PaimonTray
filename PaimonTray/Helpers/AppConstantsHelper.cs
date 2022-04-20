@@ -2,7 +2,7 @@
 {
     internal class AppConstantsHelper
     {
-        #region Fields
+        #region Constants
 
         /// <summary>
         /// The path to the app icon image (.png).
@@ -94,6 +94,6 @@
         /// </summary>
         public const int RevisionVersionStable = 200;
 
-        #endregion Fields
+        #endregion Constants
     } // end class AppConstantsHelper
 } // end namespace PaimonTray.Helpers

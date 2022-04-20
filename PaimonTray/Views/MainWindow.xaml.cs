@@ -42,7 +42,7 @@ namespace PaimonTray.Views
             CustomiseWindow();
 
             MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site";
-            MenuFlyoutItemMoreHelpShowLogs.CommandParameter = ((App)Application.Current).LogsDirectory;
+            MenuFlyoutItemMoreHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
             TaskbarIconApp.Visibility = Visibility.Visible;
 
             new ToastContentBuilder()

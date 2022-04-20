@@ -35,8 +35,8 @@ namespace PaimonTray.ViewModels
                     Log.Information("Exit the app requested.");
 
                     // Hide the windows first to avoid any uneven window closing process.
-                    ((App)Application.Current).MainWin?.AppWin?.Hide();
-                    ((App)Application.Current).SettingsWin?.AppWin?.Hide();
+                    (Application.Current as App)?.MainWin?.AppWin?.Hide();
+                    (Application.Current as App)?.SettingsWin?.AppWin?.Hide();
 
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
@@ -83,13 +83,13 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
-                    if (((App)Application.Current).SettingsWin == null)
+                    if ((Application.Current as App)?.SettingsWin == null)
                     {
                         ((App)Application.Current).SettingsWin = new SettingsWindow();
                         return;
                     } // end if
 
-                    ((App)Application.Current).SettingsWin.Activate();
+                    (Application.Current as App)?.SettingsWin.Activate();
                 };
                 return xamlUiCommand;
             } // end get

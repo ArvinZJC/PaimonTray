@@ -80,7 +80,7 @@ namespace PaimonTray
         // Handle the app instance activation event.
         private static void AppInstance_OnActivated(object sender, AppActivationArguments args)
         {
-            ((App)Application.Current).MainWin?.AppWin?.Show();
+            (Application.Current as App)?.MainWin?.AppWin?.Show();
         } // end method AppInstance_OnActivated
 
         #endregion Event Handlers
