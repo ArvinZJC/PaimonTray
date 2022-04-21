@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
-using PaimonTray.Views;
+using PaimonTray.Helpers;
 using Serilog;
 using System.IO;
 using Windows.ApplicationModel;
@@ -14,19 +14,14 @@ namespace PaimonTray
         #region Properties
 
         /// <summary>
+        /// The app version.
+        /// </summary>
+        public string AppVersion { get; private set; }
+
+        /// <summary>
         /// The logs directory.
         /// </summary>
         public string LogsDirectory { get; private set; }
-
-        /// <summary>
-        /// The main window.
-        /// </summary>
-        public MainWindow MainWin { get; private set; }
-
-        /// <summary>
-        /// The settings window.
-        /// </summary>
-        public SettingsWindow SettingsWin { get; set; }
 
         #endregion Properties
 
@@ -39,10 +34,9 @@ namespace PaimonTray
         {
             InitializeComponent();
             ConfigLogger();
-            Log.Information("{DisplayName} V{Major}.{Minor}.{Build}.{Revision} started.", Package.Current.DisplayName,
-                Package.Current.Id.Version.Major,
-                Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build,
-                Package.Current.Id.Version.Revision);
+            GenerateAppVersion();
+            Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
+            SettingsHelper.InitialiseSettings();
         } // end constructor App
 
         #endregion Constructors
@@ -54,8 +48,7 @@ namespace PaimonTray
         {
             LoggerConfiguration loggerConfig = new();
 
-            if (Package.Current.IsDevelopmentMode)
-                loggerConfig.MinimumLevel.Debug();
+            if (Package.Current.IsDevelopmentMode) loggerConfig.MinimumLevel.Debug();
 
             LogsDirectory = Path.Combine(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path, "Logs");
             Log.Logger = loggerConfig.WriteTo.Async(a =>
@@ -64,6 +57,21 @@ namespace PaimonTray
                         "log_" + (Package.Current.IsDevelopmentMode ? "dev_" : string.Empty) + ".log"),
                     rollingInterval: RollingInterval.Day)).CreateLogger();
         } // end method ConfigLogger
+
+        // Generate the app version from the package version.
+        private void GenerateAppVersion()
+        {
+            var suffix = Package.Current.Id.Version.Revision switch
+            {
+                < AppConstantsHelper.RevisionVersionBetaMin => $"-alpha.{Package.Current.Id.Version.Revision + 1}",
+                < AppConstantsHelper.RevisionVersionStable =>
+                    $"-beta.{Package.Current.Id.Version.Revision - AppConstantsHelper.RevisionVersionBetaMin + 1}",
+                _ => string.Empty
+            };
+
+            AppVersion =
+                $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}{suffix}";
+        } // end method GetAppVersion
 
         #endregion Methods
 
@@ -76,7 +84,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            MainWin = new MainWindow();
+            WindowsHelper.ShowMainWindow();
         } // end method OnLaunched
 
         #endregion Event Handlers

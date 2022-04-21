@@ -1,5 +1,8 @@
 ﻿namespace PaimonTray.Helpers
 {
+    /// <summary>
+    /// The app constants helper.
+    /// </summary>
     internal class AppConstantsHelper
     {
         #region Constants

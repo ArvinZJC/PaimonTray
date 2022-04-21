@@ -63,8 +63,8 @@ namespace PaimonTray.Views
         // Customise the window.
         private void CustomiseWindow()
         {
-            _windowId = WindowManagementHelper.GetWindowId(this);
-            AppWin = WindowManagementHelper.GetAppWindow(_windowId);
+            _windowId = WindowsHelper.GetWindowId(this);
+            AppWin = WindowsHelper.GetAppWindow(_windowId);
             Title = Package.Current.DisplayName;
 
             if (AppWin == null)

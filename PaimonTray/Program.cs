@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using PaimonTray.Helpers;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -52,7 +53,7 @@ namespace PaimonTray
 
             if (appInstance.IsCurrent)
             {
-                appInstance.Activated += AppInstance_OnActivated;
+                appInstance.Activated += (_, _) => WindowsHelper.ShowMainWindow().AppWin.Show();
                 return false;
             } // end if
 
@@ -74,15 +75,5 @@ namespace PaimonTray
         } // end method RedirectActivation
 
         #endregion Methods
-
-        #region Event Handlers
-
-        // Handle the app instance activation event.
-        private static void AppInstance_OnActivated(object sender, AppActivationArguments args)
-        {
-            (Application.Current as App)?.MainWin?.AppWin?.Show();
-        } // end method AppInstance_OnActivated
-
-        #endregion Event Handlers
     } // end class Program
 } // end namespace PaimonTray

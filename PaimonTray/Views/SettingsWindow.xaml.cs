@@ -18,15 +18,6 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class SettingsWindow
     {
-        #region Properties
-
-        /// <summary>
-        /// The settings window's <see cref="AppWindow"/>.
-        /// </summary>
-        public AppWindow AppWin { get; private set; }
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -45,33 +36,32 @@ namespace PaimonTray.Views
         // Customise the window.
         private async void CustomiseWindowAsync()
         {
-            var windowId = WindowManagementHelper.GetWindowId(this);
+            var windowId = WindowsHelper.GetWindowId(this);
+            var appWin = WindowsHelper.GetAppWindow(windowId);
 
-            AppWin = WindowManagementHelper.GetAppWindow(windowId);
             Title = $"Settings - {Package.Current.DisplayName}";
 
-            if (AppWin == null)
+            if (appWin == null)
             {
                 Log.Warning("The settings window's AppWindow is null.");
                 return;
             } // end if
 
-            AppWin.Destroying += AppWin_OnDestroying;
-            AppWin.SetIcon((await StorageFile.GetFileFromApplicationUriAsync(
+            appWin.SetIcon((await StorageFile.GetFileFromApplicationUriAsync(
                 new Uri(AppConstantsHelper.AppIconPath))).Path);
 
             // Customise the title bar.
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
-                AppWin.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-                AppWin.TitleBar.ButtonHoverBackgroundColor =
+                appWin.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+                appWin.TitleBar.ButtonHoverBackgroundColor =
                     (Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"] as SolidColorBrush)
                     ?.Color;
-                AppWin.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                AppWin.TitleBar.ExtendsContentIntoTitleBar = true;
-                GridColumnTitleBarLeftPadding.Width = new GridLength(AppWin.TitleBar.LeftInset);
-                GridColumnTitleBarRightPadding.Width = new GridLength(AppWin.TitleBar.RightInset);
-                GridTitleBar.Height = AppWin.TitleBar.Height;
+                appWin.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                appWin.TitleBar.ExtendsContentIntoTitleBar = true;
+                GridColumnTitleBarLeftPadding.Width = new GridLength(appWin.TitleBar.LeftInset);
+                GridColumnTitleBarRightPadding.Width = new GridLength(appWin.TitleBar.RightInset);
+                GridTitleBar.Height = appWin.TitleBar.Height;
             }
             else
             {
@@ -81,19 +71,13 @@ namespace PaimonTray.Views
 
             var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
 
-            AppWin.Move(new PointInt32((workArea.Width - AppWin.Size.Width) / 2,
-                (workArea.Height - AppWin.Size.Height) / 2));
+            appWin.Move(new PointInt32((workArea.Width - appWin.Size.Width) / 2,
+                (workArea.Height - appWin.Size.Height) / 2));
         } // end method CustomiseWindowAsync
 
         #endregion Methods
 
         #region Event Handlers
-
-        // Handle the AppWindow's destroying event.
-        private static void AppWin_OnDestroying(object sender, object e)
-        {
-            ((App)Application.Current).SettingsWin = null;
-        } // end method AppWin_OnDestroying
 
         // Handle the root navigation view's display mode changed event.
         private void NavigationViewRoot_OnDisplayModeChanged(NavigationView sender,

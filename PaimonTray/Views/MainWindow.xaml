@@ -21,7 +21,6 @@
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
-            LeftClickCommandParameter="{x:Bind AppWin}"
             IconSource="{x:Bind h:AppConstantsHelper.AppIconPath}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
@@ -114,7 +113,6 @@
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
                                 Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
-                                CommandParameter="{x:Bind AppWin}"
                                 Text="Hide" />
                             <MenuFlyoutItem
                                 Command="{x:Bind CommandsViewModel.ExitAppCommand}"

@@ -1,9 +1,7 @@
 ﻿using H.NotifyIcon;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using PaimonTray.Helpers;
-using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -33,10 +31,6 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
                     Log.Information("Exit the app requested.");
-
-                    // Hide the windows first to avoid any uneven window closing process.
-                    (Application.Current as App)?.MainWin?.AppWin?.Hide();
-                    (Application.Current as App)?.SettingsWin?.AppWin?.Hide();
 
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
@@ -81,16 +75,7 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new();
 
-                xamlUiCommand.ExecuteRequested += (_, _) =>
-                {
-                    if ((Application.Current as App)?.SettingsWin == null)
-                    {
-                        ((App)Application.Current).SettingsWin = new SettingsWindow();
-                        return;
-                    } // end if
-
-                    (Application.Current as App)?.SettingsWin.Activate();
-                };
+                xamlUiCommand.ExecuteRequested += (_, _) => WindowsHelper.ShowSettingsWindow();
                 return xamlUiCommand;
             } // end get
         } // end property ShowSettingsWindowCommand
@@ -106,14 +91,14 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new();
 
-                xamlUiCommand.ExecuteRequested += (_, e) =>
+                xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
-                    if (e.Parameter is not AppWindow appWindowMain) return;
+                    var mainWindow = WindowsHelper.ShowMainWindow();
 
-                    if (appWindowMain.IsVisible)
-                        appWindowMain.Hide();
+                    if (mainWindow.AppWin.IsVisible)
+                        mainWindow.AppWin.Hide();
                     else
-                        appWindowMain.Show();
+                        mainWindow.AppWin.Show();
                 };
                 return xamlUiCommand;
             } // end get
