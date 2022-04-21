@@ -112,14 +112,15 @@ namespace PaimonTray.Views
                     break;
 
                 case AppConstantsHelper.NavigationViewItemTagGeneralSettings:
+                case "":
                     pageType = typeof(GeneralSettingsPage);
                     break;
 
                 default:
-                    pageType = typeof(GeneralSettingsPage);
                     Log.Warning(
                         $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {(args.SelectedItem as NavigationViewItem)?.Content}, tag: {(args.SelectedItem as NavigationViewItem)?.Tag})");
-                    break;
+                    NavigationViewItemGeneral.IsSelected = true;
+                    return;
             } // end switch-case
 
             FrameRoot.Navigate(pageType, null, new EntranceNavigationTransitionInfo());

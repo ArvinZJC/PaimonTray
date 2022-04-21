@@ -1,7 +1,9 @@
-﻿using Microsoft.UI;
+﻿using System;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using PaimonTray.Views;
+using Serilog;
 using System.Collections.Generic;
 using System.Linq;
 using WinRT.Interop;
@@ -47,22 +49,10 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Open or activate the main window.
         /// </summary>
-        /// <param name="activateIfExists">A flag indicating if the main window should be activated if exists.</param>
         /// <returns>The <see cref="MainWindow"/> instance.</returns>
-        public static MainWindow ShowMainWindow(bool activateIfExists = false)
+        public static MainWindow ShowMainWindow()
         {
-            foreach (var existingWindow in ExistingWindowList.Where(existingWindow => existingWindow is MainWindow))
-            {
-                if (activateIfExists) existingWindow.Activate();
-
-                return existingWindow as MainWindow;
-            } // end foreach
-
-            var mainWindow = new MainWindow();
-
-            mainWindow.Closed += (_, _) => ExistingWindowList.Remove(mainWindow);
-            ExistingWindowList.Add(mainWindow);
-            return mainWindow;
+            return ShowWindow(typeof(MainWindow), false) as MainWindow;
         } // end method ShowMainWindow
 
         /// <summary>
@@ -70,14 +60,33 @@ namespace PaimonTray.Helpers
         /// </summary>
         public static void ShowSettingsWindow()
         {
-            foreach (var existingWindow in ExistingWindowList.Where(existingWindow => existingWindow is SettingsWindow))
-                existingWindow.Activate();
-
-            var settingsWindow = new SettingsWindow();
-
-            settingsWindow.Closed += (_, _) => ExistingWindowList.Remove(settingsWindow);
-            ExistingWindowList.Add(settingsWindow);
+            ShowWindow(typeof(SettingsWindow));
         } // end method ShowSettingsWindow
+
+        // Open or activate the specific window based on the provided window type. The flag is set to indicate if the window should be activated if exists.
+        private static Window ShowWindow(Type windowType, bool activateIfExists = true)
+        {
+            foreach (var existingWindow in ExistingWindowList.Where(existingWindow =>
+                         existingWindow.GetType() == windowType))
+            {
+                if (activateIfExists) existingWindow.Activate();
+
+                return existingWindow;
+            } // end foreach
+
+            var window = Activator.CreateInstance(windowType) as Window;
+
+            if (window == null)
+            {
+                Log.Warning($"Failed to open the specific window based on the provided window type ({windowType}).");
+                return null;
+            } // end if
+
+            window.Closed += (_, _) => ExistingWindowList.Remove(window);
+            ExistingWindowList.Add(window);
+
+            return window;
+        } // end method ShowWindow
 
         #endregion Methods
     } // end class WindowsHelper

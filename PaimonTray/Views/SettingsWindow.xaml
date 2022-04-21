@@ -64,6 +64,7 @@
             </NavigationView.FooterMenuItems>
             <NavigationView.MenuItems>
                 <NavigationViewItem
+                    x:Name="NavigationViewItemGeneral"
                     Content="General"
                     IsSelected="True"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagGeneralSettings}">
