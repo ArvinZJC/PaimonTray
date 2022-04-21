@@ -112,7 +112,7 @@ namespace PaimonTray.Views
                     break;
 
                 case AppConstantsHelper.NavigationViewItemTagGeneralSettings:
-                case "":
+                case null:
                     pageType = typeof(GeneralSettingsPage);
                     break;
 
