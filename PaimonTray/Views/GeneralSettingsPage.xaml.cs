@@ -18,8 +18,17 @@ namespace PaimonTray.Views
         public GeneralSettingsPage()
         {
             InitializeComponent();
+            ShowThemeSelection();
+        } // end constructor GeneralSettingsPage
 
-            switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] as string)
+        #endregion Constructors
+
+        #region Methods
+
+        // Show the theme selection.
+        private void ShowThemeSelection()
+        {
+            switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme])
             {
                 case SettingsHelper.TagThemeDark:
                     RadioButtonThemeDark.IsChecked = true;
@@ -33,30 +42,20 @@ namespace PaimonTray.Views
                     RadioButtonThemeSystem.IsChecked = true;
                     break;
             } // end switch-case
-        } // end constructor GeneralSettingsPage
+        } // end method ShowThemeSelection
 
-        #endregion Constructors
+        #endregion Methods
 
         #region Event Handlers
 
+        // Handle the theme radio buttons' checked event.
         private void RadioButtonsTheme_Checked(object sender, RoutedEventArgs e)
         {
-            switch ((sender as RadioButton)?.Tag as string)
+            if ((sender as RadioButton)?.Tag != null)
             {
-                case SettingsHelper.TagThemeDark:
-                    ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] = SettingsHelper.TagThemeDark;
-                    break;
-
-                case SettingsHelper.TagThemeLight:
-                    ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] =
-                        SettingsHelper.TagThemeLight;
-                    break;
-
-                case SettingsHelper.TagThemeSystem:
-                    ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] =
-                        SettingsHelper.TagThemeSystem;
-                    break;
-            } // end switch-case
+                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] = ((RadioButton)sender).Tag;
+                ThemesHelper.ApplyThemeSelection(((RadioButton)sender).Tag as string);
+            } // end if
 
             TextBlockThemeSelection.Text = (sender as RadioButton)?.Content as string;
         } // end method RadioButtonsTheme_Checked

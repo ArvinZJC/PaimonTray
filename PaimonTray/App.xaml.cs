@@ -3,6 +3,7 @@ using PaimonTray.Helpers;
 using Serilog;
 using System.IO;
 using Windows.ApplicationModel;
+using Windows.Storage;
 
 namespace PaimonTray
 {
@@ -50,7 +51,7 @@ namespace PaimonTray
 
             if (Package.Current.IsDevelopmentMode) loggerConfig.MinimumLevel.Debug();
 
-            LogsDirectory = Path.Combine(Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path, "Logs");
+            LogsDirectory = Path.Combine(ApplicationData.Current.LocalCacheFolder.Path, "Logs");
             Log.Logger = loggerConfig.WriteTo.Async(a =>
                 a.File(
                     Path.Combine(LogsDirectory,

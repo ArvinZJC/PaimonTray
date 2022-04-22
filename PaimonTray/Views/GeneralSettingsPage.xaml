@@ -62,7 +62,8 @@
         </Expander>
         <Expander
             Grid.Row="1"
-            HorizontalAlignment="Stretch">
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left">
             <Expander.Content>
                 <StackPanel>
                     <RadioButton Content="English" />

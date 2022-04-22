@@ -6,6 +6,7 @@ using PaimonTray.Views;
 using Serilog;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Storage;
 using WinRT.Interop;
 
 namespace PaimonTray.Helpers
@@ -82,8 +83,10 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            window.Closed += (_, _) => ExistingWindowList.Remove(window);
             ExistingWindowList.Add(window);
+            ThemesHelper.ApplyThemeSelection(
+                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] as string);
+            window.Closed += (_, _) => ExistingWindowList.Remove(window);
 
             return window;
         } // end method ShowWindow
