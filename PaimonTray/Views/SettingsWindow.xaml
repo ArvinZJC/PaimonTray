@@ -14,6 +14,7 @@
         </Grid.RowDefinitions>
         <Grid
             x:Name="GridTitleBar"
+            ActualThemeChanged="GridTitleBar_OnActualThemeChanged"
             Grid.Row="0"
             Height="28">
             <Grid.ColumnDefinitions>
@@ -25,6 +26,24 @@
                     x:Name="GridColumnTitleBarRightPadding"
                     Width="0" />
             </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <!-- ReSharper disable Xaml.RedundantResource -->
+                    <SolidColorBrush
+                        x:Key="TitleBarButtonHoverBackground"
+                        Color="{ThemeResource SystemBaseLowColor}" />
+                    <SolidColorBrush
+                        x:Key="TitleBarButtonPressedBackground"
+                        Color="{ThemeResource SystemBaseMediumLowColor}" />
+                    <SolidColorBrush
+                        x:Key="TitleBarCaptionForeground"
+                        Color="{ThemeResource SystemBaseHighColor}" />
+                    <SolidColorBrush
+                        x:Key="TitleBarCaptionInactiveForeground"
+                        Color="{ThemeResource SystemBaseMediumLowColor}" />
+                    <!-- ReSharper restore Xaml.RedundantResource -->
+                </ResourceDictionary>
+            </Grid.Resources>
             <StackPanel
                 Grid.Column="1"
                 Orientation="Horizontal">
@@ -35,29 +54,29 @@
                     Width="16" />
                 <TextBlock
                     x:Name="TextBlockWindowTitle"
-                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="Settings"
                     VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
         <NavigationView
-            x:Name="NavigationViewRoot"
-            DisplayModeChanged="NavigationViewRoot_OnDisplayModeChanged"
+            x:Name="NavigationViewBody"
+            DisplayModeChanged="NavigationViewBody_OnDisplayModeChanged"
             Grid.Row="1"
             Header="General"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
-            Loaded="NavigationViewRoot_OnLoaded"
-            SelectionChanged="NavigationViewRoot_OnSelectionChanged">
+            Loaded="NavigationViewBody_OnLoaded"
+            SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="About"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAboutApp}">
                     <NavigationViewItem.Icon>
                         <FontIcon
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontFamily="{ThemeResource SymbolThemeFontFamily}"
                             Glyph="{x:Bind h:AppConstantsHelper.GlyphInfo}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
@@ -70,7 +89,7 @@
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagGeneralSettings}">
                     <NavigationViewItem.Icon>
                         <FontIcon
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            FontFamily="{ThemeResource SymbolThemeFontFamily}"
                             Glyph="{x:Bind h:AppConstantsHelper.GlyphRepair}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>

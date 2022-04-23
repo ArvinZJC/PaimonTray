@@ -1,7 +1,7 @@
-﻿using Windows.Storage;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
+using Windows.Storage;
 
 namespace PaimonTray.Views
 {

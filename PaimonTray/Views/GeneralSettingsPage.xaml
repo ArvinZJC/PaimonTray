@@ -50,7 +50,7 @@
                             Text="Theme" />
                         <TextBlock
                             Grid.Row="1"
-                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
                             Text="Select which app theme to display." />
                     </Grid>
                     <TextBlock
@@ -85,7 +85,7 @@
                             Text="Language" />
                         <TextBlock
                             Grid.Row="1"
-                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
                             Text="Change the app language." />
                     </Grid>
                     <TextBlock
@@ -98,12 +98,12 @@
         </Expander>
         <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
         <RelativePanel
-            Background="{StaticResource ExpanderHeaderBackground}"
-            BorderBrush="{StaticResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{StaticResource ExpanderHeaderBorderThickness}"
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
             CornerRadius="4"
             Grid.Row="2"
-            MinHeight="{StaticResource ExpanderMinHeight}"
+            MinHeight="{ThemeResource ExpanderMinHeight}"
             Padding="16, 10, 60, 10">
             <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
             <Grid
@@ -119,7 +119,7 @@
                     Text="Run at Windows startup" />
                 <TextBlock
                     Grid.Row="1"
-                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
                     Text="Description?" />
             </Grid>
             <ToggleSwitch
