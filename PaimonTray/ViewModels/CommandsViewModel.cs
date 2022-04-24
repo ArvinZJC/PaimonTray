@@ -21,7 +21,7 @@ namespace PaimonTray.ViewModels
         /// <summary>
         /// The command to exit the app.
         /// </summary>
-        public ICommand ExitAppCommand
+        public ICommand ExitCommand
 #pragma warning restore CA1822 // Mark members as static
         {
             get
@@ -42,7 +42,7 @@ namespace PaimonTray.ViewModels
                 };
                 return xamlUiCommand;
             } // end get
-        } // end property ExitAppCommand
+        } // end property ExitCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>

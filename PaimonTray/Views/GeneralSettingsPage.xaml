@@ -17,23 +17,20 @@
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left">
             <Expander.Content>
-                <StackPanel>
-                    <RadioButton
-                        x:Name="RadioButtonThemeSystem"
-                        Checked="RadioButtonsTheme_Checked"
-                        Content="Use system setting"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeSystem}" />
+                <RadioButtons x:Name="RadioButtonsTheme">
                     <RadioButton
                         x:Name="RadioButtonThemeLight"
-                        Checked="RadioButtonsTheme_Checked"
-                        Content="Light"
+                        Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
                     <RadioButton
                         x:Name="RadioButtonThemeDark"
-                        Checked="RadioButtonsTheme_Checked"
-                        Content="Dark"
+                        Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
-                </StackPanel>
+                    <RadioButton
+                        x:Name="RadioButtonThemeSystem"
+                        Checked="RadioButtonTheme_Checked"
+                        Tag="{x:Bind h:SettingsHelper.TagThemeSystem}" />
+                </RadioButtons>
             </Expander.Content>
             <Expander.Header>
                 <RelativePanel Padding="0, 10">
@@ -46,12 +43,12 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock
-                            Grid.Row="0"
-                            Text="Theme" />
+                            x:Name="TextBlockTheme"
+                            Grid.Row="0" />
                         <TextBlock
+                            x:Name="TextBlockThemeExplanation"
                             Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            Text="Select which app theme to display." />
+                            Style="{ThemeResource CaptionTextBlockStyle}" />
                     </Grid>
                     <TextBlock
                         x:Name="TextBlockThemeSelection"
@@ -65,10 +62,10 @@
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left">
             <Expander.Content>
-                <StackPanel>
+                <RadioButtons x:Name="RadioButtonsLanguage">
                     <RadioButton Content="English" />
                     <RadioButton Content="简体中文" />
-                </StackPanel>
+                </RadioButtons>
             </Expander.Content>
             <Expander.Header>
                 <RelativePanel Padding="0, 10">
@@ -81,16 +78,15 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock
-                            Grid.Row="0"
-                            Text="Language" />
+                            x:Name="TextBlockLanguage"
+                            Grid.Row="0" />
                         <TextBlock
+                            x:Name="TextBlockLanguageExplanation"
                             Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            Text="Change the app language." />
+                            Style="{ThemeResource CaptionTextBlockStyle}" />
                     </Grid>
                     <TextBlock
                         x:Name="TextBlockLanguageSelection"
-                        Text="Temp"
                         RelativePanel.AlignRightWithPanel="True"
                         RelativePanel.AlignVerticalCenterWithPanel="True" />
                 </RelativePanel>
@@ -116,11 +112,11 @@
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
-                    Text="Run at Windows startup" />
+                    Text="(Run at Windows startup?)" />
                 <TextBlock
                     Grid.Row="1"
                     Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="Description?" />
+                    Text="(Description?)" />
             </Grid>
             <ToggleSwitch
                 FlowDirection="RightToLeft"

@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
 namespace PaimonTray.Views
@@ -19,6 +20,7 @@ namespace PaimonTray.Views
         {
             InitializeComponent();
             ShowThemeSelection();
+            UpdateUiText();
         } // end constructor GeneralSettingsPage
 
         #endregion Constructors
@@ -44,12 +46,28 @@ namespace PaimonTray.Views
             } // end switch-case
         } // end method ShowThemeSelection
 
+        // Update the UI text.
+        private void UpdateUiText()
+        {
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+
+            RadioButtonThemeDark.Content = resourceLoader.GetString("DarkTheme");
+            RadioButtonThemeLight.Content = resourceLoader.GetString("LightTheme");
+            RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemTheme");
+            TextBlockLanguage.Text = resourceLoader.GetString("Language");
+            TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
+            TextBlockLanguageSelection.Text = (RadioButtonsLanguage.SelectedItem as RadioButton)?.Content as string;
+            TextBlockTheme.Text = resourceLoader.GetString("Theme");
+            TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
+            TextBlockThemeSelection.Text = (RadioButtonsTheme.SelectedItem as RadioButton)?.Content as string;
+        } // end method UpdateUiText
+
         #endregion Methods
 
         #region Event Handlers
 
-        // Handle the theme radio buttons' checked event.
-        private void RadioButtonsTheme_Checked(object sender, RoutedEventArgs e)
+        // Handle the theme radio button's checked event.
+        private void RadioButtonTheme_Checked(object sender, RoutedEventArgs e)
         {
             if ((sender as RadioButton)?.Tag != null)
             {
@@ -57,6 +75,7 @@ namespace PaimonTray.Views
                 ThemesHelper.ApplyThemeSelection(((RadioButton)sender).Tag as string);
             } // end if
 
+            RadioButtonsTheme.SelectedItem = sender as RadioButton;
             TextBlockThemeSelection.Text = (sender as RadioButton)?.Content as string;
         } // end method RadioButtonsTheme_Checked
 

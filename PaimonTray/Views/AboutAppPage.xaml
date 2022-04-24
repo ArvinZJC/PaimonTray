@@ -37,18 +37,24 @@
         <TextBlock
             x:Name="TextBlockCopyright"
             Grid.Row="2" />
-        <RichTextBlock Grid.Row="3">
+        <RichTextBlock
+            Grid.Row="3"
+            HorizontalAlignment="Left">
             <Paragraph>
-                Inspired by
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">PaimonMenuBar</Hyperlink>
+                <Run x:Name="RunAcknowledgementInspiration" />
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">
+                    <Run Text="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationName}" />
+                </Hyperlink>
             </Paragraph>
             <Paragraph>
-                App icon credited to
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.AppIconSourceUrl}">Chawong</Hyperlink>
+                <Run x:Name="RunAcknowledgementAppIcon" />
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.AppIconSourceUrl}">
+                    <Run Text="{x:Bind h:AppConstantsHelper.AppIconAuthor}" />
+                </Hyperlink>
             </Paragraph>
         </RichTextBlock>
         <HyperlinkButton
-            Content="License"
+            x:Name="HyperlinkButtonLicense"
             Grid.Row="4"
             NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoLicenseUrl}" />
         <StackPanel Grid.Row="5">
@@ -56,21 +62,21 @@
                 x:Name="HyperlinkButtonHome"
                 IsEnabled="False" />
             <HyperlinkButton
-                Content="User manual"
+                x:Name="HyperlinkButtonUserManual"
                 IsEnabled="False" />
         </StackPanel>
         <StackPanel Grid.Row="6">
             <HyperlinkButton
-                Content="GitHub repository"
+                x:Name="HyperlinkButtonGitHubRepo"
                 NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}" />
             <HyperlinkButton
-                Content="Gitee repository (backup)"
+                x:Name="HyperlinkButtonGiteeRepo"
                 IsEnabled="False" />
             <HyperlinkButton
-                Content="View issues"
+                x:Name="HyperlinkButtonViewIssues"
                 NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}" />
             <HyperlinkButton
-                Content="Release notes"
+                x:Name="HyperlinkButtonReleaseNotes"
                 NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoReleasesUrl}" />
         </StackPanel>
     </Grid>

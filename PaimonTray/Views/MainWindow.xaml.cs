@@ -2,10 +2,12 @@
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources;
 using Windows.Graphics;
 
 namespace PaimonTray.Views
@@ -40,20 +42,10 @@ namespace PaimonTray.Views
         {
             InitializeComponent();
             CustomiseWindow();
+            UpdateUiText(true);
 
-            MenuFlyoutItemMoreHelpHome.Text = $"{Package.Current.DisplayName} site";
-            MenuFlyoutItemMoreHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
             TaskbarIconApp.Visibility = Visibility.Visible;
-
-            new ToastContentBuilder()
-                .AddText("Paimon's now in your \"system tray\"!")
-                .AddText(
-                    "If the icon doesn't appear in the taskbar corner, you can find it in the taskbar corner overflow menu and move it to the taskbar corner by system settings or by dragging and dropping.")
-                .Show(toast =>
-                {
-                    toast.Group = Package.Current.DisplayName;
-                    toast.Tag = AppConstantsHelper.NotificationTagTaskbarIconAppReady;
-                });
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -89,6 +81,39 @@ namespace PaimonTray.Views
             appWindowOverlappedPresenter.IsResizable = false;
             appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
         } // end method CustomiseWindow
+
+        // Update the UI text.
+        private void UpdateUiText(bool isFirstLoad = false)
+        {
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+
+            MenuFlyoutItemAppMenuExit.Text = resourceLoader.GetString("Exit");
+            MenuFlyoutItemAppMenuSettings.Text = resourceLoader.GetString("Settings");
+            MenuFlyoutItemMainMenuExit.Text = resourceLoader.GetString("Exit");
+            MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
+            MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
+            MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
+            MenuFlyoutItemMainMenuHelpShowLogs.Text = resourceLoader.GetString("ShowLogs");
+            MenuFlyoutItemMainMenuHide.Text = resourceLoader.GetString("Hide");
+            MenuFlyoutItemMainMenuAddAccount.Text = resourceLoader.GetString("AddAccount");
+            MenuFlyoutItemMainMenuReleaseNotes.Text = resourceLoader.GetString("ReleaseNotes");
+            MenuFlyoutItemMainMenuSettings.Text = resourceLoader.GetString("Settings");
+            MenuFlyoutItemMainMenuUserManual.Text = resourceLoader.GetString("UserManual");
+            MenuFlyoutItemMainMenuViewIssues.Text = resourceLoader.GetString("ViewIssues");
+            MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
+            NavigationViewItemBodyAddAccount.Content = resourceLoader.GetString("AddAccount");
+            ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
+
+            if (isFirstLoad)
+                new ToastContentBuilder()
+                    .AddText(resourceLoader.GetString("TaskbarIconAppReadyNotificationTitle"))
+                    .AddText(resourceLoader.GetString("TaskbarIconAppReadyNotificationContent"))
+                    .Show(toast =>
+                    {
+                        toast.Group = Package.Current.DisplayName;
+                        toast.Tag = AppConstantsHelper.NotificationTagTaskbarIconAppReady;
+                    });
+        } // end method UpdateUiText
 
         #endregion Methods
 

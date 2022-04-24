@@ -8,6 +8,7 @@ using PaimonTray.Helpers;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources;
 using Windows.Graphics;
 using Windows.Storage;
 
@@ -33,6 +34,7 @@ namespace PaimonTray.Views
         {
             InitializeComponent();
             CustomiseWindowAsync();
+            UpdateUiText();
         } // end constructor SettingsWindow
 
         #endregion Constructors
@@ -83,7 +85,6 @@ namespace PaimonTray.Views
             var windowId = WindowsHelper.GetWindowId(this);
 
             _appWindow = WindowsHelper.GetAppWindow(windowId);
-            Title = $"Settings - {Package.Current.DisplayName}";
 
             if (_appWindow == null)
             {
@@ -102,6 +103,18 @@ namespace PaimonTray.Views
                 (workArea.Height - _appWindow.Size.Height) / 2));
         } // end method CustomiseWindowAsync
 
+        // Update the UI text.
+        private void UpdateUiText()
+        {
+            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+
+            NavigationViewItemBodyAbout.Content = resourceLoader.GetString("About");
+            NavigationViewItemBodyAccounts.Content = resourceLoader.GetString("Accounts");
+            NavigationViewItemBodyGeneral.Content = resourceLoader.GetString("General");
+            TextBlockWindowTitle.Text = resourceLoader.GetString("Settings");
+            Title = $"{resourceLoader.GetString("Settings")} - {Package.Current.DisplayName}";
+        } // end method UpdateUiText
+
         #endregion Methods
 
         #region Event Handlers
@@ -117,7 +130,7 @@ namespace PaimonTray.Views
             NavigationViewDisplayModeChangedEventArgs args)
         {
             NavigationViewBody.IsPaneToggleButtonVisible = args.DisplayMode != NavigationViewDisplayMode.Expanded;
-            ScrollViewerRoot.Padding = args.DisplayMode == NavigationViewDisplayMode.Minimal
+            ScrollViewerBody.Padding = args.DisplayMode == NavigationViewDisplayMode.Minimal
                 ? new Thickness(18, 18, 18, 0)
                 : new Thickness(56, 18, 56, 0);
         } // end method NavigationViewBody_OnDisplayModeChanged
@@ -152,11 +165,11 @@ namespace PaimonTray.Views
                 default:
                     Log.Warning(
                         $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {(args.SelectedItem as NavigationViewItem)?.Content}, tag: {(args.SelectedItem as NavigationViewItem)?.Tag})");
-                    NavigationViewItemGeneral.IsSelected = true;
+                    NavigationViewItemBodyGeneral.IsSelected = true;
                     return;
             } // end switch-case
 
-            FrameRoot.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
+            FrameBody.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
             NavigationViewBody.Header = (args.SelectedItem as NavigationViewItem)?.Content;
         } // end method NavigationViewBody_OnSelectionChanged
 

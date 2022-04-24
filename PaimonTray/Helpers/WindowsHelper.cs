@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using PaimonTray.Views;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;

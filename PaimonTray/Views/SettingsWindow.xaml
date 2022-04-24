@@ -55,7 +55,6 @@
                 <TextBlock
                     x:Name="TextBlockWindowTitle"
                     Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="Settings"
                     VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
@@ -72,7 +71,7 @@
             SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
-                    Content="About"
+                    x:Name="NavigationViewItemBodyAbout"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAboutApp}">
                     <NavigationViewItem.Icon>
                         <FontIcon
@@ -83,8 +82,7 @@
             </NavigationView.FooterMenuItems>
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                    x:Name="NavigationViewItemGeneral"
-                    Content="General"
+                    x:Name="NavigationViewItemBodyGeneral"
                     IsSelected="True"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagGeneralSettings}">
                     <NavigationViewItem.Icon>
@@ -94,15 +92,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem
-                    Content="Accounts"
+                    x:Name="NavigationViewItemBodyAccounts"
                     Icon="People"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAccountsSettings}" />
             </NavigationView.MenuItems>
             <ScrollViewer
-                x:Name="ScrollViewerRoot"
+                x:Name="ScrollViewerBody"
                 HorizontalScrollBarVisibility="Auto">
                 <Frame
-                    x:Name="FrameRoot"
+                    x:Name="FrameBody"
                     IsNavigationStackEnabled="False" />
             </ScrollViewer>
         </NavigationView>

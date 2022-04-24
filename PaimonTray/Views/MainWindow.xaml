@@ -29,13 +29,13 @@
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
-                        Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}"
-                        Text="Settings" />
+                        x:Name="MenuFlyoutItemAppMenuSettings"
+                        Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
-                        Command="{x:Bind CommandsViewModel.ExitAppCommand}"
-                        CommandParameter="{x:Bind TaskbarIconApp}"
-                        Text="Exit" />
+                        x:Name="MenuFlyoutItemAppMenuExit"
+                        Command="{x:Bind CommandsViewModel.ExitCommand}"
+                        CommandParameter="{x:Bind TaskbarIconApp}" />
                 </MenuFlyout>
             </ni:TaskbarIcon.ContextFlyout>
         </ni:TaskbarIcon>
@@ -47,41 +47,41 @@
             PaneDisplayMode="LeftCompact">
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                    Content="Account 1"
+                    Content="(User-defined username)"
                     Icon="Contact"
                     IsSelected="True" />
                 <NavigationViewItem
-                    Content="New account"
+                    x:Name="NavigationViewItemBodyAddAccount"
                     Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <Button
+                    x:Name="ButtonMainMenu"
                     Background="Transparent"
                     BorderBrush="Transparent"
                     Margin="4, 0, 0, 0"
                     Padding="0, 7"
-                    ToolTipService.ToolTip="Settings and more"
                     Width="40">
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem
-                                Icon="AddFriend"
-                                Text="New account" />
+                                x:Name="MenuFlyoutItemMainMenuAddAccount"
+                                Icon="AddFriend" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
+                                x:Name="MenuFlyoutItemMainMenuSettings"
                                 Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}"
-                                Icon="Setting"
-                                Text="Settings" />
+                                Icon="Setting" />
                             <MenuFlyoutSubItem
-                                Icon="Help"
-                                Text="Help">
+                                x:Name="MenuFlyoutSubItemMainMenuHelp"
+                                Icon="Help">
                                 <MenuFlyoutItem
-                                    x:Name="MenuFlyoutItemMoreHelpHome"
+                                    x:Name="MenuFlyoutItemMainMenuHelpHome"
                                     Icon="Home"
                                     IsEnabled="False" />
                                 <MenuFlyoutItem
-                                    IsEnabled="False"
-                                    Text="User manual">
+                                    x:Name="MenuFlyoutItemMainMenuUserManual"
+                                    IsEnabled="False">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon
                                             FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -90,34 +90,33 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuGitHubRepo"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}"
-                                    Text="GitHub repository" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}" />
                                 <MenuFlyoutItem
-                                    IsEnabled="False"
-                                    Text="Gitee repository (backup)" />
+                                    x:Name="MenuFlyoutItemMainMenuGiteeRepo"
+                                    IsEnabled="False" />
                                 <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuViewIssues"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}"
-                                    Text="View issues" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}" />
                                 <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuReleaseNotes"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoReleasesUrl}"
-                                    Text="Release notes" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoReleasesUrl}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
-                                    x:Name="MenuFlyoutItemMoreHelpShowLogs"
-                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    Text="Show logs in Explorer" />
+                                    x:Name="MenuFlyoutItemMainMenuHelpShowLogs"
+                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
-                                Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
-                                Text="Hide" />
+                                x:Name="MenuFlyoutItemMainMenuHide"
+                                Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
                             <MenuFlyoutItem
-                                Command="{x:Bind CommandsViewModel.ExitAppCommand}"
-                                CommandParameter="{x:Bind TaskbarIconApp}"
-                                Text="Exit" />
+                                x:Name="MenuFlyoutItemMainMenuExit"
+                                Command="{x:Bind CommandsViewModel.ExitCommand}"
+                                CommandParameter="{x:Bind TaskbarIconApp}" />
                         </MenuFlyout>
                     </Button.Flyout>
                     <SymbolIcon Symbol="More" />
@@ -128,7 +127,7 @@
                     Height="300"
                     SelectionMode="None"
                     Width="300">
-                    <ListViewItem Content="Data" />
+                    <ListViewItem Content="(Pending implementation...)" />
                 </ListView>
             </Frame>
         </NavigationView>

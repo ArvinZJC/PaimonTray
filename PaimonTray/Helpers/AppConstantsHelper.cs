@@ -8,6 +8,11 @@
         #region Constants
 
         /// <summary>
+        /// The app icon's author.
+        /// </summary>
+        public const string AppIconAuthor = "Chawong";
+
+        /// <summary>
         /// The path to the app icon image (.png).
         /// </summary>
         public const string AppIconImagePath = "ms-appx:///Assets/AppIcon/AppIcon.png";
@@ -21,6 +26,11 @@
         /// The app icon source URL.
         /// </summary>
         public const string AppIconSourceUrl = "https://www.pixiv.net/en/artworks/92415888";
+
+        /// <summary>
+        /// The name of the GitHub repository inspiring the app.
+        /// </summary>
+        public const string GitHubRepoInspirationName = "PaimonMenuBar";
 
         /// <summary>
         /// The URL of the GitHub repository inspiring the app.
