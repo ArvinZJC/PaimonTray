@@ -129,6 +129,10 @@
   <data name="AppIconAcknowledgement" xml:space="preserve">
     <value>App icon credited to</value>
   </data>
+  <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
+    <value>Your changes will be applied the next time you start the app.</value>
+    <comment>The hint shown when the changes require app restart.</comment>
+  </data>
   <data name="DarkTheme" xml:space="preserve">
     <value>Dark</value>
   </data>
@@ -182,7 +186,7 @@
     <value>site</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
-  <data name="SystemTheme" xml:space="preserve">
+  <data name="SystemDefault" xml:space="preserve">
     <value>Use system setting</value>
   </data>
   <data name="TaskbarIconAppReadyNotificationContent" xml:space="preserve">

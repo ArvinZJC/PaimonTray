@@ -129,6 +129,10 @@
   <data name="AppIconAcknowledgement" xml:space="preserve">
     <value>应用图标来源于</value>
   </data>
+  <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
+    <value>您所做的更改将在下次启动应用时生效。</value>
+    <comment>The hint shown when the changes require app restart.</comment>
+  </data>
   <data name="DarkTheme" xml:space="preserve">
     <value>深色</value>
   </data>
@@ -182,7 +186,7 @@
     <value>网站</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
-  <data name="SystemTheme" xml:space="preserve">
+  <data name="SystemDefault" xml:space="preserve">
     <value>使用系统设置</value>
   </data>
   <data name="TaskbarIconAppReadyNotificationContent" xml:space="preserve">

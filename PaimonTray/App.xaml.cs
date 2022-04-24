@@ -3,6 +3,7 @@ using PaimonTray.Helpers;
 using Serilog;
 using System.IO;
 using Windows.ApplicationModel;
+using Windows.Globalization;
 using Windows.Storage;
 
 namespace PaimonTray
@@ -24,6 +25,11 @@ namespace PaimonTray
         /// </summary>
         public string LogsDirectory { get; private set; }
 
+        /// <summary>
+        /// The language selection applied at present since the changes will be applied after app restart.
+        /// </summary>
+        public string LanguageSelectionApplied { get; }
+
         #endregion Properties
 
         #region Constructors
@@ -33,11 +39,21 @@ namespace PaimonTray
         /// </summary>
         public App()
         {
-            InitializeComponent();
             ConfigLogger();
             GenerateAppVersion();
             Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
             SettingsHelper.InitialiseSettings();
+
+            ApplicationLanguages.PrimaryLanguageOverride =
+                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] as string ==
+                SettingsHelper.TagSystem
+                    ? string.Empty
+                    : ApplicationData.Current.LocalSettings.Values[
+                        SettingsHelper.KeyLanguage] as string; // Apply the language selection.
+            LanguageSelectionApplied =
+                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] as string;
+
+            InitializeComponent();
         } // end constructor App
 
         #endregion Constructors

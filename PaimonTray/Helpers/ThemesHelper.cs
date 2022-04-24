@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
-using Serilog;
+using Windows.Storage;
 
 namespace PaimonTray.Helpers
 {
@@ -13,33 +13,16 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Apply the theme selection.
         /// </summary>
-        /// <param name="themeSelection">The selected theme option tag.</param>
-        public static void ApplyThemeSelection(string themeSelection)
+        public static void ApplyThemeSelection()
         {
-            ElementTheme theme;
-
-            switch (themeSelection)
-            {
-                case SettingsHelper.TagThemeDark:
-                    theme = ElementTheme.Dark;
-                    break;
-
-                case SettingsHelper.TagThemeLight:
-                    theme = ElementTheme.Light;
-                    break;
-
-                case SettingsHelper.TagThemeSystem:
-                    theme = ElementTheme.Default;
-                    break;
-
-                default:
-                    theme = ElementTheme.Default;
-                    Log.Warning($"Invalid theme selection ({themeSelection}).");
-                    break;
-            } // end switch-case
-
             foreach (var window in WindowsHelper.ExistingWindowList)
-                ((FrameworkElement)window.Content).RequestedTheme = theme;
+                ((FrameworkElement)window.Content).RequestedTheme =
+                    ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] switch
+                    {
+                        SettingsHelper.TagThemeDark => ElementTheme.Dark,
+                        SettingsHelper.TagThemeLight => ElementTheme.Light,
+                        _ => ElementTheme.Default
+                    };
         } // end method ApplyThemeSelection
 
         #endregion Methods

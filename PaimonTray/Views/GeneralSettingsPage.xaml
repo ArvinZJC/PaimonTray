@@ -29,7 +29,7 @@
                     <RadioButton
                         x:Name="RadioButtonThemeSystem"
                         Checked="RadioButtonTheme_Checked"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeSystem}" />
+                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                 </RadioButtons>
             </Expander.Content>
             <Expander.Header>
@@ -62,10 +62,34 @@
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left">
             <Expander.Content>
-                <RadioButtons x:Name="RadioButtonsLanguage">
-                    <RadioButton Content="English" />
-                    <RadioButton Content="简体中文" />
-                </RadioButtons>
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <RadioButtons
+                        x:Name="RadioButtonsLanguage"
+                        Grid.Row="0">
+                        <RadioButton
+                            x:Name="RadioButtonLanguageEn"
+                            Checked="RadioButtonLanguage_OnChecked"
+                            Content="English"
+                            Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
+                        <RadioButton
+                            x:Name="RadioButtonLanguageZhCn"
+                            Checked="RadioButtonLanguage_OnChecked"
+                            Content="简体中文"
+                            Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
+                        <RadioButton
+                            x:Name="RadioButtonLanguageSystem"
+                            Checked="RadioButtonLanguage_OnChecked"
+                            Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                    </RadioButtons>
+                    <TextBlock
+                        x:Name="TextBlockLanguageAppliedAfterAppRestart"
+                        Grid.Row="1"
+                        Visibility="Collapsed" />
+                </Grid>
             </Expander.Content>
             <Expander.Header>
                 <RelativePanel Padding="0, 10">
