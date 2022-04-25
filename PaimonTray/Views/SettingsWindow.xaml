@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Activated="SettingsWindow_OnActivated">
+    <!-- The root grid. -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!-- The title bar grid. -->
         <Grid
             x:Name="GridTitleBar"
             ActualThemeChanged="GridTitleBar_OnActualThemeChanged"
@@ -58,6 +60,7 @@
                     VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
+        <!-- The body navigation view. -->
         <NavigationView
             x:Name="NavigationViewBody"
             DisplayModeChanged="NavigationViewBody_OnDisplayModeChanged"
@@ -96,9 +99,9 @@
                     Icon="People"
                     Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAccountsSettings}" />
             </NavigationView.MenuItems>
-            <ScrollViewer
-                x:Name="ScrollViewerBody"
-                HorizontalScrollBarVisibility="Auto">
+            <!-- The body scroll viewer. -->
+            <ScrollViewer x:Name="ScrollViewerBody">
+                <!-- The body frame. -->
                 <Frame
                     x:Name="FrameBody"
                     IsNavigationStackEnabled="False" />

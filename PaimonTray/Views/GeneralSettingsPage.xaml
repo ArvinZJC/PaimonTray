@@ -6,6 +6,7 @@
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- The root grid. -->
     <Grid
         Padding="0, 0, 0, 4"
         RowSpacing="4">
@@ -15,43 +16,53 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!-- The grid for configuring launch on Windows startup. -->
         <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
-        <RelativePanel
+        <Grid
             Background="{ThemeResource ExpanderHeaderBackground}"
             BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
             BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="16"
             CornerRadius="4"
             Grid.Row="0"
             MinHeight="{ThemeResource ExpanderMinHeight}"
             Padding="16, 10, 60, 10">
             <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <Grid
-                RelativePanel.AlignLeftWithPanel="True"
-                RelativePanel.AlignVerticalCenterWithPanel="True"
-                RowSpacing="2">
+                Grid.Column="0"
+                RowSpacing="2"
+                VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     x:Name="TextBlockLaunchOnWindowsStartup"
-                    Grid.Row="0" />
+                    Grid.Row="0"
+                    TextWrapping="WrapWholeWords" />
                 <TextBlock
                     x:Name="TextBlockLaunchOnWindowsStartupExplanation"
+                    Foreground="{ThemeResource SystemBaseMediumColor}"
                     Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}" />
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    TextWrapping="WrapWholeWords" />
             </Grid>
             <RichTextBlock
+                Grid.Column="1"
                 IsTextSelectionEnabled="False"
-                RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.AlignVerticalCenterWithPanel="True">
+                VerticalAlignment="Center">
                 <Paragraph>
                     <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
                         <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
                     </Hyperlink>
                 </Paragraph>
             </RichTextBlock>
-        </RelativePanel>
+        </Grid>
+        <!-- The language expander. -->
         <Expander
             Grid.Row="1"
             HorizontalAlignment="Stretch"
@@ -87,30 +98,40 @@
                 </Grid>
             </Expander.Content>
             <Expander.Header>
-                <RelativePanel Padding="0, 10">
+                <Grid
+                    ColumnSpacing="16"
+                    Padding="0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <Grid
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        RowSpacing="2">
+                        Grid.Column="0"
+                        RowSpacing="2"
+                        VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock
                             x:Name="TextBlockLanguage"
-                            Grid.Row="0" />
+                            Grid.Row="0"
+                            TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockLanguageExplanation"
+                            Foreground="{ThemeResource SystemBaseMediumColor}"
                             Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}" />
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextWrapping="WrapWholeWords" />
                     </Grid>
                     <TextBlock
                         x:Name="TextBlockLanguageSelection"
-                        RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True" />
-                </RelativePanel>
+                        Grid.Column="1"
+                        VerticalAlignment="Center" />
+                </Grid>
             </Expander.Header>
         </Expander>
+        <!-- The theme expander. -->
         <Expander
             Grid.Row="2"
             HorizontalAlignment="Stretch"
@@ -132,60 +153,78 @@
                 </RadioButtons>
             </Expander.Content>
             <Expander.Header>
-                <RelativePanel Padding="0, 10">
+                <Grid
+                    ColumnSpacing="16"
+                    Padding="0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <Grid
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True"
-                        RowSpacing="2">
+                        Grid.Column="0"
+                        RowSpacing="2"
+                        VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock
                             x:Name="TextBlockTheme"
-                            Grid.Row="0" />
+                            Grid.Row="0"
+                            TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockThemeExplanation"
+                            Foreground="{ThemeResource SystemBaseMediumColor}"
                             Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}" />
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextWrapping="WrapWholeWords" />
                     </Grid>
                     <TextBlock
                         x:Name="TextBlockThemeSelection"
-                        RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.AlignVerticalCenterWithPanel="True" />
-                </RelativePanel>
+                        Grid.Column="1"
+                        VerticalAlignment="Center" />
+                </Grid>
             </Expander.Header>
         </Expander>
+        <!-- The placeholder grid. -->
         <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
-        <RelativePanel
+        <Grid
             Background="{ThemeResource ExpanderHeaderBackground}"
             BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
             BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="16"
             CornerRadius="4"
             Grid.Row="3"
             MinHeight="{ThemeResource ExpanderMinHeight}"
             Padding="16, 10, 60, 10">
             <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <Grid
-                RelativePanel.AlignLeftWithPanel="True"
-                RelativePanel.AlignVerticalCenterWithPanel="True"
-                RowSpacing="2">
+                Grid.Column="0"
+                RowSpacing="2"
+                VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
-                    Text="Placeholder" />
+                    Text="Placeholder"
+                    TextWrapping="WrapWholeWords" />
                 <TextBlock
+                    Foreground="{ThemeResource SystemBaseMediumColor}"
                     Grid.Row="1"
                     Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="Placeholder" />
+                    Text="Placeholder"
+                    TextWrapping="WrapWholeWords" />
             </Grid>
             <ToggleSwitch
                 FlowDirection="RightToLeft"
-                RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.AlignVerticalCenterWithPanel="True" />
-        </RelativePanel>
+                Grid.Column="1"
+                VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </Page>
