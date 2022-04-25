@@ -51,7 +51,7 @@
         <uap5:Extension
           Category="windows.startupTask"
           EntryPoint="Windows.FullTrustApplication"
-          Executable="$targetnametoken$.exe">
+          Executable="PaimonTray.exe">
           <uap5:StartupTask
             DisplayName="PaimonTray"
             Enabled="false"
