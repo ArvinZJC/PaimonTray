@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
         <RelativePanel
@@ -33,17 +34,23 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
-                    Grid.Row="0"
-                    Text="(Run at Windows startup?)" />
+                    x:Name="TextBlockLaunchOnWindowsStartup"
+                    Grid.Row="0" />
                 <TextBlock
+                    x:Name="TextBlockLaunchOnWindowsStartupExplanation"
                     Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="(Description?)" />
+                    Style="{ThemeResource CaptionTextBlockStyle}" />
             </Grid>
-            <ToggleSwitch
-                FlowDirection="RightToLeft"
+            <RichTextBlock
+                IsTextSelectionEnabled="False"
                 RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                RelativePanel.AlignVerticalCenterWithPanel="True">
+                <Paragraph>
+                    <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
+                        <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
+                    </Hyperlink>
+                </Paragraph>
+            </RichTextBlock>
         </RelativePanel>
         <Expander
             Grid.Row="1"
@@ -149,5 +156,36 @@
                 </RelativePanel>
             </Expander.Header>
         </Expander>
+        <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+        <RelativePanel
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            CornerRadius="4"
+            Grid.Row="3"
+            MinHeight="{ThemeResource ExpanderMinHeight}"
+            Padding="16, 10, 60, 10">
+            <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
+            <Grid
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignVerticalCenterWithPanel="True"
+                RowSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Text="Placeholder" />
+                <TextBlock
+                    Grid.Row="1"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    Text="Placeholder" />
+            </Grid>
+            <ToggleSwitch
+                FlowDirection="RightToLeft"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignVerticalCenterWithPanel="True" />
+        </RelativePanel>
     </Grid>
 </Page>

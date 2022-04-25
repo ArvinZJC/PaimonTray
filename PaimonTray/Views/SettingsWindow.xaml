@@ -50,7 +50,7 @@
                 <Image
                     Height="16"
                     Margin="16,0"
-                    Source="{x:Bind h:AppConstantsHelper.AppIconPath}"
+                    Source="{x:Bind h:AppConstantsHelper.AppIconUri}"
                     Width="16" />
                 <TextBlock
                     x:Name="TextBlockWindowTitle"

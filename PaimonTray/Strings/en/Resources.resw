@@ -163,6 +163,15 @@
   <data name="LanguageExplanation" xml:space="preserve">
     <value>Change the app language.</value>
   </data>
+  <data name="LaunchOnWindowsStartup" xml:space="preserve">
+    <value>Launch on Windows startup</value>
+  </data>
+  <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
+    <value>Modify the startup settings to configure whether to start the app when you log in to Windows.</value>
+  </data>
+  <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
+    <value>Change startup settings</value>
+  </data>
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>

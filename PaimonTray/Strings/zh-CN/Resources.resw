@@ -163,6 +163,15 @@
   <data name="LanguageExplanation" xml:space="preserve">
     <value>改变应用语言。</value>
   </data>
+  <data name="LaunchOnWindowsStartup" xml:space="preserve">
+    <value>在 Windows 启动时启动</value>
+  </data>
+  <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
+    <value>更改启动设置来配置是否让应用在登录到 Windows 时启动。</value>
+  </data>
+  <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
+    <value>更改启动设置</value>
+  </data>
   <data name="License" xml:space="preserve">
     <value>证书</value>
   </data>

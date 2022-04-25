@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
@@ -75,10 +77,14 @@ namespace PaimonTray.Views
             RadioButtonThemeDark.Content = resourceLoader.GetString("DarkTheme");
             RadioButtonThemeLight.Content = resourceLoader.GetString("LightTheme");
             RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
+            RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
             TextBlockLanguageAppliedAfterAppRestart.Text = resourceLoader.GetString("ChangesAppliedAfterAppRestart");
             TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
             TextBlockLanguageSelection.Text = (RadioButtonsLanguage.SelectedItem as RadioButton)?.Content as string;
+            TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
+            TextBlockLaunchOnWindowsStartupExplanation.Text =
+                resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
             TextBlockTheme.Text = resourceLoader.GetString("Theme");
             TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
             TextBlockThemeSelection.Text = (RadioButtonsTheme.SelectedItem as RadioButton)?.Content as string;
@@ -87,6 +93,14 @@ namespace PaimonTray.Views
         #endregion Methods
 
         #region Event Handlers
+
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the click event of the link of the setting for configuring launch on Windows startup.
+        private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.SystemSettingsStartupAppsUri);
+        } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
 
         // Handle the language radio button's checked event.
         private void RadioButtonLanguage_OnChecked(object sender, RoutedEventArgs e)

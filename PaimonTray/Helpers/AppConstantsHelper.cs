@@ -13,14 +13,14 @@
         public const string AppIconAuthor = "Chawong";
 
         /// <summary>
-        /// The path to the app icon image (.png).
+        /// The app icon image (.png) URI.
         /// </summary>
-        public const string AppIconImagePath = "ms-appx:///Assets/AppIcon/AppIcon.png";
+        public const string AppIconImageUri = "ms-appx:///Assets/AppIcon/AppIcon.png";
 
         /// <summary>
-        /// The path to the app icon (.ico).
+        /// The app icon (.ico) URI.
         /// </summary>
-        public const string AppIconPath = "ms-appx:///Assets/AppIcon/AppIcon.ico";
+        public const string AppIconUri = "ms-appx:///Assets/AppIcon/AppIcon.ico";
 
         /// <summary>
         /// The app icon source URL.
@@ -106,6 +106,11 @@
         /// The stable revision version.
         /// </summary>
         public const int RevisionVersionStable = 200;
+
+        /// <summary>
+        /// The URI of the system settings page configuring the startup apps.
+        /// </summary>
+        public const string SystemSettingsStartupAppsUri = "ms-settings:startupapps";
 
         #endregion Constants
     } // end class AppConstantsHelper

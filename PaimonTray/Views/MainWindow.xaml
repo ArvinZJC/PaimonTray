@@ -21,7 +21,7 @@
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
-            IconSource="{x:Bind h:AppConstantsHelper.AppIconPath}"
+            IconSource="{x:Bind h:AppConstantsHelper.AppIconUri}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
             ToolTipText="{x:Bind am:Package.Current.DisplayName}"
