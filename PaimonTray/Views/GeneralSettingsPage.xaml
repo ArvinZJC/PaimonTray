@@ -6,7 +6,9 @@
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid RowSpacing="4">
+    <Grid
+        Padding="0, 0, 0, 4"
+        RowSpacing="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -19,6 +21,10 @@
             <Expander.Content>
                 <RadioButtons x:Name="RadioButtonsTheme">
                     <RadioButton
+                        x:Name="RadioButtonThemeSystem"
+                        Checked="RadioButtonTheme_Checked"
+                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                    <RadioButton
                         x:Name="RadioButtonThemeLight"
                         Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
@@ -26,10 +32,6 @@
                         x:Name="RadioButtonThemeDark"
                         Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
-                    <RadioButton
-                        x:Name="RadioButtonThemeSystem"
-                        Checked="RadioButtonTheme_Checked"
-                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                 </RadioButtons>
             </Expander.Content>
             <Expander.Header>
@@ -71,6 +73,10 @@
                         x:Name="RadioButtonsLanguage"
                         Grid.Row="0">
                         <RadioButton
+                            x:Name="RadioButtonLanguageSystem"
+                            Checked="RadioButtonLanguage_OnChecked"
+                            Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                        <RadioButton
                             x:Name="RadioButtonLanguageEn"
                             Checked="RadioButtonLanguage_OnChecked"
                             Content="English"
@@ -80,10 +86,6 @@
                             Checked="RadioButtonLanguage_OnChecked"
                             Content="简体中文"
                             Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
-                        <RadioButton
-                            x:Name="RadioButtonLanguageSystem"
-                            Checked="RadioButtonLanguage_OnChecked"
-                            Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                     </RadioButtons>
                     <TextBlock
                         x:Name="TextBlockLanguageAppliedAfterAppRestart"
