@@ -23,7 +23,7 @@
             <Image
                 Height="96"
                 Margin="0, 0, 18, 0"
-                Source="{x:Bind h:AppConstantsHelper.AppIconImagePath}"
+                Source="{x:Bind h:AppConstantsHelper.AppIconImageUri}"
                 Width="96" />
             <TextBlock
                 FontWeight="SemiBold"
@@ -39,7 +39,8 @@
             Grid.Row="2" />
         <RichTextBlock
             Grid.Row="3"
-            HorizontalAlignment="Left">
+            HorizontalAlignment="Left"
+            IsTextSelectionEnabled="False">
             <Paragraph>
                 <Run x:Name="RunAcknowledgementInspiration" />
                 <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">
