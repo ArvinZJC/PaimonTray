@@ -187,7 +187,7 @@
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
   <data name="SystemDefault" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Use system default</value>
   </data>
   <data name="TaskbarIconAppReadyNotificationContent" xml:space="preserve">
     <value>If the icon doesn't appear in the taskbar corner, you can find it in the taskbar corner overflow menu and move it to the taskbar corner by system settings or by dragging and dropping.</value>

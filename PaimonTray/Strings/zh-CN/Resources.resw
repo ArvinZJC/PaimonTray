@@ -187,7 +187,7 @@
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
   <data name="SystemDefault" xml:space="preserve">
-    <value>使用系统设置</value>
+    <value>使用系统默认值</value>
   </data>
   <data name="TaskbarIconAppReadyNotificationContent" xml:space="preserve">
     <value>若应用图标未出现在任务栏角中，则您可在任务栏角溢出菜单中找到它，并将其通过系统设置或拖拽移动到任务栏角中。</value>
