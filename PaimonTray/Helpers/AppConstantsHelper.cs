@@ -93,9 +93,9 @@
         public const string NavigationViewItemTagGeneralSettings = "GeneralSettings";
 
         /// <summary>
-        /// The app's task bar icon ready notification tag.
+        /// The greeting notification tag.
         /// </summary>
-        public const string NotificationTagTaskbarIconAppReady = "TaskbarIconApp_Ready";
+        public const string NotificationTagGreeting = "Greeting";
 
         /// <summary>
         /// The minimum beta revision version.
@@ -106,6 +106,11 @@
         /// The stable revision version.
         /// </summary>
         public const int RevisionVersionStable = 200;
+
+        /// <summary>
+        /// The URI of the system settings page configuring notifications.
+        /// </summary>
+        public const string SystemSettingsNotificationsUri = "ms-settings:notifications";
 
         /// <summary>
         /// The URI of the system settings page configuring the startup apps.

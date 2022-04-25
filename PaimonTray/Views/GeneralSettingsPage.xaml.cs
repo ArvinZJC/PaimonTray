@@ -21,6 +21,7 @@ namespace PaimonTray.Views
         public GeneralSettingsPage()
         {
             InitializeComponent();
+            ShowGreetingNotificationSelection();
             ShowLanguageSelection();
             ShowThemeSelection();
             UpdateUiText();
@@ -29,6 +30,18 @@ namespace PaimonTray.Views
         #endregion Constructors
 
         #region Methods
+
+        // Show the greeting notification selection.
+        private void ShowGreetingNotificationSelection()
+        {
+            if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
+            {
+                ToggleSwitchGreetingNotification.IsOn = true;
+                return;
+            } // end if
+
+            ToggleSwitchGreetingNotification.IsOn = false;
+        } // end method ShowGreetingNotificationSelection
 
         // Show the language selection.
         private void ShowLanguageSelection()
@@ -78,6 +91,8 @@ namespace PaimonTray.Views
             RadioButtonThemeLight.Content = resourceLoader.GetString("LightTheme");
             RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
             RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
+            RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
+            TextBlockGreetingNotification.Text = resourceLoader.GetString("GreetingNotification");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
             TextBlockLanguageAppliedAfterAppRestart.Text = resourceLoader.GetString("ChangesAppliedAfterAppRestart");
             TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
@@ -85,6 +100,8 @@ namespace PaimonTray.Views
             TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
             TextBlockLaunchOnWindowsStartupExplanation.Text =
                 resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
+            TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
+            TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
             TextBlockTheme.Text = resourceLoader.GetString("Theme");
             TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
             TextBlockThemeSelection.Text = (RadioButtonsTheme.SelectedItem as RadioButton)?.Content as string;
@@ -101,6 +118,14 @@ namespace PaimonTray.Views
         {
             new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.SystemSettingsStartupAppsUri);
         } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
+
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the click event of the link of the notifications setting.
+        private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.SystemSettingsNotificationsUri);
+        } // end method HyperlinkNotificationsLink_OnClick
 
         // Handle the language radio button's checked event.
         private void RadioButtonLanguage_OnChecked(object sender, RoutedEventArgs e)
@@ -129,6 +154,13 @@ namespace PaimonTray.Views
             RadioButtonsTheme.SelectedItem = sender;
             TextBlockThemeSelection.Text = (sender as RadioButton)?.Content as string;
         } // end method RadioButtonsTheme_Checked
+
+        // Handle the greeting notification toggle switch's toggled event.
+        private void ToggleSwitchGreetingNotification_OnToggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification] =
+                ToggleSwitchGreetingNotification.IsOn;
+        } // end method ToggleSwitchGreetingNotification_OnToggled
 
         #endregion Event Handlers
     } // end class GeneralSettingsPage

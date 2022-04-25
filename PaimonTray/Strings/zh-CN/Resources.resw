@@ -148,6 +148,15 @@
   <data name="GitHubRepo" xml:space="preserve">
     <value>GitHub 仓库</value>
   </data>
+  <data name="GreetingNotification" xml:space="preserve">
+    <value>在应用启动时显示一个问候通知</value>
+  </data>
+  <data name="GreetingNotificationContent" xml:space="preserve">
+    <value>若应用图标未出现在任务栏角中，则您可在任务栏角溢出菜单中找到它，并将其通过系统设置或拖拽移动到任务栏角中。</value>
+  </data>
+  <data name="GreetingNotificationTitle" xml:space="preserve">
+    <value>派蒙进到您的“系统托盘”里啦！</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>帮助</value>
   </data>
@@ -170,7 +179,7 @@
     <value>更改启动设置来配置是否让应用在登录到 Windows 时启动。</value>
   </data>
   <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
-    <value>更改启动设置</value>
+    <value>更改您的启动设置</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>证书</value>
@@ -181,6 +190,15 @@
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>设置及其他</value>
     <comment>The tooltip of the main window's body navigation view's pane footer button.</comment>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="NotificationsExplanation" xml:space="preserve">
+    <value>更改通知设置。</value>
+  </data>
+  <data name="NotificationsLinkText" xml:space="preserve">
+    <value>更改您的通知设置</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
@@ -197,12 +215,6 @@
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>
-  </data>
-  <data name="TaskbarIconAppReadyNotificationContent" xml:space="preserve">
-    <value>若应用图标未出现在任务栏角中，则您可在任务栏角溢出菜单中找到它，并将其通过系统设置或拖拽移动到任务栏角中。</value>
-  </data>
-  <data name="TaskbarIconAppReadyNotificationTitle" xml:space="preserve">
-    <value>派蒙进到您的“系统托盘”里啦！</value>
   </data>
   <data name="Theme" xml:space="preserve">
     <value>主题</value>

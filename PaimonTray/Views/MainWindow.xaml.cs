@@ -9,6 +9,7 @@ using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Graphics;
+using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -104,14 +105,15 @@ namespace PaimonTray.Views
             NavigationViewItemBodyAddAccount.Content = resourceLoader.GetString("AddAccount");
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
 
-            if (isFirstLoad)
+            if (isFirstLoad &&
+                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
                 new ToastContentBuilder()
-                    .AddText(resourceLoader.GetString("TaskbarIconAppReadyNotificationTitle"))
-                    .AddText(resourceLoader.GetString("TaskbarIconAppReadyNotificationContent"))
+                    .AddText(resourceLoader.GetString("GreetingNotificationTitle"))
+                    .AddText(resourceLoader.GetString("GreetingNotificationContent"))
                     .Show(toast =>
                     {
                         toast.Group = Package.Current.DisplayName;
-                        toast.Tag = AppConstantsHelper.NotificationTagTaskbarIconAppReady;
+                        toast.Tag = AppConstantsHelper.NotificationTagGreeting;
                     });
         } // end method UpdateUiText
 

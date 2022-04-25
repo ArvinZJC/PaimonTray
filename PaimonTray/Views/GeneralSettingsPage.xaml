@@ -186,45 +186,69 @@
                 </Grid>
             </Expander.Header>
         </Expander>
-        <!-- The placeholder grid. -->
-        <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
-        <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="16"
-            CornerRadius="4"
+        <!-- The notifications expander. -->
+        <Expander
             Grid.Row="3"
-            MinHeight="{ThemeResource ExpanderMinHeight}"
-            Padding="16, 10, 60, 10">
-            <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid
-                Grid.Column="0"
-                RowSpacing="2"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Text="Placeholder"
-                    TextWrapping="WrapWholeWords" />
-                <TextBlock
-                    Foreground="{ThemeResource SystemBaseMediumColor}"
-                    Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}"
-                    Text="Placeholder"
-                    TextWrapping="WrapWholeWords" />
-            </Grid>
-            <ToggleSwitch
-                FlowDirection="RightToLeft"
-                Grid.Column="1"
-                VerticalAlignment="Center" />
-        </Grid>
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch">
+            <Expander.Content>
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockGreetingNotification"
+                        Grid.Column="0"
+                        TextWrapping="WrapWholeWords"
+                        VerticalAlignment="Center" />
+                    <ToggleSwitch
+                        x:Name="ToggleSwitchGreetingNotification"
+                        FlowDirection="RightToLeft"
+                        Grid.Column="1"
+                        Toggled="ToggleSwitchGreetingNotification_OnToggled"
+                        VerticalAlignment="Center" />
+                </Grid>
+            </Expander.Content>
+            <Expander.Header>
+                <Grid
+                    ColumnSpacing="16"
+                    Padding="0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid
+                        Grid.Column="0"
+                        RowSpacing="2"
+                        VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="TextBlockNotifications"
+                            Grid.Row="0"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Name="TextBlockNotificationsExplanation"
+                            Foreground="{ThemeResource SystemBaseMediumColor}"
+                            Grid.Row="1"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextWrapping="WrapWholeWords" />
+                    </Grid>
+                    <RichTextBlock
+                        Grid.Column="1"
+                        IsTextSelectionEnabled="False"
+                        VerticalAlignment="Center">
+                        <Paragraph>
+                            <Hyperlink Click="HyperlinkNotificationsLink_OnClick">
+                                <Run x:Name="RunNotificationsLinkText" />
+                            </Hyperlink>
+                        </Paragraph>
+                    </RichTextBlock>
+                </Grid>
+            </Expander.Header>
+        </Expander>
     </Grid>
 </Page>

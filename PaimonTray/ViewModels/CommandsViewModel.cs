@@ -35,7 +35,7 @@ namespace PaimonTray.ViewModels
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
-                    ToastNotificationManager.History.Remove(AppConstantsHelper.NotificationTagTaskbarIconAppReady,
+                    ToastNotificationManager.History.Remove(AppConstantsHelper.NotificationTagGreeting,
                         Package.Current.DisplayName);
                     Log.CloseAndFlush();
                     Application.Current.Exit();
