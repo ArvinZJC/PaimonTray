@@ -9,6 +9,7 @@
     xmlns:ni="using:H.NotifyIcon"
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- The root stack panel. -->
     <StackPanel
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
         HorizontalAlignment="Center"
@@ -18,6 +19,7 @@
         <StackPanel.DataContext>
             <vm:CommandsViewModel x:Name="CommandsViewModel" />
         </StackPanel.DataContext>
+        <!-- The app's task bar icon. -->
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
@@ -39,6 +41,7 @@
                 </MenuFlyout>
             </ni:TaskbarIcon.ContextFlyout>
         </ni:TaskbarIcon>
+        <!-- The body navigation view. -->
         <NavigationView
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
@@ -55,6 +58,7 @@
                     Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
+                <!-- The main menu button. -->
                 <Button
                     x:Name="ButtonMainMenu"
                     Background="Transparent"
@@ -122,6 +126,7 @@
                     <SymbolIcon Symbol="More" />
                 </Button>
             </NavigationView.PaneFooter>
+            <!-- The body frame. -->
             <Frame>
                 <ListView
                     Height="300"
