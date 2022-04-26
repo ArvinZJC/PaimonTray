@@ -50,9 +50,9 @@
             PaneDisplayMode="LeftCompact">
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                    Content="(User-defined username)"
                     Icon="Contact"
-                    IsSelected="True" />
+                    IsSelected="True"
+                    ToolTipService.ToolTip="(User-defined username)" />
                 <NavigationViewItem
                     x:Name="NavigationViewItemBodyAddAccount"
                     Icon="Add" />

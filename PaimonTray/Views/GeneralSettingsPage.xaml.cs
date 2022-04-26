@@ -31,7 +31,9 @@ namespace PaimonTray.Views
 
         #region Methods
 
-        // Show the greeting notification selection.
+        /// <summary>
+        /// Show the greeting notification selection.
+        /// </summary>
         private void ShowGreetingNotificationSelection()
         {
             if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
@@ -43,7 +45,9 @@ namespace PaimonTray.Views
             ToggleSwitchGreetingNotification.IsOn = false;
         } // end method ShowGreetingNotificationSelection
 
-        // Show the language selection.
+        /// <summary>
+        /// Show the language selection.
+        /// </summary>
         private void ShowLanguageSelection()
         {
             switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage])
@@ -62,7 +66,9 @@ namespace PaimonTray.Views
             } // end switch-case
         } // end method ShowLanguageSelection
 
-        // Show the theme selection.
+        /// <summary>
+        /// Show the theme selection.
+        /// </summary>
         private void ShowThemeSelection()
         {
             switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme])
@@ -81,7 +87,9 @@ namespace PaimonTray.Views
             } // end switch-case
         } // end method ShowThemeSelection
 
-        // Update the UI text.
+        /// <summary>
+        /// Update the UI text.
+        /// </summary>
         private void UpdateUiText()
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();

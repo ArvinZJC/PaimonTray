@@ -63,7 +63,12 @@ namespace PaimonTray.Helpers
             ShowWindow(typeof(SettingsWindow));
         } // end method ShowSettingsWindow
 
-        // Open or activate the specific window based on the provided window type. The flag is set to indicate if the window should be activated if exists.
+        /// <summary>
+        /// Open or activate the specific window.
+        /// </summary>
+        /// <param name="windowType">The window type.</param>
+        /// <param name="activateIfExists">A flag indicating if the window should be activated if exists.</param>
+        /// <returns></returns>
         private static Window ShowWindow(Type windowType, bool activateIfExists = true)
         {
             foreach (var existingWindow in ExistingWindowList.Where(existingWindow =>

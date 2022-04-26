@@ -62,28 +62,31 @@ namespace PaimonTray.Helpers
         {
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyGreetingNotification) ||
                 ApplicationData.Current.LocalSettings.Values[KeyGreetingNotification] is not bool)
-            {
-                ApplicationData.Current.LocalSettings.Values[KeyGreetingNotification] = true;
-                Log.Information("Greeting notification setting initialised to default.");
-            } // end if
+                InitialiseSetting(KeyGreetingNotification, "Greeting notification setting", true);
 
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyLanguage) ||
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(
                     ApplicationData.Current.LocalSettings.Values[KeyLanguage]))
-            {
-                ApplicationData.Current.LocalSettings.Values[KeyLanguage] = TagSystem;
-                Log.Information("Language setting initialised to default.");
-            } // end if
+                InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
             // ReSharper disable once InvertIf
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyTheme) ||
                 !new[] { TagSystem, TagThemeDark, TagThemeLight }.Contains(
                     ApplicationData.Current.LocalSettings.Values[KeyTheme]))
-            {
-                ApplicationData.Current.LocalSettings.Values[KeyTheme] = TagSystem;
-                Log.Information("Theme setting initialised to default.");
-            } // end if
+                InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
         } // end method InitialiseSettings
+
+        /// <summary>
+        /// Initialise a setting.
+        /// </summary>
+        /// <param name="key">The setting key.</param>
+        /// <param name="name">The setting name with the 1st letter capitalised.</param>
+        /// <param name="value">The setting value.</param>
+        private static void InitialiseSetting(string key, string name, object value)
+        {
+            ApplicationData.Current.LocalSettings.Values[key] = value;
+            Log.Information($"{name} initialised to default.");
+        } // end method InitialiseSetting
 
         #endregion Methods
     } // end class SettingsHelper

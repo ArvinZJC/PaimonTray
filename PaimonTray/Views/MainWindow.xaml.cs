@@ -20,7 +20,11 @@ namespace PaimonTray.Views
     {
         #region Fields
 
-        private bool _isFirstLoad = true; // A flag indicating if it is the 1st time the window is loaded.
+        /// <summary>
+        /// A flag indicating if it is the 1st time the window is loaded.
+        /// </summary>
+        private bool _isFirstLoad = true;
+
         private WindowId _windowId;
 
         #endregion Fields
@@ -53,7 +57,9 @@ namespace PaimonTray.Views
 
         #region Methods
 
-        // Customise the window.
+        /// <summary>
+        /// Customise the window.
+        /// </summary>
         private void CustomiseWindow()
         {
             _windowId = WindowsHelper.GetWindowId(this);
@@ -83,7 +89,10 @@ namespace PaimonTray.Views
             appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
         } // end method CustomiseWindow
 
-        // Update the UI text.
+        /// <summary>
+        /// Update the UI text.
+        /// </summary>
+        /// <param name="isFirstLoad">A flag indicating if it is the 1st time the window is loaded.</param>
         private void UpdateUiText(bool isFirstLoad = false)
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
@@ -102,8 +111,8 @@ namespace PaimonTray.Views
             MenuFlyoutItemMainMenuUserManual.Text = resourceLoader.GetString("UserManual");
             MenuFlyoutItemMainMenuViewIssues.Text = resourceLoader.GetString("ViewIssues");
             MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
-            NavigationViewItemBodyAddAccount.Content = resourceLoader.GetString("AddAccount");
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
+            ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
 
             if (isFirstLoad &&
                 (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])

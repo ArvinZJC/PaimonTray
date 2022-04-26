@@ -41,7 +41,9 @@ namespace PaimonTray.Views
 
         #region Methods
 
-        // Customise the title bar.
+        /// <summary>
+        /// Customise the title bar.
+        /// </summary>
         private void CustomiseTitleBar()
         {
             if (AppWindowTitleBar.IsCustomizationSupported())
@@ -79,7 +81,9 @@ namespace PaimonTray.Views
             } // end if...else
         } // end method CustomiseTitleBar
 
-        // Customise the window.
+        /// <summary>
+        /// Customise the window.
+        /// </summary>
         private async void CustomiseWindowAsync()
         {
             var windowId = WindowsHelper.GetWindowId(this);
@@ -102,7 +106,9 @@ namespace PaimonTray.Views
                 (workArea.Height - _appWindow.Size.Height) / 2));
         } // end method CustomiseWindowAsync
 
-        // Update the UI text.
+        /// <summary>
+        /// Update the UI text.
+        /// </summary>
         private void UpdateUiText()
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();

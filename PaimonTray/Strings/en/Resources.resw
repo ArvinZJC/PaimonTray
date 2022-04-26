@@ -207,7 +207,7 @@
     <value>Settings</value>
   </data>
   <data name="ShowLogs" xml:space="preserve">
-    <value>Show logs in Explorer</value>
+    <value>Show logs in File Explorer</value>
   </data>
   <data name="Site" xml:space="preserve">
     <value>site</value>

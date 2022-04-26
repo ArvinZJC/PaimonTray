@@ -27,7 +27,9 @@ namespace PaimonTray.Views
 
         #region Methods
 
-        // Update the UI text.
+        /// <summary>
+        /// Update the UI text.
+        /// </summary>
         private void UpdateUiText()
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
