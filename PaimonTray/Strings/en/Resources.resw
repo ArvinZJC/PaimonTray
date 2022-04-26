@@ -191,6 +191,9 @@
     <value>Settings and more</value>
     <comment>The tooltip of the main window's body navigation view's pane footer button.</comment>
   </data>
+  <data name="MainWindowTopNavigationPane" xml:space="preserve">
+    <value>Turn on the top navigation pane on the main window</value>
+  </data>
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>

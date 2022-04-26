@@ -88,7 +88,7 @@ namespace PaimonTray.Helpers
             } // end if
 
             ExistingWindowList.Add(window);
-            ThemesHelper.ApplyThemeSelection();
+            SettingsHelper.ApplyThemeSelection();
             window.Closed += (_, _) => ExistingWindowList.Remove(window);
 
             return window;

@@ -4,6 +4,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
@@ -36,6 +37,11 @@ namespace PaimonTray.Views
         /// </summary>
         public AppWindow AppWin { get; private set; }
 
+        /// <summary>
+        /// The main window's <see cref="MainWindowViewModel"/>.
+        /// </summary>
+        public MainWindowViewModel MainWinViewModel { get; }
+
         #endregion Properties
 
         #region Constructors
@@ -49,6 +55,7 @@ namespace PaimonTray.Views
             CustomiseWindow();
             UpdateUiText(true);
 
+            MainWinViewModel = new MainWindowViewModel();
             MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
             TaskbarIconApp.Visibility = Visibility.Visible;
         } // end constructor MainWindow

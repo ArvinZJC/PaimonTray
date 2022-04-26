@@ -1,4 +1,7 @@
-﻿using Serilog;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Views;
+using Serilog;
 using System.Linq;
 using Windows.Storage;
 
@@ -20,6 +23,11 @@ namespace PaimonTray.Helpers
         /// The language setting key.
         /// </summary>
         public const string KeyLanguage = "Language";
+
+        /// <summary>
+        /// The setting key for the main window's top navigation pane.
+        /// </summary>
+        public const string KeyMainWindowTopNavigationPane = "MainWindowTopNavigationPane";
 
         /// <summary>
         /// The theme setting key.
@@ -56,6 +64,43 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
+        /// Apply the selection of the main window's top navigation pane.
+        /// </summary>
+        public static void ApplyMainWindowTopNavigationPaneSelection()
+        {
+            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
+                         existingWindow is MainWindow))
+                ((MainWindow)existingWindow).MainWinViewModel.NavViewPaneDisplayMode =
+                    DecideMainWindowNavigationViewPaneDisplayMode();
+        } // end method ApplyMainWindowTopNavigationPaneSelection
+
+        /// <summary>
+        /// Apply the theme selection.
+        /// </summary>
+        public static void ApplyThemeSelection()
+        {
+            foreach (var window in WindowsHelper.ExistingWindowList)
+                ((FrameworkElement)window.Content).RequestedTheme =
+                    ApplicationData.Current.LocalSettings.Values[KeyTheme] switch
+                    {
+                        TagThemeDark => ElementTheme.Dark,
+                        TagThemeLight => ElementTheme.Light,
+                        _ => ElementTheme.Default
+                    };
+        } // end method ApplyThemeSelection
+
+        /// <summary>
+        /// Decide the main window's navigation view's pane display mode.
+        /// </summary>
+        /// <returns>The main window's navigation view's pane display mode.</returns>
+        public static NavigationViewPaneDisplayMode DecideMainWindowNavigationViewPaneDisplayMode()
+        {
+            return (bool)ApplicationData.Current.LocalSettings.Values[KeyMainWindowTopNavigationPane]
+                ? NavigationViewPaneDisplayMode.Top
+                : NavigationViewPaneDisplayMode.LeftCompact;
+        } // end method DecideMainWindowNavigationViewPaneDisplayMode
+
+        /// <summary>
         /// Initialise the settings when initialising the app.
         /// </summary>
         public static void InitialiseSettings()
@@ -68,6 +113,11 @@ namespace PaimonTray.Helpers
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(
                     ApplicationData.Current.LocalSettings.Values[KeyLanguage]))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
+
+            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyMainWindowTopNavigationPane) ||
+                ApplicationData.Current.LocalSettings.Values[KeyMainWindowTopNavigationPane] is not bool)
+                InitialiseSetting(KeyMainWindowTopNavigationPane,
+                    "The setting for configuring the main window's top navigation pane", false);
 
             // ReSharper disable once InvertIf
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyTheme) ||

@@ -191,6 +191,9 @@
     <value>设置及其他</value>
     <comment>The tooltip of the main window's body navigation view's pane footer button.</comment>
   </data>
+  <data name="MainWindowTopNavigationPane" xml:space="preserve">
+    <value>在主窗口上启用顶部导航窗格</value>
+  </data>
   <data name="Notifications" xml:space="preserve">
     <value>通知</value>
   </data>

@@ -15,9 +15,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- The grid for configuring launch on Windows startup. -->
-        <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
         <Grid
             Background="{ThemeResource ExpanderHeaderBackground}"
             BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
@@ -27,7 +27,6 @@
             Grid.Row="0"
             MinHeight="{ThemeResource ExpanderMinHeight}"
             Padding="16, 10, 60, 10">
-            <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -250,5 +249,31 @@
                 </Grid>
             </Expander.Header>
         </Expander>
+        <!-- The grid for configuring the main window's top navigation pane. -->
+        <Grid
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="16"
+            CornerRadius="4"
+            Grid.Row="4"
+            MinHeight="{ThemeResource ExpanderMinHeight}"
+            Padding="16, 10, 60, 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="TextBlockMainWindowTopNavigationPane"
+                Grid.Column="0"
+                TextWrapping="WrapWholeWords"
+                VerticalAlignment="Center" />
+            <ToggleSwitch
+                x:Name="ToggleSwitchMainWindowTopNavigationPane"
+                FlowDirection="RightToLeft"
+                Grid.Column="1"
+                Toggled="ToggleSwitchMainWindowTopNavigationPane_OnToggled"
+                VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </Page>

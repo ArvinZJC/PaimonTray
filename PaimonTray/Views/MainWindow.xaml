@@ -47,7 +47,7 @@
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
-            PaneDisplayMode="LeftCompact">
+            PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Icon="Contact"

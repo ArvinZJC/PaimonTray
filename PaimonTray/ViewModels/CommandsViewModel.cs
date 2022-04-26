@@ -11,7 +11,7 @@ using Windows.UI.Notifications;
 namespace PaimonTray.ViewModels
 {
     /// <summary>
-    /// The taskbar icon view model.
+    /// The commands view model.
     /// </summary>
     internal class CommandsViewModel
     {
