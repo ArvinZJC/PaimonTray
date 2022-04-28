@@ -5,9 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Height="400"
-    Width="400">
+    Height="650"
+    Unloaded="AddAccountPage_OnUnloaded"
+    Width="650">
     <Grid>
-        <TextBlock Text="AddAccount" />
+        <WebView2
+            x:Name="WebView2Login"
+            Source="https://user.mihoyo.com/#/login/captcha" />
     </Grid>
 </Page>

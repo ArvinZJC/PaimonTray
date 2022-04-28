@@ -124,7 +124,7 @@
     <value>Accounts</value>
   </data>
   <data name="AddAccount" xml:space="preserve">
-    <value>Add account</value>
+    <value>Add an account</value>
   </data>
   <data name="AppIconAcknowledgement" xml:space="preserve">
     <value>App icon credited to</value>
