@@ -7,7 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Height="400"
     Width="400">
-    <Grid Background="Black">
+    <Grid>
         <TextBlock Text="AddAccount" />
     </Grid>
 </Page>

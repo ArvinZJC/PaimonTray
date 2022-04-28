@@ -145,16 +145,17 @@ namespace PaimonTray.Views
             int winWidth;
             var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
 
+            // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
             {
-                winHeight = (int)(Math.Ceiling(e.NewSize.Height) + NavigationViewBody.CompactPaneLength) +
+                winHeight = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) + NavigationViewBody.CompactPaneLength) +
                             AppConstantsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)Math.Ceiling(e.NewSize.Width) + AppConstantsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) + AppConstantsHelper.MainWindowSideLengthOffset;
             }
             else
             {
-                winHeight = (int)Math.Ceiling(e.NewSize.Height) + AppConstantsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)(Math.Ceiling(e.NewSize.Width) + NavigationViewBody.CompactPaneLength) +
+                winHeight = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) + AppConstantsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) + NavigationViewBody.CompactPaneLength) +
                            AppConstantsHelper.MainWindowSideLengthOffset;
             } // end if...else
 

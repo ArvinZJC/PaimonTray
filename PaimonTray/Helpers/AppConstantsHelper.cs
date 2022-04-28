@@ -80,7 +80,7 @@
         /// <summary>
         /// The main window side length offset.
         /// </summary>
-        public const int MainWindowSideLengthOffset = 4;
+        public const int MainWindowSideLengthOffset = 2;
 
         /// <summary>
         /// The app introduction navigation view item tag.
