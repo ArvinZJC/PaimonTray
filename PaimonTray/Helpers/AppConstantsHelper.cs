@@ -78,9 +78,19 @@
         public const int MainWindowPositionOffset = 12;
 
         /// <summary>
+        /// The main window side length offset.
+        /// </summary>
+        public const int MainWindowSideLengthOffset = 4;
+
+        /// <summary>
         /// The app introduction navigation view item tag.
         /// </summary>
         public const string NavigationViewItemTagAboutApp = "AboutApp";
+
+        /// <summary>
+        /// The tag of the navigation view item for adding an account.
+        /// </summary>
+        public const string NavigationViewItemTagAddAccount = "AddAccount";
 
         /// <summary>
         /// The accounts settings navigation view item tag.

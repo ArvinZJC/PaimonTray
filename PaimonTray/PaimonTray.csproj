@@ -48,6 +48,8 @@
   <ItemGroup>
     <None Remove="Views\AboutAppPage.xaml" />
     <None Remove="Views\AccountsSettingsPage.xaml" />
+    <None Remove="Views\AddAccountPage.xaml" />
+    <None Remove="Views\DataPage.xaml" />
     <None Remove="Views\GeneralSettingsPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +78,12 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <Page Update="Views\DataPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\AddAccountPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\AboutAppPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

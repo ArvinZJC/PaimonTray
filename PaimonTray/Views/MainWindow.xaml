@@ -9,16 +9,13 @@
     xmlns:ni="using:H.NotifyIcon"
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- The root stack panel. -->
-    <StackPanel
+    <!-- The root grid. -->
+    <Grid
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        HorizontalAlignment="Center"
-        Padding="2, 0, 0, 0"
-        SizeChanged="StackPanelRoot_OnSizeChanged"
-        VerticalAlignment="Center">
-        <StackPanel.DataContext>
+        Padding="2, 0, 0, 0">
+        <Grid.DataContext>
             <vm:CommandsViewModel x:Name="CommandsViewModel" />
-        </StackPanel.DataContext>
+        </Grid.DataContext>
         <!-- The app's task bar icon. -->
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
@@ -43,11 +40,13 @@
         </ni:TaskbarIcon>
         <!-- The body navigation view. -->
         <NavigationView
+            x:Name="NavigationViewBody"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
-            PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Icon="Contact"
@@ -55,7 +54,8 @@
                     ToolTipService.ToolTip="(User-defined username)" />
                 <NavigationViewItem
                     x:Name="NavigationViewItemBodyAddAccount"
-                    Icon="Add" />
+                    Icon="Add"
+                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAddAccount}" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <!-- The main menu button. -->
@@ -127,14 +127,12 @@
                 </Button>
             </NavigationView.PaneFooter>
             <!-- The body frame. -->
-            <Frame>
-                <ListView
-                    Height="300"
-                    SelectionMode="None"
-                    Width="300">
-                    <ListViewItem Content="(Pending implementation...)" />
-                </ListView>
-            </Frame>
+            <Frame
+                x:Name="FrameBody"
+                HorizontalAlignment="Left"
+                IsNavigationStackEnabled="False"
+                SizeChanged="FrameBody_OnSizeChanged"
+                VerticalAlignment="Top" />
         </NavigationView>
-    </StackPanel>
+    </Grid>
 </Window>

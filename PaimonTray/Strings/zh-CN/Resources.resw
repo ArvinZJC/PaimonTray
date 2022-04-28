@@ -152,7 +152,7 @@
     <value>在应用启动时显示一个问候通知</value>
   </data>
   <data name="GreetingNotificationContent" xml:space="preserve">
-    <value>若应用图标未出现在任务栏角中，则您可在任务栏角溢出菜单中找到它，并将其通过系统设置或拖拽移动到任务栏角中。</value>
+    <value>您可通过点击应用图标来显示/隐藏主窗口。</value>
   </data>
   <data name="GreetingNotificationTitle" xml:space="preserve">
     <value>派蒙进到您的“系统托盘”里啦！</value>

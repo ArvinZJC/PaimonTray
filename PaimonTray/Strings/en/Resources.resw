@@ -152,7 +152,7 @@
     <value>Show a greeting notification when the app starts</value>
   </data>
   <data name="GreetingNotificationContent" xml:space="preserve">
-    <value>If the icon doesn't appear in the taskbar corner, you can find it in the taskbar corner overflow menu and move it to the taskbar corner by system settings or by dragging and dropping.</value>
+    <value>You can click the app icon to show/hide the main window.</value>
   </data>
   <data name="GreetingNotificationTitle" xml:space="preserve">
     <value>Paimon's now in your "system tray"!</value>

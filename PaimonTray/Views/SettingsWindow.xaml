@@ -65,7 +65,6 @@
             x:Name="NavigationViewBody"
             DisplayModeChanged="NavigationViewBody_OnDisplayModeChanged"
             Grid.Row="1"
-            Header="General"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"

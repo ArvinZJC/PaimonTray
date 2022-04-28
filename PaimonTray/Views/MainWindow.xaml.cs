@@ -3,6 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using PaimonTray.Helpers;
 using PaimonTray.ViewModels;
 using Serilog;
@@ -93,7 +94,7 @@ namespace PaimonTray.Views
             appWindowOverlappedPresenter.IsMaximizable = false;
             appWindowOverlappedPresenter.IsMinimizable = false;
             appWindowOverlappedPresenter.IsResizable = false;
-            appWindowOverlappedPresenter.SetBorderAndTitleBar(false, false);
+            appWindowOverlappedPresenter.SetBorderAndTitleBar(true, false);
         } // end method CustomiseWindow
 
         /// <summary>
@@ -137,25 +138,49 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the root stack panel's size changed event.
-        private void StackPanelRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        // Handle the body frame's size changed event.
+        private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var stackPanelRootHeight = (int)Math.Ceiling(e.NewSize.Height);
-            var stackPanelRootWidth = (int)Math.Ceiling(e.NewSize.Width);
+            int winHeight;
+            int winWidth;
             var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
+
+            if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
+            {
+                winHeight = (int)(Math.Ceiling(e.NewSize.Height) + NavigationViewBody.CompactPaneLength) +
+                            AppConstantsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)Math.Ceiling(e.NewSize.Width) + AppConstantsHelper.MainWindowSideLengthOffset;
+            }
+            else
+            {
+                winHeight = (int)Math.Ceiling(e.NewSize.Height) + AppConstantsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)(Math.Ceiling(e.NewSize.Width) + NavigationViewBody.CompactPaneLength) +
+                           AppConstantsHelper.MainWindowSideLengthOffset;
+            } // end if...else
 
             AppWin.MoveAndResize(new RectInt32
             {
-                Height = stackPanelRootHeight, Width = stackPanelRootWidth,
-                X = workArea.Width - stackPanelRootWidth - AppConstantsHelper.MainWindowPositionOffset,
-                Y = workArea.Height - stackPanelRootHeight - AppConstantsHelper.MainWindowPositionOffset
+                Height = winHeight, Width = winWidth,
+                X = workArea.Width - winWidth - AppConstantsHelper.MainWindowPositionOffset,
+                Y = workArea.Height - winHeight - AppConstantsHelper.MainWindowPositionOffset
             });
 
             if (!_isFirstLoad) return;
 
             Activate(); // Activate the window here to prevent being flicked when moving and resizing.
             _isFirstLoad = false;
-        } // end method StackPanelRoot_OnSizeChanged
+        } // end method FrameBody_OnSizeChanged
+
+        // Handle the body navigation view's selection changed event.
+        private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            FrameBody.Navigate(
+                (args.SelectedItem as NavigationViewItem)?.Tag as string ==
+                AppConstantsHelper.NavigationViewItemTagAddAccount
+                    ? typeof(AddAccountPage)
+                    : typeof(DataPage), null, new EntranceNavigationTransitionInfo());
+        } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers
     } // end class MainWindow
