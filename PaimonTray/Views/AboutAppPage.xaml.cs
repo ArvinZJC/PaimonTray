@@ -41,8 +41,8 @@ namespace PaimonTray.Views
             HyperlinkButtonReleaseNotes.Content = resourceLoader.GetString("ReleaseNotes");
             HyperlinkButtonUserManual.Content = resourceLoader.GetString("UserManual");
             HyperlinkButtonViewIssues.Content = resourceLoader.GetString("ViewIssues");
-            RunAcknowledgementAppIcon.Text = resourceLoader.GetString("AppIconAcknowledgement");
-            RunAcknowledgementInspiration.Text = resourceLoader.GetString("InspirationAcknowledgement");
+            RunAcknowledgementAppIcon.Text = resourceLoader.GetString("AcknowledgementAppIcon");
+            RunAcknowledgementInspiration.Text = resourceLoader.GetString("AcknowledgementInspiration");
             TextBlockVersion.Text =
                 $"{resourceLoader.GetString("Version")} {(Application.Current as App)?.AppVersion} ({Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision})";
         } // end method UpdateUiText

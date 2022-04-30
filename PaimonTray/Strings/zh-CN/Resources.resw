@@ -123,18 +123,18 @@
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
+  <data name="AcknowledgementAppIcon" xml:space="preserve">
+    <value>应用图标来源于</value>
+  </data>
+  <data name="AcknowledgementInspiration" xml:space="preserve">
+    <value>受启发于</value>
+  </data>
   <data name="AddAccount" xml:space="preserve">
     <value>添加账号</value>
-  </data>
-  <data name="AppIconAcknowledgement" xml:space="preserve">
-    <value>应用图标来源于</value>
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>您所做的更改将在下次启动应用时生效。</value>
     <comment>The hint shown when the changes require app restart.</comment>
-  </data>
-  <data name="DarkTheme" xml:space="preserve">
-    <value>深色</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>退出</value>
@@ -163,9 +163,6 @@
   <data name="Hide" xml:space="preserve">
     <value>隐藏</value>
   </data>
-  <data name="InspirationAcknowledgement" xml:space="preserve">
-    <value>受启发于</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>语言</value>
   </data>
@@ -183,9 +180,6 @@
   </data>
   <data name="License" xml:space="preserve">
     <value>证书</value>
-  </data>
-  <data name="LightTheme" xml:space="preserve">
-    <value>浅色</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>设置及其他</value>
@@ -206,6 +200,21 @@
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
   </data>
+  <data name="Server" xml:space="preserve">
+    <value>服务器</value>
+  </data>
+  <data name="ServerCn" xml:space="preserve">
+    <value>国服</value>
+  </data>
+  <data name="ServerExplanation" xml:space="preserve">
+    <value>选择要登录的服务器。</value>
+  </data>
+  <data name="ServerGlobal" xml:space="preserve">
+    <value>国际服</value>
+  </data>
+  <data name="ServerLogin" xml:space="preserve">
+    <value>在网页上登录您的账号</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
   </data>
@@ -222,8 +231,14 @@
   <data name="Theme" xml:space="preserve">
     <value>主题</value>
   </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>深色</value>
+  </data>
   <data name="ThemeExplanation" xml:space="preserve">
     <value>选择要显示的应用主题。</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>浅色</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>

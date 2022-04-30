@@ -26,14 +26,13 @@
             CornerRadius="4"
             Grid.Row="0"
             MinHeight="{ThemeResource ExpanderMinHeight}"
-            Padding="16, 10, 60, 10">
+            Padding="16, 12, 60, 12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid
                 Grid.Column="0"
-                RowSpacing="2"
                 VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -92,6 +91,7 @@
                     </RadioButtons>
                     <TextBlock
                         x:Name="TextBlockLanguageAppliedAfterAppRestart"
+                        Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}"
                         Grid.Row="1"
                         Visibility="Collapsed" />
                 </Grid>
@@ -99,14 +99,13 @@
             <Expander.Header>
                 <Grid
                     ColumnSpacing="16"
-                    Padding="0, 10">
+                    Padding="0, 12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid
                         Grid.Column="0"
-                        RowSpacing="2"
                         VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -154,14 +153,13 @@
             <Expander.Header>
                 <Grid
                     ColumnSpacing="16"
-                    Padding="0, 10">
+                    Padding="0, 12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid
                         Grid.Column="0"
-                        RowSpacing="2"
                         VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -212,14 +210,13 @@
             <Expander.Header>
                 <Grid
                     ColumnSpacing="16"
-                    Padding="0, 10">
+                    Padding="0, 12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid
                         Grid.Column="0"
-                        RowSpacing="2"
                         VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -258,7 +255,7 @@
             CornerRadius="4"
             Grid.Row="4"
             MinHeight="{ThemeResource ExpanderMinHeight}"
-            Padding="16, 10, 60, 10">
+            Padding="16, 12, 60, 12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

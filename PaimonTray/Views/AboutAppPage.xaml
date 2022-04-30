@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
-    <Grid RowSpacing="18">
+    <Grid RowSpacing="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -23,7 +23,7 @@
             Orientation="Horizontal">
             <Image
                 Height="96"
-                Margin="0, 0, 18, 0"
+                Margin="0, 0, 16, 0"
                 Source="{x:Bind h:AppConstantsHelper.AppIconImageUri}"
                 Width="96" />
             <TextBlock
@@ -34,14 +34,17 @@
         </StackPanel>
         <TextBlock
             x:Name="TextBlockVersion"
-            Grid.Row="1" />
+            Grid.Row="1"
+            Margin="12, 0, 0, 0"/>
         <TextBlock
             x:Name="TextBlockCopyright"
-            Grid.Row="2" />
+            Grid.Row="2"
+            Margin="12, 0, 0, 0"/>
         <RichTextBlock
             Grid.Row="3"
             HorizontalAlignment="Left"
-            IsTextSelectionEnabled="False">
+            IsTextSelectionEnabled="False"
+            Margin="12, 0, 0, 0">
             <Paragraph>
                 <Run x:Name="RunAcknowledgementInspiration" />
                 <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">

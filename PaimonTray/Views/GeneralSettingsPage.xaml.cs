@@ -101,8 +101,8 @@ namespace PaimonTray.Views
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
             RadioButtonLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
-            RadioButtonThemeDark.Content = resourceLoader.GetString("DarkTheme");
-            RadioButtonThemeLight.Content = resourceLoader.GetString("LightTheme");
+            RadioButtonThemeDark.Content = resourceLoader.GetString("ThemeDark");
+            RadioButtonThemeLight.Content = resourceLoader.GetString("ThemeLight");
             RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
             RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
             RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");

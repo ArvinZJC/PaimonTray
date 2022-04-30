@@ -123,18 +123,18 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="AcknowledgementAppIcon" xml:space="preserve">
+    <value>App icon credited to</value>
+  </data>
+  <data name="AcknowledgementInspiration" xml:space="preserve">
+    <value>Inspired by</value>
+  </data>
   <data name="AddAccount" xml:space="preserve">
     <value>Add an account</value>
-  </data>
-  <data name="AppIconAcknowledgement" xml:space="preserve">
-    <value>App icon credited to</value>
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>Your changes will be applied the next time you start the app.</value>
     <comment>The hint shown when the changes require app restart.</comment>
-  </data>
-  <data name="DarkTheme" xml:space="preserve">
-    <value>Dark</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -163,9 +163,6 @@
   <data name="Hide" xml:space="preserve">
     <value>Hide</value>
   </data>
-  <data name="InspirationAcknowledgement" xml:space="preserve">
-    <value>Inspired by</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -183,9 +180,6 @@
   </data>
   <data name="License" xml:space="preserve">
     <value>License</value>
-  </data>
-  <data name="LightTheme" xml:space="preserve">
-    <value>Light</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>Settings and more</value>
@@ -206,6 +200,21 @@
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
   </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="ServerCn" xml:space="preserve">
+    <value>CN</value>
+  </data>
+  <data name="ServerExplanation" xml:space="preserve">
+    <value>Select the server to log in.</value>
+  </data>
+  <data name="ServerGlobal" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="ServerLogin" xml:space="preserve">
+    <value>Log into your account on the web page</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -222,8 +231,14 @@
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
   </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
   <data name="ThemeExplanation" xml:space="preserve">
     <value>Select which app theme to display.</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>
