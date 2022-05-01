@@ -52,7 +52,7 @@
                 <Image
                     Height="16"
                     Margin="16,0"
-                    Source="{x:Bind h:AppConstantsHelper.AppIconUri}"
+                    Source="{x:Bind h:AppConstantsHelper.UriAppIcon}"
                     Width="16" />
                 <TextBlock
                     x:Name="TextBlockWindowTitle"
@@ -72,9 +72,7 @@
             Loaded="NavigationViewBody_OnLoaded"
             SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem
-                    x:Name="NavigationViewItemBodyAbout"
-                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAboutApp}">
+                <NavigationViewItem x:Name="NavigationViewItemBodyAbout">
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{ThemeResource SymbolThemeFontFamily}"
@@ -85,8 +83,7 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Name="NavigationViewItemBodyGeneral"
-                    IsSelected="True"
-                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagGeneralSettings}">
+                    IsSelected="True">
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{ThemeResource SymbolThemeFontFamily}"
@@ -95,11 +92,12 @@
                 </NavigationViewItem>
                 <NavigationViewItem
                     x:Name="NavigationViewItemBodyAccounts"
-                    Icon="People"
-                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAccountsSettings}" />
+                    Icon="People" />
             </NavigationView.MenuItems>
             <!-- The body scroll viewer. -->
-            <ScrollViewer x:Name="ScrollViewerBody">
+            <ScrollViewer
+                x:Name="ScrollViewerBody"
+                VerticalScrollBarVisibility="Auto">
                 <!-- The body frame. -->
                 <Frame
                     x:Name="FrameBody"

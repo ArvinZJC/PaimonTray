@@ -41,12 +41,14 @@
                 <TextBlock
                     x:Name="TextBlockLaunchOnWindowsStartup"
                     Grid.Row="0"
+                    TextAlignment="Justify"
                     TextWrapping="WrapWholeWords" />
                 <TextBlock
                     x:Name="TextBlockLaunchOnWindowsStartupExplanation"
                     Foreground="{ThemeResource SystemBaseMediumColor}"
                     Grid.Row="1"
                     Style="{ThemeResource CaptionTextBlockStyle}"
+                    TextAlignment="Justify"
                     TextWrapping="WrapWholeWords" />
             </Grid>
             <RichTextBlock
@@ -93,6 +95,8 @@
                         x:Name="TextBlockLanguageAppliedAfterAppRestart"
                         Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}"
                         Grid.Row="1"
+                        TextAlignment="Justify"
+                        TextWrapping="WrapWholeWords"
                         Visibility="Collapsed" />
                 </Grid>
             </Expander.Content>
@@ -114,12 +118,14 @@
                         <TextBlock
                             x:Name="TextBlockLanguage"
                             Grid.Row="0"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockLanguageExplanation"
                             Foreground="{ThemeResource SystemBaseMediumColor}"
                             Grid.Row="1"
                             Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                     </Grid>
                     <TextBlock
@@ -168,12 +174,14 @@
                         <TextBlock
                             x:Name="TextBlockTheme"
                             Grid.Row="0"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockThemeExplanation"
                             Foreground="{ThemeResource SystemBaseMediumColor}"
                             Grid.Row="1"
                             Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                     </Grid>
                     <TextBlock
@@ -198,6 +206,7 @@
                         x:Name="TextBlockGreetingNotification"
                         Grid.Column="0"
                         TextWrapping="WrapWholeWords"
+                        TextAlignment="Justify"
                         VerticalAlignment="Center" />
                     <ToggleSwitch
                         x:Name="ToggleSwitchGreetingNotification"
@@ -225,12 +234,14 @@
                         <TextBlock
                             x:Name="TextBlockNotifications"
                             Grid.Row="0"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockNotificationsExplanation"
                             Foreground="{ThemeResource SystemBaseMediumColor}"
                             Grid.Row="1"
                             Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextAlignment="Justify"
                             TextWrapping="WrapWholeWords" />
                     </Grid>
                     <RichTextBlock
@@ -263,6 +274,7 @@
             <TextBlock
                 x:Name="TextBlockMainWindowTopNavigationPane"
                 Grid.Column="0"
+                TextAlignment="Justify"
                 TextWrapping="WrapWholeWords"
                 VerticalAlignment="Center" />
             <ToggleSwitch

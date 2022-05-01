@@ -79,8 +79,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         public static void ApplyThemeSelection()
         {
-            foreach (var window in WindowsHelper.ExistingWindowList)
-                ((FrameworkElement)window.Content).RequestedTheme =
+            foreach (var existingWindow in WindowsHelper.ExistingWindowList)
+                ((FrameworkElement)existingWindow.Content).RequestedTheme =
                     ApplicationData.Current.LocalSettings.Values[KeyTheme] switch
                     {
                         TagThemeDark => ElementTheme.Dark,

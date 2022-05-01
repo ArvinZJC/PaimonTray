@@ -134,7 +134,13 @@
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>您所做的更改将在下次启动应用时生效。</value>
-    <comment>The hint shown when the changes require app restart.</comment>
+  </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>cookie</value>
+    <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
+  </data>
+  <data name="DownloadWebView2Runtime" xml:space="preserve">
+    <value>下载 WebView2 运行环境</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>退出</value>
@@ -163,6 +169,12 @@
   <data name="Hide" xml:space="preserve">
     <value>隐藏</value>
   </data>
+  <data name="HowToGetCookies" xml:space="preserve">
+    <value>如何获取您的 cookie？（使用手册相关的部分还未完备。提供的来自 PaimonMenuBar 的链接可供参考。）</value>
+  </data>
+  <data name="HoYoLab" xml:space="preserve">
+    <value>HoYoLAB</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>语言</value>
   </data>
@@ -181,12 +193,23 @@
   <data name="License" xml:space="preserve">
     <value>证书</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="LoginHintAlternative" xml:space="preserve">
+    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不显示此提示。</value>
+  </data>
+  <data name="LoginWebPage" xml:space="preserve">
+    <value>在网页上登录您的账号</value>
+  </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>设置及其他</value>
-    <comment>The tooltip of the main window's body navigation view's pane footer button.</comment>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>在主窗口上启用顶部导航窗格</value>
+  </data>
+  <data name="MiHoYo" xml:space="preserve">
+    <value>米哈游</value>
   </data>
   <data name="Notifications" xml:space="preserve">
     <value>通知</value>
@@ -211,9 +234,6 @@
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>国际服</value>
-  </data>
-  <data name="ServerLogin" xml:space="preserve">
-    <value>在网页上登录您的账号</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>

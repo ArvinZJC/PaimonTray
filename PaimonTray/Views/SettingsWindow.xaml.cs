@@ -97,7 +97,7 @@ namespace PaimonTray.Views
             } // end if
 
             _appWindow.SetIcon(
-                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppConstantsHelper.AppIconUri))).Path);
+                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppConstantsHelper.UriAppIcon))).Path);
             CustomiseTitleBar();
 
             var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
@@ -107,7 +107,7 @@ namespace PaimonTray.Views
         } // end method CustomiseWindowAsync
 
         /// <summary>
-        /// Update the UI text.
+        /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {
@@ -152,27 +152,12 @@ namespace PaimonTray.Views
         {
             Type pageType;
 
-            switch ((args.SelectedItem as NavigationViewItem)?.Tag)
-            {
-                case AppConstantsHelper.NavigationViewItemTagAboutApp:
-                    pageType = typeof(AboutAppPage);
-                    break;
-
-                case AppConstantsHelper.NavigationViewItemTagAccountsSettings:
-                    pageType = typeof(AccountsSettingsPage);
-                    break;
-
-                case AppConstantsHelper.NavigationViewItemTagGeneralSettings:
-                case null:
-                    pageType = typeof(GeneralSettingsPage);
-                    break;
-
-                default:
-                    Log.Warning(
-                        $"Failed to identify the selected item in the settings window's root navigation view by tag. (Content: {(args.SelectedItem as NavigationViewItem)?.Content}, tag: {(args.SelectedItem as NavigationViewItem)?.Tag})");
-                    NavigationViewItemBodyGeneral.IsSelected = true;
-                    return;
-            } // end switch-case
+            if (args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAbout)
+                pageType = typeof(AboutAppPage);
+            else if (args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAccounts)
+                pageType = typeof(AccountsSettingsPage);
+            else
+                pageType = typeof(GeneralSettingsPage);
 
             FrameBody.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
             NavigationViewBody.Header = (args.SelectedItem as NavigationViewItem)?.Content;

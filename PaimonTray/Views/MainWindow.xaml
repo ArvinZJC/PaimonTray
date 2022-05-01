@@ -18,7 +18,7 @@
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
-            IconSource="{x:Bind h:AppConstantsHelper.AppIconUri}"
+            IconSource="{x:Bind h:AppConstantsHelper.UriAppIcon}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
             ToolTipText="{x:Bind am:Package.Current.DisplayName}"
@@ -52,8 +52,7 @@
                     ToolTipService.ToolTip="(User-defined username)" />
                 <NavigationViewItem
                     x:Name="NavigationViewItemBodyAddAccount"
-                    Icon="Add"
-                    Tag="{x:Bind h:AppConstantsHelper.NavigationViewItemTagAddAccount}" />
+                    Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <!-- The main menu button. -->
@@ -94,18 +93,18 @@
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGitHubRepo"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepo}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGiteeRepo"
                                     IsEnabled="False" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuViewIssues"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuReleaseNotes"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.GitHubRepoReleasesUrl}" />
+                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpShowLogs"

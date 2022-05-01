@@ -27,8 +27,6 @@ namespace PaimonTray.Views
         /// </summary>
         private bool _isFirstLoad = true;
 
-        private WindowId _windowId;
-
         #endregion Fields
 
         #region Properties
@@ -43,6 +41,11 @@ namespace PaimonTray.Views
         /// </summary>
         public MainWindowViewModel MainWinViewModel { get; }
 
+        /// <summary>
+        /// The main window's <see cref="WindowId"/>.
+        /// </summary>
+        public WindowId WinId { get; private set; }
+
         #endregion Properties
 
         #region Constructors
@@ -54,7 +57,7 @@ namespace PaimonTray.Views
         {
             InitializeComponent();
             CustomiseWindow();
-            UpdateUiText(true);
+            UpdateUiText();
 
             MainWinViewModel = new MainWindowViewModel();
             MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
@@ -70,8 +73,8 @@ namespace PaimonTray.Views
         /// </summary>
         private void CustomiseWindow()
         {
-            _windowId = WindowsHelper.GetWindowId(this);
-            AppWin = WindowsHelper.GetAppWindow(_windowId);
+            WinId = WindowsHelper.GetWindowId(this);
+            AppWin = WindowsHelper.GetAppWindow(WinId);
             Title = Package.Current.DisplayName;
 
             if (AppWin == null)
@@ -98,10 +101,9 @@ namespace PaimonTray.Views
         } // end method CustomiseWindow
 
         /// <summary>
-        /// Update the UI text.
+        /// Update the UI text during the initialisation process.
         /// </summary>
-        /// <param name="isFirstLoad">A flag indicating if it is the 1st time the window is loaded.</param>
-        private void UpdateUiText(bool isFirstLoad = false)
+        private void UpdateUiText()
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
@@ -122,15 +124,14 @@ namespace PaimonTray.Views
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
             ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
 
-            if (isFirstLoad &&
-                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
+            if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
                 new ToastContentBuilder()
                     .AddText(resourceLoader.GetString("GreetingNotificationTitle"))
                     .AddText(resourceLoader.GetString("GreetingNotificationContent"))
                     .Show(toast =>
                     {
                         toast.Group = Package.Current.DisplayName;
-                        toast.Tag = AppConstantsHelper.NotificationTagGreeting;
+                        toast.Tag = AppConstantsHelper.TagGreetingNotification;
                     });
         } // end method UpdateUiText
 
@@ -143,31 +144,31 @@ namespace PaimonTray.Views
         {
             int winHeight;
             int winWidth;
-            var workArea = DisplayArea.GetFromWindowId(_windowId, DisplayAreaFallback.Primary).WorkArea;
+            var workArea = DisplayArea.GetFromWindowId(WinId, DisplayAreaFallback.Primary).WorkArea;
 
             // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
             {
                 winHeight = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
                                   NavigationViewBody.CompactPaneLength) +
-                            AppConstantsHelper.MainWindowSideLengthOffset;
+                            AppConstantsHelper.WindowMainSideLengthOffset;
                 winWidth = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
-                           AppConstantsHelper.MainWindowSideLengthOffset;
+                           AppConstantsHelper.WindowMainSideLengthOffset;
             }
             else
             {
                 winHeight = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
-                            AppConstantsHelper.MainWindowSideLengthOffset;
+                            AppConstantsHelper.WindowMainSideLengthOffset;
                 winWidth = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
                                  NavigationViewBody.CompactPaneLength) +
-                           AppConstantsHelper.MainWindowSideLengthOffset;
+                           AppConstantsHelper.WindowMainSideLengthOffset;
             } // end if...else
 
             AppWin.MoveAndResize(new RectInt32
             {
                 Height = winHeight, Width = winWidth,
-                X = workArea.Width - winWidth - AppConstantsHelper.MainWindowPositionOffset,
-                Y = workArea.Height - winHeight - AppConstantsHelper.MainWindowPositionOffset
+                X = workArea.Width - winWidth - AppConstantsHelper.WindowMainPositionOffset,
+                Y = workArea.Height - winHeight - AppConstantsHelper.WindowMainPositionOffset
             });
 
             if (!_isFirstLoad) return;
@@ -181,8 +182,7 @@ namespace PaimonTray.Views
             NavigationViewSelectionChangedEventArgs args)
         {
             FrameBody.Navigate(
-                (args.SelectedItem as NavigationViewItem)?.Tag as string ==
-                AppConstantsHelper.NavigationViewItemTagAddAccount
+                args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAddAccount
                     ? typeof(AddAccountPage)
                     : typeof(DataPage), null, new EntranceNavigationTransitionInfo());
         } // end method NavigationViewBody_OnSelectionChanged

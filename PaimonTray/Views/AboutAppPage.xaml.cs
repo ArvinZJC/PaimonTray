@@ -28,7 +28,7 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
-        /// Update the UI text.
+        /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {

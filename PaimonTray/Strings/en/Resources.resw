@@ -133,8 +133,14 @@
     <value>Add an account</value>
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
-    <value>Your changes will be applied the next time you start the app.</value>
-    <comment>The hint shown when the changes require app restart.</comment>
+    <value>Your changes will be applied the next time the app is started.</value>
+  </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>cookies</value>
+    <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
+  </data>
+  <data name="DownloadWebView2Runtime" xml:space="preserve">
+    <value>Download WebView2 Runtime</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -163,6 +169,12 @@
   <data name="Hide" xml:space="preserve">
     <value>Hide</value>
   </data>
+  <data name="HowToGetCookies" xml:space="preserve">
+    <value>How to get your cookies? (The relevant user manual section is unready. The link provided is from PaimonMenuBar for your reference.)</value>
+  </data>
+  <data name="HoYoLab" xml:space="preserve">
+    <value>HoYoLAB</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -181,12 +193,23 @@
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LoginHintAlternative" xml:space="preserve">
+    <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to dismiss this hint the next time the page is loaded.</value>
+  </data>
+  <data name="LoginWebPage" xml:space="preserve">
+    <value>Log into your account on the web page</value>
+  </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>Settings and more</value>
-    <comment>The tooltip of the main window's body navigation view's pane footer button.</comment>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>Turn on the top navigation pane on the main window</value>
+  </data>
+  <data name="MiHoYo" xml:space="preserve">
+    <value>miHoYo</value>
   </data>
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
@@ -211,9 +234,6 @@
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>Global</value>
-  </data>
-  <data name="ServerLogin" xml:space="preserve">
-    <value>Log into your account on the web page</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>

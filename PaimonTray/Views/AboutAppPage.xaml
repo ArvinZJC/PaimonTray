@@ -24,7 +24,7 @@
             <Image
                 Height="96"
                 Margin="0, 0, 16, 0"
-                Source="{x:Bind h:AppConstantsHelper.AppIconImageUri}"
+                Source="{x:Bind h:AppConstantsHelper.UriAppIconImage}"
                 Width="96" />
             <TextBlock
                 FontWeight="SemiBold"
@@ -47,13 +47,13 @@
             Margin="12, 0, 0, 0">
             <Paragraph>
                 <Run x:Name="RunAcknowledgementInspiration" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationUrl}">
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
                     <Run Text="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationName}" />
                 </Hyperlink>
             </Paragraph>
             <Paragraph>
                 <Run x:Name="RunAcknowledgementAppIcon" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.AppIconSourceUrl}">
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlAppIconSource}">
                     <Run Text="{x:Bind h:AppConstantsHelper.AppIconAuthor}" />
                 </Hyperlink>
             </Paragraph>
@@ -61,7 +61,7 @@
         <HyperlinkButton
             x:Name="HyperlinkButtonLicense"
             Grid.Row="4"
-            NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoLicenseUrl}" />
+            NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoLicense}" />
         <StackPanel Grid.Row="5">
             <HyperlinkButton
                 x:Name="HyperlinkButtonHome"
@@ -73,16 +73,16 @@
         <StackPanel Grid.Row="6">
             <HyperlinkButton
                 x:Name="HyperlinkButtonGitHubRepo"
-                NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoUrl}" />
+                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepo}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonGiteeRepo"
                 IsEnabled="False" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonViewIssues"
-                NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoIssuesUrl}" />
+                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonReleaseNotes"
-                NavigateUri="{x:Bind h:AppConstantsHelper.GitHubRepoReleasesUrl}" />
+                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
         </StackPanel>
     </Grid>
 </Page>

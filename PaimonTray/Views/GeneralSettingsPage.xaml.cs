@@ -94,7 +94,7 @@ namespace PaimonTray.Views
         } // end method ShowThemeSelection
 
         /// <summary>
-        /// Update the UI text.
+        /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {
@@ -131,7 +131,7 @@ namespace PaimonTray.Views
         private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
 #pragma warning restore CA1822 // Mark members as static
         {
-            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.SystemSettingsStartupAppsUri);
+            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsStartupApps);
         } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static
@@ -139,7 +139,7 @@ namespace PaimonTray.Views
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
 #pragma warning restore CA1822 // Mark members as static
         {
-            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.SystemSettingsNotificationsUri);
+            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
         // Handle the language radio button's checked event.
