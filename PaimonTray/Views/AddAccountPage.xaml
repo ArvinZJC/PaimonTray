@@ -83,7 +83,6 @@
                     VerticalScrollBarVisibility="Auto">
                     <!-- The login grid. -->
                     <Grid
-                        x:Name="GridLogin"
                         ColumnSpacing="12"
                         RowSpacing="8">
                         <Grid.RowDefinitions>
@@ -117,6 +116,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel
                                     Grid.Column="0"
@@ -135,9 +135,18 @@
                                     </RichTextBlock>
                                     <TextBlock x:Name="TextBlockLogin" />
                                 </StackPanel>
+                                <Button
+                                    x:Name="ButtonLoginWebPageReload"
+                                    Click="ButtonLoginWebPageReload_OnClick"
+                                    Grid.Column="1"
+                                    Padding="4">
+                                    <FontIcon
+                                        FontSize="{ThemeResource ToolTipContentThemeFontSize}"
+                                        Glyph="{x:Bind h:AppConstantsHelper.GlyphRefresh}" />
+                                </Button>
                                 <HyperlinkButton
                                     x:Name="HyperlinkButtonHowToGetCookies"
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     NavigateUri="{x:Bind h:AppConstantsHelper.UrlHowToGetCookies}"
                                     Padding="0"
                                     Visibility="Collapsed">
@@ -147,9 +156,25 @@
                                 </HyperlinkButton>
                             </Grid>
                         </StackPanel>
-                        <!-- The cookies grid. -->
                         <Grid
-                            x:Name="GridCookies"
+                            x:Name="GridLoginWebPage"
+                            Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Button
+                                x:Name="ButtonLoginWebPage"
+                                Click="ButtonLoginWebPage_OnClick"
+                                Grid.Row="1"
+                                HorizontalAlignment="Stretch"
+                                Margin="0, 8, 0, 0"
+                                Style="{ThemeResource AccentButtonStyle}"
+                                Visibility="Collapsed" />
+                        </Grid>
+                        <!-- The alternative login grid. -->
+                        <Grid
+                            x:Name="GridLoginAlternative"
                             Grid.Row="1"
                             RowSpacing="8"
                             Visibility="Collapsed">
@@ -162,8 +187,8 @@
                                 AcceptsReturn="True"
                                 TextWrapping="Wrap" />
                             <Button
-                                x:Name="ButtonLogin"
-                                Click="ButtonLogin_OnClick"
+                                x:Name="ButtonLoginAlternative"
+                                Click="ButtonLoginAlternative_OnClick"
                                 Grid.Row="1"
                                 HorizontalAlignment="Stretch"
                                 Style="{ThemeResource AccentButtonStyle}" />

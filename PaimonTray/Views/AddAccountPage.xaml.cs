@@ -19,7 +19,7 @@ namespace PaimonTray.Views
         #region Fields
 
         private bool _isWebView2Available;
-        private WebView2 _webView2Login;
+        private WebView2 _webView2LoginWebPage;
 
         private readonly ResourceLoader _resourceLoader;
 
@@ -51,9 +51,7 @@ namespace PaimonTray.Views
 
             var pageMaxHeight = 0;
             var pageMaxWidth = 0;
-            var uriLoginMiHoYo = new Uri(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                ? AppConstantsHelper.UrlLoginMiHoYo
-                : AppConstantsHelper.UrlLoginHoYoLab);
+            var uriLoginMiHoYo = GetLoginWebPageUri();
 
             foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
                          existingWindow is MainWindow))
@@ -68,14 +66,18 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
+                var pageSuggestedHeight = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                    ? AppConstantsHelper.PageAddAccountLoginWebPageCnHeight
+                    : AppConstantsHelper.PageAddAccountLoginWebPageGlobalHeight;
                 var pageSuggestedWidth = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                     ? AppConstantsHelper.PageAddAccountLoginWebPageCnWidth
                     : AppConstantsHelper.PageAddAccountLoginWebPageGlobalWidth;
 
-                _webView2Login.Source = uriLoginMiHoYo;
-                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginWebPageHeight
-                    ? pageMaxHeight
-                    : AppConstantsHelper.PageAddAccountLoginWebPageHeight;
+                _webView2LoginWebPage.Source = uriLoginMiHoYo;
+                ButtonLoginWebPage.Visibility = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+                PageAddAccount.Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
                 PageAddAccount.Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
             }
             else
@@ -102,13 +104,17 @@ namespace PaimonTray.Views
                 Log.Information(
                     $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
                 _isWebView2Available = true;
-                _webView2Login = new WebView2();
-                await _webView2Login.EnsureCoreWebView2Async();
-                _webView2Login.CoreWebView2.SourceChanged += CoreWebView2Login_OnSourceChanged;
+                _webView2LoginWebPage = new WebView2();
+                await _webView2LoginWebPage.EnsureCoreWebView2Async();
+                _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+                _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
 
-                GridLogin.Children.Add(_webView2Login);
-                Grid.SetRow(_webView2Login, 1);
+                ButtonLoginWebPage.Content = _resourceLoader.GetString("LoginComplete");
+                GridLoginWebPage.Children.Add(_webView2LoginWebPage);
+                Grid.SetRow(_webView2LoginWebPage, 0);
                 TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
+                ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginHintComplete"));
+                ToolTipService.SetToolTip(ButtonLoginWebPageReload, _resourceLoader.GetString("ReloadLoginWebPage"));
 
                 ApplyServerSelection();
             }
@@ -118,8 +124,9 @@ namespace PaimonTray.Views
                 Log.Error(e.ToString());
                 _isWebView2Available = false;
 
-                ButtonLogin.Content = _resourceLoader.GetString("Login");
-                GridCookies.Visibility = Visibility.Visible;
+                ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
+                ButtonLoginWebPageReload.Visibility = Visibility.Collapsed;
+                GridLoginAlternative.Visibility = Visibility.Visible;
                 GridLoginHintAlternative.Visibility = Visibility.Visible;
                 HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
                 HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
@@ -129,6 +136,45 @@ namespace PaimonTray.Views
                 ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
             } // end try...catch
         } // end method ConfigWebView2LoginAsync
+
+        private async void GetCookiesAsync()
+        {
+            var stringBuilderCookies = new StringBuilder();
+
+            foreach (var cookie in await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+                         ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                             ? AppConstantsHelper.UrlCookiesMiHoYo
+                             : AppConstantsHelper.UrlCookiesHoYoLab))
+                stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
+
+            var cookies = stringBuilderCookies.ToString();
+
+            if (cookies.Contains(AppConstantsHelper.CookieNameEssential))
+            {
+                _webView2LoginWebPage.Close();
+                Log.Information(cookies);
+                return;
+            } // end if
+
+            Log.Warning("Web page login failed. User is expected to try again.");
+            await new ContentDialog
+            {
+                Content = _resourceLoader.GetString("LoginFail"),
+                CloseButtonText = _resourceLoader.GetString("Ok"),
+                XamlRoot = Content.XamlRoot
+            }.ShowAsync();
+        } // end method GetCookiesAsync
+
+        /// <summary>
+        /// Get the login web page URI.
+        /// </summary>
+        /// <returns>The login web page URI.</returns>
+        private Uri GetLoginWebPageUri()
+        {
+            return new Uri(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                ? AppConstantsHelper.UrlLoginMiHoYo
+                : AppConstantsHelper.UrlLoginHoYoLab);
+        } // end method GetLoginWebPageUri
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -149,14 +195,26 @@ namespace PaimonTray.Views
         // Handle the unloaded event of the page for adding an account.
         private void AddAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if (_isWebView2Available) _webView2Login.Close();
+            if (_isWebView2Available) _webView2LoginWebPage.Close();
         } // end method AddAccountPage_OnUnloaded
 
-        // Handle the login button's click event.
-        private void ButtonLogin_OnClick(object sender, RoutedEventArgs e)
+        // Handle the alternative login button's click event.
+        private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
-        } // end method ButtonLogin_OnClick
+        } // end method ButtonLoginAlternative_OnClick
+
+        // Handle the web page login button's click event.
+        private void ButtonLoginWebPage_OnClick(object sender, RoutedEventArgs e)
+        {
+            GetCookiesAsync();
+        } // end method ButtonLoginWebPage_OnClick
+
+        // Handle the click event of the button for reloading the login web page.
+        private void ButtonLoginWebPageReload_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
+        } // end method ButtonLoginWebPageReload_OnClick
 
         // Handle the server combo box's selection changed event.
         private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -164,26 +222,16 @@ namespace PaimonTray.Views
             ApplyServerSelection();
         } // end method ComboBoxServer_OnSelectionChanged
 
-        // Handle the login CoreWebView2's source changed event.
-        private async void CoreWebView2Login_OnSourceChanged(CoreWebView2 sender,
+        // Handle the web page login CoreWebView2's source changed event.
+        private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
             CoreWebView2SourceChangedEventArgs args)
         {
-            if (!_webView2Login.Source.ToString()
-                    .Contains(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                        ? AppConstantsHelper.UrlLoginEndMiHoYo
-                        : AppConstantsHelper.UrlLoginEndHoYoLab)) return;
+            if ((ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn &&
+                 !_webView2LoginWebPage.Source.ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) ||
+                ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerGlobal) return;
 
-            var cookies = new StringBuilder();
-
-            foreach (var cookie in await _webView2Login.CoreWebView2.CookieManager.GetCookiesAsync(
-                         ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                             ? AppConstantsHelper.UrlCookiesMiHoYo
-                             : AppConstantsHelper.UrlCookiesHoYoLab))
-                cookies.Append($"{cookie.Name}={cookie.Value};");
-
-            _webView2Login.Close();
-            Log.Information(cookies.ToString());
-        } // end method CoreWebView2Login_OnSourceChanged
+            GetCookiesAsync();
+        } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
         #endregion Event Handlers
     } // end class AddAccountPage

@@ -196,8 +196,17 @@
   <data name="Login" xml:space="preserve">
     <value>Log in</value>
   </data>
+  <data name="LoginComplete" xml:space="preserve">
+    <value>Complete login</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>Failed to log into your account. Please try again.</value>
+  </data>
   <data name="LoginHintAlternative" xml:space="preserve">
     <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to dismiss this hint the next time the page is loaded.</value>
+  </data>
+  <data name="LoginHintComplete" xml:space="preserve">
+    <value>You need to confirm completing login after you log into your account on the web page.</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
@@ -220,8 +229,14 @@
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>Change notification settings</value>
   </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
+  </data>
+  <data name="ReloadLoginWebPage" xml:space="preserve">
+    <value>Reload the login web page.</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>

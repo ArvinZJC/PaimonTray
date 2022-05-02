@@ -196,8 +196,17 @@
   <data name="Login" xml:space="preserve">
     <value>登录</value>
   </data>
+  <data name="LoginComplete" xml:space="preserve">
+    <value>完成登录</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>登录您的账号失败。请重试。</value>
+  </data>
   <data name="LoginHintAlternative" xml:space="preserve">
     <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不显示此提示。</value>
+  </data>
+  <data name="LoginHintComplete" xml:space="preserve">
+    <value>您需要在网页上登录您的账号后确认完成登录。</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
@@ -220,8 +229,14 @@
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>更改您的通知设置</value>
   </data>
+  <data name="Ok" xml:space="preserve">
+    <value>好</value>
+  </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
+  </data>
+  <data name="ReloadLoginWebPage" xml:space="preserve">
+    <value>重新加载登录页。</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>服务器</value>

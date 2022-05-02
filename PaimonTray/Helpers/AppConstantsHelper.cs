@@ -13,6 +13,11 @@
         public const string AppIconAuthor = "Chawong";
 
         /// <summary>
+        /// The essential cookie name in cookies.
+        /// </summary>
+        public const string CookieNameEssential = "account_id";
+
+        /// <summary>
         /// The name of the GitHub repository inspiring the app.
         /// </summary>
         public const string GitHubRepoInspirationName = "PaimonMenuBar";
@@ -26,6 +31,11 @@
         /// The code of the glyph Info.
         /// </summary>
         public const string GlyphInfo = "\xE946";
+
+        /// <summary>
+        /// The code of the glyph Refresh.
+        /// </summary>
+        public const string GlyphRefresh = "\xE72C";
 
         /// <summary>
         /// The code of the glyph Repair.
@@ -48,19 +58,24 @@
         public const int PageAddAccountLoginAlternativeWidth = 500;
 
         /// <summary>
+        /// The height of the page for adding a CN server account using the web page login method.
+        /// </summary>
+        public const int PageAddAccountLoginWebPageCnHeight = 800;
+
+        /// <summary>
         /// The width of the page for adding a CN server account using the web page login method.
         /// </summary>
         public const int PageAddAccountLoginWebPageCnWidth = 680;
 
         /// <summary>
-        /// The width of the page for adding a global server account using the web page login method.
+        /// The height of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int PageAddAccountLoginWebPageGlobalWidth = 1352;
+        public const int PageAddAccountLoginWebPageGlobalHeight = 820;
 
         /// <summary>
-        /// The height of the page for adding an account using the web page login method.
+        /// The width of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int PageAddAccountLoginWebPageHeight = 800;
+        public const int PageAddAccountLoginWebPageGlobalWidth = 800;
 
         /// <summary>
         /// The minimum beta revision version.
@@ -105,12 +120,12 @@
         /// <summary>
         /// The HoYoLAB cookies URL.
         /// </summary>
-        public const string UrlCookiesHoYoLab = "https://account.hoyolab.com";
+        public const string UrlCookiesHoYoLab = "https://www.hoyolab.com";
 
         /// <summary>
         /// The miHoYo cookies URL.
         /// </summary>
-        public const string UrlCookiesMiHoYo = "https://user.mihoyo.com";
+        public const string UrlCookiesMiHoYo = "https://bbs.mihoyo.com";
 
         /// <summary>
         /// The app's GitHub repository URL.
@@ -143,24 +158,19 @@
         public const string UrlHowToGetCookies = "https://paimon.swo.moe/#how-to-get-my-cookie";
 
         /// <summary>
-        /// The URL for indicating the success of logging into HoYoLAB.
-        /// </summary>
-        public const string UrlLoginEndHoYoLab = "https://account.hoyolab.com/#/account";
-
-        /// <summary>
         /// The URL for indicating the success of logging into miHoYo.
         /// </summary>
-        public const string UrlLoginEndMiHoYo = "https://user.mihoyo.com/#/account";
+        public const string UrlLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
 
         /// <summary>
         /// The URL for logging into HoYoLAB.
         /// </summary>
-        public const string UrlLoginHoYoLab = "https://account.hoyolab.com/#/login";
+        public const string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
 
         /// <summary>
         /// The URL for logging into miHoYo.
         /// </summary>
-        public const string UrlLoginMiHoYo = "https://user.mihoyo.com/#/login/captcha";
+        public const string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
 
         /// <summary>
         /// The URL for downloading the Microsoft Edge WebView2 Runtime.
