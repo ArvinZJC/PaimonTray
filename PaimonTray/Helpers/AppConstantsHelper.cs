@@ -38,14 +38,29 @@
         public const string GlyphStatusCircleQuestionMark = "\xF142";
 
         /// <summary>
-        /// The side length of the page for adding an account using the alternative login method.
+        /// The height of the page for adding an account using the alternative login method.
         /// </summary>
-        public const int PageAddAccountLoginAlternativeSideLength = 500;
+        public const int PageAddAccountLoginAlternativeHeight = 500;
 
         /// <summary>
-        /// The side length of the page for adding an account using the web page login method.
+        /// The width of the page for adding an account using the alternative login method.
         /// </summary>
-        public const int PageAddAccountLoginWebPageSideLength = 800;
+        public const int PageAddAccountLoginAlternativeWidth = 500;
+
+        /// <summary>
+        /// The width of the page for adding a CN server account using the web page login method.
+        /// </summary>
+        public const int PageAddAccountLoginWebPageCnWidth = 680;
+
+        /// <summary>
+        /// The width of the page for adding a global server account using the web page login method.
+        /// </summary>
+        public const int PageAddAccountLoginWebPageGlobalWidth = 1352;
+
+        /// <summary>
+        /// The height of the page for adding an account using the web page login method.
+        /// </summary>
+        public const int PageAddAccountLoginWebPageHeight = 800;
 
         /// <summary>
         /// The minimum beta revision version.
@@ -90,7 +105,7 @@
         /// <summary>
         /// The HoYoLAB cookies URL.
         /// </summary>
-        public const string UrlCookiesHoYoLab = ""; // TODO
+        public const string UrlCookiesHoYoLab = "https://account.hoyolab.com";
 
         /// <summary>
         /// The miHoYo cookies URL.
@@ -130,7 +145,7 @@
         /// <summary>
         /// The URL for indicating the success of logging into HoYoLAB.
         /// </summary>
-        public const string UrlLoginEndHoYoLab = ""; // TODO
+        public const string UrlLoginEndHoYoLab = "https://account.hoyolab.com/#/account";
 
         /// <summary>
         /// The URL for indicating the success of logging into miHoYo.
@@ -140,7 +155,7 @@
         /// <summary>
         /// The URL for logging into HoYoLAB.
         /// </summary>
-        public const string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
+        public const string UrlLoginHoYoLab = "https://account.hoyolab.com/#/login";
 
         /// <summary>
         /// The URL for logging into miHoYo.

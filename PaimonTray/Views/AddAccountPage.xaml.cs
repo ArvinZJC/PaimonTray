@@ -68,23 +68,25 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
+                var pageSuggestedWidth = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                    ? AppConstantsHelper.PageAddAccountLoginWebPageCnWidth
+                    : AppConstantsHelper.PageAddAccountLoginWebPageGlobalWidth;
+
                 _webView2Login.Source = uriLoginMiHoYo;
-                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginWebPageSideLength
+                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginWebPageHeight
                     ? pageMaxHeight
-                    : AppConstantsHelper.PageAddAccountLoginWebPageSideLength;
-                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.PageAddAccountLoginWebPageSideLength
-                    ? pageMaxWidth
-                    : AppConstantsHelper.PageAddAccountLoginWebPageSideLength;
+                    : AppConstantsHelper.PageAddAccountLoginWebPageHeight;
+                PageAddAccount.Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
             }
             else
             {
                 HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
-                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginAlternativeSideLength
+                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginAlternativeHeight
                     ? pageMaxHeight
-                    : AppConstantsHelper.PageAddAccountLoginAlternativeSideLength;
-                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.PageAddAccountLoginAlternativeSideLength
+                    : AppConstantsHelper.PageAddAccountLoginAlternativeHeight;
+                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.PageAddAccountLoginAlternativeWidth
                     ? pageMaxWidth
-                    : AppConstantsHelper.PageAddAccountLoginAlternativeSideLength;
+                    : AppConstantsHelper.PageAddAccountLoginAlternativeWidth;
                 RunLoginPlace.Text = _resourceLoader.GetString(
                     ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn ? "MiHoYo" : "HoYoLab");
             } // end if...else
