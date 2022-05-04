@@ -116,11 +116,21 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
                     var mainWindow = WindowsHelper.ShowMainWindow();
+                    var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
+                    // Set the text of the main window's menu flyout item for toggling the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
                     if (mainWindow.Visible)
+                    {
                         mainWindow.Hide();
+                        mainWindow.MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text =
+                            resourceLoader.GetString("ShowMainWindow");
+                    }
                     else
+                    {
                         mainWindow.Show();
+                        mainWindow.MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text =
+                            resourceLoader.GetString("HideMainWindow");
+                    } // end if...else
                 };
                 return xamlUiCommand;
             } // end get

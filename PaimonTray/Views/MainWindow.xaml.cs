@@ -105,7 +105,6 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-            MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text = resourceLoader.GetString("ToggleMainWindowVisibility");
             MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
             MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
             MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";

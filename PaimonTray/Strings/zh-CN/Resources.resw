@@ -256,6 +256,9 @@
   <data name="ShowLogs" xml:space="preserve">
     <value>在文件资源管理器中显示日志文件</value>
   </data>
+  <data name="ShowMainWindow" xml:space="preserve">
+    <value>显示主窗口</value>
+  </data>
   <data name="Site" xml:space="preserve">
     <value>网站</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
@@ -274,9 +277,6 @@
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>浅色</value>
-  </data>
-  <data name="ToggleMainWindowVisibility" xml:space="preserve">
-    <value>显示/隐藏主窗口</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>

@@ -33,6 +33,7 @@
                     <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
+                        x:FieldModifier="public"
                         x:Name="MenuFlyoutItemAppMenuToggleMainWindowVisibility"
                         Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
                     <MenuFlyoutItem
