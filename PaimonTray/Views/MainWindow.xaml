@@ -15,6 +15,7 @@
             <vm:CommandsViewModel x:Name="CommandsViewModel" />
         </Grid.DataContext>
         <!-- The app's task bar icon. -->
+        <!-- TODO: ContextMenuMode="SecondWindow" if qualified. -->
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
@@ -24,14 +25,18 @@
             ToolTipText="{x:Bind am:Package.Current.DisplayName}"
             Visibility="Collapsed">
             <ni:TaskbarIcon.ContextFlyout>
-                <MenuFlyout>
+                <MenuFlyout AreOpenCloseAnimationsEnabled="False">
                     <MenuFlyoutItem
-                        x:Name="MenuFlyoutItemAppMenuSettings"
-                        Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
+                        Command="{x:Bind CommandsViewModel.AddAccountCommand}"
+                        IsEnabled="False" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
-                        x:Name="MenuFlyoutItemAppMenuExit"
-                        Command="{x:Bind CommandsViewModel.ExitCommand}"
+                        x:Name="MenuFlyoutItemAppMenuToggleMainWindowVisibility"
+                        Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind CommandsViewModel.ExitAppCommand}"
                         CommandParameter="{x:Bind TaskbarIconApp}" />
                 </MenuFlyout>
             </ni:TaskbarIcon.ContextFlyout>
@@ -66,13 +71,10 @@
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem
-                                x:Name="MenuFlyoutItemMainMenuAddAccount"
-                                Icon="AddFriend" />
+                                Command="{x:Bind CommandsViewModel.AddAccountCommand}"
+                                IsEnabled="False" />
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem
-                                x:Name="MenuFlyoutItemMainMenuSettings"
-                                Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}"
-                                Icon="Setting" />
+                            <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                             <MenuFlyoutSubItem
                                 x:Name="MenuFlyoutSubItemMainMenuHelp"
                                 Icon="Help">
@@ -112,11 +114,10 @@
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
-                                x:Name="MenuFlyoutItemMainMenuHide"
+                                x:Name="MenuFlyoutItemMainMenuHideMainWindow"
                                 Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
                             <MenuFlyoutItem
-                                x:Name="MenuFlyoutItemMainMenuExit"
-                                Command="{x:Bind CommandsViewModel.ExitCommand}"
+                                Command="{x:Bind CommandsViewModel.ExitAppCommand}"
                                 CommandParameter="{x:Bind TaskbarIconApp}" />
                         </MenuFlyout>
                     </Button.Flyout>

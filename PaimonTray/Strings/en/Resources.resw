@@ -154,20 +154,11 @@
   <data name="GitHubRepo" xml:space="preserve">
     <value>GitHub repository</value>
   </data>
-  <data name="GreetingNotification" xml:space="preserve">
-    <value>Show a greeting notification when the app starts</value>
-  </data>
-  <data name="GreetingNotificationContent" xml:space="preserve">
-    <value>You can click the app icon to show/hide the main window.</value>
-  </data>
-  <data name="GreetingNotificationTitle" xml:space="preserve">
-    <value>Paimon's now in your "system tray"!</value>
-  </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
-  <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+  <data name="HideMainWindow" xml:space="preserve">
+    <value>Hide the main window</value>
   </data>
   <data name="HowToGetCookies" xml:space="preserve">
     <value>How to get your cookies? (The relevant user manual section is unready. The link provided is from PaimonMenuBar for your reference.)</value>
@@ -206,7 +197,7 @@
     <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to dismiss this hint the next time the page is loaded.</value>
   </data>
   <data name="LoginHintComplete" xml:space="preserve">
-    <value>You need to confirm completing login after you log into your account on the web page.</value>
+    <value>Confirm completing login after you log into your account on the web page</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
@@ -219,6 +210,15 @@
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>miHoYo</value>
+  </data>
+  <data name="NotificationGreeting" xml:space="preserve">
+    <value>Show a greeting notification when the app starts</value>
+  </data>
+  <data name="NotificationGreetingContent" xml:space="preserve">
+    <value>You can click the app icon in the taskbar corner or its overflow menu to show/hide the main window.</value>
+  </data>
+  <data name="NotificationGreetingTitle" xml:space="preserve">
+    <value>Paimon's now in your "system tray"!</value>
   </data>
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
@@ -236,7 +236,7 @@
     <value>Release notes</value>
   </data>
   <data name="ReloadLoginWebPage" xml:space="preserve">
-    <value>Reload the login web page.</value>
+    <value>Reload the login web page</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
@@ -274,6 +274,9 @@
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
+  </data>
+  <data name="ToggleMainWindowVisibility" xml:space="preserve">
+    <value>Show/Hide the main window</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>

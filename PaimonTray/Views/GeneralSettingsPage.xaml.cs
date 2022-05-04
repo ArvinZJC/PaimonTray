@@ -21,9 +21,9 @@ namespace PaimonTray.Views
         public GeneralSettingsPage()
         {
             InitializeComponent();
-            ShowGreetingNotificationSelection();
             ShowLanguageSelection();
             ShowMainWindowTopNavigationPaneSelection();
+            ShowNotificationGreetingSelection();
             ShowThemeSelection();
             UpdateUiText();
         } // end constructor GeneralSettingsPage
@@ -31,15 +31,6 @@ namespace PaimonTray.Views
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Show the greeting notification selection.
-        /// </summary>
-        private void ShowGreetingNotificationSelection()
-        {
-            ToggleSwitchGreetingNotification.IsOn =
-                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification];
-        } // end method ShowGreetingNotificationSelection
 
         /// <summary>
         /// Show the language selection.
@@ -71,6 +62,15 @@ namespace PaimonTray.Views
                 (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane];
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ShowMainWindowTopNavigationPaneSelection
+
+        /// <summary>
+        /// Show the greeting notification selection.
+        /// </summary>
+        private void ShowNotificationGreetingSelection()
+        {
+            ToggleSwitchNotificationGreeting.IsOn =
+                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting];
+        } // end method ShowNotificationGreetingSelection
 
         /// <summary>
         /// Show the theme selection.
@@ -106,7 +106,6 @@ namespace PaimonTray.Views
             RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
             RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
             RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
-            TextBlockGreetingNotification.Text = resourceLoader.GetString("GreetingNotification");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
             TextBlockLanguageAppliedAfterAppRestart.Text = resourceLoader.GetString("ChangesAppliedAfterAppRestart");
             TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
@@ -115,6 +114,7 @@ namespace PaimonTray.Views
             TextBlockLaunchOnWindowsStartupExplanation.Text =
                 resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
             TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
+            TextBlockNotificationGreeting.Text = resourceLoader.GetString("NotificationGreeting");
             TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
             TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
             TextBlockTheme.Text = resourceLoader.GetString("Theme");
@@ -170,13 +170,6 @@ namespace PaimonTray.Views
             TextBlockThemeSelection.Text = (sender as RadioButton)?.Content as string;
         } // end method RadioButtonsTheme_Checked
 
-        // Handle the greeting notification toggle switch's toggled event.
-        private void ToggleSwitchGreetingNotification_OnToggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification] =
-                ToggleSwitchGreetingNotification.IsOn;
-        } // end method ToggleSwitchGreetingNotification_OnToggled
-
         // Handle the toggled event of the toggle switch of the setting for configuring the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
         {
@@ -184,6 +177,13 @@ namespace PaimonTray.Views
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
+
+        // Handle the greeting notification toggle switch's toggled event.
+        private void ToggleSwitchNotificationGreeting_OnToggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting] =
+                ToggleSwitchNotificationGreeting.IsOn;
+        } // end method ToggleSwitchNotificationGreeting_OnToggled
 
         #endregion Event Handlers
     } // end class GeneralSettingsPage

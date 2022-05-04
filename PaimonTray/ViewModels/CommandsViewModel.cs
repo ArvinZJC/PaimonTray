@@ -1,11 +1,12 @@
 ﻿using H.NotifyIcon;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
-using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Notifications;
 
 namespace PaimonTray.ViewModels
@@ -19,9 +20,28 @@ namespace PaimonTray.ViewModels
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
+        /// The command to add an account.
+        /// </summary>
+        public ICommand AddAccountCommand
+#pragma warning restore CA1822 // Mark members as static
+
+        {
+            get
+            {
+                XamlUICommand xamlUiCommand = new();
+
+                xamlUiCommand.ExecuteRequested += (_, _) => Log.Debug("Adding an account requested."); // TODO
+                xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend };
+                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AddAccount");
+                return xamlUiCommand;
+            } // end get
+        } // end property AddAccountCommand
+
+#pragma warning disable CA1822 // Mark members as static
+        /// <summary>
         /// The command to exit the app.
         /// </summary>
-        public ICommand ExitCommand
+        public ICommand ExitAppCommand
 #pragma warning restore CA1822 // Mark members as static
         {
             get
@@ -35,14 +55,14 @@ namespace PaimonTray.ViewModels
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
-                    ToastNotificationManager.History.Remove(AppConstantsHelper.TagGreetingNotification,
-                        Package.Current.DisplayName);
+                    ToastNotificationManager.History.Clear();
                     Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
+                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("Exit");
                 return xamlUiCommand;
             } // end get
-        } // end property ExitCommand
+        } // end property ExitAppCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
@@ -76,6 +96,8 @@ namespace PaimonTray.ViewModels
                 XamlUICommand xamlUiCommand = new();
 
                 xamlUiCommand.ExecuteRequested += (_, _) => WindowsHelper.ShowSettingsWindow();
+                xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.Setting };
+                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("Settings");
                 return xamlUiCommand;
             } // end get
         } // end property ShowSettingsWindowCommand
@@ -95,10 +117,10 @@ namespace PaimonTray.ViewModels
                 {
                     var mainWindow = WindowsHelper.ShowMainWindow();
 
-                    if (mainWindow.AppWin.IsVisible)
-                        mainWindow.AppWin.Hide();
+                    if (mainWindow.Visible)
+                        mainWindow.Hide();
                     else
-                        mainWindow.AppWin.Show();
+                        mainWindow.Show();
                 };
                 return xamlUiCommand;
             } // end get

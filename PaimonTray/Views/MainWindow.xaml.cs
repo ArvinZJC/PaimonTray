@@ -22,6 +22,8 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        private AppWindow _appWindow;
+
         /// <summary>
         /// A flag indicating if it is the 1st time the window is loaded.
         /// </summary>
@@ -30,11 +32,6 @@ namespace PaimonTray.Views
         #endregion Fields
 
         #region Properties
-
-        /// <summary>
-        /// The main window's <see cref="AppWindow"/>.
-        /// </summary>
-        public AppWindow AppWin { get; private set; }
 
         /// <summary>
         /// The main window's <see cref="MainWindowViewModel"/>.
@@ -61,7 +58,8 @@ namespace PaimonTray.Views
 
             MainWinViewModel = new MainWindowViewModel();
             MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
-            TaskbarIconApp.Visibility = Visibility.Visible;
+            TaskbarIconApp.Visibility =
+                Visibility.Visible; // Show the taskbar icon when finishing all the other initialisation.
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -73,19 +71,19 @@ namespace PaimonTray.Views
         /// </summary>
         private void CustomiseWindow()
         {
-            WinId = WindowsHelper.GetWindowId(this);
-            AppWin = WindowsHelper.GetAppWindow(WinId);
             Title = Package.Current.DisplayName;
+            WinId = WindowsHelper.GetWindowId(this);
+            _appWindow = WindowsHelper.GetAppWindow(WinId);
 
-            if (AppWin == null)
+            if (_appWindow == null)
             {
                 Log.Warning("The main window's AppWindow is null.");
                 return;
             } // end if
 
-            AppWin.IsShownInSwitchers = false;
+            _appWindow.IsShownInSwitchers = false;
 
-            var appWindowOverlappedPresenter = AppWin.Presenter as OverlappedPresenter;
+            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
 
             if (appWindowOverlappedPresenter == null)
             {
@@ -107,31 +105,27 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-            MenuFlyoutItemAppMenuExit.Text = resourceLoader.GetString("Exit");
-            MenuFlyoutItemAppMenuSettings.Text = resourceLoader.GetString("Settings");
-            MenuFlyoutItemMainMenuExit.Text = resourceLoader.GetString("Exit");
+            MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text = resourceLoader.GetString("ToggleMainWindowVisibility");
             MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
             MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
             MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
             MenuFlyoutItemMainMenuHelpShowLogs.Text = resourceLoader.GetString("ShowLogs");
-            MenuFlyoutItemMainMenuHide.Text = resourceLoader.GetString("Hide");
-            MenuFlyoutItemMainMenuAddAccount.Text = resourceLoader.GetString("AddAccount");
+            MenuFlyoutItemMainMenuHideMainWindow.Text = resourceLoader.GetString("HideMainWindow");
             MenuFlyoutItemMainMenuReleaseNotes.Text = resourceLoader.GetString("ReleaseNotes");
-            MenuFlyoutItemMainMenuSettings.Text = resourceLoader.GetString("Settings");
             MenuFlyoutItemMainMenuUserManual.Text = resourceLoader.GetString("UserManual");
             MenuFlyoutItemMainMenuViewIssues.Text = resourceLoader.GetString("ViewIssues");
             MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
             ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
 
-            if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyGreetingNotification])
+            if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting])
                 new ToastContentBuilder()
-                    .AddText(resourceLoader.GetString("GreetingNotificationTitle"))
-                    .AddText(resourceLoader.GetString("GreetingNotificationContent"))
+                    .AddText(resourceLoader.GetString("NotificationGreetingTitle"))
+                    .AddText(resourceLoader.GetString("NotificationGreetingContent"))
                     .Show(toast =>
                     {
                         toast.Group = Package.Current.DisplayName;
-                        toast.Tag = AppConstantsHelper.TagGreetingNotification;
+                        toast.Tag = AppConstantsHelper.TagNotificationGreeting;
                     });
         } // end method UpdateUiText
 
@@ -151,24 +145,24 @@ namespace PaimonTray.Views
             {
                 winHeight = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
                                   NavigationViewBody.CompactPaneLength) +
-                            AppConstantsHelper.WindowMainSideLengthOffset;
+                            AppConstantsHelper.MainWindowSideLengthOffset;
                 winWidth = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
-                           AppConstantsHelper.WindowMainSideLengthOffset;
+                           AppConstantsHelper.MainWindowSideLengthOffset;
             }
             else
             {
                 winHeight = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
-                            AppConstantsHelper.WindowMainSideLengthOffset;
+                            AppConstantsHelper.MainWindowSideLengthOffset;
                 winWidth = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
                                  NavigationViewBody.CompactPaneLength) +
-                           AppConstantsHelper.WindowMainSideLengthOffset;
+                           AppConstantsHelper.MainWindowSideLengthOffset;
             } // end if...else
 
-            AppWin.MoveAndResize(new RectInt32
+            _appWindow.MoveAndResize(new RectInt32
             {
                 Height = winHeight, Width = winWidth,
-                X = workArea.Width - winWidth - AppConstantsHelper.WindowMainPositionOffset,
-                Y = workArea.Height - winHeight - AppConstantsHelper.WindowMainPositionOffset
+                X = workArea.Width - winWidth - AppConstantsHelper.MainWindowPositionOffset,
+                Y = workArea.Height - winHeight - AppConstantsHelper.MainWindowPositionOffset
             });
 
             if (!_isFirstLoad) return;

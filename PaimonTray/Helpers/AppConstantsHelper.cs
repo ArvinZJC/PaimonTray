@@ -8,14 +8,49 @@
         #region Constants
 
         /// <summary>
+        /// The height of the page for adding an account using the alternative login method.
+        /// </summary>
+        public const int AddAccountPageLoginAlternativeHeight = 500;
+
+        /// <summary>
+        /// The width of the page for adding an account using the alternative login method.
+        /// </summary>
+        public const int AddAccountPageLoginAlternativeWidth = 500;
+
+        /// <summary>
+        /// The height of the page for adding a CN server account using the web page login method.
+        /// </summary>
+        public const int AddAccountPageLoginWebPageCnHeight = 800;
+
+        /// <summary>
+        /// The width of the page for adding a CN server account using the web page login method.
+        /// </summary>
+        public const int AddAccountPageLoginWebPageCnWidth = 680;
+
+        /// <summary>
+        /// The height of the page for adding a global server account using the web page login method.
+        /// </summary>
+        public const int AddAccountPageLoginWebPageGlobalHeight = 820;
+
+        /// <summary>
+        /// The width of the page for adding a global server account using the web page login method.
+        /// </summary>
+        public const int AddAccountPageLoginWebPageGlobalWidth = 800;
+
+        /// <summary>
         /// The app icon's author.
         /// </summary>
         public const string AppIconAuthor = "Chawong";
 
         /// <summary>
-        /// The essential cookie name in cookies.
+        /// The ID cookie name.
         /// </summary>
-        public const string CookieNameEssential = "account_id";
+        public const string CookieNameId = "account_id";
+
+        /// <summary>
+        /// The token cookie name.
+        /// </summary>
+        public const string CookieNameToken = "cookie_token";
 
         /// <summary>
         /// The name of the GitHub repository inspiring the app.
@@ -48,49 +83,19 @@
         public const string GlyphStatusCircleQuestionMark = "\xF142";
 
         /// <summary>
-        /// The height of the page for adding an account using the alternative login method.
+        /// The main window's position offset.
         /// </summary>
-        public const int PageAddAccountLoginAlternativeHeight = 500;
+        public const int MainWindowPositionOffset = 12;
 
         /// <summary>
-        /// The width of the page for adding an account using the alternative login method.
+        /// The main window's side length offset.
         /// </summary>
-        public const int PageAddAccountLoginAlternativeWidth = 500;
-
-        /// <summary>
-        /// The height of the page for adding a CN server account using the web page login method.
-        /// </summary>
-        public const int PageAddAccountLoginWebPageCnHeight = 800;
-
-        /// <summary>
-        /// The width of the page for adding a CN server account using the web page login method.
-        /// </summary>
-        public const int PageAddAccountLoginWebPageCnWidth = 680;
-
-        /// <summary>
-        /// The height of the page for adding a global server account using the web page login method.
-        /// </summary>
-        public const int PageAddAccountLoginWebPageGlobalHeight = 820;
-
-        /// <summary>
-        /// The width of the page for adding a global server account using the web page login method.
-        /// </summary>
-        public const int PageAddAccountLoginWebPageGlobalWidth = 800;
-
-        /// <summary>
-        /// The minimum beta revision version.
-        /// </summary>
-        public const int RevisionVersionBetaMin = 100;
-
-        /// <summary>
-        /// The stable revision version.
-        /// </summary>
-        public const int RevisionVersionStable = 200;
+        public const int MainWindowSideLengthOffset = 2;
 
         /// <summary>
         /// The greeting notification tag.
         /// </summary>
-        public const string TagGreetingNotification = "Greeting";
+        public const string TagNotificationGreeting = "NotificationGreeting";
 
         /// <summary>
         /// The app icon (.ico) URI.
@@ -178,14 +183,14 @@
         public const string UrlWebView2Runtime = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
 
         /// <summary>
-        /// The main window position offset.
+        /// The minimum beta revision version.
         /// </summary>
-        public const int WindowMainPositionOffset = 12;
+        public const int VersionRevisionBetaMin = 100;
 
         /// <summary>
-        /// The main window side length offset.
+        /// The stable revision version.
         /// </summary>
-        public const int WindowMainSideLengthOffset = 2;
+        public const int VersionRevisionStable = 200;
 
         #endregion Constants
     } // end class AppConstantsHelper

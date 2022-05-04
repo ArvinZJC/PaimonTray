@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Dispatching;
+﻿using H.NotifyIcon;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using PaimonTray.Helpers;
@@ -53,7 +54,7 @@ namespace PaimonTray
 
             if (appInstance.IsCurrent)
             {
-                appInstance.Activated += (_, _) => WindowsHelper.ShowMainWindow().AppWin.Show();
+                appInstance.Activated += (_, _) => WindowsHelper.ShowMainWindow().Show();
                 return false;
             } // end if
 

@@ -59,19 +59,19 @@ namespace PaimonTray.Views
                 var workArea = DisplayArea
                     .GetFromWindowId(((MainWindow)existingWindow).WinId, DisplayAreaFallback.Primary).WorkArea;
 
-                pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.WindowMainPositionOffset;
-                pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.WindowMainPositionOffset;
+                pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.MainWindowPositionOffset;
+                pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.MainWindowPositionOffset;
                 break;
             } // end foreach
 
             if (_isWebView2Available)
             {
                 var pageSuggestedHeight = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                    ? AppConstantsHelper.PageAddAccountLoginWebPageCnHeight
-                    : AppConstantsHelper.PageAddAccountLoginWebPageGlobalHeight;
+                    ? AppConstantsHelper.AddAccountPageLoginWebPageCnHeight
+                    : AppConstantsHelper.AddAccountPageLoginWebPageGlobalHeight;
                 var pageSuggestedWidth = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                    ? AppConstantsHelper.PageAddAccountLoginWebPageCnWidth
-                    : AppConstantsHelper.PageAddAccountLoginWebPageGlobalWidth;
+                    ? AppConstantsHelper.AddAccountPageLoginWebPageCnWidth
+                    : AppConstantsHelper.AddAccountPageLoginWebPageGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
                 ButtonLoginWebPage.Visibility = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
@@ -83,12 +83,12 @@ namespace PaimonTray.Views
             else
             {
                 HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
-                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.PageAddAccountLoginAlternativeHeight
+                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
                     ? pageMaxHeight
-                    : AppConstantsHelper.PageAddAccountLoginAlternativeHeight;
-                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.PageAddAccountLoginAlternativeWidth
+                    : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
+                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
                     ? pageMaxWidth
-                    : AppConstantsHelper.PageAddAccountLoginAlternativeWidth;
+                    : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
                 RunLoginPlace.Text = _resourceLoader.GetString(
                     ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn ? "MiHoYo" : "HoYoLab");
             } // end if...else
@@ -139,17 +139,19 @@ namespace PaimonTray.Views
 
         private async void GetCookiesAsync()
         {
-            var stringBuilderCookies = new StringBuilder();
+            var stringBuilderCookies = new StringBuilder(string.Empty);
 
             foreach (var cookie in await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
                          ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                              ? AppConstantsHelper.UrlCookiesMiHoYo
                              : AppConstantsHelper.UrlCookiesHoYoLab))
-                stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
+                if (cookie.Name is AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken)
+                    stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
 
             var cookies = stringBuilderCookies.ToString();
 
-            if (cookies.Contains(AppConstantsHelper.CookieNameEssential))
+            if (cookies.Contains(AppConstantsHelper.CookieNameId) &&
+                cookies.Contains(AppConstantsHelper.CookieNameToken))
             {
                 _webView2LoginWebPage.Close();
                 Log.Information(cookies);
@@ -162,7 +164,7 @@ namespace PaimonTray.Views
                 Content = _resourceLoader.GetString("LoginFail"),
                 CloseButtonText = _resourceLoader.GetString("Ok"),
                 XamlRoot = Content.XamlRoot
-            }.ShowAsync();
+            }.ShowAsync(); // TODO
         } // end method GetCookiesAsync
 
         /// <summary>

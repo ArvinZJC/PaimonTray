@@ -203,16 +203,16 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
-                        x:Name="TextBlockGreetingNotification"
+                        x:Name="TextBlockNotificationGreeting"
                         Grid.Column="0"
                         TextWrapping="WrapWholeWords"
                         TextAlignment="Justify"
                         VerticalAlignment="Center" />
                     <ToggleSwitch
-                        x:Name="ToggleSwitchGreetingNotification"
+                        x:Name="ToggleSwitchNotificationGreeting"
                         FlowDirection="RightToLeft"
                         Grid.Column="1"
-                        Toggled="ToggleSwitchGreetingNotification_OnToggled"
+                        Toggled="ToggleSwitchNotificationGreeting_OnToggled"
                         VerticalAlignment="Center" />
                 </Grid>
             </Expander.Content>

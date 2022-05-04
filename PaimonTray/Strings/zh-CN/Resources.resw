@@ -154,20 +154,11 @@
   <data name="GitHubRepo" xml:space="preserve">
     <value>GitHub 仓库</value>
   </data>
-  <data name="GreetingNotification" xml:space="preserve">
-    <value>在应用启动时显示一个问候通知</value>
-  </data>
-  <data name="GreetingNotificationContent" xml:space="preserve">
-    <value>您可通过点击应用图标来显示/隐藏主窗口。</value>
-  </data>
-  <data name="GreetingNotificationTitle" xml:space="preserve">
-    <value>派蒙进到您的“系统托盘”里啦！</value>
-  </data>
   <data name="Help" xml:space="preserve">
     <value>帮助</value>
   </data>
-  <data name="Hide" xml:space="preserve">
-    <value>隐藏</value>
+  <data name="HideMainWindow" xml:space="preserve">
+    <value>隐藏主窗口</value>
   </data>
   <data name="HowToGetCookies" xml:space="preserve">
     <value>如何获取您的 cookie？（使用手册相关的部分还未完备。提供的来自 PaimonMenuBar 的链接可供参考。）</value>
@@ -206,7 +197,7 @@
     <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不显示此提示。</value>
   </data>
   <data name="LoginHintComplete" xml:space="preserve">
-    <value>您需要在网页上登录您的账号后确认完成登录。</value>
+    <value>在网页上登录您的账号后确认完成登录</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
@@ -219,6 +210,15 @@
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>
+  </data>
+  <data name="NotificationGreeting" xml:space="preserve">
+    <value>在应用启动时显示一个问候通知</value>
+  </data>
+  <data name="NotificationGreetingContent" xml:space="preserve">
+    <value>您可点击在任务栏角或其溢出菜单中的应用图标来显示/隐藏主窗口。</value>
+  </data>
+  <data name="NotificationGreetingTitle" xml:space="preserve">
+    <value>派蒙进到您的“系统托盘”里啦！</value>
   </data>
   <data name="Notifications" xml:space="preserve">
     <value>通知</value>
@@ -236,7 +236,7 @@
     <value>发布说明</value>
   </data>
   <data name="ReloadLoginWebPage" xml:space="preserve">
-    <value>重新加载登录页。</value>
+    <value>重新加载登录页</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>服务器</value>
@@ -274,6 +274,9 @@
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>浅色</value>
+  </data>
+  <data name="ToggleMainWindowVisibility" xml:space="preserve">
+    <value>显示/隐藏主窗口</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>

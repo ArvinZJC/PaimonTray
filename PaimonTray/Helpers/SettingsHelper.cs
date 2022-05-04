@@ -15,11 +15,6 @@ namespace PaimonTray.Helpers
         #region Constants
 
         /// <summary>
-        /// The greeting notification setting key.
-        /// </summary>
-        public const string KeyGreetingNotification = "GreetingNotification";
-
-        /// <summary>
         /// The language setting key.
         /// </summary>
         public const string KeyLanguage = "Language";
@@ -28,6 +23,11 @@ namespace PaimonTray.Helpers
         /// The setting key for the main window's top navigation pane.
         /// </summary>
         public const string KeyMainWindowTopNavigationPane = "MainWindowTopNavigationPane";
+
+        /// <summary>
+        /// The greeting notification setting key.
+        /// </summary>
+        public const string KeyNotificationGreeting = "NotificationGreeting";
 
         /// <summary>
         /// The theme setting key.
@@ -105,9 +105,9 @@ namespace PaimonTray.Helpers
         /// </summary>
         public static void InitialiseSettings()
         {
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyGreetingNotification) ||
-                ApplicationData.Current.LocalSettings.Values[KeyGreetingNotification] is not bool)
-                InitialiseSetting(KeyGreetingNotification, "Greeting notification setting", true);
+            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyNotificationGreeting) ||
+                ApplicationData.Current.LocalSettings.Values[KeyNotificationGreeting] is not bool)
+                InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
 
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyLanguage) ||
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(

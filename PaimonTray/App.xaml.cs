@@ -80,9 +80,9 @@ namespace PaimonTray
         {
             var suffix = Package.Current.Id.Version.Revision switch
             {
-                < AppConstantsHelper.RevisionVersionBetaMin => $"-alpha.{Package.Current.Id.Version.Revision + 1}",
-                < AppConstantsHelper.RevisionVersionStable =>
-                    $"-beta.{Package.Current.Id.Version.Revision - AppConstantsHelper.RevisionVersionBetaMin + 1}",
+                < AppConstantsHelper.VersionRevisionBetaMin => $"-alpha.{Package.Current.Id.Version.Revision + 1}",
+                < AppConstantsHelper.VersionRevisionStable =>
+                    $"-beta.{Package.Current.Id.Version.Revision - AppConstantsHelper.VersionRevisionBetaMin + 1}",
                 _ => string.Empty
             };
 
