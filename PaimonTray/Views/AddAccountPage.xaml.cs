@@ -80,16 +80,16 @@ namespace PaimonTray.Views
                 ButtonLoginWebPage.Visibility = comboBoxServerSelectedItem == ComboBoxItemServerCn
                     ? Visibility.Collapsed
                     : Visibility.Visible;
-                PageAddAccount.Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
-                PageAddAccount.Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
+                Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
+                Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
             }
             else
             {
                 HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
-                PageAddAccount.Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
+                Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
                     ? pageMaxHeight
                     : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
-                PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
+                Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
                     ? pageMaxWidth
                     : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
                 RunLoginPlace.Text =
@@ -181,7 +181,7 @@ namespace PaimonTray.Views
                 Content = _resourceLoader.GetString("LoginFail"),
                 CloseButtonText = _resourceLoader.GetString("Ok"),
                 RequestedTheme = SettingsHelper.GetTheme(),
-                XamlRoot = Content.XamlRoot
+                XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
             };
 
             await _contentDialogueLoginFail.ShowAsync();
