@@ -169,8 +169,16 @@
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="LanguageEn" xml:space="preserve">
+    <value>English</value>
+    <comment>Use the language to display the language name.</comment>
+  </data>
   <data name="LanguageExplanation" xml:space="preserve">
     <value>Change the app language.</value>
+  </data>
+  <data name="LanguageZhCn" xml:space="preserve">
+    <value>简体中文</value>
+    <comment>Use the language to display the language name.</comment>
   </data>
   <data name="LaunchOnWindowsStartup" xml:space="preserve">
     <value>Launch on Windows startup</value>

@@ -75,20 +75,16 @@
                     </Grid.RowDefinitions>
                     <RadioButtons
                         x:Name="RadioButtonsLanguage"
-                        Grid.Row="0">
+                        Grid.Row="0"
+                        SelectionChanged="RadioButtonsLanguage_OnSelectionChanged">
                         <RadioButton
                             x:Name="RadioButtonLanguageSystem"
-                            Checked="RadioButtonLanguage_OnChecked"
                             Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                         <RadioButton
                             x:Name="RadioButtonLanguageEn"
-                            Checked="RadioButtonLanguage_OnChecked"
-                            Content="English"
                             Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
                         <RadioButton
                             x:Name="RadioButtonLanguageZhCn"
-                            Checked="RadioButtonLanguage_OnChecked"
-                            Content="简体中文"
                             Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
                     </RadioButtons>
                     <TextBlock
@@ -141,18 +137,17 @@
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left">
             <Expander.Content>
-                <RadioButtons x:Name="RadioButtonsTheme">
+                <RadioButtons
+                    x:Name="RadioButtonsTheme"
+                    SelectionChanged="RadioButtonsTheme_OnSelectionChanged">
                     <RadioButton
                         x:Name="RadioButtonThemeSystem"
-                        Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                     <RadioButton
                         x:Name="RadioButtonThemeLight"
-                        Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
                     <RadioButton
                         x:Name="RadioButtonThemeDark"
-                        Checked="RadioButtonTheme_Checked"
                         Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
                 </RadioButtons>
             </Expander.Content>

@@ -15,7 +15,7 @@ namespace PaimonTray.Views
     {
         #region Fields
 
-        private ApplicationDataContainer _applicationDataContainerSettings;
+        private readonly ApplicationDataContainer _applicationDataContainerSettings;
 
         #endregion Fields
 
@@ -45,20 +45,13 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowLanguageSelection()
         {
-            switch (_applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage])
-            {
-                case SettingsHelper.TagLanguageEn:
-                    RadioButtonLanguageEn.IsChecked = true;
-                    break;
-
-                case SettingsHelper.TagLanguageZhCn:
-                    RadioButtonLanguageZhCn.IsChecked = true;
-                    break;
-
-                default:
-                    RadioButtonLanguageSystem.IsChecked = true;
-                    break;
-            } // end switch-case
+            RadioButtonsLanguage.SelectedItem =
+                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] switch
+                {
+                    SettingsHelper.TagLanguageEn => RadioButtonLanguageEn,
+                    SettingsHelper.TagLanguageZhCn => RadioButtonLanguageZhCn,
+                    _ => RadioButtonLanguageSystem
+                };
         } // end method ShowLanguageSelection
 
         /// <summary>
@@ -85,20 +78,12 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowThemeSelection()
         {
-            switch (_applicationDataContainerSettings.Values[SettingsHelper.KeyTheme])
+            RadioButtonsTheme.SelectedItem = _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] switch
             {
-                case SettingsHelper.TagThemeDark:
-                    RadioButtonThemeDark.IsChecked = true;
-                    break;
-
-                case SettingsHelper.TagThemeLight:
-                    RadioButtonThemeLight.IsChecked = true;
-                    break;
-
-                default:
-                    RadioButtonThemeSystem.IsChecked = true;
-                    break;
-            } // end switch-case
+                SettingsHelper.TagThemeDark => RadioButtonThemeDark,
+                SettingsHelper.TagThemeLight => RadioButtonThemeLight,
+                _ => RadioButtonThemeSystem
+            };
         } // end method ShowThemeSelection
 
         /// <summary>
@@ -108,7 +93,9 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
+            RadioButtonLanguageEn.Content = resourceLoader.GetString("LanguageEn");
             RadioButtonLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
+            RadioButtonLanguageZhCn.Content = resourceLoader.GetString("LanguageZhCn");
             RadioButtonThemeDark.Content = resourceLoader.GetString("ThemeDark");
             RadioButtonThemeLight.Content = resourceLoader.GetString("ThemeLight");
             RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
@@ -150,33 +137,37 @@ namespace PaimonTray.Views
             new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
-        // Handle the language radio button's checked event.
-        private void RadioButtonLanguage_OnChecked(object sender, RoutedEventArgs e)
+        // Handle the language radio buttons' selection changed event.
+        private void RadioButtonsLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RadioButtonsLanguage.SelectedItem != sender && (sender as RadioButton)?.Tag != null)
-                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] = ((RadioButton)sender).Tag;
+            var radioButtonsLanguageSelectedItem = RadioButtonsLanguage.SelectedItem as RadioButton;
 
-            RadioButtonsLanguage.SelectedItem = sender;
+            if (radioButtonsLanguageSelectedItem == null) return;
+
+            var radioButtonsLanguageSelectedItemTag = radioButtonsLanguageSelectedItem.Tag as string;
+
+            _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] = radioButtonsLanguageSelectedItemTag;
+
             TextBlockLanguageAppliedAfterAppRestart.Visibility =
-                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] as string ==
-                (Application.Current as App)?.LanguageSelectionApplied
+                radioButtonsLanguageSelectedItemTag == (Application.Current as App)?.LanguageSelectionApplied
                     ? Visibility.Collapsed
                     : Visibility.Visible;
-            TextBlockLanguageSelection.Text = (sender as RadioButton)?.Content as string;
-        } // end method RadioButtonLanguage_OnChecked
+            TextBlockLanguageSelection.Text = radioButtonsLanguageSelectedItem.Content as string;
+        } // end method RadioButtonsLanguage_OnSelectionChanged
 
-        // Handle the theme radio button's checked event.
-        private void RadioButtonTheme_Checked(object sender, RoutedEventArgs e)
+        // Handle the theme radio buttons' selection changed event.
+        private void RadioButtonsTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RadioButtonsTheme.SelectedItem != sender && (sender as RadioButton)?.Tag != null)
-            {
-                _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] = ((RadioButton)sender).Tag;
-                SettingsHelper.ApplyThemeSelection();
-            } // end if
+            var radioButtonsThemeSelectedItem = RadioButtonsTheme.SelectedItem as RadioButton;
 
-            RadioButtonsTheme.SelectedItem = sender;
-            TextBlockThemeSelection.Text = (sender as RadioButton)?.Content as string;
-        } // end method RadioButtonsTheme_Checked
+            if (radioButtonsThemeSelectedItem == null) return;
+
+            _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] =
+                radioButtonsThemeSelectedItem.Tag as string;
+            SettingsHelper.ApplyThemeSelection();
+
+            TextBlockThemeSelection.Text = radioButtonsThemeSelectedItem.Content as string;
+        } // end method RadioButtonsTheme_OnSelectionChanged
 
         // Handle the toggled event of the toggle switch of the setting for configuring the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
