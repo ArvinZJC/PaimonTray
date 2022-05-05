@@ -13,6 +13,12 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class GeneralSettingsPage
     {
+        #region Fields
+
+        private ApplicationDataContainer _applicationDataContainerSettings;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -20,6 +26,8 @@ namespace PaimonTray.Views
         /// </summary>
         public GeneralSettingsPage()
         {
+            _applicationDataContainerSettings =
+                ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings];
             InitializeComponent();
             ShowLanguageSelection();
             ShowMainWindowTopNavigationPaneSelection();
@@ -37,7 +45,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowLanguageSelection()
         {
-            switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage])
+            switch (_applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage])
             {
                 case SettingsHelper.TagLanguageEn:
                     RadioButtonLanguageEn.IsChecked = true;
@@ -59,7 +67,7 @@ namespace PaimonTray.Views
         private void ShowMainWindowTopNavigationPaneSelection()
         {
             ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane];
+                (bool)_applicationDataContainerSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane];
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ShowMainWindowTopNavigationPaneSelection
 
@@ -69,7 +77,7 @@ namespace PaimonTray.Views
         private void ShowNotificationGreetingSelection()
         {
             ToggleSwitchNotificationGreeting.IsOn =
-                (bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting];
+                (bool)_applicationDataContainerSettings.Values[SettingsHelper.KeyNotificationGreeting];
         } // end method ShowNotificationGreetingSelection
 
         /// <summary>
@@ -77,7 +85,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowThemeSelection()
         {
-            switch (ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme])
+            switch (_applicationDataContainerSettings.Values[SettingsHelper.KeyTheme])
             {
                 case SettingsHelper.TagThemeDark:
                     RadioButtonThemeDark.IsChecked = true;
@@ -146,11 +154,11 @@ namespace PaimonTray.Views
         private void RadioButtonLanguage_OnChecked(object sender, RoutedEventArgs e)
         {
             if (RadioButtonsLanguage.SelectedItem != sender && (sender as RadioButton)?.Tag != null)
-                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] = ((RadioButton)sender).Tag;
+                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] = ((RadioButton)sender).Tag;
 
             RadioButtonsLanguage.SelectedItem = sender;
             TextBlockLanguageAppliedAfterAppRestart.Visibility =
-                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] as string ==
+                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] as string ==
                 (Application.Current as App)?.LanguageSelectionApplied
                     ? Visibility.Collapsed
                     : Visibility.Visible;
@@ -162,7 +170,7 @@ namespace PaimonTray.Views
         {
             if (RadioButtonsTheme.SelectedItem != sender && (sender as RadioButton)?.Tag != null)
             {
-                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyTheme] = ((RadioButton)sender).Tag;
+                _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] = ((RadioButton)sender).Tag;
                 SettingsHelper.ApplyThemeSelection();
             } // end if
 
@@ -173,7 +181,7 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for configuring the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane] =
+            _applicationDataContainerSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane] =
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
@@ -181,7 +189,7 @@ namespace PaimonTray.Views
         // Handle the greeting notification toggle switch's toggled event.
         private void ToggleSwitchNotificationGreeting_OnToggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting] =
+            _applicationDataContainerSettings.Values[SettingsHelper.KeyNotificationGreeting] =
                 ToggleSwitchNotificationGreeting.IsOn;
         } // end method ToggleSwitchNotificationGreeting_OnToggled
 

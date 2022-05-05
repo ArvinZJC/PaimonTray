@@ -44,14 +44,12 @@ namespace PaimonTray
             Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
             SettingsHelper.InitialiseSettings();
 
-            ApplicationLanguages.PrimaryLanguageOverride =
-                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] as string ==
-                SettingsHelper.TagSystem
-                    ? string.Empty
-                    : ApplicationData.Current.LocalSettings.Values[
-                        SettingsHelper.KeyLanguage] as string; // Apply the language selection.
-            LanguageSelectionApplied =
-                ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyLanguage] as string;
+            // Apply the language selection.
+            LanguageSelectionApplied = ApplicationData.Current.LocalSettings
+                .Containers[SettingsHelper.ContainerKeySettings].Values[SettingsHelper.KeyLanguage] as string;
+            ApplicationLanguages.PrimaryLanguageOverride = LanguageSelectionApplied == SettingsHelper.TagSystem
+                ? string.Empty
+                : LanguageSelectionApplied;
 
             InitializeComponent();
         } // end constructor App
@@ -78,16 +76,16 @@ namespace PaimonTray
         // Generate the app version from the package version.
         private void GenerateAppVersion()
         {
-            var suffix = Package.Current.Id.Version.Revision switch
+            var packageVersion = Package.Current.Id.Version;
+            var suffix = packageVersion.Revision switch
             {
-                < AppConstantsHelper.VersionRevisionBetaMin => $"-alpha.{Package.Current.Id.Version.Revision + 1}",
+                < AppConstantsHelper.VersionRevisionBetaMin => $"-alpha.{packageVersion.Revision + 1}",
                 < AppConstantsHelper.VersionRevisionStable =>
-                    $"-beta.{Package.Current.Id.Version.Revision - AppConstantsHelper.VersionRevisionBetaMin + 1}",
+                    $"-beta.{packageVersion.Revision - AppConstantsHelper.VersionRevisionBetaMin + 1}",
                 _ => string.Empty
             };
 
-            AppVersion =
-                $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}{suffix}";
+            AppVersion = $"{packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}{suffix}";
         } // end method GetAppVersion
 
         #endregion Methods

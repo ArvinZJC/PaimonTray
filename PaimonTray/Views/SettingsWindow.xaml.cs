@@ -48,34 +48,41 @@ namespace PaimonTray.Views
         {
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
-                _appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-                _appWindow.TitleBar.ButtonForegroundColor =
+                var titleBar = _appWindow.TitleBar;
+
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor =
                     (GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush)?.Color;
-                _appWindow.TitleBar.ButtonHoverBackgroundColor =
+                titleBar.ButtonHoverBackgroundColor =
                     (GridTitleBar.Resources["TitleBarButtonHoverBackground"] as SolidColorBrush)?.Color;
-                _appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                _appWindow.TitleBar.ButtonInactiveForegroundColor = GridTitleBar.ActualTheme switch
+                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                titleBar.ButtonInactiveForegroundColor = GridTitleBar.ActualTheme switch
                 {
                     ElementTheme.Dark => Colors.DimGray,
                     ElementTheme.Default => null,
                     ElementTheme.Light => Colors.Silver,
                     _ => null
                 };
-                _appWindow.TitleBar.ButtonPressedBackgroundColor =
+                titleBar.ButtonPressedBackgroundColor =
                     (GridTitleBar.Resources["TitleBarButtonPressedBackground"] as SolidColorBrush)?.Color;
-                _appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-                GridColumnTitleBarLeftPadding.Width = new GridLength(_appWindow.TitleBar.LeftInset);
-                GridColumnTitleBarRightPadding.Width = new GridLength(_appWindow.TitleBar.RightInset);
-                GridTitleBar.Height = _appWindow.TitleBar.Height;
+                titleBar.ExtendsContentIntoTitleBar = true;
+
+                GridColumnTitleBarLeftPadding.Width = new GridLength(titleBar.LeftInset);
+                GridColumnTitleBarRightPadding.Width = new GridLength(titleBar.RightInset);
+                GridTitleBar.Height = titleBar.Height;
             }
             else
             {
-                ((SolidColorBrush)Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color =
+                var app = Application.Current;
+
+                // It is necessary to set the colour rather than the solid colour brush to avoid strange performance.
+                ((SolidColorBrush)app.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarButtonHoverBackground"]).Color;
-                ((SolidColorBrush)Application.Current.Resources["WindowCaptionForeground"]).Color =
+                ((SolidColorBrush)app.Resources["WindowCaptionForeground"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionForeground"]).Color;
-                ((SolidColorBrush)Application.Current.Resources["WindowCaptionForegroundDisabled"]).Color =
+                ((SolidColorBrush)app.Resources["WindowCaptionForegroundDisabled"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionInactiveForeground"]).Color;
+
                 ExtendsContentIntoTitleBar = true;
                 SetTitleBar(GridTitleBar);
             } // end if...else

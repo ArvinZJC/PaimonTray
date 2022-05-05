@@ -15,24 +15,29 @@ namespace PaimonTray.Helpers
         #region Constants
 
         /// <summary>
+        /// The settings container key.
+        /// </summary>
+        public const string ContainerKeySettings = "settings";
+
+        /// <summary>
         /// The language setting key.
         /// </summary>
-        public const string KeyLanguage = "Language";
+        public const string KeyLanguage = "language";
 
         /// <summary>
         /// The setting key for the main window's top navigation pane.
         /// </summary>
-        public const string KeyMainWindowTopNavigationPane = "MainWindowTopNavigationPane";
+        public const string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
 
         /// <summary>
         /// The greeting notification setting key.
         /// </summary>
-        public const string KeyNotificationGreeting = "NotificationGreeting";
+        public const string KeyNotificationGreeting = "notificationGreeting";
 
         /// <summary>
         /// The theme setting key.
         /// </summary>
-        public const string KeyTheme = "Theme";
+        public const string KeyTheme = "theme";
 
         /// <summary>
         /// The English language option tag.
@@ -47,17 +52,17 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The system default option tag.
         /// </summary>
-        public const string TagSystem = "System";
+        public const string TagSystem = "system";
 
         /// <summary>
         /// The dark theme option tag.
         /// </summary>
-        public const string TagThemeDark = "Dark";
+        public const string TagThemeDark = "dark";
 
         /// <summary>
         /// The light theme option tag.
         /// </summary>
-        public const string TagThemeLight = "Light";
+        public const string TagThemeLight = "light";
 
         #endregion Constants
 
@@ -81,7 +86,7 @@ namespace PaimonTray.Helpers
         {
             foreach (var existingWindow in WindowsHelper.ExistingWindowList)
                 ((FrameworkElement)existingWindow.Content).RequestedTheme =
-                    ApplicationData.Current.LocalSettings.Values[KeyTheme] switch
+                    ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[KeyTheme] switch
                     {
                         TagThemeDark => ElementTheme.Dark,
                         TagThemeLight => ElementTheme.Light,
@@ -95,34 +100,39 @@ namespace PaimonTray.Helpers
         /// <returns>The main window's navigation view's pane display mode.</returns>
         public static NavigationViewPaneDisplayMode DecideMainWindowNavigationViewPaneDisplayMode()
         {
-            return (bool)ApplicationData.Current.LocalSettings.Values[KeyMainWindowTopNavigationPane]
+            return (bool)ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings]
+                .Values[KeyMainWindowTopNavigationPane]
                 ? NavigationViewPaneDisplayMode.Top
                 : NavigationViewPaneDisplayMode.LeftCompact;
         } // end method DecideMainWindowNavigationViewPaneDisplayMode
 
         /// <summary>
-        /// Initialise the settings when initialising the app.
+        /// Initialise the settings when initialising the app. It should be invoked earlier than any other operations on the settings.
         /// </summary>
         public static void InitialiseSettings()
         {
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyNotificationGreeting) ||
-                ApplicationData.Current.LocalSettings.Values[KeyNotificationGreeting] is not bool)
+            var applicationDataContainerSettings = ApplicationData.Current.LocalSettings.CreateContainer(
+                ContainerKeySettings,
+                ApplicationDataCreateDisposition.Always);
+
+            if (!applicationDataContainerSettings.Values.ContainsKey(KeyNotificationGreeting) ||
+                applicationDataContainerSettings.Values[KeyNotificationGreeting] is not bool)
                 InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
 
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyLanguage) ||
+            if (!applicationDataContainerSettings.Values.ContainsKey(KeyLanguage) ||
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(
-                    ApplicationData.Current.LocalSettings.Values[KeyLanguage]))
+                    applicationDataContainerSettings.Values[KeyLanguage]))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyMainWindowTopNavigationPane) ||
-                ApplicationData.Current.LocalSettings.Values[KeyMainWindowTopNavigationPane] is not bool)
+            if (!applicationDataContainerSettings.Values.ContainsKey(KeyMainWindowTopNavigationPane) ||
+                applicationDataContainerSettings.Values[KeyMainWindowTopNavigationPane] is not bool)
                 InitialiseSetting(KeyMainWindowTopNavigationPane,
                     "The setting for configuring the main window's top navigation pane", false);
 
             // ReSharper disable once InvertIf
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(KeyTheme) ||
+            if (!applicationDataContainerSettings.Values.ContainsKey(KeyTheme) ||
                 !new[] { TagSystem, TagThemeDark, TagThemeLight }.Contains(
-                    ApplicationData.Current.LocalSettings.Values[KeyTheme]))
+                    applicationDataContainerSettings.Values[KeyTheme]))
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
         } // end method InitialiseSettings
 
@@ -134,7 +144,7 @@ namespace PaimonTray.Helpers
         /// <param name="value">The setting value.</param>
         private static void InitialiseSetting(string key, string name, object value)
         {
-            ApplicationData.Current.LocalSettings.Values[key] = value;
+            ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[key] = value;
             Log.Information($"{name} initialised to default.");
         } // end method InitialiseSetting
 

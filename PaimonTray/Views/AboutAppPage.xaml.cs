@@ -32,6 +32,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
+            var packageVersion = Package.Current.Id.Version;
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
             HyperlinkButtonGiteeRepo.Content = resourceLoader.GetString("GiteeRepo");
@@ -44,7 +45,7 @@ namespace PaimonTray.Views
             RunAcknowledgementAppIcon.Text = resourceLoader.GetString("AcknowledgementAppIcon");
             RunAcknowledgementInspiration.Text = resourceLoader.GetString("AcknowledgementInspiration");
             TextBlockVersion.Text =
-                $"{resourceLoader.GetString("Version")} {(Application.Current as App)?.AppVersion} ({Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision})";
+                $"{resourceLoader.GetString("Version")} {(Application.Current as App)?.AppVersion} ({packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}.{packageVersion.Revision})";
         } // end method UpdateUiText
 
         #endregion Methods

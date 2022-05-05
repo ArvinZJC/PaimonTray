@@ -32,8 +32,8 @@ namespace PaimonTray.Views
         /// </summary>
         public AddAccountPage()
         {
-            InitializeComponent();
             _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            InitializeComponent();
             ChooseLoginMethodAsync();
             UpdateUiText();
         } // end constructor AddAccountPage
@@ -47,7 +47,9 @@ namespace PaimonTray.Views
         /// </summary>
         private void ApplyServerSelection()
         {
-            if (ComboBoxServer.SelectedItem == null) return;
+            var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
+
+            if (comboBoxServerSelectedItem == null) return;
 
             var pageMaxHeight = 0;
             var pageMaxWidth = 0;
@@ -66,15 +68,15 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
-                var pageSuggestedHeight = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                var pageSuggestedHeight = comboBoxServerSelectedItem == ComboBoxItemServerCn
                     ? AppConstantsHelper.AddAccountPageLoginWebPageCnHeight
                     : AppConstantsHelper.AddAccountPageLoginWebPageGlobalHeight;
-                var pageSuggestedWidth = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                var pageSuggestedWidth = comboBoxServerSelectedItem == ComboBoxItemServerCn
                     ? AppConstantsHelper.AddAccountPageLoginWebPageCnWidth
                     : AppConstantsHelper.AddAccountPageLoginWebPageGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                ButtonLoginWebPage.Visibility = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                ButtonLoginWebPage.Visibility = comboBoxServerSelectedItem == ComboBoxItemServerCn
                     ? Visibility.Collapsed
                     : Visibility.Visible;
                 PageAddAccount.Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
@@ -89,8 +91,10 @@ namespace PaimonTray.Views
                 PageAddAccount.Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
                     ? pageMaxWidth
                     : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
-                RunLoginPlace.Text = _resourceLoader.GetString(
-                    ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn ? "MiHoYo" : "HoYoLab");
+                RunLoginPlace.Text =
+                    _resourceLoader.GetString(comboBoxServerSelectedItem == ComboBoxItemServerCn
+                        ? "MiHoYo"
+                        : "HoYoLab");
             } // end if...else
         } // end method ApplyServerSelection
 
@@ -228,9 +232,11 @@ namespace PaimonTray.Views
         private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
             CoreWebView2SourceChangedEventArgs args)
         {
-            if ((ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn &&
-                 !_webView2LoginWebPage.Source.ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) ||
-                ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerGlobal) return;
+            var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
+
+            if ((comboBoxServerSelectedItem == ComboBoxItemServerCn && !_webView2LoginWebPage.Source.ToString()
+                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) ||
+                comboBoxServerSelectedItem == ComboBoxItemServerGlobal) return;
 
             GetCookiesAsync();
         } // end method CoreWebView2LoginWebPage_OnSourceChanged

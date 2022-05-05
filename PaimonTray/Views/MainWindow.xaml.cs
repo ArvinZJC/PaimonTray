@@ -52,11 +52,11 @@ namespace PaimonTray.Views
         /// </summary>
         public MainWindow()
         {
+            MainWinViewModel = new MainWindowViewModel();
             InitializeComponent();
             CustomiseWindow();
             UpdateUiText();
 
-            MainWinViewModel = new MainWindowViewModel();
             MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
             TaskbarIconApp.Visibility =
                 Visibility.Visible; // Show the taskbar icon when finishing all the other initialisation.
@@ -105,6 +105,7 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
+            MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text = resourceLoader.GetString("HideMainWindow");
             MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
             MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
             MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
@@ -117,7 +118,8 @@ namespace PaimonTray.Views
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
             ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
 
-            if ((bool)ApplicationData.Current.LocalSettings.Values[SettingsHelper.KeyNotificationGreeting])
+            if ((bool)ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
+                    .Values[SettingsHelper.KeyNotificationGreeting])
                 new ToastContentBuilder()
                     .AddText(resourceLoader.GetString("NotificationGreetingTitle"))
                     .AddText(resourceLoader.GetString("NotificationGreetingContent"))
@@ -135,6 +137,7 @@ namespace PaimonTray.Views
         // Handle the body frame's size changed event.
         private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            var frameBodyContent = (FrameworkElement)FrameBody.Content;
             int winHeight;
             int winWidth;
             var workArea = DisplayArea.GetFromWindowId(WinId, DisplayAreaFallback.Primary).WorkArea;
@@ -142,18 +145,16 @@ namespace PaimonTray.Views
             // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
             {
-                winHeight = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
-                                  NavigationViewBody.CompactPaneLength) +
+                winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
                             AppConstantsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
+                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) +
                            AppConstantsHelper.MainWindowSideLengthOffset;
             }
             else
             {
-                winHeight = (int)Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualHeight) +
+                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) +
                             AppConstantsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)(Math.Ceiling(((FrameworkElement)FrameBody.Content).ActualWidth) +
-                                 NavigationViewBody.CompactPaneLength) +
+                winWidth = (int)(Math.Ceiling(frameBodyContent.ActualWidth) + NavigationViewBody.CompactPaneLength) +
                            AppConstantsHelper.MainWindowSideLengthOffset;
             } // end if...else
 
