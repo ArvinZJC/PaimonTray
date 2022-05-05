@@ -7,6 +7,7 @@
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    ActualThemeChanged="AddAccountPage_OnActualThemeChanged"
     Unloaded="AddAccountPage_OnUnloaded">
     <!-- The root grid. -->
     <Grid
@@ -183,8 +184,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBox
+                                x:Name="TextBoxLoginAlternative"
                                 Grid.Row="0"
-                                AcceptsReturn="True"
                                 TextWrapping="Wrap" />
                             <Button
                                 x:Name="ButtonLoginAlternative"

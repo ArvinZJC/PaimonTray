@@ -85,13 +85,7 @@ namespace PaimonTray.Helpers
         public static void ApplyThemeSelection()
         {
             foreach (var existingWindow in WindowsHelper.ExistingWindowList)
-                ((FrameworkElement)existingWindow.Content).RequestedTheme =
-                    ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[KeyTheme] switch
-                    {
-                        TagThemeDark => ElementTheme.Dark,
-                        TagThemeLight => ElementTheme.Light,
-                        _ => ElementTheme.Default
-                    };
+                ((FrameworkElement)existingWindow.Content).RequestedTheme = GetTheme();
         } // end method ApplyThemeSelection
 
         /// <summary>
@@ -105,6 +99,20 @@ namespace PaimonTray.Helpers
                 ? NavigationViewPaneDisplayMode.Top
                 : NavigationViewPaneDisplayMode.LeftCompact;
         } // end method DecideMainWindowNavigationViewPaneDisplayMode
+
+        /// <summary>
+        /// Get the theme.
+        /// </summary>
+        /// <returns>The theme.</returns>
+        public static ElementTheme GetTheme()
+        {
+            return ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[KeyTheme] switch
+            {
+                TagThemeDark => ElementTheme.Dark,
+                TagThemeLight => ElementTheme.Light,
+                _ => ElementTheme.Default
+            };
+        } // end method GetTheme
 
         /// <summary>
         /// Initialise the settings when initialising the app. It should be invoked earlier than any other operations on the settings.

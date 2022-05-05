@@ -18,6 +18,7 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        private ContentDialog _contentDialogueLoginFail;
         private bool _isWebView2Available;
         private WebView2 _webView2LoginWebPage;
 
@@ -141,34 +142,55 @@ namespace PaimonTray.Views
             } // end try...catch
         } // end method ConfigWebView2LoginAsync
 
+        // Get the login cookies.
         private async void GetCookiesAsync()
         {
-            var stringBuilderCookies = new StringBuilder(string.Empty);
+            string cookies;
 
-            foreach (var cookie in await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
-                         ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                             ? AppConstantsHelper.UrlCookiesMiHoYo
-                             : AppConstantsHelper.UrlCookiesHoYoLab))
-                if (cookie.Name is AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken)
-                    stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
+            if (_isWebView2Available)
+            {
+                var stringBuilderCookies = new StringBuilder(string.Empty);
 
-            var cookies = stringBuilderCookies.ToString();
+                foreach (var cookie in await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+                             ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                                 ? AppConstantsHelper.UrlCookiesMiHoYo
+                                 : AppConstantsHelper.UrlCookiesHoYoLab))
+                    if (cookie.Name is AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken)
+                        stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
+
+                cookies = stringBuilderCookies.ToString();
+            }
+            else
+                cookies = TextBoxLoginAlternative.Text;
+
 
             if (cookies.Contains(AppConstantsHelper.CookieNameId) &&
                 cookies.Contains(AppConstantsHelper.CookieNameToken))
             {
-                _webView2LoginWebPage.Close();
-                Log.Information(cookies);
+                if (_isWebView2Available) _webView2LoginWebPage.Close();
+
+                Log.Information(cookies); // TODO
                 return;
             } // end if
 
-            Log.Warning("Web page login failed. User is expected to try again.");
-            await new ContentDialog
+            Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
+                        $" login failed (cookies: {cookies}). User is expected to try again.");
+
+            _contentDialogueLoginFail = new ContentDialog
             {
                 Content = _resourceLoader.GetString("LoginFail"),
                 CloseButtonText = _resourceLoader.GetString("Ok"),
+                RequestedTheme = SettingsHelper.GetTheme(),
                 XamlRoot = Content.XamlRoot
-            }.ShowAsync(); // TODO
+            };
+
+            await _contentDialogueLoginFail.ShowAsync();
+            _contentDialogueLoginFail = null;
+
+            if (!_isWebView2Available) return;
+
+            _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+            _webView2LoginWebPage.Source = GetLoginWebPageUri();
         } // end method GetCookiesAsync
 
         /// <summary>
@@ -198,6 +220,14 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
+        // Handle the actual theme changed event of the page for adding an account.
+        private void AddAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            if (_contentDialogueLoginFail == null) return;
+
+            _contentDialogueLoginFail.RequestedTheme = SettingsHelper.GetTheme();
+        } // end method AddAccountPage_OnActualThemeChanged
+
         // Handle the unloaded event of the page for adding an account.
         private void AddAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
@@ -207,7 +237,7 @@ namespace PaimonTray.Views
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            GetCookiesAsync();
         } // end method ButtonLoginAlternative_OnClick
 
         // Handle the web page login button's click event.
