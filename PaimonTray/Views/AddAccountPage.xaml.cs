@@ -85,17 +85,17 @@ namespace PaimonTray.Views
             }
             else
             {
-                HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
                 Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
                     ? pageMaxHeight
                     : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
-                Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
-                    ? pageMaxWidth
-                    : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
+                HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginPlace.Text =
                     _resourceLoader.GetString(comboBoxServerSelectedItem == ComboBoxItemServerCn
                         ? "MiHoYo"
                         : "HoYoLab");
+                Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
+                    ? pageMaxWidth
+                    : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
             } // end if...else
         } // end method ApplyServerSelection
 
