@@ -223,7 +223,7 @@
     <value>Show a greeting notification when the app starts</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
-    <value>You can click the app icon in the taskbar corner or its overflow menu to show/hide the main window.</value>
+    <value>You can click the app icon to show/hide the main window. If the icon disappears from the taskbar corner, you can drag it back from the taskbar corner overflow menu.</value>
   </data>
   <data name="NotificationGreetingTitle" xml:space="preserve">
     <value>Paimon's now in your "system tray"!</value>

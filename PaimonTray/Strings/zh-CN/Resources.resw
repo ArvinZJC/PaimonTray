@@ -223,7 +223,7 @@
     <value>在应用启动时显示一个问候通知</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
-    <value>您可点击在任务栏角或其溢出菜单中的应用图标来显示/隐藏主窗口。</value>
+    <value>您可点击应用图标来显示/隐藏主窗口。若图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
   </data>
   <data name="NotificationGreetingTitle" xml:space="preserve">
     <value>派蒙进到您的“系统托盘”里啦！</value>
