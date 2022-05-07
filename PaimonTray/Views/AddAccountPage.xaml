@@ -65,8 +65,12 @@
                     SelectionChanged="ComboBoxServer_OnSelectionChanged"
                     SelectedItem="{x:Bind ComboBoxItemServerCn}"
                     VerticalAlignment="Center">
-                    <ComboBoxItem x:Name="ComboBoxItemServerCn" />
-                    <ComboBoxItem x:Name="ComboBoxItemServerGlobal" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemServerCn"
+                        Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemServerGlobal"
+                        Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
                 </ComboBox>
             </Grid>
             <!-- The container grid for the login section. -->

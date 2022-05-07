@@ -21,6 +21,11 @@ namespace PaimonTray
         public string AppVersion { get; private set; }
 
         /// <summary>
+        /// The accounts helper.
+        /// </summary>
+        public AccountsHelper AccHelper { get; } 
+
+        /// <summary>
         /// The logs directory.
         /// </summary>
         public string LogsDirectory { get; private set; }
@@ -51,6 +56,7 @@ namespace PaimonTray
                 ? string.Empty
                 : LanguageSelectionApplied;
 
+            AccHelper = new AccountsHelper();
             InitializeComponent();
         } // end constructor App
 

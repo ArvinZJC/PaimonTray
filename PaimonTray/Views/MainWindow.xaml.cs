@@ -178,7 +178,7 @@ namespace PaimonTray.Views
             FrameBody.Navigate(
                 args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAddAccount
                     ? typeof(AddAccountPage)
-                    : typeof(DataPage), null, new EntranceNavigationTransitionInfo());
+                    : typeof(GameDataPage), null, new EntranceNavigationTransitionInfo());
         } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers

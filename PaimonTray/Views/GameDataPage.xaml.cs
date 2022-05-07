@@ -1,20 +1,20 @@
 ﻿namespace PaimonTray.Views
 {
     /// <summary>
-    /// The data page.
+    /// The game data page.
     /// </summary>
-    public sealed partial class DataPage
+    public sealed partial class GameDataPage
     {
         #region Constructors
 
         /// <summary>
-        /// Initialise the data page.
+        /// Initialise the game data page.
         /// </summary>
-        public DataPage()
+        public GameDataPage()
         {
             InitializeComponent();
-        } // end constructor DataPage
+        } // end constructor GameDataPage
 
         #endregion Constructors
-    } // end class DataPage
+    } // end class GameDataPage
 } // end namespace PaimonTray.Views

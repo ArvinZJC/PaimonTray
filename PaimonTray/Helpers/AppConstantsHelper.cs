@@ -3,8 +3,21 @@
     /// <summary>
     /// The app constants helper.
     /// </summary>
-    internal class AppConstantsHelper
+    public class AppConstantsHelper
     {
+        #region Enumerations
+
+        /// <summary>
+        /// The game server.
+        /// </summary>
+        public enum Server
+        {
+            Cn,
+            Global
+        } // end enum Server
+
+        #endregion Enumerations
+
         #region Constants
 
         /// <summary>

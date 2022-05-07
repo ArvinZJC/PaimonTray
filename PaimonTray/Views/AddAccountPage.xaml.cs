@@ -5,9 +5,11 @@ using Microsoft.Web.WebView2.Core;
 using PaimonTray.Helpers;
 using Serilog;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -67,19 +69,19 @@ namespace PaimonTray.Views
                 break;
             } // end foreach
 
+            var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
+
             if (_isWebView2Available)
             {
-                var pageSuggestedHeight = comboBoxServerSelectedItem == ComboBoxItemServerCn
+                var pageSuggestedHeight = isServerCn
                     ? AppConstantsHelper.AddAccountPageLoginWebPageCnHeight
                     : AppConstantsHelper.AddAccountPageLoginWebPageGlobalHeight;
-                var pageSuggestedWidth = comboBoxServerSelectedItem == ComboBoxItemServerCn
+                var pageSuggestedWidth = isServerCn
                     ? AppConstantsHelper.AddAccountPageLoginWebPageCnWidth
                     : AppConstantsHelper.AddAccountPageLoginWebPageGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                ButtonLoginWebPage.Visibility = comboBoxServerSelectedItem == ComboBoxItemServerCn
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
+                ButtonLoginWebPage.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
                 Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
                 Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
             }
@@ -89,10 +91,7 @@ namespace PaimonTray.Views
                     ? pageMaxHeight
                     : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
                 HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
-                RunLoginPlace.Text =
-                    _resourceLoader.GetString(comboBoxServerSelectedItem == ComboBoxItemServerCn
-                        ? "MiHoYo"
-                        : "HoYoLab");
+                RunLoginPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
                 Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
                     ? pageMaxWidth
                     : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
@@ -123,10 +122,10 @@ namespace PaimonTray.Views
 
                 ApplyServerSelection();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 Log.Error("Failed to detect WebView2 Runtime.");
-                Log.Error(e.ToString());
+                Log.Error(exception.ToString());
                 _isWebView2Available = false;
 
                 ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
@@ -145,31 +144,37 @@ namespace PaimonTray.Views
         // Get the login cookies.
         private async void GetCookiesAsync()
         {
+            string accountId;
             string cookies;
+            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
 
             if (_isWebView2Available)
             {
-                var stringBuilderCookies = new StringBuilder(string.Empty);
+                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(isServerCn
+                    ? AppConstantsHelper.UrlCookiesMiHoYo
+                    : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
 
-                foreach (var cookie in await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
-                             ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                                 ? AppConstantsHelper.UrlCookiesMiHoYo
-                                 : AppConstantsHelper.UrlCookiesHoYoLab))
-                    if (cookie.Name is AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken)
-                        stringBuilderCookies.Append($"{cookie.Name}={cookie.Value};");
-
-                cookies = stringBuilderCookies.ToString();
+                (accountId, cookies) = ProcessCookies(ref rawCookies);
             }
             else
-                cookies = TextBoxLoginAlternative.Text;
+            {
+                var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
 
+                (accountId, cookies) = ProcessCookies(ref rawCookies);
+            } // end if...else
 
-            if (cookies.Contains(AppConstantsHelper.CookieNameId) &&
+            if (accountId != string.Empty && cookies.Contains(AppConstantsHelper.CookieNameId) &&
                 cookies.Contains(AppConstantsHelper.CookieNameToken))
             {
                 if (_isWebView2Available) _webView2LoginWebPage.Close();
 
-                Log.Information(cookies); // TODO
+                var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue();
+                var server = isServerCn ? AccountsHelper.TagServerCn : AccountsHelper.TagServerGlobal;
+
+                applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
+                ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts]
+                    .Values[$"{server}{accountId}"] = applicationDataCompositeValueAccount; // TODO
                 return;
             } // end if
 
@@ -203,6 +208,54 @@ namespace PaimonTray.Views
                 ? AppConstantsHelper.UrlLoginMiHoYo
                 : AppConstantsHelper.UrlLoginHoYoLab);
         } // end method GetLoginWebPageUri
+
+        /// <summary>
+        /// Process the raw cookies.
+        /// </summary>
+        /// <typeparam name="T">Should be a <see cref="string"/> or <see cref="CoreWebView2Cookie"/> type.</typeparam>
+        /// <param name="rawCookies">The raw cookies.</param>
+        /// <returns>1st item: the account ID; 2nd item: the processed cookies.</returns>
+        private static (string, string) ProcessCookies<T>(ref ImmutableList<T> rawCookies)
+        {
+            var accountId = string.Empty;
+            var cookieName = string.Empty;
+            var cookieValue = string.Empty;
+            var stringBuilderCookies = new StringBuilder(string.Empty);
+            var validCookieNameCount = 0;
+
+            foreach (var cookie in rawCookies)
+            {
+                switch (cookie)
+                {
+                    case CoreWebView2Cookie coreWebView2Cookie:
+                        cookieName = coreWebView2Cookie.Name;
+                        cookieValue = coreWebView2Cookie.Value;
+                        break;
+
+                    case string stringCookie:
+                        var cookieParts = stringCookie.Split('=',
+                            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                        if (cookieParts.Length != 2) continue;
+
+                        cookieName = cookieParts[0];
+                        cookieValue = cookieParts[1];
+                        break;
+                } // end switch-case
+
+                if (cookieName is not (AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken))
+                    continue;
+
+                stringBuilderCookies.Append($"{cookieName}={cookieValue};");
+                validCookieNameCount++;
+
+                if (cookieName == AppConstantsHelper.CookieNameId) accountId = cookieValue;
+
+                if (validCookieNameCount == 2) break;
+            } // end foreach
+
+            return (accountId, stringBuilderCookies.ToString());
+        } // end generic method ProcessCookies
 
         /// <summary>
         /// Update the UI text during the initialisation process.
