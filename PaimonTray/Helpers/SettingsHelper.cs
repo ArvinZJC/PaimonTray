@@ -119,28 +119,25 @@ namespace PaimonTray.Helpers
         /// </summary>
         public static void InitialiseSettings()
         {
-            var applicationDataContainerSettings = ApplicationData.Current.LocalSettings.CreateContainer(
-                ContainerKeySettings,
-                ApplicationDataCreateDisposition.Always);
+            var propertySetSettings = ApplicationData.Current.LocalSettings
+                .CreateContainer(ContainerKeySettings, ApplicationDataCreateDisposition.Always).Values;
 
-            if (!applicationDataContainerSettings.Values.ContainsKey(KeyNotificationGreeting) ||
-                applicationDataContainerSettings.Values[KeyNotificationGreeting] is not bool)
+            if (!propertySetSettings.ContainsKey(KeyNotificationGreeting) ||
+                propertySetSettings[KeyNotificationGreeting] is not bool)
                 InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
 
-            if (!applicationDataContainerSettings.Values.ContainsKey(KeyLanguage) ||
-                !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(
-                    applicationDataContainerSettings.Values[KeyLanguage]))
+            if (!propertySetSettings.ContainsKey(KeyLanguage) ||
+                !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(propertySetSettings[KeyLanguage]))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
-            if (!applicationDataContainerSettings.Values.ContainsKey(KeyMainWindowTopNavigationPane) ||
-                applicationDataContainerSettings.Values[KeyMainWindowTopNavigationPane] is not bool)
+            if (!propertySetSettings.ContainsKey(KeyMainWindowTopNavigationPane) ||
+                propertySetSettings[KeyMainWindowTopNavigationPane] is not bool)
                 InitialiseSetting(KeyMainWindowTopNavigationPane,
                     "The setting for configuring the main window's top navigation pane", false);
 
             // ReSharper disable once InvertIf
-            if (!applicationDataContainerSettings.Values.ContainsKey(KeyTheme) ||
-                !new[] { TagSystem, TagThemeDark, TagThemeLight }.Contains(
-                    applicationDataContainerSettings.Values[KeyTheme]))
+            if (!propertySetSettings.ContainsKey(KeyTheme) ||
+                !new[] { TagSystem, TagThemeDark, TagThemeLight }.Contains(propertySetSettings[KeyTheme]))
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
         } // end method InitialiseSettings
 

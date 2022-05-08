@@ -52,20 +52,37 @@ namespace PaimonTray.Views
         /// <param name="cookies">The cookies.</param>
         private async void AddAccountAsync(string accountId, string cookies)
         {
-            var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue();
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
+            var keyAccount = $"{server}{accountId}";
+            var propertySetAccounts = ApplicationData.Current.LocalSettings
+                .Containers[AccountsHelper.ContainerKeyAccounts].Values;
 
-            applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
-            ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts]
-                .Values[$"{server}{accountId}"] = applicationDataCompositeValueAccount; // TODO: check if already added
+            Log.Information($"Start to add the account (account key: {keyAccount}).");
+
+            if (propertySetAccounts.ContainsKey(keyAccount))
+            {
+                Log.Warning("Already added the account before.");
+                ShowContentDialogueLoginFailAsync(_resourceLoader.GetString("AddAccountNoNeed"));
+                return;
+            } // end if
+
+            var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue
+            {
+                [AccountsHelper.KeyCookies] = cookies
+            };
+
+            propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
 
             var roles = await (Application.Current as App)?.AccHelper.GetRolesAsync(accountId, server)!;
+            var isNullRoles = roles == null;
 
-            if (roles == null || roles.Count == 0)
+            if (isNullRoles || roles.Count == 0)
             {
-                // TODO: reuse login failed dialogue, with different messages.
+                Log.Warning("Failed to add the account. " + (isNullRoles ? "Null roles." : "No role linked."));
+                ShowContentDialogueLoginFailAsync(
+                    _resourceLoader.GetString(isNullRoles ? "LoginFail" : "AddAccountFail"));
                 return;
             } // end if
 
@@ -214,7 +231,7 @@ namespace PaimonTray.Views
             } // end if
 
             Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                        $" login failed (cookies: {cookies}). User is expected to try again.");
+                        $" login failed due to invalid cookies: {cookies})");
             ShowContentDialogueLoginFailAsync(_resourceLoader.GetString("LoginFail"));
         } // end method LogInAsync
 
@@ -283,10 +300,14 @@ namespace PaimonTray.Views
             await _contentDialogueLoginFail.ShowAsync();
             _contentDialogueLoginFail = null;
 
-            if (!_isWebView2Available) return;
+            if (_isWebView2Available)
+            {
+                _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+                _webView2LoginWebPage.Source = GetLoginWebPageUri();
+                return;
+            } // end if
 
-            _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
-            _webView2LoginWebPage.Source = GetLoginWebPageUri();
+            TextBoxLoginAlternative.Text = string.Empty;
         } // end method ShowContentDialogueLoginFailAsync
 
         /// <summary>
