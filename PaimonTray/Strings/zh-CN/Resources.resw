@@ -132,6 +132,12 @@
   <data name="AddAccount" xml:space="preserve">
     <value>添加账号</value>
   </data>
+  <data name="AddAccountFail" xml:space="preserve">
+    <value>添加您的账号失败。您的账号未绑定角色。</value>
+  </data>
+  <data name="AddAccountNoNeed" xml:space="preserve">
+    <value>您的账号已经在之前添加过了。</value>
+  </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>您所做的更改将在下次启动应用时生效。</value>
   </data>

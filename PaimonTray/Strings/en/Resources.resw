@@ -132,6 +132,12 @@
   <data name="AddAccount" xml:space="preserve">
     <value>Add an account</value>
   </data>
+  <data name="AddAccountFail" xml:space="preserve">
+    <value>Failed to add your account. There is no role linked to your account.</value>
+  </data>
+  <data name="AddAccountNoNeed" xml:space="preserve">
+    <value>Your account has alreay been added before.</value>
+  </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>Your changes will be applied the next time the app is started.</value>
   </data>

@@ -46,6 +46,34 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
+        /// Add an account.
+        /// </summary>
+        /// <param name="accountId">The account ID.</param>
+        /// <param name="cookies">The cookies.</param>
+        private async void AddAccountAsync(string accountId, string cookies)
+        {
+            var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue();
+            var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                ? AccountsHelper.TagServerCn
+                : AccountsHelper.TagServerGlobal;
+
+            applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
+            ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts]
+                .Values[$"{server}{accountId}"] = applicationDataCompositeValueAccount; // TODO: check if already added
+
+            var roles = await (Application.Current as App)?.AccHelper.GetRolesAsync(accountId, server)!;
+
+            if (roles == null || roles.Count == 0)
+            {
+                // TODO: reuse login failed dialogue, with different messages.
+                return;
+            } // end if
+
+            // TODO: user selects roles if >= 2 roles; add role directly if 1 role
+            if (_isWebView2Available) _webView2LoginWebPage.Close();
+        } // end method AddAccountAsync
+
+        /// <summary>
         /// Apply the server selection.
         /// </summary>
         private void ApplyServerSelection()
@@ -141,18 +169,31 @@ namespace PaimonTray.Views
             } // end try...catch
         } // end method ConfigWebView2LoginAsync
 
-        // Get the login cookies.
-        private async void GetCookiesAsync()
+        /// <summary>
+        /// Get the login web page URI.
+        /// </summary>
+        /// <returns>The login web page URI.</returns>
+        private Uri GetLoginWebPageUri()
+        {
+            return new Uri(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                ? AppConstantsHelper.UrlLoginMiHoYo
+                : AppConstantsHelper.UrlLoginHoYoLab);
+        } // end method GetLoginWebPageUri
+
+        /// <summary>
+        /// Log in.
+        /// </summary>
+        private async void LogInAsync()
         {
             string accountId;
             string cookies;
-            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
 
             if (_isWebView2Available)
             {
-                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(isServerCn
-                    ? AppConstantsHelper.UrlCookiesMiHoYo
-                    : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
+                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+                    ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                        ? AppConstantsHelper.UrlCookiesMiHoYo
+                        : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
 
                 (accountId, cookies) = ProcessCookies(ref rawCookies);
             }
@@ -164,50 +205,18 @@ namespace PaimonTray.Views
                 (accountId, cookies) = ProcessCookies(ref rawCookies);
             } // end if...else
 
+            // Execute if valid account ID and cookies.
             if (accountId != string.Empty && cookies.Contains(AppConstantsHelper.CookieNameId) &&
                 cookies.Contains(AppConstantsHelper.CookieNameToken))
             {
-                if (_isWebView2Available) _webView2LoginWebPage.Close();
-
-                var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue();
-                var server = isServerCn ? AccountsHelper.TagServerCn : AccountsHelper.TagServerGlobal;
-
-                applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
-                ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts]
-                    .Values[$"{server}{accountId}"] = applicationDataCompositeValueAccount; // TODO
+                AddAccountAsync(accountId, cookies);
                 return;
             } // end if
 
             Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
                         $" login failed (cookies: {cookies}). User is expected to try again.");
-
-            _contentDialogueLoginFail = new ContentDialog
-            {
-                Content = _resourceLoader.GetString("LoginFail"),
-                CloseButtonText = _resourceLoader.GetString("Ok"),
-                RequestedTheme = SettingsHelper.GetTheme(),
-                XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
-            };
-
-            await _contentDialogueLoginFail.ShowAsync();
-            _contentDialogueLoginFail = null;
-
-            if (!_isWebView2Available) return;
-
-            _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
-            _webView2LoginWebPage.Source = GetLoginWebPageUri();
-        } // end method GetCookiesAsync
-
-        /// <summary>
-        /// Get the login web page URI.
-        /// </summary>
-        /// <returns>The login web page URI.</returns>
-        private Uri GetLoginWebPageUri()
-        {
-            return new Uri(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                ? AppConstantsHelper.UrlLoginMiHoYo
-                : AppConstantsHelper.UrlLoginHoYoLab);
-        } // end method GetLoginWebPageUri
+            ShowContentDialogueLoginFailAsync(_resourceLoader.GetString("LoginFail"));
+        } // end method LogInAsync
 
         /// <summary>
         /// Process the raw cookies.
@@ -258,6 +267,29 @@ namespace PaimonTray.Views
         } // end generic method ProcessCookies
 
         /// <summary>
+        /// Show the login fail content dialogue.
+        /// </summary>
+        /// <param name="content">The content dialogue's content.</param>
+        private async void ShowContentDialogueLoginFailAsync(string content)
+        {
+            _contentDialogueLoginFail = new ContentDialog
+            {
+                Content = content,
+                CloseButtonText = _resourceLoader.GetString("Ok"),
+                RequestedTheme = SettingsHelper.GetTheme(),
+                XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
+            };
+
+            await _contentDialogueLoginFail.ShowAsync();
+            _contentDialogueLoginFail = null;
+
+            if (!_isWebView2Available) return;
+
+            _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+            _webView2LoginWebPage.Source = GetLoginWebPageUri();
+        } // end method ShowContentDialogueLoginFailAsync
+
+        /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
@@ -290,13 +322,13 @@ namespace PaimonTray.Views
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
-            GetCookiesAsync();
+            LogInAsync();
         } // end method ButtonLoginAlternative_OnClick
 
         // Handle the web page login button's click event.
         private void ButtonLoginWebPage_OnClick(object sender, RoutedEventArgs e)
         {
-            GetCookiesAsync();
+            LogInAsync();
         } // end method ButtonLoginWebPage_OnClick
 
         // Handle the click event of the button for reloading the login web page.
@@ -321,7 +353,7 @@ namespace PaimonTray.Views
                     .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) ||
                 comboBoxServerSelectedItem == ComboBoxItemServerGlobal) return;
 
-            GetCookiesAsync();
+            LogInAsync();
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
         #endregion Event Handlers

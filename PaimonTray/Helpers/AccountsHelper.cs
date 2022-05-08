@@ -1,11 +1,13 @@
-﻿using Serilog;
+﻿using PaimonTray.Models;
+using Serilog;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Web.Http;
-using Newtonsoft.Json.Linq;
 
 namespace PaimonTray.Helpers
 {
@@ -88,14 +90,9 @@ namespace PaimonTray.Helpers
         public const string KeyCookies = "cookies";
 
         /// <summary>
-        /// The message key.
+        /// The list key.
         /// </summary>
-        private const string KeyMessage = "Message";
-
-        /// <summary>
-        /// The return code key.
-        /// </summary>
-        private const string KeyReturnCode = "retcode";
+        public const string KeyList = "list";
 
         /// <summary>
         /// The CN server tag.
@@ -116,14 +113,15 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The URL for the global server to get roles.
         /// </summary>
-        private const string UrlRolesServerGlobal = "https://api-os-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_global";
+        private const string UrlRolesServerGlobal =
+            "https://api-os-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_global";
 
         #endregion Constants
 
         #region Fields
 
-        private ApplicationDataContainer _applicationDataContainerAccounts;
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
+        private readonly IPropertySet _propertySetAccounts;
 
         #endregion Fields
 
@@ -134,19 +132,25 @@ namespace PaimonTray.Helpers
         /// </summary>
         public AccountsHelper()
         {
-            _applicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
-                    ApplicationDataCreateDisposition.Always);
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
+            _propertySetAccounts = ApplicationData.Current.LocalSettings
+                .CreateContainer(ContainerKeyAccounts, ApplicationDataCreateDisposition.Always).Values;
         } // end constructor AccountsHelper
 
         #endregion Constructors
 
         #region Methods
 
-        public async Task<bool> GetRolesAsync(string accountId, string server)
+        /// <summary>
+        /// Get the account's roles.
+        /// TODO: reduce the method complexity.
+        /// </summary>
+        /// <param name="accountId">The account ID.</param>
+        /// <param name="server">The server. Should be the CN/global server tag.</param>
+        /// <returns>A list of roles, or <c>null</c> if the operation fails.</returns>
+        public async Task<ImmutableList<Role>> GetRolesAsync(string accountId, string server)
         {
             var keyAccount = $"{server}{accountId}";
 
@@ -154,14 +158,14 @@ namespace PaimonTray.Helpers
 
             if (!new[] { TagServerCn, TagServerGlobal }.Contains(server))
             {
-                Log.Warning($"Invalid server.");
-                return false;
+                Log.Warning("Invalid server.");
+                return null;
             } // end if
 
-            if (!_applicationDataContainerAccounts.Values.ContainsKey(keyAccount))
+            if (!_propertySetAccounts.ContainsKey(keyAccount))
             {
                 Log.Warning("No such account key.");
-                return false;
+                return null;
             } // end if
 
             string headerValueOrigin;
@@ -187,8 +191,7 @@ namespace PaimonTray.Helpers
                 urlRoles = UrlRolesServerGlobal;
             } // end if...else
 
-            var applicationDataCompositeValueAccount =
-                (ApplicationDataCompositeValue)_applicationDataContainerAccounts.Values[keyAccount];
+            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(urlRoles));
             var headers = httpRequestMessage.Headers;
 
@@ -206,26 +209,33 @@ namespace PaimonTray.Helpers
             }
             catch (Exception exception)
             {
-                Log.Error($"The HTTP response to get roles was unsuccessful.");
+                Log.Error("The HTTP response to get roles was unsuccessful.");
                 Log.Error(exception.ToString());
-                return false;
+                return null;
             } // end try...catch
 
             var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
-            var jObjectBody = JObject.Parse(httpResponseBody);
-            var returnCode = jObjectBody[KeyReturnCode]?.ToObject<int>();
+            var account = JsonSerializer.Deserialize<Account>(httpResponseBody,
+                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-            if (returnCode != 0)
+            if (account == null)
             {
-                Log.Warning($"Failed to get roles from the server API (message: {jObjectBody[KeyMessage]?.ToObject<string>()}).");
-                return false;
+                Log.Warning($"Failed to parse the response's body: {httpResponseBody}");
+                return null;
             } // end if
 
-            var roles = jObjectBody["data"]?["list"]?.Children().ToImmutableList();
-            // TODO: return roles for selection?
+            if (account.ReturnCode != 0)
+            {
+                Log.Warning(
+                    $"Failed to get roles from the server API (message: {account.Message}, return code: {account.ReturnCode}).");
+                return null;
+            } // end if
 
-            return true;
-        } // end method GetRoles
+            if (account.Data.TryGetValue(KeyList, out var roles)) return roles;
+
+            Log.Warning("Failed to get the role data list.");
+            return null;
+        } // end method GetRolesAsync
 
         #endregion Methods
     } // end class AccountsHelper

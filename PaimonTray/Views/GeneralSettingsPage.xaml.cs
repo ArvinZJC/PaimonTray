@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
 using PaimonTray.ViewModels;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 
 namespace PaimonTray.Views
@@ -15,7 +16,7 @@ namespace PaimonTray.Views
     {
         #region Fields
 
-        private readonly ApplicationDataContainer _applicationDataContainerSettings;
+        private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
 
@@ -26,8 +27,8 @@ namespace PaimonTray.Views
         /// </summary>
         public GeneralSettingsPage()
         {
-            _applicationDataContainerSettings =
-                ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings];
+            _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
+                .Values;
             InitializeComponent();
             ShowLanguageSelection();
             ShowMainWindowTopNavigationPaneSelection();
@@ -45,13 +46,12 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowLanguageSelection()
         {
-            RadioButtonsLanguage.SelectedItem =
-                _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] switch
-                {
-                    SettingsHelper.TagLanguageEn => RadioButtonLanguageEn,
-                    SettingsHelper.TagLanguageZhCn => RadioButtonLanguageZhCn,
-                    _ => RadioButtonLanguageSystem
-                };
+            RadioButtonsLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
+            {
+                SettingsHelper.TagLanguageEn => RadioButtonLanguageEn,
+                SettingsHelper.TagLanguageZhCn => RadioButtonLanguageZhCn,
+                _ => RadioButtonLanguageSystem
+            };
         } // end method ShowLanguageSelection
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace PaimonTray.Views
         private void ShowMainWindowTopNavigationPaneSelection()
         {
             ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                (bool)_applicationDataContainerSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane];
+                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane];
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ShowMainWindowTopNavigationPaneSelection
 
@@ -69,8 +69,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowNotificationGreetingSelection()
         {
-            ToggleSwitchNotificationGreeting.IsOn =
-                (bool)_applicationDataContainerSettings.Values[SettingsHelper.KeyNotificationGreeting];
+            ToggleSwitchNotificationGreeting.IsOn = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
         } // end method ShowNotificationGreetingSelection
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowThemeSelection()
         {
-            RadioButtonsTheme.SelectedItem = _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] switch
+            RadioButtonsTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
             {
                 SettingsHelper.TagThemeDark => RadioButtonThemeDark,
                 SettingsHelper.TagThemeLight => RadioButtonThemeLight,
@@ -146,7 +145,7 @@ namespace PaimonTray.Views
 
             var radioButtonsLanguageSelectedItemTag = radioButtonsLanguageSelectedItem.Tag as string;
 
-            _applicationDataContainerSettings.Values[SettingsHelper.KeyLanguage] = radioButtonsLanguageSelectedItemTag;
+            _propertySetSettings[SettingsHelper.KeyLanguage] = radioButtonsLanguageSelectedItemTag;
 
             TextBlockLanguageAppliedAfterAppRestart.Visibility =
                 radioButtonsLanguageSelectedItemTag == (Application.Current as App)?.LanguageSelectionApplied
@@ -162,8 +161,7 @@ namespace PaimonTray.Views
 
             if (radioButtonsThemeSelectedItem == null) return;
 
-            _applicationDataContainerSettings.Values[SettingsHelper.KeyTheme] =
-                radioButtonsThemeSelectedItem.Tag as string;
+            _propertySetSettings[SettingsHelper.KeyTheme] = radioButtonsThemeSelectedItem.Tag as string;
             SettingsHelper.ApplyThemeSelection();
 
             TextBlockThemeSelection.Text = radioButtonsThemeSelectedItem.Content as string;
@@ -172,7 +170,7 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for configuring the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
         {
-            _applicationDataContainerSettings.Values[SettingsHelper.KeyMainWindowTopNavigationPane] =
+            _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] =
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
@@ -180,8 +178,7 @@ namespace PaimonTray.Views
         // Handle the greeting notification toggle switch's toggled event.
         private void ToggleSwitchNotificationGreeting_OnToggled(object sender, RoutedEventArgs e)
         {
-            _applicationDataContainerSettings.Values[SettingsHelper.KeyNotificationGreeting] =
-                ToggleSwitchNotificationGreeting.IsOn;
+            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = ToggleSwitchNotificationGreeting.IsOn;
         } // end method ToggleSwitchNotificationGreeting_OnToggled
 
         #endregion Event Handlers
