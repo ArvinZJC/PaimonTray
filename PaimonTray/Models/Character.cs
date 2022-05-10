@@ -3,9 +3,9 @@
 namespace PaimonTray.Models
 {
     /// <summary>
-    /// The role model.
+    /// The character model.
     /// </summary>
-    public class Role
+    public class Character
     {
         /// <summary>
         /// The level.
@@ -27,5 +27,5 @@ namespace PaimonTray.Models
         /// </summary>
         [JsonPropertyName("game_uid")]
         public string UserId { get; set; }
-    } // end class Role
+    } // end class Character
 } // end namespace PaimonTray.Models

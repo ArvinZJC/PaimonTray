@@ -5,19 +5,6 @@
     /// </summary>
     public class AppConstantsHelper
     {
-        #region Enumerations
-
-        /// <summary>
-        /// The game server.
-        /// </summary>
-        public enum Server
-        {
-            Cn,
-            Global
-        } // end enum Server
-
-        #endregion Enumerations
-
         #region Constants
 
         /// <summary>
@@ -54,16 +41,6 @@
         /// The app icon's author.
         /// </summary>
         public const string AppIconAuthor = "Chawong";
-
-        /// <summary>
-        /// The ID cookie name.
-        /// </summary>
-        public const string CookieNameId = "account_id";
-
-        /// <summary>
-        /// The token cookie name.
-        /// </summary>
-        public const string CookieNameToken = "cookie_token";
 
         /// <summary>
         /// The name of the GitHub repository inspiring the app.

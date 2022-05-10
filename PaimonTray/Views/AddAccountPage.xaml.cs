@@ -75,18 +75,18 @@ namespace PaimonTray.Views
 
             propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
 
-            var roles = await (Application.Current as App)?.AccHelper.GetRolesAsync(accountId, server)!;
-            var isNullRoles = roles == null;
+            var characters = await (Application.Current as App)?.AccHelper.GetCharactersAsync(accountId, server)!;
+            var isNullCharacters = characters == null;
 
-            if (isNullRoles || roles.Count == 0)
+            if (isNullCharacters || characters.Count == 0)
             {
-                Log.Warning("Failed to add the account. " + (isNullRoles ? "Null roles." : "No role linked."));
+                Log.Warning("Failed to add the account. " + (isNullCharacters ? "Null characters." : "No character linked."));
                 ShowContentDialogueLoginFailAsync(
-                    _resourceLoader.GetString(isNullRoles ? "LoginFail" : "AddAccountFail"));
+                    _resourceLoader.GetString(isNullCharacters ? "LoginFail" : "AddAccountFail"));
                 return;
             } // end if
 
-            // TODO: user selects roles if >= 2 roles; add role directly if 1 role
+            // TODO: user selects characters if >= 2 characters (need to consider feasibility); add the character directly if 1 character
             if (_isWebView2Available) _webView2LoginWebPage.Close();
         } // end method AddAccountAsync
 
@@ -223,8 +223,8 @@ namespace PaimonTray.Views
             } // end if...else
 
             // Execute if valid account ID and cookies.
-            if (accountId != string.Empty && cookies.Contains(AppConstantsHelper.CookieNameId) &&
-                cookies.Contains(AppConstantsHelper.CookieNameToken))
+            if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
+                cookies.Contains(AccountsHelper.CookieKeyToken))
             {
                 AddAccountAsync(accountId, cookies);
                 return;
@@ -269,13 +269,13 @@ namespace PaimonTray.Views
                         break;
                 } // end switch-case
 
-                if (cookieName is not (AppConstantsHelper.CookieNameId or AppConstantsHelper.CookieNameToken))
+                if (cookieName is not (AccountsHelper.CookieKeyUserId or AccountsHelper.CookieKeyToken))
                     continue;
 
                 stringBuilderCookies.Append($"{cookieName}={cookieValue};");
                 validCookieNameCount++;
 
-                if (cookieName == AppConstantsHelper.CookieNameId) accountId = cookieValue;
+                if (cookieName == AccountsHelper.CookieKeyUserId) accountId = cookieValue;
 
                 if (validCookieNameCount == 2) break;
             } // end foreach

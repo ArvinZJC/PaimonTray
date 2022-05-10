@@ -10,9 +10,9 @@ namespace PaimonTray.Models
     internal class Account
     {
         /// <summary>
-        /// The role data.
+        /// The character data.
         /// </summary>
-        public Dictionary<string, ImmutableList<Role>> Data { get; set; }
+        public Dictionary<string, ImmutableList<Character>> Data { get; set; }
 
         /// <summary>
         /// The response message.

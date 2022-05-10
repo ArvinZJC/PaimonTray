@@ -133,7 +133,7 @@
     <value>Add an account</value>
   </data>
   <data name="AddAccountFail" xml:space="preserve">
-    <value>Failed to add your account. There is no role linked to your account.</value>
+    <value>Failed to add your account. There is no character linked to your account.</value>
   </data>
   <data name="AddAccountNoNeed" xml:space="preserve">
     <value>Your account has alreay been added before.</value>
