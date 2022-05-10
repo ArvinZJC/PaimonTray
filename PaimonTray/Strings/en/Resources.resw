@@ -123,6 +123,9 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="AcknowledgementApiUses" xml:space="preserve">
+    <value>API uses credited to</value>
+  </data>
   <data name="AcknowledgementAppIcon" xml:space="preserve">
     <value>App icon credited to</value>
   </data>
@@ -137,6 +140,13 @@
   </data>
   <data name="AddAccountNoNeed" xml:space="preserve">
     <value>Your account has alreay been added before.</value>
+  </data>
+  <data name="And" xml:space="preserve">
+    <value>and</value>
+  </data>
+  <data name="AppIconAuthor" xml:space="preserve">
+    <value>Chawong</value>
+    <comment>No need to translate.</comment>
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>Your changes will be applied the next time the app is started.</value>
@@ -224,6 +234,17 @@
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>miHoYo</value>
+  </data>
+  <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
+    <value>genshin.py</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="NameGitHubRepoApiUsesSecondary" xml:space="preserve">
+    <value>Genshin Dailynote Helper</value>
+  </data>
+  <data name="NameGitHubRepoInspiration" xml:space="preserve">
+    <value>PaimonMenuBar</value>
+    <comment>No need to translate.</comment>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>Show a greeting notification when the app starts</value>

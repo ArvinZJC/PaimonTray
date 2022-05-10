@@ -123,6 +123,9 @@
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
+  <data name="AcknowledgementApiUses" xml:space="preserve">
+    <value>接口用法参考于</value>
+  </data>
   <data name="AcknowledgementAppIcon" xml:space="preserve">
     <value>应用图标来源于</value>
   </data>
@@ -137,6 +140,13 @@
   </data>
   <data name="AddAccountNoNeed" xml:space="preserve">
     <value>您的账号已经在之前添加过了。</value>
+  </data>
+  <data name="And" xml:space="preserve">
+    <value>和</value>
+  </data>
+  <data name="AppIconAuthor" xml:space="preserve">
+    <value>Chawong</value>
+    <comment>No need to translate.</comment>
   </data>
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>您所做的更改将在下次启动应用时生效。</value>
@@ -224,6 +234,17 @@
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>
+  </data>
+  <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
+    <value>genshin.py</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="NameGitHubRepoApiUsesSecondary" xml:space="preserve">
+    <value>原神实时便笺提醒小助手</value>
+  </data>
+  <data name="NameGitHubRepoInspiration" xml:space="preserve">
+    <value>PaimonMenuBar</value>
+    <comment>No need to translate.</comment>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>在应用启动时显示一个问候通知</value>

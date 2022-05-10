@@ -35,11 +35,11 @@
         <TextBlock
             x:Name="TextBlockVersion"
             Grid.Row="1"
-            Margin="12, 0, 0, 0"/>
+            Margin="12, 0, 0, 0" />
         <TextBlock
             x:Name="TextBlockCopyright"
             Grid.Row="2"
-            Margin="12, 0, 0, 0"/>
+            Margin="12, 0, 0, 0" />
         <RichTextBlock
             Grid.Row="3"
             HorizontalAlignment="Left"
@@ -48,13 +48,23 @@
             <Paragraph>
                 <Run x:Name="RunAcknowledgementInspiration" />
                 <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
-                    <Run Text="{x:Bind h:AppConstantsHelper.GitHubRepoInspirationName}" />
+                    <Run x:Name="RunNameGitHubRepoInspiration" />
+                </Hyperlink>
+            </Paragraph>
+            <Paragraph>
+                <Run x:Name="RunAcknowledgementApiUses" />
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
+                    <Run x:Name="RunNameGitHubRepoApiUsesPrimary" />
+                </Hyperlink>
+                <Run x:Name="RunAcknowledgementApiUsesAnd" />
+                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
+                    <Run x:Name="RunNameGitHubRepoApiUsesSecondary" />
                 </Hyperlink>
             </Paragraph>
             <Paragraph>
                 <Run x:Name="RunAcknowledgementAppIcon" />
                 <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlAppIconSource}">
-                    <Run Text="{x:Bind h:AppConstantsHelper.AppIconAuthor}" />
+                    <Run x:Name="RunAppIconAuthor" />
                 </Hyperlink>
             </Paragraph>
         </RichTextBlock>

@@ -38,16 +38,6 @@
         public const int AddAccountPageLoginWebPageGlobalWidth = 800;
 
         /// <summary>
-        /// The app icon's author.
-        /// </summary>
-        public const string AppIconAuthor = "Chawong";
-
-        /// <summary>
-        /// The name of the GitHub repository inspiring the app.
-        /// </summary>
-        public const string GitHubRepoInspirationName = "PaimonMenuBar";
-
-        /// <summary>
         /// The code of the glyph Dictionary.
         /// </summary>
         public const string GlyphDictionary = "\xE82D";
@@ -126,6 +116,16 @@
         /// The app's GitHub repository URL.
         /// </summary>
         public const string UrlGitHubRepo = "https://github.com/ArvinZJC/PaimonTray";
+
+        /// <summary>
+        /// The URL of the GitHub repository primarily referred for API uses.
+        /// </summary>
+        public const string UrlGitHubRepoApiUsesPrimary = "https://github.com/thesadru/genshin.py";
+
+        /// <summary>
+        /// The URL of the GitHub repository secondarily referred for API uses.
+        /// </summary>
+        public const string UrlGitHubRepoApiUsesSecondary = "https://github.com/Xm798/Genshin-Dailynote-Helper";
 
         /// <summary>
         /// The URL of the GitHub repository inspiring the app.
