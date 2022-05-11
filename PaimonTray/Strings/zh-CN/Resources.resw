@@ -135,11 +135,12 @@
   <data name="AddAccount" xml:space="preserve">
     <value>添加账号</value>
   </data>
-  <data name="AddAccountFail" xml:space="preserve">
-    <value>添加您的账号失败。您的账号未绑定角色。</value>
+  <data name="AddAccountConfirmation" xml:space="preserve">
+    <value>添加您的账号？</value>
+    <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
-  <data name="AddAccountNoNeed" xml:space="preserve">
-    <value>您的账号已经在之前添加过了。</value>
+  <data name="AddAccountNoCharacter" xml:space="preserve">
+    <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
   </data>
   <data name="And" xml:space="preserve">
     <value>和</value>
@@ -214,14 +215,11 @@
   <data name="LoginComplete" xml:space="preserve">
     <value>完成登录</value>
   </data>
+  <data name="LoginCompleteTooltip" xml:space="preserve">
+    <value>在网页上登录您的账号后确认完成登录</value>
+  </data>
   <data name="LoginFail" xml:space="preserve">
     <value>登录您的账号失败。请重试。</value>
-  </data>
-  <data name="LoginHintAlternative" xml:space="preserve">
-    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不显示此提示。</value>
-  </data>
-  <data name="LoginHintComplete" xml:space="preserve">
-    <value>在网页上登录您的账号后确认完成登录</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
@@ -231,6 +229,12 @@
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>在主窗口上启用顶部导航窗格</value>
+  </data>
+  <data name="MessageLoginAlternative" xml:space="preserve">
+    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
+  </data>
+  <data name="MessageUpdateAccount" xml:space="preserve">
+    <value>您的账号已在之前添加过了，并刚同步了最新信息。</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>
@@ -245,6 +249,9 @@
   <data name="NameGitHubRepoInspiration" xml:space="preserve">
     <value>PaimonMenuBar</value>
     <comment>No need to translate.</comment>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>不了</value>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>在应用启动时显示一个问候通知</value>
@@ -263,9 +270,6 @@
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>更改您的通知设置</value>
-  </data>
-  <data name="Ok" xml:space="preserve">
-    <value>好</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
@@ -321,5 +325,8 @@
   </data>
   <data name="ViewIssues" xml:space="preserve">
     <value>查看 issues</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是的</value>
   </data>
 </root>

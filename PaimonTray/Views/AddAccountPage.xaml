@@ -94,31 +94,22 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0">
-                            <!-- The grid for the login hint indicating the alternative login method. -->
-                            <Grid
-                                x:Name="GridLoginHintAlternative"
-                                ColumnSpacing="8"
-                                Margin="0, 0, 0, 8"
-                                Visibility="Collapsed">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    x:Name="TextBlockLoginHintAlternative"
-                                    Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}"
-                                    Grid.Column="0"
-                                    TextAlignment="Justify"
-                                    TextWrapping="WrapWholeWords" />
-                                <HyperlinkButton
-                                    x:Name="HyperlinkButtonDownloadWebView2Runtime"
-                                    Grid.Column="1"
-                                    NavigateUri="{x:Bind h:AppConstantsHelper.UrlWebView2Runtime}" />
-                            </Grid>
+                            <!-- The alternative login message info bar. -->
+                            <InfoBar
+                                x:Name="InfoBarMessageLoginAlternative"
+                                Severity="Warning">
+                                <InfoBar.ActionButton>
+                                    <HyperlinkButton
+                                        x:Name="HyperlinkButtonDownloadWebView2Runtime"
+                                        Grid.Column="1"
+                                        NavigateUri="{x:Bind h:AppConstantsHelper.UrlWebView2Runtime}" />
+                                </InfoBar.ActionButton>
+                            </InfoBar>
+                            <!-- The login message info bar. -->
+                            <InfoBar x:Name="InfoBarMessageLogin" />
                             <!-- The login header grid. -->
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
@@ -147,7 +138,7 @@
                                 </Button>
                                 <HyperlinkButton
                                     x:Name="HyperlinkButtonHowToGetCookies"
-                                    Grid.Column="2"
+                                    Grid.Column="1"
                                     NavigateUri="{x:Bind h:AppConstantsHelper.UrlHowToGetCookies}"
                                     Padding="0"
                                     Visibility="Collapsed">

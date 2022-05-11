@@ -135,11 +135,12 @@
   <data name="AddAccount" xml:space="preserve">
     <value>Add an account</value>
   </data>
-  <data name="AddAccountFail" xml:space="preserve">
-    <value>Failed to add your account. There is no character linked to your account.</value>
+  <data name="AddAccountConfirmation" xml:space="preserve">
+    <value>Add your account?</value>
+    <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
-  <data name="AddAccountNoNeed" xml:space="preserve">
-    <value>Your account has alreay been added before.</value>
+  <data name="AddAccountNoCharacter" xml:space="preserve">
+    <value>No character is linked to your account. Do you still want to add the account?</value>
   </data>
   <data name="And" xml:space="preserve">
     <value>and</value>
@@ -214,14 +215,11 @@
   <data name="LoginComplete" xml:space="preserve">
     <value>Complete login</value>
   </data>
+  <data name="LoginCompleteTooltip" xml:space="preserve">
+    <value>Confirm completing login after you log into your account on the web page</value>
+  </data>
   <data name="LoginFail" xml:space="preserve">
     <value>Failed to log into your account. Please try again.</value>
-  </data>
-  <data name="LoginHintAlternative" xml:space="preserve">
-    <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to dismiss this hint the next time the page is loaded.</value>
-  </data>
-  <data name="LoginHintComplete" xml:space="preserve">
-    <value>Confirm completing login after you log into your account on the web page</value>
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
@@ -231,6 +229,12 @@
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>Turn on the top navigation pane on the main window</value>
+  </data>
+  <data name="MessageLoginAlternative" xml:space="preserve">
+    <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to never show this message again the next time the page is loaded.</value>
+  </data>
+  <data name="MessageUpdateAccount" xml:space="preserve">
+    <value>Your account has already been added before. It has just been updated.</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>miHoYo</value>
@@ -245,6 +249,9 @@
   <data name="NameGitHubRepoInspiration" xml:space="preserve">
     <value>PaimonMenuBar</value>
     <comment>No need to translate.</comment>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>Show a greeting notification when the app starts</value>
@@ -263,9 +270,6 @@
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>Change notification settings</value>
-  </data>
-  <data name="Ok" xml:space="preserve">
-    <value>OK</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
@@ -321,5 +325,8 @@
   </data>
   <data name="ViewIssues" xml:space="preserve">
     <value>View issues</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>

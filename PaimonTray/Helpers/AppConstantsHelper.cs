@@ -20,22 +20,22 @@
         /// <summary>
         /// The height of the page for adding a CN server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageCnHeight = 800;
+        public const int AddAccountPageLoginWebPageServerCnHeight = 808;
 
         /// <summary>
         /// The width of the page for adding a CN server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageCnWidth = 680;
+        public const int AddAccountPageLoginWebPageServerCnWidth = 680;
 
         /// <summary>
         /// The height of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageGlobalHeight = 820;
+        public const int AddAccountPageLoginWebPageServerGlobalHeight = 828;
 
         /// <summary>
         /// The width of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageGlobalWidth = 800;
+        public const int AddAccountPageLoginWebPageServerGlobalWidth = 800;
 
         /// <summary>
         /// The code of the glyph Dictionary.

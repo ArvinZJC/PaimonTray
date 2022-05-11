@@ -2,7 +2,6 @@
 using Serilog;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
@@ -59,14 +58,54 @@ namespace PaimonTray.Helpers
         private const string HeaderValueUserAgentServerGlobal = $"miHoYoBBSOversea/{HeaderValueAppVersionServerGlobal}";
 
         /// <summary>
+        /// The characters key.
+        /// </summary>
+        public const string KeyCharacters = "characters";
+
+        /// <summary>
         /// The cookies key.
         /// </summary>
         public const string KeyCookies = "cookies";
 
         /// <summary>
+        /// The ID key.
+        /// </summary>
+        public const string KeyId = "id";
+
+        /// <summary>
+        /// The IsEnabled key.
+        /// </summary>
+        public const string KeyIsEnabled = "isEnabled";
+
+        /// <summary>
+        /// The level key.
+        /// </summary>
+        public const string KeyLevel = "level";
+
+        /// <summary>
         /// The list key.
         /// </summary>
         public const string KeyList = "list";
+
+        /// <summary>
+        /// The nickname key.
+        /// </summary>
+        public const string KeyNickname = "nickname";
+
+        /// <summary>
+        /// The region key.
+        /// </summary>
+        public const string KeyRegion = "region";
+
+        /// <summary>
+        /// The server key.
+        /// </summary>
+        public const string KeyServer = "server";
+
+        /// <summary>
+        /// The user ID key.
+        /// </summary>
+        public const string KeyUserId = "userId";
 
         /// <summary>
         /// The CN server tag.
@@ -121,31 +160,21 @@ namespace PaimonTray.Helpers
         /// Get the account's characters.
         /// TODO: reduce the method complexity.
         /// </summary>
-        /// <param name="accountId">The account ID.</param>
-        /// <param name="server">The server. Should be the CN/global server tag.</param>
+        /// <param name="keyAccount">The account key.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
-        public async Task<ImmutableList<Character>> GetCharactersAsync(string accountId, string server)
+        public async Task<ImmutableList<Character>> GetCharactersAsync(string keyAccount)
         {
-            var keyAccount = $"{server}{accountId}";
-
-            Log.Information($"Start to get characters (account key: {keyAccount}).");
-
-            if (!new[] { TagServerCn, TagServerGlobal }.Contains(server))
-            {
-                Log.Warning("Invalid server.");
-                return null;
-            } // end if
-
             if (!_propertySetAccounts.ContainsKey(keyAccount))
             {
-                Log.Warning("No such account key.");
+                Log.Warning($"No such account key ({keyAccount}).");
                 return null;
             } // end if
 
+            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
             string headerValueUserAgent;
             string urlCharacters;
 
-            if (server == TagServerCn)
+            if (applicationDataCompositeValueAccount[KeyServer] as string == TagServerCn)
             {
                 headerValueUserAgent = HeaderValueUserAgentServerCn;
                 urlCharacters = UrlCharactersServerCn;
@@ -156,7 +185,6 @@ namespace PaimonTray.Helpers
                 urlCharacters = UrlCharactersServerGlobal;
             } // end if...else
 
-            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(urlCharacters));
             var headers = httpRequestMessage.Headers;
 
@@ -171,7 +199,7 @@ namespace PaimonTray.Helpers
             }
             catch (Exception exception)
             {
-                Log.Error("The HTTP response to get characters was unsuccessful.");
+                Log.Error($"The HTTP response to get characters was unsuccessful (account key: {keyAccount}).");
                 Log.Error(exception.ToString());
                 return null;
             } // end try...catch
@@ -182,22 +210,67 @@ namespace PaimonTray.Helpers
 
             if (account == null)
             {
-                Log.Warning($"Failed to parse the response's body: {httpResponseBody}");
+                Log.Warning($"Failed to parse the response's body (account key: {keyAccount}):");
+                Log.Information(httpResponseBody);
                 return null;
             } // end if
 
             if (account.ReturnCode != 0)
             {
                 Log.Warning(
-                    $"Failed to get characters from the server API (message: {account.Message}, return code: {account.ReturnCode}).");
+                    $"Failed to get characters from the specific API (account key: {keyAccount}, message: {account.Message}, return code: {account.ReturnCode}).");
                 return null;
             } // end if
 
             if (account.Data.TryGetValue(KeyList, out var characters)) return characters;
 
-            Log.Warning("Failed to get the character data list.");
+            Log.Warning($"Failed to get the character data list (account key: {keyAccount}).");
             return null;
         } // end method GetCharactersAsync
+
+        /// <summary>
+        /// Add or update the characters.
+        /// </summary>
+        /// <param name="characters">The characters.</param>
+        /// <param name="keyAccount">The account key.</param>
+        public void StoreCharacters(ImmutableList<Character> characters, string keyAccount)
+        {
+            if (!_propertySetAccounts.ContainsKey(keyAccount))
+            {
+                Log.Warning($"No such account key ({keyAccount}).");
+                return;
+            } // end if
+
+            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
+
+            if (characters.Count == 0)
+            {
+                applicationDataCompositeValueAccount.Remove(KeyCharacters);
+                _propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+                return;
+            } // end if
+
+            var applicationDataCompositeValueCharacters =
+                applicationDataCompositeValueAccount.ContainsKey(KeyCharacters)
+                    ? (ApplicationDataCompositeValue)applicationDataCompositeValueAccount[KeyCharacters]
+                    : new ApplicationDataCompositeValue();
+            var applicationDataCompositeValueCharactersNew = new ApplicationDataCompositeValue();
+
+            foreach (var character in characters)
+                applicationDataCompositeValueCharactersNew[character.UserId] = new ApplicationDataCompositeValue
+                {
+                    [KeyIsEnabled] = applicationDataCompositeValueCharacters.ContainsKey(character.UserId)
+                        ? (applicationDataCompositeValueCharacters[character.UserId] as
+                            ApplicationDataCompositeValue)?[KeyIsEnabled]
+                        : true,
+                    [KeyLevel] = character.Level,
+                    [KeyNickname] = character.Nickname
+                };
+
+            applicationDataCompositeValueAccount[KeyCharacters] = applicationDataCompositeValueCharactersNew;
+            applicationDataCompositeValueAccount[KeyIsEnabled] = true;
+            _propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+        } // end method StoreCharacters
 
         #endregion Methods
     } // end class AccountsHelper

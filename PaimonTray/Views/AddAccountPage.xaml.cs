@@ -15,12 +15,13 @@ namespace PaimonTray.Views
 {
     /// <summary>
     /// The page for adding an account.
+    /// TODO: component IsEnabled and loading status when processing login
     /// </summary>
     public sealed partial class AddAccountPage
     {
         #region Fields
 
-        private ContentDialog _contentDialogueLoginFail;
+        private ContentDialog _contentDialogue;
         private bool _isWebView2Available;
         private WebView2 _webView2LoginWebPage;
 
@@ -47,6 +48,7 @@ namespace PaimonTray.Views
 
         /// <summary>
         /// Add an account.
+        /// TODO: reduce the method complexity.
         /// </summary>
         /// <param name="accountId">The account ID.</param>
         /// <param name="cookies">The cookies.</param>
@@ -58,36 +60,71 @@ namespace PaimonTray.Views
             var keyAccount = $"{server}{accountId}";
             var propertySetAccounts = ApplicationData.Current.LocalSettings
                 .Containers[AccountsHelper.ContainerKeyAccounts].Values;
+            var shouldUpdateAccount =
+                propertySetAccounts
+                    .ContainsKey(keyAccount); // A flag indicating if the account should be updated or added.
 
-            Log.Information($"Start to add the account (account key: {keyAccount}).");
+            if (!shouldUpdateAccount) propertySetAccounts[keyAccount] = new ApplicationDataCompositeValue();
 
-            if (propertySetAccounts.ContainsKey(keyAccount))
-            {
-                Log.Warning("Already added the account before.");
-                ShowContentDialogueLoginFailAsync(_resourceLoader.GetString("AddAccountNoNeed"));
-                return;
-            } // end if
+            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)propertySetAccounts[keyAccount];
 
-            var applicationDataCompositeValueAccount = new ApplicationDataCompositeValue
-            {
-                [AccountsHelper.KeyCookies] = cookies
-            };
-
+            applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
+            applicationDataCompositeValueAccount[AccountsHelper.KeyId] = accountId;
+            applicationDataCompositeValueAccount[AccountsHelper.KeyIsEnabled] = false;
+            applicationDataCompositeValueAccount[AccountsHelper.KeyServer] = server;
             propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
 
-            var characters = await (Application.Current as App)?.AccHelper.GetCharactersAsync(accountId, server)!;
+            var app = Application.Current as App;
+            var characters = await app?.AccHelper.GetCharactersAsync(keyAccount)!;
             var isNullCharacters = characters == null;
 
-            if (isNullCharacters || characters.Count == 0)
+            InitialiseLogin();
+
+            if (isNullCharacters)
             {
-                Log.Warning("Failed to add the account. " + (isNullCharacters ? "Null characters." : "No character linked."));
-                ShowContentDialogueLoginFailAsync(
-                    _resourceLoader.GetString(isNullCharacters ? "LoginFail" : "AddAccountFail"));
+                Log.Warning($"Failed to add the account due to null characters (account key: {keyAccount}).");
+                propertySetAccounts.Remove(keyAccount);
+                ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
                 return;
             } // end if
 
-            // TODO: user selects characters if >= 2 characters (need to consider feasibility); add the character directly if 1 character
-            if (_isWebView2Available) _webView2LoginWebPage.Close();
+            if (shouldUpdateAccount)
+            {
+                app?.AccHelper.StoreCharacters(characters, keyAccount);
+                ShowLoginMessage(_resourceLoader.GetString("MessageUpdateAccount"));
+                return;
+            } // end if
+
+            if (characters.Count == 0)
+            {
+                _contentDialogue = new ContentDialog
+                {
+                    Content = _resourceLoader.GetString("AddAccountNoCharacter"),
+                    CloseButtonText = _resourceLoader.GetString("No"),
+                    PrimaryButtonText = _resourceLoader.GetString("Yes"),
+                    RequestedTheme = SettingsHelper.GetTheme(),
+                    Title = _resourceLoader.GetString("AddAccountConfirmation"),
+                    XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
+                };
+
+                var contentDialogResult = await _contentDialogue.ShowAsync();
+
+                _contentDialogue = null;
+
+                if (contentDialogResult == ContentDialogResult.Primary)
+                {
+                    applicationDataCompositeValueAccount[AccountsHelper.KeyIsEnabled] = true;
+                    propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+                    ShowLoginMessage(_resourceLoader.GetString(""));
+                }
+                else
+                    propertySetAccounts.Remove(keyAccount);
+
+                return;
+            } // end if
+
+            app?.AccHelper.StoreCharacters(characters, keyAccount);
+            // TODO: navigate to proper place
         } // end method AddAccountAsync
 
         /// <summary>
@@ -116,14 +153,16 @@ namespace PaimonTray.Views
 
             var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
 
+            InfoBarMessageLogin.IsOpen = false;
+
             if (_isWebView2Available)
             {
                 var pageSuggestedHeight = isServerCn
-                    ? AppConstantsHelper.AddAccountPageLoginWebPageCnHeight
-                    : AppConstantsHelper.AddAccountPageLoginWebPageGlobalHeight;
+                    ? AppConstantsHelper.AddAccountPageLoginWebPageServerCnHeight
+                    : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalHeight;
                 var pageSuggestedWidth = isServerCn
-                    ? AppConstantsHelper.AddAccountPageLoginWebPageCnWidth
-                    : AppConstantsHelper.AddAccountPageLoginWebPageGlobalWidth;
+                    ? AppConstantsHelper.AddAccountPageLoginWebPageServerCnWidth
+                    : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
                 ButtonLoginWebPage.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
@@ -152,6 +191,7 @@ namespace PaimonTray.Views
             {
                 Log.Information(
                     $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
+                throw new NotImplementedException();
                 _isWebView2Available = true;
                 _webView2LoginWebPage = new WebView2();
                 await _webView2LoginWebPage.EnsureCoreWebView2Async();
@@ -162,7 +202,7 @@ namespace PaimonTray.Views
                 GridLoginWebPage.Children.Add(_webView2LoginWebPage);
                 Grid.SetRow(_webView2LoginWebPage, 0);
                 TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
-                ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginHintComplete"));
+                ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
                 ToolTipService.SetToolTip(ButtonLoginWebPageReload, _resourceLoader.GetString("ReloadLoginWebPage"));
 
                 ApplyServerSelection();
@@ -176,12 +216,12 @@ namespace PaimonTray.Views
                 ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
                 ButtonLoginWebPageReload.Visibility = Visibility.Collapsed;
                 GridLoginAlternative.Visibility = Visibility.Visible;
-                GridLoginHintAlternative.Visibility = Visibility.Visible;
                 HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
                 HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
-                RichTextBlockLoginPlace.Visibility = Visibility.Visible;
+                InfoBarMessageLoginAlternative.IsOpen = true;
+                InfoBarMessageLoginAlternative.Message = _resourceLoader.GetString("MessageLoginAlternative");
                 TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
-                TextBlockLoginHintAlternative.Text = _resourceLoader.GetString("LoginHintAlternative");
+                TextBlockLoginPlace.Visibility = Visibility.Visible;
                 ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
             } // end try...catch
         } // end method ConfigWebView2LoginAsync
@@ -198,12 +238,29 @@ namespace PaimonTray.Views
         } // end method GetLoginWebPageUri
 
         /// <summary>
+        /// Initialise the login.
+        /// </summary>
+        private void InitialiseLogin()
+        {
+            if (_isWebView2Available)
+            {
+                _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+                _webView2LoginWebPage.Source = GetLoginWebPageUri();
+                return;
+            } // end if
+
+            TextBoxLoginAlternative.Text = string.Empty;
+        } // end method InitialiseLogin
+
+        /// <summary>
         /// Log in.
         /// </summary>
         private async void LogInAsync()
         {
             string accountId;
             string cookies;
+
+            InfoBarMessageLogin.IsOpen = false;
 
             if (_isWebView2Available)
             {
@@ -232,7 +289,8 @@ namespace PaimonTray.Views
 
             Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
                         $" login failed due to invalid cookies: {cookies})");
-            ShowContentDialogueLoginFailAsync(_resourceLoader.GetString("LoginFail"));
+            InitialiseLogin();
+            ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
         } // end method LogInAsync
 
         /// <summary>
@@ -284,31 +342,16 @@ namespace PaimonTray.Views
         } // end generic method ProcessCookies
 
         /// <summary>
-        /// Show the login fail content dialogue.
+        /// Show the login message.
         /// </summary>
-        /// <param name="content">The content dialogue's content.</param>
-        private async void ShowContentDialogueLoginFailAsync(string content)
+        /// <param name="message">The login message.</param>
+        /// <param name="infoBarSeverity">The info bar's severity.</param>
+        private void ShowLoginMessage(string message, InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
-            _contentDialogueLoginFail = new ContentDialog
-            {
-                Content = content,
-                CloseButtonText = _resourceLoader.GetString("Ok"),
-                RequestedTheme = SettingsHelper.GetTheme(),
-                XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
-            };
-
-            await _contentDialogueLoginFail.ShowAsync();
-            _contentDialogueLoginFail = null;
-
-            if (_isWebView2Available)
-            {
-                _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
-                _webView2LoginWebPage.Source = GetLoginWebPageUri();
-                return;
-            } // end if
-
-            TextBoxLoginAlternative.Text = string.Empty;
-        } // end method ShowContentDialogueLoginFailAsync
+            InfoBarMessageLogin.Message = message;
+            InfoBarMessageLogin.Severity = infoBarSeverity;
+            InfoBarMessageLogin.IsOpen = true; // Show the info bar when ready.
+        } // end method ShowLoginMessage
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -329,9 +372,7 @@ namespace PaimonTray.Views
         // Handle the actual theme changed event of the page for adding an account.
         private void AddAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
         {
-            if (_contentDialogueLoginFail == null) return;
-
-            _contentDialogueLoginFail.RequestedTheme = SettingsHelper.GetTheme();
+            if (_contentDialogue != null) _contentDialogue.RequestedTheme = SettingsHelper.GetTheme();
         } // end method AddAccountPage_OnActualThemeChanged
 
         // Handle the unloaded event of the page for adding an account.
