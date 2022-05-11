@@ -126,17 +126,14 @@
                                     Grid.Column="0"
                                     Orientation="Horizontal"
                                     VerticalAlignment="Center">
-                                    <RichTextBlock
-                                        x:Name="RichTextBlockLoginPlace"
-                                        IsTextSelectionEnabled="False"
+                                    <TextBlock
+                                        x:Name="TextBlockLoginPlace"
                                         Margin="0, 0, 8, 0"
                                         Visibility="Collapsed">
-                                        <Paragraph>
-                                            <Hyperlink x:Name="HyperlinkLoginPlace">
-                                                <Run x:Name="RunLoginPlace" />
-                                            </Hyperlink>
-                                        </Paragraph>
-                                    </RichTextBlock>
+                                        <Hyperlink x:Name="HyperlinkLoginPlace">
+                                            <Run x:Name="RunLoginPlace" />
+                                        </Hyperlink>
+                                    </TextBlock>
                                     <TextBlock x:Name="TextBlockLogin" />
                                 </StackPanel>
                                 <Button

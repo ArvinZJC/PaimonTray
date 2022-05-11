@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!-- The app icon and name stack panel. -->
         <StackPanel
             Grid.Row="0"
             Orientation="Horizontal">
@@ -40,34 +41,30 @@
             x:Name="TextBlockCopyright"
             Grid.Row="2"
             Margin="12, 0, 0, 0" />
-        <RichTextBlock
+        <!-- The acknowledgement text block. -->
+        <TextBlock
             Grid.Row="3"
             HorizontalAlignment="Left"
-            IsTextSelectionEnabled="False"
             Margin="12, 0, 0, 0">
-            <Paragraph>
-                <Run x:Name="RunAcknowledgementInspiration" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
-                    <Run x:Name="RunNameGitHubRepoInspiration" />
-                </Hyperlink>
-            </Paragraph>
-            <Paragraph>
-                <Run x:Name="RunAcknowledgementApiUses" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
-                    <Run x:Name="RunNameGitHubRepoApiUsesPrimary" />
-                </Hyperlink>
-                <Run x:Name="RunAcknowledgementApiUsesAnd" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
-                    <Run x:Name="RunNameGitHubRepoApiUsesSecondary" />
-                </Hyperlink>
-            </Paragraph>
-            <Paragraph>
-                <Run x:Name="RunAcknowledgementAppIcon" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlAppIconSource}">
-                    <Run x:Name="RunAppIconAuthor" />
-                </Hyperlink>
-            </Paragraph>
-        </RichTextBlock>
+            <Run x:Name="RunAcknowledgementInspiration" />
+            <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
+                <Run x:Name="RunNameGitHubRepoInspiration" />
+            </Hyperlink>
+            <LineBreak />
+            <Run x:Name="RunAcknowledgementApiUses" />
+            <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
+                <Run x:Name="RunNameGitHubRepoApiUsesPrimary" />
+            </Hyperlink>
+            <Run x:Name="RunAcknowledgementApiUsesAnd" />
+            <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
+                <Run x:Name="RunNameGitHubRepoApiUsesSecondary" />
+            </Hyperlink>
+            <LineBreak />
+            <Run x:Name="RunAcknowledgementAppIcon" />
+            <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlAppIconSource}">
+                <Run x:Name="RunAppIconAuthor" />
+            </Hyperlink>
+        </TextBlock>
         <HyperlinkButton
             x:Name="HyperlinkButtonLicense"
             Grid.Row="4"
