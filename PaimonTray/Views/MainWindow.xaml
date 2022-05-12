@@ -44,6 +44,7 @@
         </ni:TaskbarIcon>
         <!-- The body navigation view. -->
         <NavigationView
+            x:FieldModifier="public"
             x:Name="NavigationViewBody"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"

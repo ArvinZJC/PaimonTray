@@ -124,7 +124,15 @@ namespace PaimonTray.Views
             } // end if
 
             app?.AccHelper.StoreCharacters(characters, keyAccount);
+
             // TODO: navigate to proper place
+            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
+                         existingWindow is MainWindow))
+            {
+                var navigationViewBodyMenuItems = ((MainWindow)existingWindow).NavigationViewBody.MenuItems;
+
+                navigationViewBodyMenuItems.Insert(navigationViewBodyMenuItems.Count - 1, null);
+            }
         } // end method AddAccountAsync
 
         /// <summary>
