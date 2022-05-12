@@ -43,14 +43,14 @@
         public const string GlyphDictionary = "\xE82D";
 
         /// <summary>
+        /// The code of the glyph Home.
+        /// </summary>
+        public const string GlyphHome = "\xE80F";
+
+        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public const string GlyphInfo = "\xE946";
-
-        /// <summary>
-        /// The code of the glyph Refresh.
-        /// </summary>
-        public const string GlyphRefresh = "\xE72C";
 
         /// <summary>
         /// The code of the glyph Repair.

@@ -158,7 +158,6 @@ namespace PaimonTray.Helpers
 
         /// <summary>
         /// Get the account's characters.
-        /// TODO: reduce the method complexity.
         /// </summary>
         /// <param name="keyAccount">The account key.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>

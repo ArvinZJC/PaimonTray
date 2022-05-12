@@ -142,6 +142,9 @@
   <data name="AddAccountNoCharacter" xml:space="preserve">
     <value>No character is linked to your account. Do you still want to add the account?</value>
   </data>
+  <data name="AddingAccount" xml:space="preserve">
+    <value>Adding your account</value>
+  </data>
   <data name="And" xml:space="preserve">
     <value>and</value>
   </data>
@@ -178,7 +181,7 @@
     <value>Hide the main window</value>
   </data>
   <data name="HowToGetCookies" xml:space="preserve">
-    <value>How to get your cookies? (The relevant user manual section is unready. The link provided is from PaimonMenuBar for your reference.)</value>
+    <value>How to get your cookies? (Temp)</value>
   </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
@@ -223,6 +226,9 @@
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
+  </data>
+  <data name="LoginWebPageHome" xml:space="preserve">
+    <value>Go to the login web page</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>Settings and more</value>
@@ -273,9 +279,6 @@
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
-  </data>
-  <data name="ReloadLoginWebPage" xml:space="preserve">
-    <value>Reload the login web page</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>

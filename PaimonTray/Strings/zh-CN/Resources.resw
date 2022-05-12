@@ -142,6 +142,9 @@
   <data name="AddAccountNoCharacter" xml:space="preserve">
     <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
   </data>
+  <data name="AddingAccount" xml:space="preserve">
+    <value>添加您的账号中</value>
+  </data>
   <data name="And" xml:space="preserve">
     <value>和</value>
   </data>
@@ -178,7 +181,7 @@
     <value>隐藏主窗口</value>
   </data>
   <data name="HowToGetCookies" xml:space="preserve">
-    <value>如何获取您的 cookie？（使用手册相关的部分还未完备。提供的来自 PaimonMenuBar 的链接可供参考。）</value>
+    <value>如何获取您的 cookie？（临时）</value>
   </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
@@ -223,6 +226,9 @@
   </data>
   <data name="LoginWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
+  </data>
+  <data name="LoginWebPageHome" xml:space="preserve">
+    <value>转到登录页</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>设置及其他</value>
@@ -273,9 +279,6 @@
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
-  </data>
-  <data name="ReloadLoginWebPage" xml:space="preserve">
-    <value>重新加载登录页</value>
   </data>
   <data name="Server" xml:space="preserve">
     <value>服务器</value>

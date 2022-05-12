@@ -8,6 +8,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
@@ -15,7 +16,6 @@ namespace PaimonTray.Views
 {
     /// <summary>
     /// The page for adding an account.
-    /// TODO: component IsEnabled and loading status when processing login
     /// </summary>
     public sealed partial class AddAccountPage
     {
@@ -48,11 +48,11 @@ namespace PaimonTray.Views
 
         /// <summary>
         /// Add an account.
-        /// TODO: reduce the method complexity.
         /// </summary>
         /// <param name="accountId">The account ID.</param>
         /// <param name="cookies">The cookies.</param>
-        private async void AddAccountAsync(string accountId, string cookies)
+        /// <returns>A <see cref="Task"/> object just to indicate that any later operation needs to wait.</returns>
+        private async Task AddAccountAsync(string accountId, string cookies)
         {
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
@@ -191,19 +191,19 @@ namespace PaimonTray.Views
             {
                 Log.Information(
                     $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
-                throw new NotImplementedException();
                 _isWebView2Available = true;
                 _webView2LoginWebPage = new WebView2();
                 await _webView2LoginWebPage.EnsureCoreWebView2Async();
                 _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
                 _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
+                _webView2LoginWebPage.NavigationCompleted += WebView2LoginWebPage_OnNavigationCompleted;
 
                 ButtonLoginWebPage.Content = _resourceLoader.GetString("LoginComplete");
                 GridLoginWebPage.Children.Add(_webView2LoginWebPage);
                 Grid.SetRow(_webView2LoginWebPage, 0);
                 TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
                 ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
-                ToolTipService.SetToolTip(ButtonLoginWebPageReload, _resourceLoader.GetString("ReloadLoginWebPage"));
+                ToolTipService.SetToolTip(ButtonLoginWebPageHome, _resourceLoader.GetString("LoginWebPageHome"));
 
                 ApplyServerSelection();
             }
@@ -214,11 +214,12 @@ namespace PaimonTray.Views
                 _isWebView2Available = false;
 
                 ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
-                ButtonLoginWebPageReload.Visibility = Visibility.Collapsed;
+                ButtonLoginWebPageHome.Visibility = Visibility.Collapsed;
                 GridLoginAlternative.Visibility = Visibility.Visible;
                 HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
                 HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
                 InfoBarMessageLoginAlternative.IsOpen = true;
+                InfoBarMessageLoginAlternative.Margin = new Thickness(0, 0, 0, 8);
                 InfoBarMessageLoginAlternative.Message = _resourceLoader.GetString("MessageLoginAlternative");
                 TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
                 TextBlockLoginPlace.Visibility = Visibility.Visible;
@@ -260,6 +261,7 @@ namespace PaimonTray.Views
             string accountId;
             string cookies;
 
+            GridAddingAccount.Visibility = Visibility.Visible;
             InfoBarMessageLogin.IsOpen = false;
 
             if (_isWebView2Available)
@@ -282,15 +284,16 @@ namespace PaimonTray.Views
             // Execute if valid account ID and cookies.
             if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
                 cookies.Contains(AccountsHelper.CookieKeyToken))
+                await AddAccountAsync(accountId, cookies);
+            else
             {
-                AddAccountAsync(accountId, cookies);
-                return;
-            } // end if
+                Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
+                            $" login failed due to invalid cookies: {cookies})");
+                InitialiseLogin();
+                ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+            } // end if...else
 
-            Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                        $" login failed due to invalid cookies: {cookies})");
-            InitialiseLogin();
-            ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+            GridAddingAccount.Visibility = Visibility.Collapsed;
         } // end method LogInAsync
 
         /// <summary>
@@ -348,6 +351,7 @@ namespace PaimonTray.Views
         /// <param name="infoBarSeverity">The info bar's severity.</param>
         private void ShowLoginMessage(string message, InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
+            InfoBarMessageLogin.Margin = new Thickness(0, 0, 0, 8);
             InfoBarMessageLogin.Message = message;
             InfoBarMessageLogin.Severity = infoBarSeverity;
             InfoBarMessageLogin.IsOpen = true; // Show the info bar when ready.
@@ -360,6 +364,7 @@ namespace PaimonTray.Views
         {
             ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
             ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
+            TextBlockAddingAccount.Text = _resourceLoader.GetString("AddingAccount");
             TextBlockServer.Text = _resourceLoader.GetString("Server");
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
             TextBlockTitle.Text = _resourceLoader.GetString("AddAccount");
@@ -393,8 +398,8 @@ namespace PaimonTray.Views
             LogInAsync();
         } // end method ButtonLoginWebPage_OnClick
 
-        // Handle the click event of the button for reloading the login web page.
-        private void ButtonLoginWebPageReload_OnClick(object sender, RoutedEventArgs e)
+        // Handle the click event of the button for going to the login web page.
+        private void ButtonLoginWebPageHome_OnClick(object sender, RoutedEventArgs e)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
         } // end method ButtonLoginWebPageReload_OnClick
@@ -409,14 +414,28 @@ namespace PaimonTray.Views
         private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
             CoreWebView2SourceChangedEventArgs args)
         {
-            var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
-
-            if ((comboBoxServerSelectedItem == ComboBoxItemServerCn && !_webView2LoginWebPage.Source.ToString()
-                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) ||
-                comboBoxServerSelectedItem == ComboBoxItemServerGlobal) return;
-
-            LogInAsync();
+            if (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn && _webView2LoginWebPage.Source
+                    .ToString()
+                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) GridAddingAccount.Visibility = Visibility.Visible;
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
+
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the info bar's closing event.
+        private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            sender.Margin = new Thickness(0);
+        } // end method InfoBar_OnClosing
+
+        // Handle the web page login WebView2's navigation completed event.
+        private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
+            CoreWebView2NavigationCompletedEventArgs args)
+        {
+            // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
+            if (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn && _webView2LoginWebPage.Source
+                    .ToString()
+                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) LogInAsync();
+        } // end method WebView2LoginWebPage_OnNavigationCompleted
 
         #endregion Event Handlers
     } // end class AddAccountPage
