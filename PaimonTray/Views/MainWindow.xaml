@@ -26,9 +26,7 @@
             Visibility="Collapsed">
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout AreOpenCloseAnimationsEnabled="False">
-                    <MenuFlyoutItem
-                        Command="{x:Bind CommandsViewModel.AddAccountCommand}"
-                        IsEnabled="False" />
+                    <MenuFlyoutItem Command="{x:Bind CommandsViewModel.AddAccountCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                     <MenuFlyoutSeparator />
@@ -70,9 +68,7 @@
                     Width="40">
                     <Button.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem
-                                Command="{x:Bind CommandsViewModel.AddAccountCommand}"
-                                IsEnabled="False" />
+                            <MenuFlyoutItem Command="{x:Bind CommandsViewModel.AddAccountCommand}" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
                             <MenuFlyoutSubItem

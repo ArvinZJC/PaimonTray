@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using Serilog;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Notifications;
@@ -30,7 +31,14 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new();
 
-                xamlUiCommand.ExecuteRequested += (_, _) => Log.Debug("Adding an account requested."); // TODO
+                xamlUiCommand.ExecuteRequested += (_, _) =>
+                {
+                    var mainWindow = WindowsHelper.ShowMainWindow();
+
+                    mainWindow.NavigationViewBody.SelectedItem = mainWindow.NavigationViewBody.MenuItems.Last();
+
+                    if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
+                };
                 xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend };
                 xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AddAccount");
                 return xamlUiCommand;

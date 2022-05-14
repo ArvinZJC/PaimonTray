@@ -68,7 +68,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="windowType">The window type.</param>
         /// <param name="activateIfExists">A flag indicating if the window should be activated if exists.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="Window"/> instance.</returns>
         private static Window ShowWindow(Type windowType, bool activateIfExists = true)
         {
             foreach (var existingWindow in ExistingWindowList.Where(existingWindow =>
