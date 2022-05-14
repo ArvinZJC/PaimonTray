@@ -166,7 +166,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="shouldSelectFirst">A flag indicating if the 1st character should be selected in the navigation view.</param>
-        public static void AddAccountNavigation(string containerKeyAccount, bool shouldSelectFirst = true)
+        /// <returns>A flag indicating if the operations are successful.</returns>
+        public static bool AddAccountNavigation(string containerKeyAccount, bool shouldSelectFirst = true)
         {
             var applicationDataContainerAccounts =
                 ApplicationData.Current.LocalSettings.Containers[ContainerKeyAccounts];
@@ -174,7 +175,7 @@ namespace PaimonTray.Helpers
             if (!applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return;
+                return false;
             } // end if
 
             foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
@@ -186,7 +187,7 @@ namespace PaimonTray.Helpers
                 {
                     Log.Warning(
                         $"No character for adding the main window's navigation view items (account container key: {containerKeyAccount}).");
-                    return;
+                    return false;
                 } // end if
 
                 var navigationViewBody = ((MainWindow)existingWindow).NavigationViewBody;
@@ -212,6 +213,8 @@ namespace PaimonTray.Helpers
 
                 if (shouldSelectFirst) navigationViewBody.SelectedItem = navigationViewBody.MenuItems[0];
             } // end foreach
+
+            return true;
         } // end method AddAccountNavigation
 
         /// <summary>
