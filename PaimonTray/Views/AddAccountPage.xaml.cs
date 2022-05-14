@@ -59,12 +59,12 @@ namespace PaimonTray.Views
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
-            var keyAccount = $"{server}{accountId}";
+            var containerKeyAccount = $"{server}{accountId}";
             var shouldUpdateAccount =
                 applicationDataContainerAccounts.Containers
-                    .ContainsKey(keyAccount); // A flag indicating if the account should be updated or added.
+                    .ContainsKey(containerKeyAccount); // A flag indicating if the account should be updated or added.
             var propertySetAccount = applicationDataContainerAccounts
-                .CreateContainer(keyAccount, ApplicationDataCreateDisposition.Always)
+                .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
                 .Values; // Need to declare after the flag indicating if the account should be updated or added.
 
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
@@ -73,23 +73,24 @@ namespace PaimonTray.Views
             propertySetAccount[AccountsHelper.KeyServer] = server;
 
             var app = Application.Current as App;
-            var characters = await app?.AccHelper.GetCharactersFromApiAsync(keyAccount)!;
+            var characters = await app?.AccHelper.GetCharactersFromApiAsync(containerKeyAccount)!;
 
             InitialiseLogin();
 
             if (characters == null)
             {
-                Log.Warning($"Failed to add the account due to null characters (account key: {keyAccount}).");
+                Log.Warning(
+                    $"Failed to add the account due to null characters (account container key: {containerKeyAccount}).");
                 ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
 
-                if (!shouldUpdateAccount) applicationDataContainerAccounts.DeleteContainer(keyAccount);
+                if (!shouldUpdateAccount) applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
                 return;
             } // end if
 
             if (shouldUpdateAccount)
             {
-                app?.AccHelper.StoreCharacters(characters, keyAccount);
+                app?.AccHelper.StoreCharacters(characters, containerKeyAccount);
                 ShowLoginMessage(_resourceLoader.GetString("MessageUpdateAccount"));
                 return;
             } // end if
@@ -112,13 +113,13 @@ namespace PaimonTray.Views
 
                 if (contentDialogResult != ContentDialogResult.Primary)
                 {
-                    applicationDataContainerAccounts.DeleteContainer(keyAccount);
+                    applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
                     return;
                 } // end if
             } // end if
 
-            // TODO: select the account's 1st added character, or stay in this page if character.Count == 0 (show a success info bar, or show reaching account limit)
-            app?.AccHelper.StoreCharacters(characters, keyAccount);
+            // TODO: stay in this page if character.Count == 0 (show a success info bar, or show reaching account limit)
+            app?.AccHelper.StoreCharacters(characters, containerKeyAccount);
         } // end method AddAccountAsync
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace PaimonTray.Views
                 TextBlockLoginPlace.Visibility = Visibility.Visible;
                 ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
             } // end try...catch
-        } // end method ConfigWebView2LoginAsync
+        } // end method ChooseLoginMethodAsync
 
         /// <summary>
         /// Get the login web page URI.
@@ -282,7 +283,7 @@ namespace PaimonTray.Views
             else
             {
                 Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                            $" login failed due to invalid cookies: ({cookies})");
+                            $" login failed due to invalid cookies ({cookies}).");
                 InitialiseLogin();
                 ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
             } // end if...else
@@ -409,8 +410,8 @@ namespace PaimonTray.Views
             CoreWebView2SourceChangedEventArgs args)
         {
             if (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn && _webView2LoginWebPage.Source
-                    .ToString()
-                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) GridAddingAccount.Visibility = Visibility.Visible;
+                    .ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo))
+                GridAddingAccount.Visibility = Visibility.Visible;
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
 #pragma warning disable CA1822 // Mark members as static
@@ -425,10 +426,17 @@ namespace PaimonTray.Views
         private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
             CoreWebView2NavigationCompletedEventArgs args)
         {
-            // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
-            if (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn && _webView2LoginWebPage.Source
-                    .ToString()
-                    .Contains(AppConstantsHelper.UrlLoginEndMiHoYo)) LogInAsync();
+            switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
+            {
+                // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
+                case true when _webView2LoginWebPage.Source.ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo):
+                    LogInAsync();
+                    break;
+
+                case false:
+                    ButtonLoginWebPage.IsEnabled = true;
+                    break;
+            } // end switch-case
         } // end method WebView2LoginWebPage_OnNavigationCompleted
 
         #endregion Event Handlers

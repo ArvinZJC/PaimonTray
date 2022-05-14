@@ -167,6 +167,7 @@
                                     Click="ButtonLoginWebPage_OnClick"
                                     Grid.Row="1"
                                     HorizontalAlignment="Stretch"
+                                    IsEnabled="False"
                                     Margin="0, 8, 0, 0"
                                     Style="{ThemeResource AccentButtonStyle}"
                                     Visibility="Collapsed" />

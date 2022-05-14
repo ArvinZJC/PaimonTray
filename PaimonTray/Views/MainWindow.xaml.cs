@@ -176,10 +176,10 @@ namespace PaimonTray.Views
         {
             var shouldSelectFirst = true;
 
-            foreach (var keyValuePairCharacters in AccountsHelper.GetCharactersFromLocal())
+            foreach (var containerKeyAccount in ApplicationData.Current.LocalSettings
+                         .Containers[AccountsHelper.ContainerKeyAccounts].Containers.Keys)
             {
-                AccountsHelper.AddAccountNavigation(keyValuePairCharacters.Value, keyValuePairCharacters.Key,
-                    shouldSelectFirst);
+                AccountsHelper.AddAccountNavigation(containerKeyAccount, shouldSelectFirst);
                 shouldSelectFirst = false;
             } // end foreach
         } // end method NavigationViewBody_OnLoaded
