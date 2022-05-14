@@ -171,14 +171,38 @@ namespace PaimonTray.Views
             _isFirstLoad = false;
         } // end method FrameBody_OnSizeChanged
 
+        // Handle the body navigation view's loaded event.
+        private void NavigationViewBody_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var shouldSelectFirst = true;
+
+            foreach (var keyValuePairCharacters in AccountsHelper.GetCharactersFromLocal())
+            {
+                AccountsHelper.AddAccountNavigation(keyValuePairCharacters.Value, keyValuePairCharacters.Key,
+                    shouldSelectFirst);
+                shouldSelectFirst = false;
+            } // end foreach
+        } // end method NavigationViewBody_OnLoaded
+
         // Handle the body navigation view's selection changed event.
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
             NavigationViewSelectionChangedEventArgs args)
         {
-            FrameBody.Navigate(
-                args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAddAccount
-                    ? typeof(AddAccountPage)
-                    : typeof(GameDataPage), null, new EntranceNavigationTransitionInfo());
+            Type pageType;
+            object parameter = null;
+            var selectedItem = args.SelectedItem as NavigationViewItem;
+
+            if (selectedItem == null) return;
+
+            if (selectedItem == NavigationViewItemBodyAddAccount)
+                pageType = typeof(AddAccountPage);
+            else
+            {
+                pageType = typeof(GameDataPage);
+                parameter = selectedItem.Tag;
+            } // end if...else
+
+            FrameBody.Navigate(pageType, parameter, new EntranceNavigationTransitionInfo());
         } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers

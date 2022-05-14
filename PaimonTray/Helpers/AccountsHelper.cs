@@ -1,10 +1,13 @@
-﻿using PaimonTray.Models;
+﻿using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Models;
+using PaimonTray.Views;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Web.Http;
 
@@ -40,12 +43,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version RPC header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.27.2";
+        private const string HeaderValueAppVersionServerCn = "2.28.1";
 
         /// <summary>
         /// The app version RPC header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.9.0";
+        private const string HeaderValueAppVersionServerGlobal = "2.10.1";
 
         /// <summary>
         /// The User-Agent header value for the CN server.
@@ -103,9 +106,9 @@ namespace PaimonTray.Helpers
         public const string KeyServer = "server";
 
         /// <summary>
-        /// The user ID key.
+        /// The tag for adding an account.
         /// </summary>
-        public const string KeyUserId = "userId";
+        public const string TagAddAccount = "addAccount";
 
         /// <summary>
         /// The CN server tag.
@@ -133,8 +136,8 @@ namespace PaimonTray.Helpers
 
         #region Fields
 
+        private readonly ApplicationDataContainer _applicationDataContainerAccounts;
         private readonly HttpClient _httpClient;
-        private readonly IPropertySet _propertySetAccounts;
 
         #endregion Fields
 
@@ -145,11 +148,13 @@ namespace PaimonTray.Helpers
         /// </summary>
         public AccountsHelper()
         {
+            _applicationDataContainerAccounts =
+                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
+                    ApplicationDataCreateDisposition
+                        .Always); // The container's containers are in a read-only dictionary, and should not be stored.
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
-            _propertySetAccounts = ApplicationData.Current.LocalSettings
-                .CreateContainer(ContainerKeyAccounts, ApplicationDataCreateDisposition.Always).Values;
         } // end constructor AccountsHelper
 
         #endregion Constructors
@@ -157,23 +162,55 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
-        /// Get the account's characters.
+        /// Add the main window's navigation view items for a specific account's characters.
+        /// </summary>
+        /// <param name="characters">A list of characters.</param>
+        /// <param name="keyAccount">The account key.</param>
+        /// <param name="shouldSelectFirst">A flag indicating if the 1st character should be selected in the navigation view.</param>
+        public static void AddAccountNavigation(ImmutableList<Character> characters, string keyAccount,
+            bool shouldSelectFirst = true)
+        {
+            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
+                         existingWindow is MainWindow))
+            {
+                var navigationViewBody = ((MainWindow)existingWindow).NavigationViewBody;
+
+                foreach (var character in characters)
+                {
+                    var navigationViewItemCharacter = new NavigationViewItem()
+                    {
+                        Icon = new SymbolIcon(Symbol.Contact),
+                        Tag = new KeyValuePair<string, string>(keyAccount, character.UserId)
+                    };
+
+                    ToolTipService.SetToolTip(navigationViewItemCharacter,
+                        $"{character.Nickname} ({character.UserId})");
+                    navigationViewBody.MenuItems.Insert(navigationViewBody.MenuItems.Count - 1,
+                        navigationViewItemCharacter);
+                } // end foreach
+
+                if (shouldSelectFirst) navigationViewBody.SelectedItem = navigationViewBody.MenuItems[0];
+            } // end foreach
+        } // end method AddAccountNavigation
+
+        /// <summary>
+        /// Get an account's characters from the API.
         /// </summary>
         /// <param name="keyAccount">The account key.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
-        public async Task<ImmutableList<Character>> GetCharactersAsync(string keyAccount)
+        public async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string keyAccount)
         {
-            if (!_propertySetAccounts.ContainsKey(keyAccount))
+            if (!_applicationDataContainerAccounts.Containers.ContainsKey(keyAccount))
             {
                 Log.Warning($"No such account key ({keyAccount}).");
                 return null;
             } // end if
 
-            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
             string headerValueUserAgent;
+            var propertySetAccount = _applicationDataContainerAccounts.Containers[keyAccount].Values;
             string urlCharacters;
 
-            if (applicationDataCompositeValueAccount[KeyServer] as string == TagServerCn)
+            if (propertySetAccount[KeyServer] as string == TagServerCn)
             {
                 headerValueUserAgent = HeaderValueUserAgentServerCn;
                 urlCharacters = UrlCharactersServerCn;
@@ -187,7 +224,7 @@ namespace PaimonTray.Helpers
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(urlCharacters));
             var headers = httpRequestMessage.Headers;
 
-            headers.Cookie.ParseAdd(applicationDataCompositeValueAccount[KeyCookies] as string);
+            headers.Cookie.ParseAdd(propertySetAccount[KeyCookies] as string);
             headers.UserAgent.ParseAdd(headerValueUserAgent);
 
             var httpResponseMessage = await _httpClient.SendRequestAsync(httpRequestMessage);
@@ -225,50 +262,103 @@ namespace PaimonTray.Helpers
 
             Log.Warning($"Failed to get the character data list (account key: {keyAccount}).");
             return null;
-        } // end method GetCharactersAsync
+        } // end method GetCharactersFromApiAsync
+
+        /// <summary>
+        /// Get all characters from the local data.
+        /// </summary>
+        /// <returns>A dictionary containing a list of characters for each account.</returns>
+        public static Dictionary<string, ImmutableList<Character>> GetCharactersFromLocal()
+        {
+            var accountCharacters = new Dictionary<string, ImmutableList<Character>>();
+
+            foreach (var keyValuePairAccount in ApplicationData.Current.LocalSettings.Containers[ContainerKeyAccounts]
+                         .Containers)
+            {
+                var dictionaryCharacters = keyValuePairAccount.Value.Containers;
+
+                if (!dictionaryCharacters.ContainsKey(KeyCharacters)) continue;
+
+                accountCharacters.Add(keyValuePairAccount.Key,
+                    (from keyValuePairCharacter in dictionaryCharacters[KeyCharacters].Containers
+                        let propertySetCharacter = keyValuePairCharacter.Value.Values
+                        select new Character()
+                        {
+                            Level = (int)propertySetCharacter[KeyLevel],
+                            Nickname = propertySetCharacter[KeyNickname] as string,
+                            Region = propertySetCharacter[KeyRegion] as string, UserId = keyValuePairCharacter.Key
+                        }).ToImmutableList());
+            } // end foreach
+
+            return accountCharacters;
+        } // end method GetCharactersFromLocal
+
+        /// <summary>
+        /// Remove the main window's navigation view items for a specific account's characters.
+        /// </summary>
+        /// <param name="keyAccount">The account key.</param>
+        private static void RemoveAccountNavigation(string keyAccount)
+        {
+            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
+                         existingWindow is MainWindow))
+            {
+                var navigationViewBodyMenuItems = (existingWindow as MainWindow)?.NavigationViewBody.MenuItems;
+
+                foreach (NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems?.Where(
+                             navigationViewBodyMenuItem =>
+                                 ((string)((NavigationViewItem)navigationViewBodyMenuItem).Tag)
+                                 .Contains(keyAccount))!)
+                    navigationViewBodyMenuItems?.Remove(navigationViewBodyMenuItem);
+            } // end foreach
+        } // end method RemoveAccountNavigation
 
         /// <summary>
         /// Add or update the characters.
         /// </summary>
-        /// <param name="characters">The characters.</param>
+        /// <param name="characters">A list of characters.</param>
         /// <param name="keyAccount">The account key.</param>
         public void StoreCharacters(ImmutableList<Character> characters, string keyAccount)
         {
-            if (!_propertySetAccounts.ContainsKey(keyAccount))
+            if (!_applicationDataContainerAccounts.Containers.ContainsKey(keyAccount))
             {
                 Log.Warning($"No such account key ({keyAccount}).");
                 return;
             } // end if
 
-            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)_propertySetAccounts[keyAccount];
+            var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[keyAccount];
 
             if (characters.Count == 0)
             {
-                applicationDataCompositeValueAccount.Remove(KeyCharacters);
-                _propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+                applicationDataContainerAccount.DeleteContainer(KeyCharacters);
+                applicationDataContainerAccount.Values[KeyIsEnabled] = true;
+                RemoveAccountNavigation(keyAccount);
                 return;
             } // end if
 
-            var applicationDataCompositeValueCharacters =
-                applicationDataCompositeValueAccount.ContainsKey(KeyCharacters)
-                    ? (ApplicationDataCompositeValue)applicationDataCompositeValueAccount[KeyCharacters]
-                    : new ApplicationDataCompositeValue();
-            var applicationDataCompositeValueCharactersNew = new ApplicationDataCompositeValue();
+            var applicationDataContainerCharacters =
+                applicationDataContainerAccount.CreateContainer(KeyCharacters, ApplicationDataCreateDisposition.Always);
+
+            foreach (var keyValuePairCharacter in applicationDataContainerCharacters.Containers.Where(
+                         keyValuePairCharacter => !characters.Select(character => character.UserId).ToImmutableList()
+                             .Contains(keyValuePairCharacter.Key)))
+                applicationDataContainerCharacters.DeleteContainer(keyValuePairCharacter.Key);
 
             foreach (var character in characters)
-                applicationDataCompositeValueCharactersNew[character.UserId] = new ApplicationDataCompositeValue
-                {
-                    [KeyIsEnabled] = applicationDataCompositeValueCharacters.ContainsKey(character.UserId)
-                        ? (applicationDataCompositeValueCharacters[character.UserId] as
-                            ApplicationDataCompositeValue)?[KeyIsEnabled]
-                        : true,
-                    [KeyLevel] = character.Level,
-                    [KeyNickname] = character.Nickname
-                };
+            {
+                var propertySetCharacter = applicationDataContainerCharacters
+                    .CreateContainer(character.UserId, ApplicationDataCreateDisposition.Always).Values;
 
-            applicationDataCompositeValueAccount[KeyCharacters] = applicationDataCompositeValueCharactersNew;
-            applicationDataCompositeValueAccount[KeyIsEnabled] = true;
-            _propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+                if (!propertySetCharacter.ContainsKey(KeyIsEnabled))
+                    propertySetCharacter[KeyIsEnabled] = true;
+
+                propertySetCharacter[KeyLevel] = character.Level;
+                propertySetCharacter[KeyNickname] = character.Nickname;
+                propertySetCharacter[KeyRegion] = character.Region;
+            } // end foreach
+
+            applicationDataContainerAccount.Values[KeyIsEnabled] = true;
+            RemoveAccountNavigation(keyAccount);
+            AddAccountNavigation(characters, keyAccount);
         } // end method StoreCharacters
 
         #endregion Methods

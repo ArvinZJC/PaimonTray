@@ -8,6 +8,6 @@
     Height="300"
     Width="300">
     <Grid>
-        <TextBlock Text="GameData" />
+        <TextBlock x:Name="TextBlockTest" />
     </Grid>
 </Page>

@@ -50,16 +50,14 @@
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
+            Loaded="NavigationViewBody_OnLoaded"
             PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem
-                    Icon="Contact"
-                    IsSelected="True"
-                    ToolTipService.ToolTip="(User-defined username)" />
-                <NavigationViewItem
                     x:Name="NavigationViewItemBodyAddAccount"
-                    Icon="Add" />
+                    Icon="Add"
+                    Tag="{x:Bind h:AccountsHelper.TagAddAccount}" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <!-- The main menu button. -->

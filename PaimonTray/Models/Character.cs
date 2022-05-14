@@ -10,7 +10,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The level.
         /// </summary>
-        public string Level { get; set; }
+        public int Level { get; set; }
 
         /// <summary>
         /// The nickname.

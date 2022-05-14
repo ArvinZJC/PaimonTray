@@ -54,37 +54,36 @@ namespace PaimonTray.Views
         /// <returns>A <see cref="Task"/> object just to indicate that any later operation needs to wait.</returns>
         private async Task AddAccountAsync(string accountId, string cookies)
         {
+            var applicationDataContainerAccounts =
+                ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts];
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
             var keyAccount = $"{server}{accountId}";
-            var propertySetAccounts = ApplicationData.Current.LocalSettings
-                .Containers[AccountsHelper.ContainerKeyAccounts].Values;
             var shouldUpdateAccount =
-                propertySetAccounts
+                applicationDataContainerAccounts.Containers
                     .ContainsKey(keyAccount); // A flag indicating if the account should be updated or added.
+            var propertySetAccount = applicationDataContainerAccounts
+                .CreateContainer(keyAccount, ApplicationDataCreateDisposition.Always)
+                .Values; // Need to declare after the flag indicating if the account should be updated or added.
 
-            if (!shouldUpdateAccount) propertySetAccounts[keyAccount] = new ApplicationDataCompositeValue();
-
-            var applicationDataCompositeValueAccount = (ApplicationDataCompositeValue)propertySetAccounts[keyAccount];
-
-            applicationDataCompositeValueAccount[AccountsHelper.KeyCookies] = cookies;
-            applicationDataCompositeValueAccount[AccountsHelper.KeyId] = accountId;
-            applicationDataCompositeValueAccount[AccountsHelper.KeyIsEnabled] = false;
-            applicationDataCompositeValueAccount[AccountsHelper.KeyServer] = server;
-            propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
+            propertySetAccount[AccountsHelper.KeyCookies] = cookies;
+            propertySetAccount[AccountsHelper.KeyId] = accountId;
+            propertySetAccount[AccountsHelper.KeyIsEnabled] = false;
+            propertySetAccount[AccountsHelper.KeyServer] = server;
 
             var app = Application.Current as App;
-            var characters = await app?.AccHelper.GetCharactersAsync(keyAccount)!;
-            var isNullCharacters = characters == null;
+            var characters = await app?.AccHelper.GetCharactersFromApiAsync(keyAccount)!;
 
             InitialiseLogin();
 
-            if (isNullCharacters)
+            if (characters == null)
             {
                 Log.Warning($"Failed to add the account due to null characters (account key: {keyAccount}).");
-                propertySetAccounts.Remove(keyAccount);
                 ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+
+                if (!shouldUpdateAccount) applicationDataContainerAccounts.DeleteContainer(keyAccount);
+
                 return;
             } // end if
 
@@ -111,28 +110,15 @@ namespace PaimonTray.Views
 
                 _contentDialogue = null;
 
-                if (contentDialogResult == ContentDialogResult.Primary)
+                if (contentDialogResult != ContentDialogResult.Primary)
                 {
-                    applicationDataCompositeValueAccount[AccountsHelper.KeyIsEnabled] = true;
-                    propertySetAccounts[keyAccount] = applicationDataCompositeValueAccount;
-                    ShowLoginMessage(_resourceLoader.GetString(""));
-                }
-                else
-                    propertySetAccounts.Remove(keyAccount);
-
-                return;
+                    applicationDataContainerAccounts.DeleteContainer(keyAccount);
+                    return;
+                } // end if
             } // end if
 
+            // TODO: select the account's 1st added character, or stay in this page if character.Count == 0 (show a success info bar, or show reaching account limit)
             app?.AccHelper.StoreCharacters(characters, keyAccount);
-
-            // TODO: navigate to proper place
-            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
-                         existingWindow is MainWindow))
-            {
-                var navigationViewBodyMenuItems = ((MainWindow)existingWindow).NavigationViewBody.MenuItems;
-
-                navigationViewBodyMenuItems.Insert(navigationViewBodyMenuItems.Count - 1, null);
-            }
         } // end method AddAccountAsync
 
         /// <summary>
@@ -296,7 +282,7 @@ namespace PaimonTray.Views
             else
             {
                 Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                            $" login failed due to invalid cookies: {cookies})");
+                            $" login failed due to invalid cookies: ({cookies})");
                 InitialiseLogin();
                 ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
             } // end if...else
