@@ -142,6 +142,12 @@
   <data name="AddAccountNoCharacter" xml:space="preserve">
     <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
   </data>
+  <data name="AddAccountNoCharacterSuccess" xml:space="preserve">
+    <value>此未绑定角色的账号已添加。</value>
+  </data>
+  <data name="AddAccountReachLimit" xml:space="preserve">
+    <value>您添加的账号的数量已达上限。您仍可登录已添加的账号来同步最新信息。</value>
+  </data>
   <data name="AddingAccount" xml:space="preserve">
     <value>添加您的账号中</value>
   </data>

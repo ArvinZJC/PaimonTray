@@ -41,6 +41,11 @@ namespace PaimonTray.Helpers
         public const string CookieKeyToken = "ltoken";
 
         /// <summary>
+        /// The max number of accounts.
+        /// </summary>
+        public const int CountAccountsMax = 2;
+
+        /// <summary>
         /// The Accept header value.
         /// </summary>
         private const string HeaderValueAccept = "application/json, text/plain, */*";
@@ -167,12 +172,9 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="shouldSelectFirst">A flag indicating if the 1st character should be selected in the navigation view.</param>
         /// <returns>A flag indicating if the operations are successful.</returns>
-        public static bool AddAccountNavigation(string containerKeyAccount, bool shouldSelectFirst = true)
+        public bool AddAccountNavigation(string containerKeyAccount, bool shouldSelectFirst = true)
         {
-            var applicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.Containers[ContainerKeyAccounts];
-
-            if (!applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (!_applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return false;
@@ -181,7 +183,7 @@ namespace PaimonTray.Helpers
             foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
                          existingWindow is MainWindow))
             {
-                var applicationDataContainerAccount = applicationDataContainerAccounts.Containers[containerKeyAccount];
+                var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
 
                 if (!applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters))
                 {
@@ -216,6 +218,15 @@ namespace PaimonTray.Helpers
 
             return true;
         } // end method AddAccountNavigation
+
+        /// <summary>
+        /// Count the accounts added.
+        /// </summary>
+        /// <returns>The number of the accounts added.</returns>
+        public int CountAccounts()
+        {
+            return _applicationDataContainerAccounts.Containers.Count;
+        } // end method CountAccounts
 
         /// <summary>
         /// Get an account's characters from the API.

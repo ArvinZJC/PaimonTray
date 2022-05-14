@@ -29,6 +29,8 @@ namespace PaimonTray.Views
         /// </summary>
         private bool _isFirstLoad = true;
 
+        private readonly App _app;
+
         #endregion Fields
 
         #region Properties
@@ -52,12 +54,13 @@ namespace PaimonTray.Views
         /// </summary>
         public MainWindow()
         {
+            _app = Application.Current as App;
             MainWinViewModel = new MainWindowViewModel();
             InitializeComponent();
             CustomiseWindow();
             UpdateUiText();
 
-            MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = (Application.Current as App)?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = _app?.LogsDirectory;
             TaskbarIconApp.Visibility =
                 Visibility.Visible; // Show the taskbar icon when finishing all the other initialisation.
         } // end constructor MainWindow
@@ -179,7 +182,7 @@ namespace PaimonTray.Views
             foreach (var containerKeyAccount in ApplicationData.Current.LocalSettings
                          .Containers[AccountsHelper.ContainerKeyAccounts].Containers.Keys)
             {
-                if (AccountsHelper.AddAccountNavigation(containerKeyAccount, shouldSelectFirst))
+                if (_app.AccHelper.AddAccountNavigation(containerKeyAccount, shouldSelectFirst))
                     shouldSelectFirst = false;
             } // end foreach
         } // end method NavigationViewBody_OnLoaded

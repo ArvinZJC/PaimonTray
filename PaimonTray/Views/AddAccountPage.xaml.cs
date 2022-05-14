@@ -25,6 +25,7 @@ namespace PaimonTray.Views
         private bool _isWebView2Available;
         private WebView2 _webView2LoginWebPage;
 
+        private readonly App _app;
         private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
@@ -36,6 +37,7 @@ namespace PaimonTray.Views
         /// </summary>
         public AddAccountPage()
         {
+            _app = Application.Current as App;
             _resourceLoader = ResourceLoader.GetForViewIndependentUse();
             InitializeComponent();
             ChooseLoginMethodAsync();
@@ -55,7 +57,8 @@ namespace PaimonTray.Views
         private async Task AddAccountAsync(string accountId, string cookies)
         {
             var applicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.Containers[AccountsHelper.ContainerKeyAccounts];
+                ApplicationData.Current.LocalSettings.CreateContainer(AccountsHelper.ContainerKeyAccounts,
+                    ApplicationDataCreateDisposition.Always);
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
@@ -72,8 +75,7 @@ namespace PaimonTray.Views
             propertySetAccount[AccountsHelper.KeyIsEnabled] = false;
             propertySetAccount[AccountsHelper.KeyServer] = server;
 
-            var app = Application.Current as App;
-            var characters = await app?.AccHelper.GetCharactersFromApiAsync(containerKeyAccount)!;
+            var characters = await _app.AccHelper.GetCharactersFromApiAsync(containerKeyAccount)!;
 
             InitialiseLogin();
 
@@ -90,7 +92,7 @@ namespace PaimonTray.Views
 
             if (shouldUpdateAccount)
             {
-                app?.AccHelper.StoreCharacters(characters, containerKeyAccount);
+                _app.AccHelper.StoreCharacters(characters, containerKeyAccount);
                 ShowLoginMessage(_resourceLoader.GetString("MessageUpdateAccount"));
                 return;
             } // end if
@@ -116,10 +118,11 @@ namespace PaimonTray.Views
                     applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
                     return;
                 } // end if
+
+                ShowLoginMessage(_resourceLoader.GetString("AddAccountNoCharacterSuccess"), InfoBarSeverity.Success);
             } // end if
 
-            // TODO: stay in this page if character.Count == 0 (show a success info bar, or show reaching account limit)
-            app?.AccHelper.StoreCharacters(characters, containerKeyAccount);
+            _app.AccHelper.StoreCharacters(characters, containerKeyAccount);
         } // end method AddAccountAsync
 
         /// <summary>
@@ -146,9 +149,9 @@ namespace PaimonTray.Views
                 break;
             } // end foreach
 
-            var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
+            CheckAccountsCount();
 
-            InfoBarMessageLogin.IsOpen = false;
+            var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
 
             if (_isWebView2Available)
             {
@@ -177,6 +180,18 @@ namespace PaimonTray.Views
             } // end if...else
         } // end method ApplyServerSelection
 
+        private bool CheckAccountsCount()
+        {
+            var hasReachedLimit = _app.AccHelper.CountAccounts() >= AccountsHelper.CountAccountsMax;
+
+            if (hasReachedLimit)
+                ShowLoginMessage(_resourceLoader.GetString("AddAccountReachLimit"), InfoBarSeverity.Error);
+            else
+                InfoBarMessageLogin.IsOpen = false;
+
+            return hasReachedLimit;
+        } // end method CheckAccountsCount
+
         /// <summary>
         /// Choose the login method automatically.
         /// </summary>
@@ -199,8 +214,6 @@ namespace PaimonTray.Views
                 TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
                 ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
                 ToolTipService.SetToolTip(ButtonLoginWebPageHome, _resourceLoader.GetString("LoginWebPageHome"));
-
-                ApplyServerSelection();
             }
             catch (Exception exception)
             {
@@ -220,6 +233,8 @@ namespace PaimonTray.Views
                 TextBlockLoginPlace.Visibility = Visibility.Visible;
                 ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
             } // end try...catch
+
+            ComboBoxServer.SelectedItem = ComboBoxItemServerCn;
         } // end method ChooseLoginMethodAsync
 
         /// <summary>
@@ -253,40 +268,42 @@ namespace PaimonTray.Views
         /// </summary>
         private async void LogInAsync()
         {
-            string accountId;
-            string cookies;
-
             GridAddingAccount.Visibility = Visibility.Visible;
-            InfoBarMessageLogin.IsOpen = false;
 
-            if (_isWebView2Available)
+            if (!CheckAccountsCount())
             {
-                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
-                    ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                        ? AppConstantsHelper.UrlCookiesMiHoYo
-                        : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
+                string accountId;
+                string cookies;
 
-                (accountId, cookies) = ProcessCookies(ref rawCookies);
-            }
-            else
-            {
-                var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
-                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
+                if (_isWebView2Available)
+                {
+                    var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+                        ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                            ? AppConstantsHelper.UrlCookiesMiHoYo
+                            : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
 
-                (accountId, cookies) = ProcessCookies(ref rawCookies);
-            } // end if...else
+                    (accountId, cookies) = ProcessCookies(ref rawCookies);
+                }
+                else
+                {
+                    var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
+                        StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
 
-            // Execute if valid account ID and cookies.
-            if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
-                cookies.Contains(AccountsHelper.CookieKeyToken))
-                await AddAccountAsync(accountId, cookies);
-            else
-            {
-                Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                            $" login failed due to invalid cookies ({cookies}).");
-                InitialiseLogin();
-                ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
-            } // end if...else
+                    (accountId, cookies) = ProcessCookies(ref rawCookies);
+                } // end if...else
+
+                // Execute if valid account ID and cookies.
+                if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
+                    cookies.Contains(AccountsHelper.CookieKeyToken))
+                    await AddAccountAsync(accountId, cookies);
+                else
+                {
+                    Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
+                                $" login failed due to invalid cookies ({cookies}).");
+                    InitialiseLogin();
+                    ShowLoginMessage(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+                } // end if...else
+            } // end if
 
             GridAddingAccount.Visibility = Visibility.Collapsed;
         } // end method LogInAsync

@@ -142,6 +142,12 @@
   <data name="AddAccountNoCharacter" xml:space="preserve">
     <value>No character is linked to your account. Do you still want to add the account?</value>
   </data>
+  <data name="AddAccountNoCharacterSuccess" xml:space="preserve">
+    <value>The account with no character linked has been added.</value>
+  </data>
+  <data name="AddAccountReachLimit" xml:space="preserve">
+    <value>The number of your accounts added has already reached the limit. You can still log into your added account to update it.</value>
+  </data>
   <data name="AddingAccount" xml:space="preserve">
     <value>Adding your account</value>
   </data>
