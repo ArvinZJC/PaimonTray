@@ -265,6 +265,9 @@
   <data name="No" xml:space="preserve">
     <value>不了</value>
   </data>
+  <data name="NotificationClear" xml:space="preserve">
+    <value>在应用退出时清除通知</value>
+  </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>在应用启动时显示一个问候通知</value>
   </data>

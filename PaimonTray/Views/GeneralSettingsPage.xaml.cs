@@ -32,6 +32,7 @@ namespace PaimonTray.Views
             InitializeComponent();
             ShowLanguageSelection();
             ShowMainWindowTopNavigationPaneSelection();
+            ShowNotificationClearSelection();
             ShowNotificationGreetingSelection();
             ShowThemeSelection();
             UpdateUiText();
@@ -63,6 +64,14 @@ namespace PaimonTray.Views
                 (bool)_propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane];
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ShowMainWindowTopNavigationPaneSelection
+
+        /// <summary>
+        /// Show the selection for clearing notifications when the app exits.
+        /// </summary>
+        private void ShowNotificationClearSelection()
+        {
+            ToggleSwitchNotificationClear.IsOn = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
+        } // end method ShowNotificationClearSelection
 
         /// <summary>
         /// Show the greeting notification selection.
@@ -108,6 +117,7 @@ namespace PaimonTray.Views
             TextBlockLaunchOnWindowsStartupExplanation.Text =
                 resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
             TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
+            TextBlockNotificationClear.Text = resourceLoader.GetString("NotificationClear");
             TextBlockNotificationGreeting.Text = resourceLoader.GetString("NotificationGreeting");
             TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
             TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
@@ -167,13 +177,19 @@ namespace PaimonTray.Views
             TextBlockThemeSelection.Text = radioButtonsThemeSelectedItem.Content as string;
         } // end method RadioButtonsTheme_OnSelectionChanged
 
-        // Handle the toggled event of the toggle switch of the setting for configuring the main window's top navigation pane.
+        // Handle the toggled event of the toggle switch of the setting for the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
         {
             _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] =
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
+
+        // Handle the toggled event of the toggle switch for clearing notifications when the app exits.
+        private void ToggleSwitchNotificationClear_OnToggled(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyNotificationClear] = ToggleSwitchNotificationClear.IsOn;
+        } // end method ToggleSwitchNotificationGreeting_OnToggled
 
         // Handle the greeting notification toggle switch's toggled event.
         private void ToggleSwitchNotificationGreeting_OnToggled(object sender, RoutedEventArgs e)

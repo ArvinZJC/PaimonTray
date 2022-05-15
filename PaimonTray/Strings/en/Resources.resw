@@ -265,6 +265,9 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="NotificationClear" xml:space="preserve">
+    <value>Clear notifications when the app exits</value>
+  </data>
   <data name="NotificationGreeting" xml:space="preserve">
     <value>Show a greeting notification when the app starts</value>
   </data>

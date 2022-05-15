@@ -185,23 +185,42 @@
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch">
             <Expander.Content>
-                <Grid ColumnSpacing="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        x:Name="TextBlockNotificationGreeting"
-                        Grid.Column="0"
-                        TextWrapping="WrapWholeWords"
-                        VerticalAlignment="Center" />
-                    <ToggleSwitch
-                        x:Name="ToggleSwitchNotificationGreeting"
-                        FlowDirection="RightToLeft"
-                        Grid.Column="1"
-                        Toggled="ToggleSwitchNotificationGreeting_OnToggled"
-                        VerticalAlignment="Center" />
-                </Grid>
+                <StackPanel>
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            x:Name="TextBlockNotificationGreeting"
+                            Grid.Column="0"
+                            TextWrapping="WrapWholeWords"
+                            VerticalAlignment="Center" />
+                        <ToggleSwitch
+                            x:Name="ToggleSwitchNotificationGreeting"
+                            FlowDirection="RightToLeft"
+                            Grid.Column="1"
+                            Toggled="ToggleSwitchNotificationGreeting_OnToggled"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            x:Name="TextBlockNotificationClear"
+                            Grid.Column="0"
+                            TextWrapping="WrapWholeWords"
+                            VerticalAlignment="Center" />
+                        <ToggleSwitch
+                            x:Name="ToggleSwitchNotificationClear"
+                            FlowDirection="RightToLeft"
+                            Grid.Column="1"
+                            Toggled="ToggleSwitchNotificationClear_OnToggled"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
             </Expander.Content>
             <Expander.Header>
                 <Grid

@@ -30,6 +30,11 @@ namespace PaimonTray.Helpers
         public const string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
 
         /// <summary>
+        /// The setting key for clearing notifications when the app exits.
+        /// </summary>
+        public const string KeyNotificationClear = "notificationClear";
+
+        /// <summary>
         /// The greeting notification setting key.
         /// </summary>
         public const string KeyNotificationGreeting = "notificationGreeting";
@@ -122,10 +127,6 @@ namespace PaimonTray.Helpers
             var propertySetSettings = ApplicationData.Current.LocalSettings
                 .CreateContainer(ContainerKeySettings, ApplicationDataCreateDisposition.Always).Values;
 
-            if (!propertySetSettings.ContainsKey(KeyNotificationGreeting) ||
-                propertySetSettings[KeyNotificationGreeting] is not bool)
-                InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
-
             if (!propertySetSettings.ContainsKey(KeyLanguage) ||
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(propertySetSettings[KeyLanguage]))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
@@ -133,7 +134,16 @@ namespace PaimonTray.Helpers
             if (!propertySetSettings.ContainsKey(KeyMainWindowTopNavigationPane) ||
                 propertySetSettings[KeyMainWindowTopNavigationPane] is not bool)
                 InitialiseSetting(KeyMainWindowTopNavigationPane,
-                    "The setting for configuring the main window's top navigation pane", false);
+                    "The setting for the main window's top navigation pane", false);
+
+            if (!propertySetSettings.ContainsKey(KeyNotificationClear) ||
+                propertySetSettings[KeyNotificationClear] is not bool)
+                InitialiseSetting(KeyNotificationClear, "The setting for clearing notifications when exiting the app",
+                    true);
+
+            if (!propertySetSettings.ContainsKey(KeyNotificationGreeting) ||
+                propertySetSettings[KeyNotificationGreeting] is not bool)
+                InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
 
             // ReSharper disable once InvertIf
             if (!propertySetSettings.ContainsKey(KeyTheme) ||

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage;
 using Windows.UI.Notifications;
 
 namespace PaimonTray.ViewModels
@@ -63,7 +64,9 @@ namespace PaimonTray.ViewModels
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
-                    ToastNotificationManager.History.Clear();
+                    if ((bool)ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
+                            .Values[SettingsHelper.KeyNotificationClear]) ToastNotificationManager.History.Clear();
+
                     Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
