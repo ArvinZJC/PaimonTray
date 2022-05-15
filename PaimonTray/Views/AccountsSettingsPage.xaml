@@ -13,10 +13,28 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- The expander for the default server. -->
+        <!-- The accounts management expander. -->
         <Expander
             Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            IsExpanded="True">
+            <Expander.Content>
+                <TextBlock Text="TODO" />
+            </Expander.Content>
+            <Expander.Header>
+                <TextBlock
+                    x:Name="TextBlockAccountsManagement"
+                    Grid.Row="0"
+                    Padding="0, 20"
+                    TextWrapping="WrapWholeWords" />
+            </Expander.Header>
+        </Expander>
+        <!-- The expander for the default server. -->
+        <Expander
+            Grid.Row="1"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left">
             <Expander.Content>
@@ -72,8 +90,7 @@
             BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
             ColumnSpacing="16"
             CornerRadius="4"
-            Grid.Row="1"
-            MinHeight="{ThemeResource ExpanderMinHeight}"
+            Grid.Row="2"
             Padding="16, 12, 60, 12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -88,6 +105,7 @@
                 x:Name="ToggleSwitchLoginAlternativeAlways"
                 FlowDirection="RightToLeft"
                 Grid.Column="1"
+                Margin="0, -2"
                 Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
                 VerticalAlignment="Center" />
         </Grid>

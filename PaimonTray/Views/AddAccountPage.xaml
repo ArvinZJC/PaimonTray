@@ -38,7 +38,6 @@
                     ColumnSpacing="12"
                     CornerRadius="4, 4, 0, 0"
                     Grid.Row="0"
-                    MinHeight="{ThemeResource ExpanderMinHeight}"
                     Padding="12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -77,12 +76,11 @@
                 </Grid>
                 <!-- The container grid for the login section. -->
                 <Grid
-                    Background="{ThemeResource ExpanderHeaderBackground}"
-                    BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-                    BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                    Background="{ThemeResource ExpanderContentBackground}"
+                    BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
+                    BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
                     CornerRadius="0, 0, 4, 4"
-                    Grid.Row="1"
-                    MinHeight="{ThemeResource ExpanderMinHeight}">
+                    Grid.Row="1">
                     <!-- The login scroll viewer. -->
                     <ScrollViewer
                         Padding="12"

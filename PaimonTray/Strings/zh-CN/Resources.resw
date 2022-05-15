@@ -123,6 +123,9 @@
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
+  <data name="AccountsManagement" xml:space="preserve">
+    <value>您的账号和角色</value>
+  </data>
   <data name="AcknowledgementApiUses" xml:space="preserve">
     <value>接口用法参考于</value>
   </data>

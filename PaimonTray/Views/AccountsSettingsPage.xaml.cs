@@ -80,6 +80,7 @@ namespace PaimonTray.Views
 
             RadioButtonServerCn.Content = resourceLoader.GetString("ServerCn");
             RadioButtonServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
             TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
             TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
             TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");

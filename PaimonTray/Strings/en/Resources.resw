@@ -123,6 +123,9 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="AccountsManagement" xml:space="preserve">
+    <value>Your accounts and characters</value>
+  </data>
   <data name="AcknowledgementApiUses" xml:space="preserve">
     <value>API uses credited to</value>
   </data>
