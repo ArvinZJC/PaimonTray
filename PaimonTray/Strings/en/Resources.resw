@@ -221,6 +221,9 @@
   <data name="Login" xml:space="preserve">
     <value>Log in</value>
   </data>
+  <data name="LoginAlternativeAlways" xml:space="preserve">
+    <value>Always use the alternative login method to add your account</value>
+  </data>
   <data name="LoginComplete" xml:space="preserve">
     <value>Complete login</value>
   </data>
@@ -243,7 +246,7 @@
     <value>Turn on the top navigation pane on the main window</value>
   </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
-    <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or choose to always use this method in the settings to never show this message again the next time the page is loaded.</value>
+    <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or change the setting to always use this method to never show this message again the next time the page is loaded.</value>
   </data>
   <data name="MessageUpdateAccount" xml:space="preserve">
     <value>Your account has already been added before. It has just been updated.</value>
@@ -294,6 +297,12 @@
   </data>
   <data name="ServerCn" xml:space="preserve">
     <value>CN</value>
+  </data>
+  <data name="ServerDefault" xml:space="preserve">
+    <value>Default server</value>
+  </data>
+  <data name="ServerDefaultExplanation" xml:space="preserve">
+    <value>Select the default server to log in to add your account.</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
     <value>Select the server to log in.</value>

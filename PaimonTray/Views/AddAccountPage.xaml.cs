@@ -6,7 +6,6 @@ using PaimonTray.Helpers;
 using Serilog;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -133,21 +132,11 @@ namespace PaimonTray.Views
             var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
 
             if (comboBoxServerSelectedItem == null) return;
-
-            var pageMaxHeight = 0;
-            var pageMaxWidth = 0;
+            
             var uriLoginMiHoYo = GetLoginWebPageUri();
-
-            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
-                         existingWindow is MainWindow))
-            {
-                var workArea = DisplayArea
-                    .GetFromWindowId(((MainWindow)existingWindow).WinId, DisplayAreaFallback.Primary).WorkArea;
-
-                pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.MainWindowPositionOffset;
-                pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.MainWindowPositionOffset;
-                break;
-            } // end foreach
+            var workArea = DisplayArea.GetFromWindowId(WindowsHelper.ShowMainWindow().WinId, DisplayAreaFallback.Primary).WorkArea;
+            var pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.MainWindowPositionOffset;
+            var pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.MainWindowPositionOffset;
 
             CheckAccountsCount();
 
@@ -197,44 +186,41 @@ namespace PaimonTray.Views
         /// </summary>
         private async void ChooseLoginMethodAsync()
         {
-            try
-            {
-                Log.Information(
-                    $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
-                _isWebView2Available = true;
-                _webView2LoginWebPage = new WebView2();
-                await _webView2LoginWebPage.EnsureCoreWebView2Async();
-                _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
-                _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
-                _webView2LoginWebPage.NavigationCompleted += WebView2LoginWebPage_OnNavigationCompleted;
+            var propertySetSettings = ApplicationData.Current.LocalSettings
+                .Containers[SettingsHelper.ContainerKeySettings].Values;
 
-                ButtonLoginWebPage.Content = _resourceLoader.GetString("LoginComplete");
-                GridLoginWebPage.Children.Add(_webView2LoginWebPage);
-                Grid.SetRow(_webView2LoginWebPage, 0);
-                TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
-                ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
-                ToolTipService.SetToolTip(ButtonLoginWebPageHome, _resourceLoader.GetString("LoginWebPageHome"));
-            }
-            catch (Exception exception)
-            {
-                Log.Error("Failed to detect WebView2 Runtime.");
-                Log.Error(exception.ToString());
-                _isWebView2Available = false;
+            if ((bool)propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways])
+                UseAlternativeLoginMethod(true);
+            else
+                try
+                {
+                    Log.Information(
+                        $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
+                    _isWebView2Available = true;
+                    _webView2LoginWebPage = new WebView2();
+                    await _webView2LoginWebPage.EnsureCoreWebView2Async();
+                    _webView2LoginWebPage.CoreWebView2.CookieManager.DeleteAllCookies();
+                    _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
+                    _webView2LoginWebPage.NavigationCompleted += WebView2LoginWebPage_OnNavigationCompleted;
 
-                ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
-                ButtonLoginWebPageHome.Visibility = Visibility.Collapsed;
-                GridLoginAlternative.Visibility = Visibility.Visible;
-                HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
-                HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
-                InfoBarMessageLoginAlternative.IsOpen = true;
-                InfoBarMessageLoginAlternative.Margin = new Thickness(0, 0, 0, 8);
-                InfoBarMessageLoginAlternative.Message = _resourceLoader.GetString("MessageLoginAlternative");
-                TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
-                TextBlockLoginPlace.Visibility = Visibility.Visible;
-                ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
-            } // end try...catch
+                    ButtonLoginWebPage.Content = _resourceLoader.GetString("LoginComplete");
+                    GridLoginWebPage.Children.Add(_webView2LoginWebPage);
+                    Grid.SetRow(_webView2LoginWebPage, 0);
+                    TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
+                    ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
+                    ToolTipService.SetToolTip(ButtonLoginWebPageHome, _resourceLoader.GetString("LoginWebPageHome"));
+                }
+                catch (Exception exception)
+                {
+                    Log.Error("Failed to detect WebView2 Runtime.");
+                    Log.Error(exception.ToString());
+                    UseAlternativeLoginMethod();
+                } // end try...catch
 
-            ComboBoxServer.SelectedItem = ComboBoxItemServerCn;
+            ComboBoxServer.SelectedItem =
+                propertySetSettings[SettingsHelper.KeyServerDefault] as string == AccountsHelper.TagServerCn
+                    ? ComboBoxItemServerCn
+                    : ComboBoxItemServerGlobal;
         } // end method ChooseLoginMethodAsync
 
         /// <summary>
@@ -357,6 +343,17 @@ namespace PaimonTray.Views
         } // end generic method ProcessCookies
 
         /// <summary>
+        /// Show the alternative login message.
+        /// </summary>
+        private void ShowAlternativeLoginMessage()
+        {
+            HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
+            InfoBarMessageLoginAlternative.Margin = new Thickness(0, 0, 0, 8);
+            InfoBarMessageLoginAlternative.Message = _resourceLoader.GetString("MessageLoginAlternative");
+            InfoBarMessageLoginAlternative.IsOpen = true; // Show the info bar when ready.
+        } // end method ShowAlternativeLoginMessage
+
+        /// <summary>
         /// Show the login message.
         /// </summary>
         /// <param name="message">The login message.</param>
@@ -381,6 +378,25 @@ namespace PaimonTray.Views
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
             TextBlockTitle.Text = _resourceLoader.GetString("AddAccount");
         } // end method UpdateUiText
+
+        /// <summary>
+        /// Use the alternative login method.
+        /// </summary>
+        /// <param name="isAlways">A flag indicating if the alternative login method is always used.</param>
+        private void UseAlternativeLoginMethod(bool isAlways = false)
+        {
+            _isWebView2Available = false;
+
+            if (!isAlways) ShowAlternativeLoginMessage();
+
+            ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
+            ButtonLoginWebPageHome.Visibility = Visibility.Collapsed;
+            GridLoginAlternative.Visibility = Visibility.Visible;
+            HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
+            TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
+            TextBlockLoginPlace.Visibility = Visibility.Visible;
+            ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
+        } // end method UseAlternativeLoginMethod
 
         #endregion Methods
 

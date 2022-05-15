@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Models;
-using PaimonTray.Views;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -180,41 +179,37 @@ namespace PaimonTray.Helpers
                 return false;
             } // end if
 
-            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
-                         existingWindow is MainWindow))
+            var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
+
+            if (!applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters))
             {
-                var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
+                Log.Warning(
+                    $"No character for adding the main window's navigation view items (account container key: {containerKeyAccount}).");
+                return false;
+            } // end if
 
-                if (!applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters))
+            var navigationViewBody = WindowsHelper.ShowMainWindow().NavigationViewBody;
+
+            foreach (var keyValuePairCharacter in applicationDataContainerAccount.Containers[ContainerKeyCharacters]
+                         .Containers)
+            {
+                var propertySetCharacter = keyValuePairCharacter.Value.Values;
+
+                if (!(bool)propertySetCharacter[KeyIsEnabled]) continue;
+
+                var navigationViewItemCharacter = new NavigationViewItem()
                 {
-                    Log.Warning(
-                        $"No character for adding the main window's navigation view items (account container key: {containerKeyAccount}).");
-                    return false;
-                } // end if
+                    Icon = new SymbolIcon(Symbol.Contact),
+                    Tag = new KeyValuePair<string, string>(containerKeyAccount, keyValuePairCharacter.Key)
+                };
 
-                var navigationViewBody = ((MainWindow)existingWindow).NavigationViewBody;
-
-                foreach (var keyValuePairCharacter in applicationDataContainerAccount.Containers[ContainerKeyCharacters]
-                             .Containers)
-                {
-                    var propertySetCharacter = keyValuePairCharacter.Value.Values;
-
-                    if (!(bool)propertySetCharacter[KeyIsEnabled]) continue;
-
-                    var navigationViewItemCharacter = new NavigationViewItem()
-                    {
-                        Icon = new SymbolIcon(Symbol.Contact),
-                        Tag = new KeyValuePair<string, string>(containerKeyAccount, keyValuePairCharacter.Key)
-                    };
-
-                    ToolTipService.SetToolTip(navigationViewItemCharacter,
-                        $"{propertySetCharacter[KeyNickname]} ({keyValuePairCharacter.Key})");
-                    navigationViewBody.MenuItems.Insert(navigationViewBody.MenuItems.Count - 1,
-                        navigationViewItemCharacter);
-                } // end foreach
-
-                if (shouldSelectFirst) navigationViewBody.SelectedItem = navigationViewBody.MenuItems[0];
+                ToolTipService.SetToolTip(navigationViewItemCharacter,
+                    $"{propertySetCharacter[KeyNickname]} ({keyValuePairCharacter.Key})");
+                navigationViewBody.MenuItems.Insert(navigationViewBody.MenuItems.Count - 1,
+                    navigationViewItemCharacter);
             } // end foreach
+
+            if (shouldSelectFirst) navigationViewBody.SelectedItem = navigationViewBody.MenuItems[0];
 
             return true;
         } // end method AddAccountNavigation
@@ -306,18 +301,14 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         private static void RemoveAccountNavigation(string containerKeyAccount)
         {
-            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
-                         existingWindow is MainWindow))
+            var navigationViewBodyMenuItems = WindowsHelper.ShowMainWindow().NavigationViewBody.MenuItems;
+
+            foreach (NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems.ToImmutableList())
             {
-                var navigationViewBodyMenuItems = ((MainWindow)existingWindow).NavigationViewBody.MenuItems;
+                if (navigationViewBodyMenuItem.Tag is not KeyValuePair<string, string> keyValuePairTag) continue;
 
-                foreach (NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems.ToImmutableList())
-                {
-                    if (navigationViewBodyMenuItem.Tag is not KeyValuePair<string, string> keyValuePairTag) continue;
-
-                    if (keyValuePairTag.Key == containerKeyAccount)
-                        navigationViewBodyMenuItems.Remove(navigationViewBodyMenuItem);
-                } // end foreach
+                if (keyValuePairTag.Key == containerKeyAccount)
+                    navigationViewBodyMenuItems.Remove(navigationViewBodyMenuItem);
             } // end foreach
         } // end method RemoveAccountNavigation
 

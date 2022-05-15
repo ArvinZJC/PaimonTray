@@ -221,6 +221,9 @@
   <data name="Login" xml:space="preserve">
     <value>登录</value>
   </data>
+  <data name="LoginAlternativeAlways" xml:space="preserve">
+    <value>总是使用替代的登录方案来添加您的账号</value>
+  </data>
   <data name="LoginComplete" xml:space="preserve">
     <value>完成登录</value>
   </data>
@@ -243,7 +246,7 @@
     <value>在主窗口上启用顶部导航窗格</value>
   </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
-    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或在设置中选择总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
+    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
   </data>
   <data name="MessageUpdateAccount" xml:space="preserve">
     <value>您的账号已在之前添加过了，并刚同步了最新信息。</value>
@@ -294,6 +297,12 @@
   </data>
   <data name="ServerCn" xml:space="preserve">
     <value>国服</value>
+  </data>
+  <data name="ServerDefault" xml:space="preserve">
+    <value>默认服务器</value>
+  </data>
+  <data name="ServerDefaultExplanation" xml:space="preserve">
+    <value>选择在添加账号时默认要登录的服务器。</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
     <value>选择要登录的服务器。</value>

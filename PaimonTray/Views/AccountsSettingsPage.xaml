@@ -3,7 +3,93 @@
     x:Class="PaimonTray.Views.AccountsSettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <TextBlock Text="AccountsSettings" />
+    <!-- The root grid. -->
+    <Grid
+        Padding="0, 0, 0, 4"
+        RowSpacing="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- The expander for the default server. -->
+        <Expander
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left">
+            <Expander.Content>
+                <RadioButtons
+                    x:Name="RadioButtonsServerDefault"
+                    Grid.Row="0"
+                    SelectionChanged="RadioButtonsServerDefault_OnSelectionChanged">
+                    <RadioButton
+                        x:Name="RadioButtonServerCn"
+                        Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                    <RadioButton
+                        x:Name="RadioButtonServerGlobal"
+                        Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
+                </RadioButtons>
+            </Expander.Content>
+            <Expander.Header>
+                <Grid
+                    ColumnSpacing="16"
+                    Padding="0, 12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="TextBlockServerDefault"
+                            Grid.Row="0"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Name="TextBlockServerDefaultExplanation"
+                            Foreground="{ThemeResource SystemBaseMediumColor}"
+                            Grid.Row="1"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextWrapping="WrapWholeWords" />
+                    </Grid>
+                    <TextBlock
+                        x:Name="TextBlockServerDefaultSelection"
+                        Grid.Column="1"
+                        VerticalAlignment="Center" />
+                </Grid>
+            </Expander.Header>
+        </Expander>
+        <!-- The grid for always using the alternative login method. -->
+        <Grid
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="16"
+            CornerRadius="4"
+            Grid.Row="1"
+            MinHeight="{ThemeResource ExpanderMinHeight}"
+            Padding="16, 12, 60, 12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="TextBlockLoginAlternativeAlways"
+                Grid.Column="0"
+                TextWrapping="WrapWholeWords"
+                VerticalAlignment="Center" />
+            <ToggleSwitch
+                x:Name="ToggleSwitchLoginAlternativeAlways"
+                FlowDirection="RightToLeft"
+                Grid.Column="1"
+                Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
+                VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
 </Page>

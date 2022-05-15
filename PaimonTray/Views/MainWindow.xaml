@@ -122,6 +122,7 @@
             </NavigationView.PaneFooter>
             <!-- The body frame. -->
             <Frame
+                x:FieldModifier="public"
                 x:Name="FrameBody"
                 HorizontalAlignment="Left"
                 IsNavigationStackEnabled="False"

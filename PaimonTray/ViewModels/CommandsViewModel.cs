@@ -35,8 +35,9 @@ namespace PaimonTray.ViewModels
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
                     var mainWindow = WindowsHelper.ShowMainWindow();
+                    var navigationViewBody = mainWindow.NavigationViewBody;
 
-                    mainWindow.NavigationViewBody.SelectedItem = mainWindow.NavigationViewBody.MenuItems.Last();
+                    navigationViewBody.SelectedItem = navigationViewBody.MenuItems.Last();
 
                     if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };

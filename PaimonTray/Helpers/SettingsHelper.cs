@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using PaimonTray.Views;
 using Serilog;
 using System.Linq;
 using Windows.Storage;
@@ -20,52 +19,62 @@ namespace PaimonTray.Helpers
         public const string ContainerKeySettings = "settings";
 
         /// <summary>
-        /// The language setting key.
+        /// The language key.
         /// </summary>
         public const string KeyLanguage = "language";
 
         /// <summary>
-        /// The setting key for the main window's top navigation pane.
+        /// The key for always using the alternative login method.
+        /// </summary>
+        public const string KeyLoginAlternativeAlways = "loginAlternativeAlways";
+
+        /// <summary>
+        /// The key for the main window's top navigation pane.
         /// </summary>
         public const string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
 
         /// <summary>
-        /// The setting key for clearing notifications when the app exits.
+        /// The key for clearing notifications when the app exits.
         /// </summary>
         public const string KeyNotificationClear = "notificationClear";
 
         /// <summary>
-        /// The greeting notification setting key.
+        /// The greeting notification key.
         /// </summary>
         public const string KeyNotificationGreeting = "notificationGreeting";
 
         /// <summary>
-        /// The theme setting key.
+        /// The key for the default server.
+        /// </summary>
+        public const string KeyServerDefault = "serverDefault";
+
+        /// <summary>
+        /// The theme key.
         /// </summary>
         public const string KeyTheme = "theme";
 
         /// <summary>
-        /// The English language option tag.
+        /// The English language tag.
         /// </summary>
         public const string TagLanguageEn = "en";
 
         /// <summary>
-        /// The simplified Chinese language option tag.
+        /// The simplified Chinese language tag.
         /// </summary>
         public const string TagLanguageZhCn = "zh-CN";
 
         /// <summary>
-        /// The system default option tag.
+        /// The system default tag.
         /// </summary>
         public const string TagSystem = "system";
 
         /// <summary>
-        /// The dark theme option tag.
+        /// The dark theme tag.
         /// </summary>
         public const string TagThemeDark = "dark";
 
         /// <summary>
-        /// The light theme option tag.
+        /// The light theme tag.
         /// </summary>
         public const string TagThemeLight = "light";
 
@@ -78,10 +87,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         public static void ApplyMainWindowTopNavigationPaneSelection()
         {
-            foreach (var existingWindow in WindowsHelper.ExistingWindowList.Where(existingWindow =>
-                         existingWindow is MainWindow))
-                ((MainWindow)existingWindow).MainWinViewModel.NavViewPaneDisplayMode =
-                    DecideMainWindowNavigationViewPaneDisplayMode();
+            WindowsHelper.ShowMainWindow().MainWinViewModel.NavViewPaneDisplayMode =
+                DecideMainWindowNavigationViewPaneDisplayMode();
         } // end method ApplyMainWindowTopNavigationPaneSelection
 
         /// <summary>
@@ -131,6 +138,11 @@ namespace PaimonTray.Helpers
                 !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(propertySetSettings[KeyLanguage]))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
+            if (!propertySetSettings.ContainsKey(KeyLoginAlternativeAlways) ||
+                propertySetSettings[KeyLoginAlternativeAlways] is not bool)
+                InitialiseSetting(KeyLoginAlternativeAlways,
+                    "The setting for always using the alternative login method", false);
+
             if (!propertySetSettings.ContainsKey(KeyMainWindowTopNavigationPane) ||
                 propertySetSettings[KeyMainWindowTopNavigationPane] is not bool)
                 InitialiseSetting(KeyMainWindowTopNavigationPane,
@@ -144,6 +156,11 @@ namespace PaimonTray.Helpers
             if (!propertySetSettings.ContainsKey(KeyNotificationGreeting) ||
                 propertySetSettings[KeyNotificationGreeting] is not bool)
                 InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
+
+            if (!propertySetSettings.ContainsKey(KeyServerDefault) ||
+                !new[] { AccountsHelper.TagServerCn, AccountsHelper.TagServerGlobal }.Contains(
+                    propertySetSettings[KeyServerDefault]))
+                InitialiseSetting(KeyServerDefault, "The setting for the default server", AccountsHelper.TagServerCn);
 
             // ReSharper disable once InvertIf
             if (!propertySetSettings.ContainsKey(KeyTheme) ||
