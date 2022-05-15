@@ -65,10 +65,10 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowServerDefaultSelection()
         {
-            RadioButtonsServerDefault.SelectedItem =
-                _propertySetSettings[SettingsHelper.KeyServerDefault] as string == AccountsHelper.TagServerCn
-                    ? RadioButtonServerCn
-                    : RadioButtonServerGlobal;
+            RadioButtonsServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
+                                                     AccountsHelper.TagServerCn
+                ? RadioButtonServerCn
+                : RadioButtonServerGlobal;
         } // end method ShowServerDefaultExplanation
 
         /// <summary>
@@ -89,6 +89,13 @@ namespace PaimonTray.Views
         #endregion Methods
 
         #region Event Handlers
+
+        // Handle the loaded event of the expander for the default server.
+        private void ExpanderServerDefault_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            TextBlockServerDefaultSelection.Text =
+                (RadioButtonsServerDefault.SelectedItem as RadioButton)?.Content as string;
+        } // end method ExpanderServerDefault_OnLoaded
 
         // Handle the selection changed event of the radio buttons for the default server.
         private void RadioButtonsServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

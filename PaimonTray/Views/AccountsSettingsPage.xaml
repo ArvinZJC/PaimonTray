@@ -36,7 +36,8 @@
         <Expander
             Grid.Row="1"
             HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left">
+            HorizontalContentAlignment="Left"
+            Loaded="ExpanderServerDefault_OnLoaded">
             <Expander.Content>
                 <RadioButtons
                     x:Name="RadioButtonsServerDefault"
