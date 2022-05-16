@@ -181,10 +181,8 @@ namespace PaimonTray.Views
 
             foreach (var containerKeyAccount in ApplicationData.Current.LocalSettings
                          .Containers[AccountsHelper.ContainerKeyAccounts].Containers.Keys)
-            {
-                if (_app.AccHelper.AddAccountNavigation(containerKeyAccount, shouldSelectFirst))
+                if (_app.AccHelper.AddOrUpdateCharactersNavigation(containerKeyAccount, null, shouldSelectFirst))
                     shouldSelectFirst = false;
-            } // end foreach
         } // end method NavigationViewBody_OnLoaded
 
         // Handle the body navigation view's selection changed event.

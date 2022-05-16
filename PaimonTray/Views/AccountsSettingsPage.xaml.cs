@@ -47,7 +47,7 @@ namespace PaimonTray.Views
             var mainWindow = WindowsHelper.ShowMainWindow();
             var navigationViewBody = mainWindow.NavigationViewBody;
 
-            if (navigationViewBody.SelectedItem == navigationViewBody.MenuItems.Last())
+            if (navigationViewBody.SelectedItem == navigationViewBody.MenuItems.LastOrDefault())
                 mainWindow.FrameBody.Navigate(typeof(AddAccountPage), null, new EntranceNavigationTransitionInfo());
         } // end method ReloadAddAccountPage
 

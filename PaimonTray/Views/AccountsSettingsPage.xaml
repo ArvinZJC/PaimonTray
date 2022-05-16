@@ -32,9 +32,35 @@
                     TextWrapping="WrapWholeWords" />
             </Expander.Header>
         </Expander>
+        <!-- The grid for always using the alternative login method. -->
+        <Grid
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="16"
+            CornerRadius="4"
+            Grid.Row="1"
+            Padding="16, 12, 60, 12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="TextBlockLoginAlternativeAlways"
+                Grid.Column="0"
+                TextWrapping="WrapWholeWords"
+                VerticalAlignment="Center" />
+            <ToggleSwitch
+                x:Name="ToggleSwitchLoginAlternativeAlways"
+                FlowDirection="RightToLeft"
+                Grid.Column="1"
+                Margin="0, -2"
+                Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
+                VerticalAlignment="Center" />
+        </Grid>
         <!-- The expander for the default server. -->
         <Expander
-            Grid.Row="1"
+            Grid.Row="2"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             Loaded="ExpanderServerDefault_OnLoaded">
@@ -84,31 +110,5 @@
                 </Grid>
             </Expander.Header>
         </Expander>
-        <!-- The grid for always using the alternative login method. -->
-        <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="16"
-            CornerRadius="4"
-            Grid.Row="2"
-            Padding="16, 12, 60, 12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="TextBlockLoginAlternativeAlways"
-                Grid.Column="0"
-                TextWrapping="WrapWholeWords"
-                VerticalAlignment="Center" />
-            <ToggleSwitch
-                x:Name="ToggleSwitchLoginAlternativeAlways"
-                FlowDirection="RightToLeft"
-                Grid.Column="1"
-                Margin="0, -2"
-                Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
-                VerticalAlignment="Center" />
-        </Grid>
     </Grid>
 </Page>

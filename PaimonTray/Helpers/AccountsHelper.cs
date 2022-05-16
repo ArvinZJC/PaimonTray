@@ -166,12 +166,14 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
-        /// Add the main window's navigation view items for a specific account's characters.
+        /// Add the specific account's characters to the main window's navigation view, or update the specific navigation view items.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
-        /// <param name="shouldSelectFirst">A flag indicating if the 1st character should be selected in the navigation view.</param>
+        /// <param name="containerKeysCharacter">A list of characters to add or update for the navigation if possible. Do for all characters if <c>null</c>.</param>
+        /// <param name="shouldSelectFirst">A flag indicating if the account's 1st character added in the navigation view should be selected.</param>
         /// <returns>A flag indicating if the operations are successful.</returns>
-        public bool AddAccountNavigation(string containerKeyAccount, bool shouldSelectFirst = true)
+        public bool AddOrUpdateCharactersNavigation(string containerKeyAccount,
+            ImmutableList<string> containerKeysCharacter = null, bool shouldSelectFirst = true)
         {
             if (!_applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
@@ -189,42 +191,64 @@ namespace PaimonTray.Helpers
             } // end if
 
             var navigationViewBody = WindowsHelper.ShowMainWindow().NavigationViewBody;
+            var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
 
             foreach (var keyValuePairCharacter in applicationDataContainerAccount.Containers[ContainerKeyCharacters]
                          .Containers)
             {
+                if (containerKeysCharacter != null &&
+                    !containerKeysCharacter.Contains(keyValuePairCharacter.Key)) continue;
+
+                var navigationViewItemCharacter =
+                    (from NavigationViewItem navigationViewBodyMenuItem in
+                            navigationViewBodyMenuItems.Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
+                        let navigationViewBodyMenuItemTag = (KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag
+                        where navigationViewBodyMenuItemTag.Key == containerKeyAccount &&
+                              navigationViewBodyMenuItemTag.Value == keyValuePairCharacter.Key
+                        select navigationViewBodyMenuItem).FirstOrDefault();
                 var propertySetCharacter = keyValuePairCharacter.Value.Values;
 
-                if (!(bool)propertySetCharacter[KeyIsEnabled]) continue;
-
-                var navigationViewItemCharacter = new NavigationViewItem()
+                if ((bool)propertySetCharacter[KeyIsEnabled])
                 {
-                    Icon = new SymbolIcon(Symbol.Contact),
-                    Tag = new KeyValuePair<string, string>(containerKeyAccount, keyValuePairCharacter.Key)
-                };
+                    if (navigationViewItemCharacter == null)
+                    {
+                        navigationViewItemCharacter = new NavigationViewItem()
+                        {
+                            Icon = new SymbolIcon(Symbol.Contact),
+                            Tag = new KeyValuePair<string, string>(containerKeyAccount, keyValuePairCharacter.Key)
+                        };
+                        navigationViewBodyMenuItems.Insert(navigationViewBodyMenuItems.Count - 1,
+                            navigationViewItemCharacter); // TODO: respect order?
+                    } // end if
 
-                ToolTipService.SetToolTip(navigationViewItemCharacter,
-                    $"{propertySetCharacter[KeyNickname]} ({keyValuePairCharacter.Key})");
-                navigationViewBody.MenuItems.Insert(navigationViewBody.MenuItems.Count - 1,
-                    navigationViewItemCharacter);
+                    ToolTipService.SetToolTip(navigationViewItemCharacter,
+                        $"{propertySetCharacter[KeyNickname]} ({keyValuePairCharacter.Key})");
+                }
+                else if (navigationViewItemCharacter != null)
+                    navigationViewBodyMenuItems.Remove(navigationViewItemCharacter);
             } // end foreach
 
-            if (shouldSelectFirst) navigationViewBody.SelectedItem = navigationViewBody.MenuItems[0];
+            if (shouldSelectFirst)
+                navigationViewBody.SelectedItem =
+                    (from NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems
+                            .Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
+                        where ((KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag).Key == containerKeyAccount
+                        select navigationViewBodyMenuItem).FirstOrDefault();
 
             return true;
-        } // end method AddAccountNavigation
+        } // end method AddOrUpdateCharactersNavigation
 
         /// <summary>
-        /// Count the accounts added.
+        /// Count the added accounts.
         /// </summary>
-        /// <returns>The number of the accounts added.</returns>
+        /// <returns>The number of the added accounts.</returns>
         public int CountAccounts()
         {
             return _applicationDataContainerAccounts.Containers.Count;
         } // end method CountAccounts
 
         /// <summary>
-        /// Get an account's characters from the API.
+        /// Get the specific account's characters from the API.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
@@ -296,24 +320,31 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
-        /// Remove the main window's navigation view items for a specific account's characters.
+        /// Remove the specific account's characters from the main window's navigation view.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
-        private static void RemoveAccountNavigation(string containerKeyAccount)
+        /// <param name="containerKeysCharacter">A list of characters to remove for the navigation if possible. Do for all characters if <c>null</c>.</param>
+        private static void RemoveCharactersNavigation(string containerKeyAccount,
+            ImmutableList<string> containerKeysCharacter = null)
         {
-            var navigationViewBodyMenuItems = WindowsHelper.ShowMainWindow().NavigationViewBody.MenuItems;
+            var navigationViewBody = WindowsHelper.ShowMainWindow().NavigationViewBody;
+            var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
 
-            foreach (NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems.ToImmutableList())
-            {
-                if (navigationViewBodyMenuItem.Tag is not KeyValuePair<string, string> keyValuePairTag) continue;
+            foreach (var navigationViewBodyMenuItem in from NavigationViewItem navigationViewBodyMenuItem in
+                         navigationViewBodyMenuItems
+                             .Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
+                     let navigationViewBodyMenuItemTag = (KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag
+                     where navigationViewBodyMenuItemTag.Key == containerKeyAccount &&
+                           (containerKeysCharacter == null ||
+                            containerKeysCharacter.Contains(navigationViewBodyMenuItemTag.Value))
+                     select navigationViewBodyMenuItem)
+                navigationViewBodyMenuItems.Remove(navigationViewBodyMenuItem);
 
-                if (keyValuePairTag.Key == containerKeyAccount)
-                    navigationViewBodyMenuItems.Remove(navigationViewBodyMenuItem);
-            } // end foreach
+            navigationViewBody.SelectedItem ??= navigationViewBodyMenuItems.FirstOrDefault();
         } // end method RemoveAccountNavigation
 
         /// <summary>
-        /// Add or update the characters, and change the main window's navigation view.
+        /// Add or update the specific account's characters, and do necessary operations on the relevant UI elements.
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
@@ -331,35 +362,41 @@ namespace PaimonTray.Helpers
             {
                 applicationDataContainerAccount.DeleteContainer(ContainerKeyCharacters);
                 applicationDataContainerAccount.Values[KeyIsEnabled] = true;
-                RemoveAccountNavigation(containerKeyAccount);
+                RemoveCharactersNavigation(containerKeyAccount);
                 return;
             } // end if
 
             var applicationDataContainerCharacters =
                 applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
                     ApplicationDataCreateDisposition.Always);
+            var containerKeysCharacter = new List<string>();
 
             foreach (var keyValuePairCharacter in applicationDataContainerCharacters.Containers.Where(
                          keyValuePairCharacter => !characters.Select(character => character.UserId).ToImmutableList()
                              .Contains(keyValuePairCharacter.Key)))
+            {
                 applicationDataContainerCharacters.DeleteContainer(keyValuePairCharacter.Key);
+                containerKeysCharacter.Add(keyValuePairCharacter.Key);
+            } // end foreach
+
+            RemoveCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
+            containerKeysCharacter.Clear();
 
             foreach (var character in characters)
             {
                 var propertySetCharacter = applicationDataContainerCharacters
                     .CreateContainer(character.UserId, ApplicationDataCreateDisposition.Always).Values;
 
-                if (!propertySetCharacter.ContainsKey(KeyIsEnabled))
-                    propertySetCharacter[KeyIsEnabled] = true;
+                if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
 
                 propertySetCharacter[KeyLevel] = character.Level;
                 propertySetCharacter[KeyNickname] = character.Nickname;
                 propertySetCharacter[KeyRegion] = character.Region;
+                containerKeysCharacter.Add(character.UserId);
             } // end foreach
 
             applicationDataContainerAccount.Values[KeyIsEnabled] = true;
-            RemoveAccountNavigation(containerKeyAccount);
-            AddAccountNavigation(containerKeyAccount);
+            AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
         } // end method StoreCharacters
 
         #endregion Methods

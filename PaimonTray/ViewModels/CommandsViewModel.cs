@@ -37,7 +37,7 @@ namespace PaimonTray.ViewModels
                     var mainWindow = WindowsHelper.ShowMainWindow();
                     var navigationViewBody = mainWindow.NavigationViewBody;
 
-                    navigationViewBody.SelectedItem = navigationViewBody.MenuItems.Last();
+                    navigationViewBody.SelectedItem = navigationViewBody.MenuItems.LastOrDefault();
 
                     if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };

@@ -132,9 +132,10 @@ namespace PaimonTray.Views
             var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
 
             if (comboBoxServerSelectedItem == null) return;
-            
+
             var uriLoginMiHoYo = GetLoginWebPageUri();
-            var workArea = DisplayArea.GetFromWindowId(WindowsHelper.ShowMainWindow().WinId, DisplayAreaFallback.Primary).WorkArea;
+            var workArea = DisplayArea
+                .GetFromWindowId(WindowsHelper.ShowMainWindow().WinId, DisplayAreaFallback.Primary).WorkArea;
             var pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.MainWindowPositionOffset;
             var pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.MainWindowPositionOffset;
 
@@ -328,8 +329,7 @@ namespace PaimonTray.Views
                         break;
                 } // end switch-case
 
-                if (cookieName is not (AccountsHelper.CookieKeyUserId or AccountsHelper.CookieKeyToken))
-                    continue;
+                if (cookieName is not (AccountsHelper.CookieKeyUserId or AccountsHelper.CookieKeyToken)) continue;
 
                 stringBuilderCookies.Append($"{cookieName}={cookieValue};");
                 validCookieNameCount++;
