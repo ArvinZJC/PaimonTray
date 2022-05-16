@@ -102,6 +102,7 @@ namespace PaimonTray.Views
                 {
                     Content = _resourceLoader.GetString("AddAccountNoCharacter"),
                     CloseButtonText = _resourceLoader.GetString("No"),
+                    DefaultButton = ContentDialogButton.Close,
                     PrimaryButtonText = _resourceLoader.GetString("Yes"),
                     RequestedTheme = SettingsHelper.GetTheme(),
                     Title = _resourceLoader.GetString("AddAccountConfirmation"),
