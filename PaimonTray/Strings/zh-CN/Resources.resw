@@ -239,8 +239,8 @@
   <data name="LoginWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
   </data>
-  <data name="LoginWebPageHome" xml:space="preserve">
-    <value>转到登录页</value>
+  <data name="LoginWebPageReturn" xml:space="preserve">
+    <value>回到登录页</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>设置及其他</value>

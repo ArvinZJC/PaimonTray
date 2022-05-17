@@ -210,7 +210,7 @@ namespace PaimonTray.Views
                     Grid.SetRow(_webView2LoginWebPage, 0);
                     TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
                     ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
-                    ToolTipService.SetToolTip(ButtonLoginWebPageHome, _resourceLoader.GetString("LoginWebPageHome"));
+                    ToolTipService.SetToolTip(ButtonLoginWebPageReturn, _resourceLoader.GetString("LoginWebPageReturn"));
                 }
                 catch (Exception exception)
                 {
@@ -232,8 +232,8 @@ namespace PaimonTray.Views
         private Uri GetLoginWebPageUri()
         {
             return new Uri(ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                ? AppConstantsHelper.UrlLoginMiHoYo
-                : AppConstantsHelper.UrlLoginHoYoLab);
+                ? AccountsHelper.UrlLoginMiHoYo
+                : AccountsHelper.UrlLoginHoYoLab);
         } // end method GetLoginWebPageUri
 
         /// <summary>
@@ -267,8 +267,8 @@ namespace PaimonTray.Views
                 {
                     var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
                         ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                            ? AppConstantsHelper.UrlCookiesMiHoYo
-                            : AppConstantsHelper.UrlCookiesHoYoLab)).ToImmutableList();
+                            ? AccountsHelper.UrlCookiesMiHoYo
+                            : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList();
 
                     (accountId, cookies) = ProcessCookies(ref rawCookies);
                 }
@@ -391,7 +391,7 @@ namespace PaimonTray.Views
             if (!isAlways) ShowAlternativeLoginMessage();
 
             ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
-            ButtonLoginWebPageHome.Visibility = Visibility.Collapsed;
+            ButtonLoginWebPageReturn.Visibility = Visibility.Collapsed;
             GridLoginAlternative.Visibility = Visibility.Visible;
             HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
             TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
@@ -427,11 +427,11 @@ namespace PaimonTray.Views
             LogInAsync();
         } // end method ButtonLoginWebPage_OnClick
 
-        // Handle the click event of the button for going to the login web page.
-        private void ButtonLoginWebPageHome_OnClick(object sender, RoutedEventArgs e)
+        // Handle the click event of the button for returning to the login web page.
+        private void ButtonLoginWebPageReturn_OnClick(object sender, RoutedEventArgs e)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-        } // end method ButtonLoginWebPageReload_OnClick
+        } // end method ButtonLoginWebPageReturn_OnClick
 
         // Handle the server combo box's selection changed event.
         private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -443,9 +443,15 @@ namespace PaimonTray.Views
         private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
             CoreWebView2SourceChangedEventArgs args)
         {
-            if (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn && _webView2LoginWebPage.Source
-                    .ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo))
-                GridAddingAccount.Visibility = Visibility.Visible;
+            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
+            var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
+
+            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginEndMiHoYo)) GridAddingAccount.Visibility = Visibility.Visible;
+
+            ButtonLoginWebPageReturn.IsEnabled = !((isServerCn &&
+                                                 (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
+                                                  webView2LoginWebPageSource.Contains(AccountsHelper
+                                                      .UrlLoginRedirectMiHoYo))) || (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
 #pragma warning disable CA1822 // Mark members as static
@@ -463,7 +469,7 @@ namespace PaimonTray.Views
             switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
             {
                 // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
-                case true when _webView2LoginWebPage.Source.ToString().Contains(AppConstantsHelper.UrlLoginEndMiHoYo):
+                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlLoginEndMiHoYo):
                     LogInAsync();
                     break;
 

@@ -239,8 +239,8 @@
   <data name="LoginWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
   </data>
-  <data name="LoginWebPageHome" xml:space="preserve">
-    <value>Go to the login web page</value>
+  <data name="LoginWebPageReturn" xml:space="preserve">
+    <value>Return to the login web page</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>Settings and more</value>

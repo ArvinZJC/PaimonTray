@@ -131,13 +131,14 @@
                                         <TextBlock x:Name="TextBlockLogin" />
                                     </StackPanel>
                                     <Button
-                                        x:Name="ButtonLoginWebPageHome"
-                                        Click="ButtonLoginWebPageHome_OnClick"
+                                        x:Name="ButtonLoginWebPageReturn"
+                                        Click="ButtonLoginWebPageReturn_OnClick"
                                         Grid.Column="1"
+                                        IsEnabled="False"
                                         Padding="4">
                                         <FontIcon
                                             FontSize="{ThemeResource ToolTipContentThemeFontSize}"
-                                            Glyph="{x:Bind h:AppConstantsHelper.GlyphHome}" />
+                                            Glyph="{x:Bind h:AppConstantsHelper.GlyphUpdateRestore}" />
                                     </Button>
                                     <HyperlinkButton
                                         x:Name="HyperlinkButtonHowToGetCookies"

@@ -43,11 +43,6 @@
         public const string GlyphDictionary = "\xE82D";
 
         /// <summary>
-        /// The code of the glyph Home.
-        /// </summary>
-        public const string GlyphHome = "\xE80F";
-
-        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public const string GlyphInfo = "\xE946";
@@ -61,6 +56,11 @@
         /// The code of the glyph Status Circle Question Mark.
         /// </summary>
         public const string GlyphStatusCircleQuestionMark = "\xF142";
+
+        /// <summary>
+        /// The code of the glyph Update Restore.
+        /// </summary>
+        public const string GlyphUpdateRestore = "\xE777";
 
         /// <summary>
         /// The main window's position offset.
@@ -103,16 +103,6 @@
         public const string UrlAppIconSource = "https://www.pixiv.net/en/artworks/92415888";
 
         /// <summary>
-        /// The HoYoLAB cookies URL.
-        /// </summary>
-        public const string UrlCookiesHoYoLab = "https://www.hoyolab.com";
-
-        /// <summary>
-        /// The miHoYo cookies URL.
-        /// </summary>
-        public const string UrlCookiesMiHoYo = "https://bbs.mihoyo.com";
-
-        /// <summary>
         /// The app's GitHub repository URL.
         /// </summary>
         public const string UrlGitHubRepo = "https://github.com/ArvinZJC/PaimonTray";
@@ -151,21 +141,6 @@
         /// The URL of the user manual section instructing how to get your cookies.
         /// </summary>
         public const string UrlHowToGetCookies = "https://paimon.swo.moe/#how-to-get-my-cookie";
-
-        /// <summary>
-        /// The URL for indicating the success of logging into miHoYo.
-        /// </summary>
-        public const string UrlLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
-
-        /// <summary>
-        /// The URL for logging into HoYoLAB.
-        /// </summary>
-        public const string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
-
-        /// <summary>
-        /// The URL for logging into miHoYo.
-        /// </summary>
-        public const string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
 
         /// <summary>
         /// The URL for downloading the Microsoft Edge WebView2 Runtime.
