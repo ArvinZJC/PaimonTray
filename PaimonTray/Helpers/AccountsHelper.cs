@@ -136,6 +136,37 @@ namespace PaimonTray.Helpers
         private const string UrlCharactersServerGlobal =
             "https://api-os-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_global";
 
+        /// <summary>
+        /// The HoYoLAB cookies URL.
+        /// </summary>
+        public const string UrlCookiesHoYoLab = "https://www.hoyolab.com";
+
+        /// <summary>
+        /// The miHoYo cookies URL.
+        /// </summary>
+        public const string UrlCookiesMiHoYo = "https://bbs.mihoyo.com";
+
+        /// <summary>
+        /// The URL for indicating the success of logging into miHoYo.
+        /// </summary>
+        public const string UrlLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
+
+        /// <summary>
+        /// The URL for logging into HoYoLAB.
+        /// </summary>
+        public const string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
+
+        /// <summary>
+        /// The URL for logging into miHoYo.
+        /// </summary>
+        public const string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
+
+        /// <summary>
+        /// The URL for indicating the success of redirecting to the actual URL for logging into miHoYo.
+        /// </summary>
+        public const string UrlLoginRedirectMiHoYo =
+            "https://user.mihoyo.com/?cb_url=//bbs.mihoyo.com/ys/accountCenter&week=1#/login";
+
         #endregion Constants
 
         #region Fields

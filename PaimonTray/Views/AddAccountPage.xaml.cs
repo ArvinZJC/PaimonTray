@@ -154,6 +154,7 @@ namespace PaimonTray.Views
                     : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
+                ButtonLoginWebPage.IsEnabled = false;
                 ButtonLoginWebPage.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
                 Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
                 Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
