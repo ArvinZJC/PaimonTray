@@ -187,7 +187,7 @@
     <value>帮助</value>
   </data>
   <data name="HideMainWindow" xml:space="preserve">
-    <value>隐藏主窗口</value>
+    <value>隐藏主界面</value>
   </data>
   <data name="HowToGetCookies" xml:space="preserve">
     <value>如何获取您的 cookie？（临时）</value>
@@ -246,7 +246,7 @@
     <value>设置及其他</value>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
-    <value>在主窗口上启用顶部导航窗格</value>
+    <value>在主界面上启用顶部导航窗格</value>
   </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
     <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
@@ -278,7 +278,7 @@
     <value>在应用启动时显示一个问候通知</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
-    <value>您可点击应用图标来显示/隐藏主窗口。若图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
+    <value>若应用图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
   </data>
   <data name="NotificationGreetingTitle" xml:space="preserve">
     <value>派蒙进到您的“系统托盘”里啦！</value>
@@ -320,7 +320,7 @@
     <value>在文件资源管理器中显示日志文件</value>
   </data>
   <data name="ShowMainWindow" xml:space="preserve">
-    <value>显示主窗口</value>
+    <value>显示主界面</value>
   </data>
   <data name="Site" xml:space="preserve">
     <value>网站</value>
@@ -328,6 +328,9 @@
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>
+  </data>
+  <data name="TaskbarIconAppTooltip" xml:space="preserve">
+    <value>左击来显示/隐藏主界面，右击来显示快捷菜单</value>
   </data>
   <data name="Theme" xml:space="preserve">
     <value>主题</value>

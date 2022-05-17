@@ -2,7 +2,6 @@
     mc:Ignorable="d"
     x:Class="PaimonTray.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:am="using:Windows.ApplicationModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -22,7 +21,6 @@
             IconSource="{x:Bind h:AppConstantsHelper.UriAppIcon}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
-            ToolTipText="{x:Bind am:Package.Current.DisplayName}"
             Visibility="Collapsed">
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout AreOpenCloseAnimationsEnabled="False">
