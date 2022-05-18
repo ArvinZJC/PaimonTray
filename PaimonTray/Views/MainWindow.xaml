@@ -30,7 +30,7 @@
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         x:FieldModifier="public"
-                        x:Name="MenuFlyoutItemAppMenuToggleMainWindowVisibility"
+                        x:Name="MenuFlyoutItemAppMenuMainWindowVisibility"
                         Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
                     <MenuFlyoutItem
                         Command="{x:Bind CommandsViewModel.ExitAppCommand}"
@@ -80,9 +80,7 @@
                                     x:Name="MenuFlyoutItemMainMenuUserManual"
                                     IsEnabled="False">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon
-                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                            Glyph="{x:Bind h:AppConstantsHelper.GlyphDictionary}" />
+                                        <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphDictionary}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
@@ -94,7 +92,7 @@
                                     x:Name="MenuFlyoutItemMainMenuGiteeRepo"
                                     IsEnabled="False" />
                                 <MenuFlyoutItem
-                                    x:Name="MenuFlyoutItemMainMenuViewIssues"
+                                    x:Name="MenuFlyoutItemMainMenuIssuesView"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
                                 <MenuFlyoutItem
@@ -103,12 +101,12 @@
                                     CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
-                                    x:Name="MenuFlyoutItemMainMenuHelpShowLogs"
+                                    x:Name="MenuFlyoutItemMainMenuHelpLogsShow"
                                     Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
-                                x:Name="MenuFlyoutItemMainMenuHideMainWindow"
+                                x:Name="MenuFlyoutItemMainMenuMainWindowHide"
                                 Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
                             <MenuFlyoutItem
                                 Command="{x:Bind CommandsViewModel.ExitAppCommand}"

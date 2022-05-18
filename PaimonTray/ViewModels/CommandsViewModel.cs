@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Notifications;
+using Microsoft.UI.Xaml.Controls.AnimatedVisuals;
 
 namespace PaimonTray.ViewModels
 {
@@ -130,18 +131,18 @@ namespace PaimonTray.ViewModels
                     var mainWindow = WindowsHelper.ShowMainWindow();
                     var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-                    // Set the text of the main window's menu flyout item for toggling the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
+                    // Set the text of the main window's menu flyout item for the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
                     if (mainWindow.Visible)
                     {
                         mainWindow.Hide();
-                        mainWindow.MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text =
-                            resourceLoader.GetString("ShowMainWindow");
+                        mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
+                            resourceLoader.GetString("MainWindowShow");
                     }
                     else
                     {
                         mainWindow.Show();
-                        mainWindow.MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text =
-                            resourceLoader.GetString("HideMainWindow");
+                        mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
+                            resourceLoader.GetString("MainWindowHide");
                     } // end if...else
                 };
                 return xamlUiCommand;

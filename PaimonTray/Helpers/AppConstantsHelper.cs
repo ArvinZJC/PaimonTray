@@ -30,7 +30,7 @@
         /// <summary>
         /// The height of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageServerGlobalHeight = 828;
+        public const int AddAccountPageLoginWebPageServerGlobalHeight = 800;
 
         /// <summary>
         /// The width of the page for adding a global server account using the web page login method.
@@ -38,9 +38,19 @@
         public const int AddAccountPageLoginWebPageServerGlobalWidth = 800;
 
         /// <summary>
+        /// The code of the glyph Accept.
+        /// </summary>
+        public const string GlyphAccept = "\xE8FB";
+
+        /// <summary>
         /// The code of the glyph Dictionary.
         /// </summary>
         public const string GlyphDictionary = "\xE82D";
+
+        /// <summary>
+        /// The code of the glyph Help.
+        /// </summary>
+        public const string GlyphHelp = "\xE897";
 
         /// <summary>
         /// The code of the glyph Info.
@@ -53,12 +63,7 @@
         public const string GlyphRepair = "\xE90F";
 
         /// <summary>
-        /// The code of the glyph Status Circle Question Mark.
-        /// </summary>
-        public const string GlyphStatusCircleQuestionMark = "\xF142";
-
-        /// <summary>
-        /// The code of the glyph Update Restore.
+        /// The code of the glyph UpdateRestore.
         /// </summary>
         public const string GlyphUpdateRestore = "\xE777";
 
@@ -103,6 +108,11 @@
         public const string UrlAppIconSource = "https://www.pixiv.net/en/artworks/92415888";
 
         /// <summary>
+        /// The URL of the user manual section instructing how to get your cookies.
+        /// </summary>
+        public const string UrlCookiesHowToGet = "https://paimon.swo.moe/#how-to-get-my-cookie";
+
+        /// <summary>
         /// The app's GitHub repository URL.
         /// </summary>
         public const string UrlGitHubRepo = "https://github.com/ArvinZJC/PaimonTray";
@@ -136,11 +146,6 @@
         /// The app's GitHub repository's releases URL.
         /// </summary>
         public const string UrlGitHubRepoReleases = "https://github.com/ArvinZJC/PaimonTray/releases";
-
-        /// <summary>
-        /// The URL of the user manual section instructing how to get your cookies.
-        /// </summary>
-        public const string UrlHowToGetCookies = "https://paimon.swo.moe/#how-to-get-my-cookie";
 
         /// <summary>
         /// The URL for downloading the Microsoft Edge WebView2 Runtime.

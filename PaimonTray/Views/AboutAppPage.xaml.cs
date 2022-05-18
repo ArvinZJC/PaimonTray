@@ -38,10 +38,10 @@ namespace PaimonTray.Views
             HyperlinkButtonGiteeRepo.Content = resourceLoader.GetString("GiteeRepo");
             HyperlinkButtonGitHubRepo.Content = resourceLoader.GetString("GitHubRepo");
             HyperlinkButtonHome.Content = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
+            HyperlinkButtonIssuesView.Content = resourceLoader.GetString("IssuesView");
             HyperlinkButtonLicense.Content = resourceLoader.GetString("License");
             HyperlinkButtonReleaseNotes.Content = resourceLoader.GetString("ReleaseNotes");
             HyperlinkButtonUserManual.Content = resourceLoader.GetString("UserManual");
-            HyperlinkButtonViewIssues.Content = resourceLoader.GetString("ViewIssues");
             RunAcknowledgementApiUses.Text = resourceLoader.GetString("AcknowledgementApiUses");
             RunAcknowledgementApiUsesAnd.Text = resourceLoader.GetString("And");
             RunAcknowledgementAppIcon.Text = resourceLoader.GetString("AcknowledgementAppIcon");

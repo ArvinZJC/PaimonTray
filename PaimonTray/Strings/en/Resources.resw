@@ -164,12 +164,18 @@
   <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
     <value>Your changes will be applied the next time the app is started.</value>
   </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
   <data name="Cookies" xml:space="preserve">
     <value>cookies</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
   </data>
-  <data name="DownloadWebView2Runtime" xml:space="preserve">
-    <value>Download WebView2 Runtime</value>
+  <data name="CookiesHowToGet" xml:space="preserve">
+    <value>How to get your cookies? (Temp)</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Enter</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
@@ -186,14 +192,11 @@
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
-  <data name="HideMainWindow" xml:space="preserve">
-    <value>Hide the main window</value>
-  </data>
-  <data name="HowToGetCookies" xml:space="preserve">
-    <value>How to get your cookies? (Temp)</value>
-  </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
+  </data>
+  <data name="IssuesView" xml:space="preserve">
+    <value>View issues</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
@@ -227,23 +230,29 @@
   <data name="LoginAlternativeAlways" xml:space="preserve">
     <value>Always use the alternative login method to add your account</value>
   </data>
-  <data name="LoginComplete" xml:space="preserve">
-    <value>Complete login</value>
-  </data>
-  <data name="LoginCompleteTooltip" xml:space="preserve">
+  <data name="LoginCompleteConfirm" xml:space="preserve">
     <value>Confirm completing login after you log into your account on the web page</value>
   </data>
   <data name="LoginFail" xml:space="preserve">
     <value>Failed to log into your account. Please try again.</value>
   </data>
-  <data name="LoginWebPage" xml:space="preserve">
+  <data name="LoginHeaderWebPage" xml:space="preserve">
     <value>Log into your account on the web page</value>
   </data>
   <data name="LoginWebPageReturn" xml:space="preserve">
     <value>Return to the login web page</value>
   </data>
+  <data name="LogsShow" xml:space="preserve">
+    <value>Show logs in File Explorer</value>
+  </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
     <value>Settings and more</value>
+  </data>
+  <data name="MainWindowHide" xml:space="preserve">
+    <value>Hide the main window</value>
+  </data>
+  <data name="MainWindowShow" xml:space="preserve">
+    <value>Show the main window</value>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>Turn on the top navigation pane on the main window</value>
@@ -316,12 +325,6 @@
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="ShowLogs" xml:space="preserve">
-    <value>Show logs in File Explorer</value>
-  </data>
-  <data name="ShowMainWindow" xml:space="preserve">
-    <value>Show the main window</value>
-  </data>
   <data name="Site" xml:space="preserve">
     <value>site</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
@@ -350,8 +353,8 @@
   <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
-  <data name="ViewIssues" xml:space="preserve">
-    <value>View issues</value>
+  <data name="WebView2RuntimeDownload" xml:space="preserve">
+    <value>Download WebView2 Runtime</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>

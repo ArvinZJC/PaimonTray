@@ -129,7 +129,7 @@ namespace PaimonTray.Views
 
         #endregion Methods
 
-        #region Event Handlers
+        #region Events
 
         // Handle the title bar grid's actual theme changed event.
         private void GridTitleBar_OnActualThemeChanged(FrameworkElement sender, object args)

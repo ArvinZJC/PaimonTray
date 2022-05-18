@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Graphics;
 using Windows.Storage;
 
+
 namespace PaimonTray.Views
 {
     /// <summary>
@@ -60,7 +61,7 @@ namespace PaimonTray.Views
             CustomiseWindow();
             UpdateUiText();
 
-            MenuFlyoutItemMainMenuHelpShowLogs.CommandParameter = _app?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
             TaskbarIconApp.Visibility =
                 Visibility.Visible; // Show the taskbar icon when finishing all the other initialisation.
         } // end constructor MainWindow
@@ -108,15 +109,15 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-            MenuFlyoutItemAppMenuToggleMainWindowVisibility.Text = resourceLoader.GetString("HideMainWindow");
+            MenuFlyoutItemAppMenuMainWindowVisibility.Text = resourceLoader.GetString("MainWindowHide");
             MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
             MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
             MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
-            MenuFlyoutItemMainMenuHelpShowLogs.Text = resourceLoader.GetString("ShowLogs");
-            MenuFlyoutItemMainMenuHideMainWindow.Text = resourceLoader.GetString("HideMainWindow");
+            MenuFlyoutItemMainMenuHelpLogsShow.Text = resourceLoader.GetString("LogsShow");
+            MenuFlyoutItemMainMenuIssuesView.Text = resourceLoader.GetString("IssuesView");
+            MenuFlyoutItemMainMenuMainWindowHide.Text = resourceLoader.GetString("MainWindowHide");
             MenuFlyoutItemMainMenuReleaseNotes.Text = resourceLoader.GetString("ReleaseNotes");
             MenuFlyoutItemMainMenuUserManual.Text = resourceLoader.GetString("UserManual");
-            MenuFlyoutItemMainMenuViewIssues.Text = resourceLoader.GetString("ViewIssues");
             MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
             TaskbarIconApp.ToolTipText =
                 $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";

@@ -35,17 +35,14 @@
         </StackPanel>
         <TextBlock
             x:Name="TextBlockVersion"
-            Grid.Row="1"
-            Margin="12, 0, 0, 0" />
+            Grid.Row="1" />
         <TextBlock
             x:Name="TextBlockCopyright"
-            Grid.Row="2"
-            Margin="12, 0, 0, 0" />
+            Grid.Row="2" />
         <!-- The acknowledgement text block. -->
         <TextBlock
             Grid.Row="3"
-            HorizontalAlignment="Left"
-            Margin="12, 0, 0, 0">
+            HorizontalAlignment="Left">
             <Run x:Name="RunAcknowledgementInspiration" />
             <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
                 <Run x:Name="RunNameGitHubRepoInspiration" />
@@ -85,7 +82,7 @@
                 x:Name="HyperlinkButtonGiteeRepo"
                 IsEnabled="False" />
             <HyperlinkButton
-                x:Name="HyperlinkButtonViewIssues"
+                x:Name="HyperlinkButtonIssuesView"
                 NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonReleaseNotes"

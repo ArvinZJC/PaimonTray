@@ -1,8 +1,11 @@
 ﻿using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using Serilog;
 using System;
 using System.Collections.Immutable;
@@ -154,8 +157,8 @@ namespace PaimonTray.Views
                     : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalWidth;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                ButtonLoginWebPage.IsEnabled = false;
-                ButtonLoginWebPage.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
+                ButtonLoginCompleteConfirm.IsEnabled = false;
+                ButtonLoginCompleteConfirm.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
                 Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
                 Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
             }
@@ -164,14 +167,18 @@ namespace PaimonTray.Views
                 Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
                     ? pageMaxHeight
                     : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
-                HyperlinkLoginPlace.NavigateUri = uriLoginMiHoYo;
-                RunLoginPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
+                HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
+                RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
                 Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
                     ? pageMaxWidth
                     : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
             } // end if...else
         } // end method ApplyServerSelection
 
+        /// <summary>
+        /// Check if the number of the accounts added has already reached the limit.
+        /// </summary>
+        /// <returns>A flag indicating if the number of the accounts added has already reached the limit.</returns>
         private bool CheckAccountsCount()
         {
             var hasReachedLimit = _app.AccHelper.CountAccounts() >= AccountsHelper.CountAccountsMax;
@@ -199,6 +206,7 @@ namespace PaimonTray.Views
                 {
                     Log.Information(
                         $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
+                    throw new NotImplementedException();
                     _isWebView2Available = true;
                     _webView2LoginWebPage = new WebView2();
                     await _webView2LoginWebPage.EnsureCoreWebView2Async();
@@ -206,12 +214,14 @@ namespace PaimonTray.Views
                     _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
                     _webView2LoginWebPage.NavigationCompleted += WebView2LoginWebPage_OnNavigationCompleted;
 
-                    ButtonLoginWebPage.Content = _resourceLoader.GetString("LoginComplete");
-                    GridLoginWebPage.Children.Add(_webView2LoginWebPage);
-                    Grid.SetRow(_webView2LoginWebPage, 0);
-                    TextBlockLogin.Text = _resourceLoader.GetString("LoginWebPage");
-                    ToolTipService.SetToolTip(ButtonLoginWebPage, _resourceLoader.GetString("LoginCompleteTooltip"));
-                    ToolTipService.SetToolTip(ButtonLoginWebPageReturn, _resourceLoader.GetString("LoginWebPageReturn"));
+                    ButtonLoginAssist.IsEnabled = false;
+                    FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphUpdateRestore;
+                    GridLogin.Children.Add(_webView2LoginWebPage);
+                    Grid.SetRow(_webView2LoginWebPage, 1);
+                    TextBlockLoginHeaderWebPage.Text = _resourceLoader.GetString("LoginHeaderWebPage");
+                    ToolTipService.SetToolTip(ButtonLoginAssist, _resourceLoader.GetString("LoginWebPageReturn"));
+                    ToolTipService.SetToolTip(ButtonLoginCompleteConfirm,
+                        _resourceLoader.GetString("LoginCompleteConfirm"));
                 }
                 catch (Exception exception)
                 {
@@ -250,6 +260,7 @@ namespace PaimonTray.Views
             } // end if
 
             TextBoxLoginAlternative.Text = string.Empty;
+            TextBoxLoginAlternative.ClearUndoRedoHistory();
         } // end method InitialiseLogin
 
         /// <summary>
@@ -259,7 +270,9 @@ namespace PaimonTray.Views
         {
             GridAddingAccount.Visibility = Visibility.Visible;
 
-            if (!CheckAccountsCount())
+            if (CheckAccountsCount())
+                InitialiseLogin();
+            else
             {
                 string accountId;
                 string cookies;
@@ -296,6 +309,34 @@ namespace PaimonTray.Views
 
             GridAddingAccount.Visibility = Visibility.Collapsed;
         } // end method LogInAsync
+
+        /// <summary>
+        /// Invoked immediately after the <see cref="AddAccountPage"/> is unloaded and is no longer the current source of a parent <see cref="Frame"/>.
+        /// </summary>
+        /// <param name="args">Details about the navigation that has unloaded the current <see cref="AddAccountPage"/>.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            if (_isWebView2Available) _webView2LoginWebPage.Close();
+
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
+            base.OnNavigatedFrom(args);
+        } // end method OnNavigatedFrom
+
+        /// <summary>
+        /// Invoked when the <see cref="AddAccountPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
+        /// </summary>
+        /// <param name="args">Details about the pending navigation that will load the current <see cref="AddAccountPage"/>.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs args)
+        {
+            ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
+            ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
+            base.OnNavigatedTo(args);
+        } // end method OnNavigatedTo
 
         /// <summary>
         /// Process the raw cookies.
@@ -349,7 +390,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowAlternativeLoginMessage()
         {
-            HyperlinkButtonDownloadWebView2Runtime.Content = _resourceLoader.GetString("DownloadWebView2Runtime");
+            HyperlinkButtonWebView2RuntimeDownload.Content = _resourceLoader.GetString("WebView2RuntimeDownload");
             InfoBarMessageLoginAlternative.Margin = new Thickness(0, 0, 0, 8);
             InfoBarMessageLoginAlternative.Message = _resourceLoader.GetString("MessageLoginAlternative");
             InfoBarMessageLoginAlternative.IsOpen = true; // Show the info bar when ready.
@@ -392,12 +433,14 @@ namespace PaimonTray.Views
             if (!isAlways) ShowAlternativeLoginMessage();
 
             ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
-            ButtonLoginWebPageReturn.Visibility = Visibility.Collapsed;
+            ButtonLoginAlternativeClear.Content = _resourceLoader.GetString("Clear");
+            FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphHelp;
             GridLoginAlternative.Visibility = Visibility.Visible;
-            HyperlinkButtonHowToGetCookies.Visibility = Visibility.Visible;
-            TextBlockLogin.Text = _resourceLoader.GetString("Cookies");
-            TextBlockLoginPlace.Visibility = Visibility.Visible;
-            ToolTipService.SetToolTip(HyperlinkButtonHowToGetCookies, _resourceLoader.GetString("HowToGetCookies"));
+            RunLoginHeaderCookies.Text = _resourceLoader.GetString("Cookies");
+            RunLoginHeaderEnter.Text = _resourceLoader.GetString("Enter");
+            TextBlockLoginHeaderAlternative.Visibility = Visibility.Visible;
+            TextBlockLoginHeaderWebPage.Visibility = Visibility.Collapsed;
+            ToolTipService.SetToolTip(ButtonLoginAssist, _resourceLoader.GetString("CookiesHowToGet"));
         } // end method UseAlternativeLoginMethod
 
         #endregion Methods
@@ -410,29 +453,44 @@ namespace PaimonTray.Views
             if (_contentDialogue != null) _contentDialogue.RequestedTheme = SettingsHelper.GetTheme();
         } // end method AddAccountPage_OnActualThemeChanged
 
-        // Handle the unloaded event of the page for adding an account.
-        private void AddAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (_isWebView2Available) _webView2LoginWebPage.Close();
-        } // end method AddAccountPage_OnUnloaded
-
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
             LogInAsync();
         } // end method ButtonLoginAlternative_OnClick
 
-        // Handle the web page login button's click event.
-        private void ButtonLoginWebPage_OnClick(object sender, RoutedEventArgs e)
+        // Handle the click event of the button for clearing cookies for the alternative login.
+        private void ButtonLoginAlternativeClear_OnClick(object sender, RoutedEventArgs e)
+        {
+            TextBoxLoginAlternative.Text = string.Empty;
+        } // end method ButtonLoginAlternativeClear_OnClick
+
+        // Handle the click event of the button for assisting login.
+        private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_isWebView2Available)
+                _webView2LoginWebPage.Source = GetLoginWebPageUri();
+            else
+                new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
+        } // end method ButtonLoginAssist_OnClick
+
+        // Handle the click event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnClick(object sender, RoutedEventArgs e)
         {
             LogInAsync();
-        } // end method ButtonLoginWebPage_OnClick
+        } // end method ButtonLoginCompleteConfirm_OnClick
 
-        // Handle the click event of the button for returning to the login web page.
-        private void ButtonLoginWebPageReturn_OnClick(object sender, RoutedEventArgs e)
+        // Handle the pointer pressed event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-        } // end method ButtonLoginWebPageReturn_OnClick
+            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOff"); // NormalOnToNormalOff
+        } // end method ButtonLoginCompleteConfirm_OnPointerPressed
+
+        // Handle the pointer released event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOn"); // NormalOffToNormalOn
+        } // end method ButtonLoginCompleteConfirm_OnPointerReleased
 
         // Handle the server combo box's selection changed event.
         private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -447,12 +505,13 @@ namespace PaimonTray.Views
             var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
             var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
 
-            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginEndMiHoYo)) GridAddingAccount.Visibility = Visibility.Visible;
+            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginEndMiHoYo))
+                GridAddingAccount.Visibility = Visibility.Visible;
 
-            ButtonLoginWebPageReturn.IsEnabled = !((isServerCn &&
-                                                 (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
-                                                  webView2LoginWebPageSource.Contains(AccountsHelper
-                                                      .UrlLoginRedirectMiHoYo))) || (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
+            ButtonLoginAssist.IsEnabled =
+                !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
+                                  webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginRedirectMiHoYo))) ||
+                  (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
 #pragma warning disable CA1822 // Mark members as static
@@ -462,6 +521,13 @@ namespace PaimonTray.Views
         {
             sender.Margin = new Thickness(0);
         } // end method InfoBar_OnClosing
+
+        // Handle the alternative login text box's text changed event.
+        private void TextBoxLoginAlternative_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            ButtonLoginAlternative.IsEnabled = TextBoxLoginAlternative.Text.Trim() != string.Empty;
+            ButtonLoginAlternativeClear.IsEnabled = TextBoxLoginAlternative.Text != string.Empty;
+        } // end method TextBoxLoginAlternative_OnTextChanged
 
         // Handle the web page login WebView2's navigation completed event.
         private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
@@ -475,7 +541,7 @@ namespace PaimonTray.Views
                     break;
 
                 case false:
-                    ButtonLoginWebPage.IsEnabled = true;
+                    ButtonLoginCompleteConfirm.IsEnabled = true;
                     break;
             } // end switch-case
         } // end method WebView2LoginWebPage_OnNavigationCompleted

@@ -23,7 +23,7 @@ namespace PaimonTray
         /// <summary>
         /// The accounts helper.
         /// </summary>
-        public AccountsHelper AccHelper { get; } 
+        public AccountsHelper AccHelper { get; }
 
         /// <summary>
         /// The logs directory.
@@ -94,10 +94,6 @@ namespace PaimonTray
             AppVersion = $"{packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}{suffix}";
         } // end method GetAppVersion
 
-        #endregion Methods
-
-        #region Event Handlers
-
         /// <summary>
         /// Invoked when the application is launched normally by the end user.
         /// Other entry points will be used such as when the application is launched to open a specific file.
@@ -108,6 +104,6 @@ namespace PaimonTray
             WindowsHelper.ShowMainWindow();
         } // end method OnLaunched
 
-        #endregion Event Handlers
+        #endregion Methods
     } // end class App
 } // end namespace PaimonTray

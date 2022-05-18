@@ -270,9 +270,9 @@ namespace PaimonTray.Helpers
         } // end method AddOrUpdateCharactersNavigation
 
         /// <summary>
-        /// Count the added accounts.
+        /// Count the accounts added.
         /// </summary>
-        /// <returns>The number of the added accounts.</returns>
+        /// <returns>The number of the accounts added.</returns>
         public int CountAccounts()
         {
             return _applicationDataContainerAccounts.Containers.Count;
