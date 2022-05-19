@@ -177,8 +177,8 @@ namespace PaimonTray.Views
             _isFirstLoad = false;
         } // end method FrameBody_OnSizeChanged
 
-        // Handle the body navigation view's loaded event.
-        private void NavigationViewBody_OnLoaded(object sender, RoutedEventArgs e)
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             var shouldSelectFirst = true;
 
@@ -186,7 +186,7 @@ namespace PaimonTray.Views
                          .Containers[AccountsHelper.ContainerKeyAccounts].Containers.Keys)
                 if (_app.AccHelper.AddOrUpdateCharactersNavigation(containerKeyAccount, null, shouldSelectFirst))
                     shouldSelectFirst = false;
-        } // end method NavigationViewBody_OnLoaded
+        } // end method GridRoot_OnLoaded
 
         // Handle the body navigation view's selection changed event.
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,

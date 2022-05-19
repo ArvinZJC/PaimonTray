@@ -37,7 +37,7 @@
             Background="{ThemeResource ExpanderHeaderBackground}"
             BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
             BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="16"
+            ColumnSpacing="32"
             CornerRadius="4"
             Grid.Row="1"
             Padding="16, 12, 60, 12">
@@ -79,7 +79,7 @@
             </Expander.Content>
             <Expander.Header>
                 <Grid
-                    ColumnSpacing="16"
+                    ColumnSpacing="32"
                     Padding="0, 12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

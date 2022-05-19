@@ -8,283 +8,265 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid
-        Padding="0, 0, 0, 4"
-        RowSpacing="4">
+        Loaded="GridRoot_OnLoaded"
+        Padding="0, 0, 0, 4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- The grid for configuring launch on Windows startup. -->
-        <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="16"
-            CornerRadius="4"
+        <!-- The info bar for informing the language applied after the app restart. -->
+        <InfoBar
+            x:Name="InfoBarLanguageAppliedAfterAppRestart"
+            Closing="InfoBarLanguageAppliedAfterAppRestart_OnClosing"
             Grid.Row="0"
-            Padding="16, 12, 60, 12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid
-                Grid.Column="0"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    x:Name="TextBlockLaunchOnWindowsStartup"
-                    Grid.Row="0"
-                    TextWrapping="WrapWholeWords" />
-                <TextBlock
-                    x:Name="TextBlockLaunchOnWindowsStartupExplanation"
-                    Foreground="{ThemeResource SystemBaseMediumColor}"
-                    Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}"
-                    TextWrapping="WrapWholeWords" />
-            </Grid>
-            <RichTextBlock
-                Grid.Column="1"
-                IsTextSelectionEnabled="False"
-                VerticalAlignment="Center">
-                <Paragraph>
-                    <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
-                        <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
-                    </Hyperlink>
-                </Paragraph>
-            </RichTextBlock>
-        </Grid>
-        <!-- The language expander. -->
-        <Expander
+            IsClosable="False" />
+        <!-- The content grid. -->
+        <Grid
             Grid.Row="1"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left">
-            <Expander.Content>
-                <Grid RowSpacing="12">
+            RowSpacing="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- The expander for configuring launch on Windows startup. -->
+            <Expander
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left">
+                <Expander.Header>
+                    <Grid
+                        ColumnSpacing="32"
+                        Padding="0, 12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid
+                            Grid.Column="0"
+                            VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                x:Name="TextBlockLaunchOnWindowsStartup"
+                                Grid.Row="0"
+                                TextWrapping="WrapWholeWords" />
+                            <TextBlock
+                                x:Name="TextBlockLaunchOnWindowsStartupExplanation"
+                                Foreground="{ThemeResource SystemBaseMediumColor}"
+                                Grid.Row="1"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                TextWrapping="WrapWholeWords" />
+                        </Grid>
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center">
+                            <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
+                                <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                </Expander.Header>
+            </Expander>
+            <!-- The language grid. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="1"
+                Padding="16, 12, 8, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <RadioButtons
-                        x:Name="RadioButtonsLanguage"
+                    <TextBlock
+                        x:Name="TextBlockLanguage"
                         Grid.Row="0"
-                        SelectionChanged="RadioButtonsLanguage_OnSelectionChanged">
-                        <RadioButton
-                            x:Name="RadioButtonLanguageSystem"
-                            Tag="{x:Bind h:SettingsHelper.TagSystem}" />
-                        <RadioButton
-                            x:Name="RadioButtonLanguageEn"
-                            Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
-                        <RadioButton
-                            x:Name="RadioButtonLanguageZhCn"
-                            Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
-                    </RadioButtons>
+                        TextWrapping="WrapWholeWords" />
                     <TextBlock
-                        x:Name="TextBlockLanguageAppliedAfterAppRestart"
-                        Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}"
+                        x:Name="TextBlockLanguageExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
                         Grid.Row="1"
-                        TextWrapping="WrapWholeWords"
-                        Visibility="Collapsed" />
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
                 </Grid>
-            </Expander.Content>
-            <Expander.Header>
-                <Grid
-                    ColumnSpacing="16"
-                    Padding="0, 12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid
-                        Grid.Column="0"
-                        VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            x:Name="TextBlockLanguage"
-                            Grid.Row="0"
-                            TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Name="TextBlockLanguageExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
-                            Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
-                    <TextBlock
-                        x:Name="TextBlockLanguageSelection"
-                        Grid.Column="1"
-                        VerticalAlignment="Center" />
-                </Grid>
-            </Expander.Header>
-        </Expander>
-        <!-- The theme expander. -->
-        <Expander
-            Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left">
-            <Expander.Content>
-                <RadioButtons
-                    x:Name="RadioButtonsTheme"
-                    SelectionChanged="RadioButtonsTheme_OnSelectionChanged">
-                    <RadioButton
-                        x:Name="RadioButtonThemeSystem"
+                <ComboBox
+                    x:Name="ComboBoxLanguage"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    MinWidth="152"
+                    SelectionChanged="ComboBoxLanguage_OnSelectionChanged"
+                    VerticalAlignment="Center">
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemLanguageSystem"
                         Tag="{x:Bind h:SettingsHelper.TagSystem}" />
-                    <RadioButton
-                        x:Name="RadioButtonThemeLight"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
-                    <RadioButton
-                        x:Name="RadioButtonThemeDark"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
-                </RadioButtons>
-            </Expander.Content>
-            <Expander.Header>
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemLanguageEn"
+                        Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemLanguageZhCn"
+                        Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
+                </ComboBox>
+            </Grid>
+            <!-- The theme grid. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="2"
+                Padding="16, 12, 8, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Grid
-                    ColumnSpacing="16"
-                    Padding="0, 12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid
-                        Grid.Column="0"
-                        VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            x:Name="TextBlockTheme"
-                            Grid.Row="0"
-                            TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Name="TextBlockThemeExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
-                            Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <TextBlock
-                        x:Name="TextBlockThemeSelection"
-                        Grid.Column="1"
-                        VerticalAlignment="Center" />
+                        x:Name="TextBlockTheme"
+                        Grid.Row="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockThemeExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
                 </Grid>
-            </Expander.Header>
-        </Expander>
-        <!-- The notifications expander. -->
-        <Expander
-            Grid.Row="3"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch">
-            <Expander.Content>
-                <StackPanel>
-                    <Grid ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                <ComboBox
+                    x:Name="ComboBoxTheme"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    MinWidth="152"
+                    SelectionChanged="ComboBoxTheme_OnSelectionChanged"
+                    VerticalAlignment="Center">
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemThemeSystem"
+                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemThemeLight"
+                        Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemThemeDark"
+                        Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
+                </ComboBox>
+            </Grid>
+            <!-- The notifications expander. -->
+            <Expander
+                Grid.Row="3"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch">
+                <Expander.Content>
+                    <StackPanel>
                         <TextBlock
-                            x:Name="TextBlockNotificationGreeting"
-                            Grid.Column="0"
-                            TextWrapping="WrapWholeWords"
-                            VerticalAlignment="Center" />
-                        <ToggleSwitch
-                            x:Name="ToggleSwitchNotificationGreeting"
-                            FlowDirection="RightToLeft"
-                            Grid.Column="1"
-                            Toggled="ToggleSwitchNotificationGreeting_OnToggled"
-                            VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            x:Name="TextBlockNotificationClear"
-                            Grid.Column="0"
-                            TextWrapping="WrapWholeWords"
-                            VerticalAlignment="Center" />
-                        <ToggleSwitch
-                            x:Name="ToggleSwitchNotificationClear"
-                            FlowDirection="RightToLeft"
-                            Grid.Column="1"
-                            Toggled="ToggleSwitchNotificationClear_OnToggled"
-                            VerticalAlignment="Center" />
-                    </Grid>
-                </StackPanel>
-            </Expander.Content>
-            <Expander.Header>
-                <Grid
-                    ColumnSpacing="16"
-                    Padding="0, 12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                            x:Name="TextBlockNotificationsNotice"
+                            FontStyle="Italic"
+                            Margin="0, 0, 0, 4"
+                            TextWrapping="WrapWholeWords" />
+                        <CheckBox
+                            x:Name="CheckBoxNotificationGreeting"
+                            Checked="CheckBoxNotificationGreeting_OnChecked"
+                            Unchecked="CheckBoxNotificationGreeting_OnUnchecked" />
+                        <CheckBox
+                            x:Name="CheckBoxNotificationClear"
+                            Checked="CheckBoxNotificationClear_OnChecked"
+                            Unchecked="CheckBoxNotificationClear_OnUnchecked" />
+                    </StackPanel>
+                </Expander.Content>
+                <Expander.Header>
                     <Grid
-                        Grid.Column="0"
-                        VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        ColumnSpacing="32"
+                        Padding="0, 12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid
+                            Grid.Column="0"
+                            VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                x:Name="TextBlockNotifications"
+                                Grid.Row="0"
+                                TextWrapping="WrapWholeWords" />
+                            <TextBlock
+                                x:Name="TextBlockNotificationsExplanation"
+                                Foreground="{ThemeResource SystemBaseMediumColor}"
+                                Grid.Row="1"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                TextWrapping="WrapWholeWords" />
+                        </Grid>
                         <TextBlock
-                            x:Name="TextBlockNotifications"
-                            Grid.Row="0"
-                            TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Name="TextBlockNotificationsExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
-                            Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
-                    <RichTextBlock
-                        Grid.Column="1"
-                        IsTextSelectionEnabled="False"
-                        VerticalAlignment="Center">
-                        <Paragraph>
+                            Grid.Column="1"
+                            VerticalAlignment="Center">
                             <Hyperlink Click="HyperlinkNotificationsLink_OnClick">
                                 <Run x:Name="RunNotificationsLinkText" />
                             </Hyperlink>
-                        </Paragraph>
-                    </RichTextBlock>
+                        </TextBlock>
+                    </Grid>
+                </Expander.Header>
+            </Expander>
+            <!-- The grid for configuring the main window's top navigation pane. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="4"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockMainWindowTopNavigationPane"
+                        Grid.Column="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockMainWindowTopNavigationPaneExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
                 </Grid>
-            </Expander.Header>
-        </Expander>
-        <!-- The grid for configuring the main window's top navigation pane. -->
-        <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="16"
-            CornerRadius="4"
-            Grid.Row="4"
-            Padding="16, 12, 60, 12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="TextBlockMainWindowTopNavigationPane"
-                Grid.Column="0"
-                TextWrapping="WrapWholeWords"
-                VerticalAlignment="Center" />
-            <ToggleSwitch
-                x:Name="ToggleSwitchMainWindowTopNavigationPane"
-                FlowDirection="RightToLeft"
-                Grid.Column="1"
-                Margin="0, -2"
-                Toggled="ToggleSwitchMainWindowTopNavigationPane_OnToggled"
-                VerticalAlignment="Center" />
+                <ToggleSwitch
+                    x:Name="ToggleSwitchMainWindowTopNavigationPane"
+                    FlowDirection="RightToLeft"
+                    Grid.Column="1"
+                    Margin="0, -2"
+                    Toggled="ToggleSwitchMainWindowTopNavigationPane_OnToggled"
+                    VerticalAlignment="Center" />
+            </Grid>
         </Grid>
     </Grid>
 </Page>

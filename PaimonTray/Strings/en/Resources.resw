@@ -161,9 +161,6 @@
     <value>Chawong</value>
     <comment>No need to translate.</comment>
   </data>
-  <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
-    <value>Your changes will be applied the next time the app is started.</value>
-  </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
@@ -200,6 +197,9 @@
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="LanguageAppliedAfterAppRestart" xml:space="preserve">
+    <value>The change to the app language will be applied the next time the app is started.</value>
   </data>
   <data name="LanguageEn" xml:space="preserve">
     <value>English</value>
@@ -255,7 +255,10 @@
     <value>Show the main window</value>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
-    <value>Turn on the top navigation pane on the main window</value>
+    <value>Use the top navigation pane on the main window</value>
+  </data>
+  <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
+    <value>When enabled, the navigation pane on the main window is shown at the top rather than on the left side.</value>
   </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
     <value>The alternative login method is used automatically because Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or change the setting to always use this method to never show this message again the next time the page is loaded.</value>
@@ -284,7 +287,7 @@
     <value>Clear notifications when the app exits</value>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
-    <value>Show a greeting notification when the app starts</value>
+    <value>Send a greeting notification when the app starts</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
     <value>If the icon disappears from the taskbar corner, you can drag it back from the taskbar corner overflow menu.</value>
@@ -300,6 +303,9 @@
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>Change notification settings</value>
+  </data>
+  <data name="NotificationsNotice" xml:space="preserve">
+    <value>Please note that the following settings regarding sending notifications take effect after you allow notifications from the app in the notification settings.</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>

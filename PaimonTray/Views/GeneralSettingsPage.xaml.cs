@@ -30,11 +30,6 @@ namespace PaimonTray.Views
             _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
                 .Values;
             InitializeComponent();
-            ShowLanguageSelection();
-            ShowMainWindowTopNavigationPaneSelection();
-            ShowNotificationClearSelection();
-            ShowNotificationGreetingSelection();
-            ShowThemeSelection();
             UpdateUiText();
         } // end constructor GeneralSettingsPage
 
@@ -47,11 +42,12 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowLanguageSelection()
         {
-            RadioButtonsLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
+            ComboBoxLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
             {
-                SettingsHelper.TagLanguageEn => RadioButtonLanguageEn,
-                SettingsHelper.TagLanguageZhCn => RadioButtonLanguageZhCn,
-                _ => RadioButtonLanguageSystem
+                SettingsHelper.TagLanguageEn => ComboBoxItemLanguageEn,
+                SettingsHelper.TagLanguageZhCn => ComboBoxItemLanguageZhCn,
+                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
+                _ => null
             };
         } // end method ShowLanguageSelection
 
@@ -70,7 +66,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowNotificationClearSelection()
         {
-            ToggleSwitchNotificationClear.IsOn = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
+            CheckBoxNotificationClear.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
         } // end method ShowNotificationClearSelection
 
         /// <summary>
@@ -78,7 +74,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowNotificationGreetingSelection()
         {
-            ToggleSwitchNotificationGreeting.IsOn = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
+            CheckBoxNotificationGreeting.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
         } // end method ShowNotificationGreetingSelection
 
         /// <summary>
@@ -86,11 +82,12 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowThemeSelection()
         {
-            RadioButtonsTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
+            ComboBoxTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
             {
-                SettingsHelper.TagThemeDark => RadioButtonThemeDark,
-                SettingsHelper.TagThemeLight => RadioButtonThemeLight,
-                _ => RadioButtonThemeSystem
+                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
+                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
+                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
+                _ => null
             };
         } // end method ShowThemeSelection
 
@@ -101,34 +98,98 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-            RadioButtonLanguageEn.Content = resourceLoader.GetString("LanguageEn");
-            RadioButtonLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
-            RadioButtonLanguageZhCn.Content = resourceLoader.GetString("LanguageZhCn");
-            RadioButtonThemeDark.Content = resourceLoader.GetString("ThemeDark");
-            RadioButtonThemeLight.Content = resourceLoader.GetString("ThemeLight");
-            RadioButtonThemeSystem.Content = resourceLoader.GetString("SystemDefault");
+            CheckBoxNotificationClear.Content = resourceLoader.GetString("NotificationClear");
+            CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
+            ComboBoxItemLanguageEn.Content = resourceLoader.GetString("LanguageEn");
+            ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
+            ComboBoxItemLanguageZhCn.Content = resourceLoader.GetString("LanguageZhCn");
+            ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
+            ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
+            ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
+            InfoBarLanguageAppliedAfterAppRestart.Title = resourceLoader.GetString("LanguageAppliedAfterAppRestart");
             RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
             RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
-            TextBlockLanguageAppliedAfterAppRestart.Text = resourceLoader.GetString("ChangesAppliedAfterAppRestart");
             TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
-            TextBlockLanguageSelection.Text = (RadioButtonsLanguage.SelectedItem as RadioButton)?.Content as string;
             TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
             TextBlockLaunchOnWindowsStartupExplanation.Text =
                 resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
             TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
-            TextBlockNotificationClear.Text = resourceLoader.GetString("NotificationClear");
-            TextBlockNotificationGreeting.Text = resourceLoader.GetString("NotificationGreeting");
+            TextBlockMainWindowTopNavigationPaneExplanation.Text =
+                resourceLoader.GetString("MainWindowTopNavigationPaneExplanation");
             TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
             TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
+            TextBlockNotificationsNotice.Text = resourceLoader.GetString("NotificationsNotice");
             TextBlockTheme.Text = resourceLoader.GetString("Theme");
             TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
-            TextBlockThemeSelection.Text = (RadioButtonsTheme.SelectedItem as RadioButton)?.Content as string;
         } // end method UpdateUiText
 
         #endregion Methods
 
         #region Event Handlers
+
+        // Handle the checked event of the check box for clearing notifications when the app exits.
+        private void CheckBoxNotificationClear_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyNotificationClear] = CheckBoxNotificationClear.IsChecked;
+        } // end method CheckBoxNotificationClear_OnChecked
+
+        // Handle the unchecked event of the check box for clearing notifications when the app exits.
+        private void CheckBoxNotificationClear_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyNotificationClear] = CheckBoxNotificationClear.IsChecked;
+        } // end method CheckBoxNotificationClear_OnUnchecked
+
+        // Handle the checked event of the greeting notification check box.
+        private void CheckBoxNotificationGreeting_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = CheckBoxNotificationGreeting.IsChecked;
+        } // end method CheckBoxNotificationGreeting_OnChecked
+
+        // Handle the unchecked event of the greeting notification check box.
+        private void CheckBoxNotificationGreeting_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = CheckBoxNotificationGreeting.IsChecked;
+        } // end method CheckBoxNotificationGreeting_OnUnchecked
+
+        // Handle the language combo box's selection changed event.
+        private void ComboBoxLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBoxLanguageSelectedItem = ComboBoxLanguage.SelectedItem as ComboBoxItem;
+
+            if (comboBoxLanguageSelectedItem == null) return;
+
+            var comboBoxLanguageSelectedItemTag = comboBoxLanguageSelectedItem.Tag as string;
+
+            _propertySetSettings[SettingsHelper.KeyLanguage] = comboBoxLanguageSelectedItemTag;
+
+            InfoBarLanguageAppliedAfterAppRestart.IsOpen = comboBoxLanguageSelectedItemTag !=
+                                                           (Application.Current as App)?.LanguageSelectionApplied;
+
+            if (InfoBarLanguageAppliedAfterAppRestart.IsOpen)
+                InfoBarLanguageAppliedAfterAppRestart.Margin = new Thickness(0, 0, 0, 8);
+        } // end method ComboBoxLanguage_OnSelectionChanged
+
+        // Handle the theme combo box's selection changed event.
+        private void ComboBoxTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBoxThemeSelectedItem = ComboBoxTheme.SelectedItem as ComboBoxItem;
+
+            if (comboBoxThemeSelectedItem == null) return;
+
+            _propertySetSettings[SettingsHelper.KeyTheme] = comboBoxThemeSelectedItem.Tag as string;
+            SettingsHelper.ApplyThemeSelection();
+        } // end method ComboBoxTheme_OnSelectionChanged
+
+        // Handle the root grid's loaded event
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ShowLanguageSelection();
+            ShowMainWindowTopNavigationPaneSelection();
+            ShowNotificationClearSelection();
+            ShowNotificationGreetingSelection();
+            ShowThemeSelection();
+        } // end method GridRoot_OnLoaded
 
 #pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
@@ -146,36 +207,13 @@ namespace PaimonTray.Views
             new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
-        // Handle the language radio buttons' selection changed event.
-        private void RadioButtonsLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the closing event of the info bar for informing the language applied after the app restart.
+        private void InfoBarLanguageAppliedAfterAppRestart_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
-            var radioButtonsLanguageSelectedItem = RadioButtonsLanguage.SelectedItem as RadioButton;
-
-            if (radioButtonsLanguageSelectedItem == null) return;
-
-            var radioButtonsLanguageSelectedItemTag = radioButtonsLanguageSelectedItem.Tag as string;
-
-            _propertySetSettings[SettingsHelper.KeyLanguage] = radioButtonsLanguageSelectedItemTag;
-
-            TextBlockLanguageAppliedAfterAppRestart.Visibility =
-                radioButtonsLanguageSelectedItemTag == (Application.Current as App)?.LanguageSelectionApplied
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
-            TextBlockLanguageSelection.Text = radioButtonsLanguageSelectedItem.Content as string;
-        } // end method RadioButtonsLanguage_OnSelectionChanged
-
-        // Handle the theme radio buttons' selection changed event.
-        private void RadioButtonsTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var radioButtonsThemeSelectedItem = RadioButtonsTheme.SelectedItem as RadioButton;
-
-            if (radioButtonsThemeSelectedItem == null) return;
-
-            _propertySetSettings[SettingsHelper.KeyTheme] = radioButtonsThemeSelectedItem.Tag as string;
-            SettingsHelper.ApplyThemeSelection();
-
-            TextBlockThemeSelection.Text = radioButtonsThemeSelectedItem.Content as string;
-        } // end method RadioButtonsTheme_OnSelectionChanged
+            sender.Margin = new Thickness(0);
+        } // end method InfoBarLanguageAppliedAfterAppRestart_OnClosing
 
         // Handle the toggled event of the toggle switch of the setting for the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
@@ -184,18 +222,6 @@ namespace PaimonTray.Views
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
-
-        // Handle the toggled event of the toggle switch for clearing notifications when the app exits.
-        private void ToggleSwitchNotificationClear_OnToggled(object sender, RoutedEventArgs e)
-        {
-            _propertySetSettings[SettingsHelper.KeyNotificationClear] = ToggleSwitchNotificationClear.IsOn;
-        } // end method ToggleSwitchNotificationGreeting_OnToggled
-
-        // Handle the greeting notification toggle switch's toggled event.
-        private void ToggleSwitchNotificationGreeting_OnToggled(object sender, RoutedEventArgs e)
-        {
-            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = ToggleSwitchNotificationGreeting.IsOn;
-        } // end method ToggleSwitchNotificationGreeting_OnToggled
 
         #endregion Event Handlers
     } // end class GeneralSettingsPage

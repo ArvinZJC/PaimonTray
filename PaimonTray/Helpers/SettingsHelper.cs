@@ -118,12 +118,24 @@ namespace PaimonTray.Helpers
         /// <returns>The theme.</returns>
         public static ElementTheme GetTheme()
         {
-            return ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[KeyTheme] switch
+            var themeSelection =
+                ApplicationData.Current.LocalSettings.Containers[ContainerKeySettings].Values[KeyTheme] as string;
+
+            switch (themeSelection)
             {
-                TagThemeDark => ElementTheme.Dark,
-                TagThemeLight => ElementTheme.Light,
-                _ => ElementTheme.Default
-            };
+                case TagSystem:
+                    return ElementTheme.Default;
+
+                case TagThemeDark:
+                    return ElementTheme.Dark;
+
+                case TagThemeLight:
+                    return ElementTheme.Light;
+
+                default:
+                    Log.Warning($"Invalid theme selection ({themeSelection}).");
+                    return ElementTheme.Default;
+            } // end switch-case
         } // end method GetTheme
 
         /// <summary>

@@ -161,9 +161,6 @@
     <value>Chawong</value>
     <comment>No need to translate.</comment>
   </data>
-  <data name="ChangesAppliedAfterAppRestart" xml:space="preserve">
-    <value>您所做的更改将在下次启动应用时生效。</value>
-  </data>
   <data name="Clear" xml:space="preserve">
     <value>清除</value>
   </data>
@@ -200,6 +197,9 @@
   </data>
   <data name="Language" xml:space="preserve">
     <value>语言</value>
+  </data>
+  <data name="LanguageAppliedAfterAppRestart" xml:space="preserve">
+    <value>对应用语言的更改将在下次启动应用时生效。</value>
   </data>
   <data name="LanguageEn" xml:space="preserve">
     <value>English</value>
@@ -257,6 +257,9 @@
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>在主界面上启用顶部导航窗格</value>
   </data>
+  <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
+    <value>启用后，主界面上的导航窗格显示于顶部，而不是左侧。</value>
+  </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
     <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
   </data>
@@ -284,7 +287,7 @@
     <value>在应用退出时清除通知</value>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
-    <value>在应用启动时显示一个问候通知</value>
+    <value>在应用启动时发送一个问候通知</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
     <value>若应用图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
@@ -300,6 +303,9 @@
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>更改您的通知设置</value>
+  </data>
+  <data name="NotificationsNotice" xml:space="preserve">
+    <value>请注意：当您在通知设置中允许来自此应用的通知后，下列关于发送通知的设置才会生效。</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
