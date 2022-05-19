@@ -231,10 +231,12 @@ namespace PaimonTray.Views
                     UseAlternativeLoginMethod();
                 } // end try...catch
 
-            ComboBoxServer.SelectedItem =
-                propertySetSettings[SettingsHelper.KeyServerDefault] as string == AccountsHelper.TagServerCn
-                    ? ComboBoxItemServerCn
-                    : ComboBoxItemServerGlobal;
+            ComboBoxServer.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
         } // end method ChooseLoginMethodAsync
 
         /// <summary>

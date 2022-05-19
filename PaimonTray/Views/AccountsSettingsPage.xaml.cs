@@ -81,7 +81,7 @@ namespace PaimonTray.Views
         // Handle the default server combo box's selection changed event.
         private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBoxServerDefaultSelectedItem = ComboBoxServerDefault.SelectedItem as RadioButton;
+            var comboBoxServerDefaultSelectedItem = ComboBoxServerDefault.SelectedItem as ComboBoxItem;
 
             if (comboBoxServerDefaultSelectedItem == null) return;
 

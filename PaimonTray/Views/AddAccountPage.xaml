@@ -35,7 +35,7 @@
                     Background="{ThemeResource ExpanderHeaderBackground}"
                     BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
                     BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-                    ColumnSpacing="12"
+                    ColumnSpacing="32"
                     CornerRadius="4, 4, 0, 0"
                     Grid.Row="0"
                     Padding="12">
@@ -64,6 +64,7 @@
                     <ComboBox
                         x:Name="ComboBoxServer"
                         Grid.Column="1"
+                        MinWidth="96"
                         SelectionChanged="ComboBoxServer_OnSelectionChanged"
                         VerticalAlignment="Center">
                         <ComboBoxItem

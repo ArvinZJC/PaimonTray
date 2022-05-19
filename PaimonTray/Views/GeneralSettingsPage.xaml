@@ -105,7 +105,6 @@
                 <ComboBox
                     x:Name="ComboBoxLanguage"
                     Grid.Column="1"
-                    HorizontalAlignment="Stretch"
                     Margin="0, 0, -8, 0"
                     MinWidth="152"
                     SelectionChanged="ComboBoxLanguage_OnSelectionChanged"
@@ -155,7 +154,6 @@
                 <ComboBox
                     x:Name="ComboBoxTheme"
                     Grid.Column="1"
-                    HorizontalAlignment="Stretch"
                     Margin="0, 0, -8, 0"
                     MinWidth="152"
                     SelectionChanged="ComboBoxTheme_OnSelectionChanged"
