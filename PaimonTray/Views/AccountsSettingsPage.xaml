@@ -8,6 +8,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid
+        Loaded="GridRoot_OnLoaded"
         Padding="0, 0, 0, 4"
         RowSpacing="4">
         <Grid.RowDefinitions>
@@ -19,7 +20,7 @@
         <Expander
             Grid.Row="0"
             HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
+            HorizontalContentAlignment="Stretch"
             IsExpanded="True">
             <Expander.Content>
                 <TextBlock Text="TODO" />
@@ -40,16 +41,29 @@
             ColumnSpacing="32"
             CornerRadius="4"
             Grid.Row="1"
-            Padding="16, 12, 60, 12">
+            Padding="16, 12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="TextBlockLoginAlternativeAlways"
+            <Grid
                 Grid.Column="0"
-                TextWrapping="WrapWholeWords"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    x:Name="TextBlockLoginAlternativeAlways"
+                    Grid.Row="0"
+                    TextWrapping="WrapWholeWords" />
+                <TextBlock
+                    x:Name="TextBlockLoginAlternativeAlwaysExplanation"
+                    Foreground="{ThemeResource SystemBaseMediumColor}"
+                    Grid.Row="1"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    TextWrapping="WrapWholeWords" />
+            </Grid>
             <ToggleSwitch
                 x:Name="ToggleSwitchLoginAlternativeAlways"
                 FlowDirection="RightToLeft"
@@ -58,57 +72,52 @@
                 Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
                 VerticalAlignment="Center" />
         </Grid>
-        <!-- The expander for the default server. -->
-        <Expander
+        <!-- The grid for the default server. -->
+        <Grid
+            Background="{ThemeResource ExpanderHeaderBackground}"
+            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+            ColumnSpacing="32"
+            CornerRadius="4"
             Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            Loaded="ExpanderServerDefault_OnLoaded">
-            <Expander.Content>
-                <RadioButtons
-                    x:Name="RadioButtonsServerDefault"
+            Padding="16, 12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid
+                Grid.Column="0"
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    x:Name="TextBlockServerDefault"
                     Grid.Row="0"
-                    SelectionChanged="RadioButtonsServerDefault_OnSelectionChanged">
-                    <RadioButton
-                        x:Name="RadioButtonServerCn"
-                        Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
-                    <RadioButton
-                        x:Name="RadioButtonServerGlobal"
-                        Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
-                </RadioButtons>
-            </Expander.Content>
-            <Expander.Header>
-                <Grid
-                    ColumnSpacing="32"
-                    Padding="0, 12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid
-                        Grid.Column="0"
-                        VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            x:Name="TextBlockServerDefault"
-                            Grid.Row="0"
-                            TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Name="TextBlockServerDefaultExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
-                            Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
-                    <TextBlock
-                        x:Name="TextBlockServerDefaultSelection"
-                        Grid.Column="1"
-                        VerticalAlignment="Center" />
-                </Grid>
-            </Expander.Header>
-        </Expander>
+                    TextWrapping="WrapWholeWords" />
+                <TextBlock
+                    x:Name="TextBlockServerDefaultExplanation"
+                    Foreground="{ThemeResource SystemBaseMediumColor}"
+                    Grid.Row="1"
+                    Style="{ThemeResource CaptionTextBlockStyle}"
+                    TextWrapping="WrapWholeWords" />
+            </Grid>
+            <ComboBox
+                x:Name="ComboBoxServerDefault"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Margin="0, 0, -8, 0"
+                MinWidth="96"
+                SelectionChanged="ComboBoxServerDefault_OnSelectionChanged"
+                VerticalAlignment="Center">
+                <ComboBoxItem
+                    x:Name="ComboBoxItemServerCn"
+                    Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                <ComboBoxItem
+                    x:Name="ComboBoxItemServerGlobal"
+                    Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
+            </ComboBox>
+        </Grid>
     </Grid>
 </Page>

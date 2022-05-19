@@ -191,7 +191,7 @@ namespace PaimonTray.Views
             SettingsHelper.ApplyThemeSelection();
         } // end method ComboBoxTheme_OnSelectionChanged
 
-        // Handle the root grid's loaded event
+        // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             ShowLanguageSelection();

@@ -1,8 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
 using PaimonTray.Helpers;
-using System.Linq;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -30,26 +28,12 @@ namespace PaimonTray.Views
             _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
                 .Values;
             InitializeComponent();
-            ShowLoginAlternativeAlwaysSelection();
-            ShowServerDefaultSelection();
             UpdateUiText();
         } // end constructor AccountsSettingsPage
 
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Reload the page for adding an account if necessary.
-        /// </summary>
-        private static void ReloadAddAccountPage()
-        {
-            var mainWindow = WindowsHelper.ShowMainWindow();
-            var navigationViewBody = mainWindow.NavigationViewBody;
-
-            if (navigationViewBody.SelectedItem == navigationViewBody.MenuItems.LastOrDefault())
-                mainWindow.FrameBody.Navigate(typeof(AddAccountPage), null, new EntranceNavigationTransitionInfo());
-        } // end method ReloadAddAccountPage
 
         /// <summary>
         /// Show the selection for always using the alternative login method.
@@ -65,10 +49,12 @@ namespace PaimonTray.Views
         /// </summary>
         private void ShowServerDefaultSelection()
         {
-            RadioButtonsServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
-                                                     AccountsHelper.TagServerCn
-                ? RadioButtonServerCn
-                : RadioButtonServerGlobal;
+            ComboBoxServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
         } // end method ShowServerDefaultExplanation
 
         /// <summary>
@@ -78,10 +64,12 @@ namespace PaimonTray.Views
         {
             var resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
-            RadioButtonServerCn.Content = resourceLoader.GetString("ServerCn");
-            RadioButtonServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
+            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
             TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
             TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
+            TextBlockLoginAlternativeAlwaysExplanation.Text =
+                resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
             TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
             TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");
         } // end method UpdateUiText
@@ -90,36 +78,27 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the loaded event of the expander for the default server.
-        private void ExpanderServerDefault_OnLoaded(object sender, RoutedEventArgs e)
+        // Handle the default server combo box's selection changed event.
+        private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TextBlockServerDefaultSelection.Text =
-                (RadioButtonsServerDefault.SelectedItem as RadioButton)?.Content as string;
-        } // end method ExpanderServerDefault_OnLoaded
+            var comboBoxServerDefaultSelectedItem = ComboBoxServerDefault.SelectedItem as RadioButton;
 
-        // Handle the selection changed event of the radio buttons for the default server.
-        private void RadioButtonsServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+            if (comboBoxServerDefaultSelectedItem == null) return;
+
+            _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
+        } // end method ComboBoxServerDefault_OnSelectionChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var radioButtonsServerDefaultSelectedItem = RadioButtonsServerDefault.SelectedItem as RadioButton;
-
-            if (radioButtonsServerDefaultSelectedItem == null) return;
-
-            var radioButtonsServerDefaultSelectedItemTag = radioButtonsServerDefaultSelectedItem.Tag as string;
-
-            _propertySetSettings[SettingsHelper.KeyServerDefault] = radioButtonsServerDefaultSelectedItemTag;
-
-            TextBlockServerDefaultSelection.Text = radioButtonsServerDefaultSelectedItem.Content as string;
-        } // end method RadioButtonsServerDefault_OnSelectionChanged
+            ShowLoginAlternativeAlwaysSelection();
+            ShowServerDefaultSelection();
+        } // end method GridRoot_OnLoaded
 
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
-            // It is required to reload the page for adding an account if necessary.
-            if ((bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] ==
-                ToggleSwitchLoginAlternativeAlways.IsOn) return;
-
             _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
-            ReloadAddAccountPage();
         } // end method ToggleSwitchLoginAlternativeAlways_OnToggled
 
         #endregion Event Handlers

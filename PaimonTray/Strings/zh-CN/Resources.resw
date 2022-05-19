@@ -228,7 +228,10 @@
     <value>登录</value>
   </data>
   <data name="LoginAlternativeAlways" xml:space="preserve">
-    <value>总是使用替代的登录方案来添加您的账号</value>
+    <value>总是使用替代的登录方案</value>
+  </data>
+  <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
+    <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号。</value>
   </data>
   <data name="LoginCompleteConfirm" xml:space="preserve">
     <value>在网页上登录您的账号后确认完成登录</value>
@@ -261,7 +264,7 @@
     <value>在主界面上启用顶部导航窗格</value>
   </data>
   <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
-    <value>启用后，主界面上的导航窗格显示于顶部，而不是左侧。</value>
+    <value>启用后，主界面上的导航窗格将显示于顶部，而不是左侧。</value>
   </data>
   <data name="MessageLoginAlternative" xml:space="preserve">
     <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
@@ -323,7 +326,7 @@
     <value>默认服务器</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>选择在添加账号时默认要登录的服务器。</value>
+    <value>选择默认要登录的服务器。您仍可在添加您的账号时更改服务器。</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
     <value>选择要登录的服务器。</value>
