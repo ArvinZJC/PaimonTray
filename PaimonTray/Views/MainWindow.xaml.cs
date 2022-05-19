@@ -10,9 +10,9 @@ using Serilog;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Collections;
 using Windows.Graphics;
 using Windows.Storage;
-
 
 namespace PaimonTray.Views
 {
@@ -31,6 +31,7 @@ namespace PaimonTray.Views
         private bool _isFirstLoad = true;
 
         private readonly App _app;
+        private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
 
@@ -56,14 +57,15 @@ namespace PaimonTray.Views
         public MainWindow()
         {
             _app = Application.Current as App;
+            _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
+                .Values;
             MainWinViewModel = new MainWindowViewModel();
             InitializeComponent();
             CustomiseWindow();
             UpdateUiText();
 
             MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
-            TaskbarIconApp.Visibility =
-                Visibility.Visible; // Show the taskbar icon when finishing all the other initialisation.
+            TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -124,8 +126,7 @@ namespace PaimonTray.Views
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
             ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
 
-            if ((bool)ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
-                    .Values[SettingsHelper.KeyNotificationGreeting])
+            if ((bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting])
                 new ToastContentBuilder()
                     .AddText(resourceLoader.GetString("NotificationGreetingTitle"))
                     .AddText(resourceLoader.GetString("NotificationGreetingContent"))
@@ -175,6 +176,9 @@ namespace PaimonTray.Views
 
             Activate(); // Activate the window here to prevent being flicked when moving and resizing.
             _isFirstLoad = false;
+
+            if (!(bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts])
+                new CommandsViewModel().ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 
         // Handle the root grid's loaded event.

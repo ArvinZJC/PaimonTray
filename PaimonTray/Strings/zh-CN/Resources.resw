@@ -254,6 +254,9 @@
   <data name="MainWindowShow" xml:space="preserve">
     <value>显示主界面</value>
   </data>
+  <data name="MainWindowShowWhenAppStarts" xml:space="preserve">
+    <value>在应用启动时显示主界面</value>
+  </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
     <value>在主界面上启用顶部导航窗格</value>
   </data>

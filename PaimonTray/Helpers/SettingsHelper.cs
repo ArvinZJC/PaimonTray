@@ -29,6 +29,11 @@ namespace PaimonTray.Helpers
         public const string KeyLoginAlternativeAlways = "loginAlternativeAlways";
 
         /// <summary>
+        /// The key for showing the main window when the app starts.
+        /// </summary>
+        public const string KeyMainWindowShowWhenAppStarts = "mainWindowShowWhenAppStarts";
+
+        /// <summary>
         /// The key for the main window's top navigation pane.
         /// </summary>
         public const string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
@@ -154,6 +159,11 @@ namespace PaimonTray.Helpers
                 propertySetSettings[KeyLoginAlternativeAlways] is not bool)
                 InitialiseSetting(KeyLoginAlternativeAlways,
                     "The setting for always using the alternative login method", false);
+
+            if (!propertySetSettings.ContainsKey(KeyMainWindowShowWhenAppStarts) ||
+                propertySetSettings[KeyMainWindowShowWhenAppStarts] is not bool)
+                InitialiseSetting(KeyMainWindowShowWhenAppStarts,
+                    "The setting for showing the main window when the app starts", false);
 
             if (!propertySetSettings.ContainsKey(KeyMainWindowTopNavigationPane) ||
                 propertySetSettings[KeyMainWindowTopNavigationPane] is not bool)

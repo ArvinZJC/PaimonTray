@@ -10,7 +10,6 @@ using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Notifications;
-using Microsoft.UI.Xaml.Controls.AnimatedVisuals;
 
 namespace PaimonTray.ViewModels
 {
@@ -21,12 +20,10 @@ namespace PaimonTray.ViewModels
     {
         #region Properties
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// The command to add an account.
         /// </summary>
         public ICommand AddAccountCommand
-#pragma warning restore CA1822 // Mark members as static
 
         {
             get

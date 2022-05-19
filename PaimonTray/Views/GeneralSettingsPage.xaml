@@ -30,48 +30,47 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!-- The expander for configuring launch on Windows startup. -->
-            <Expander
+            <!-- The grid for configuring launch on Windows startup. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
                 Grid.Row="0"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Left">
-                <Expander.Header>
-                    <Grid
-                        ColumnSpacing="32"
-                        Padding="0, 12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid
-                            Grid.Column="0"
-                            VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                x:Name="TextBlockLaunchOnWindowsStartup"
-                                Grid.Row="0"
-                                TextWrapping="WrapWholeWords" />
-                            <TextBlock
-                                x:Name="TextBlockLaunchOnWindowsStartupExplanation"
-                                Foreground="{ThemeResource SystemBaseMediumColor}"
-                                Grid.Row="1"
-                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                TextWrapping="WrapWholeWords" />
-                        </Grid>
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Center">
-                            <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
-                                <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
-                            </Hyperlink>
-                        </TextBlock>
-                    </Grid>
-                </Expander.Header>
-            </Expander>
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockLaunchOnWindowsStartup"
+                        Grid.Row="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockLaunchOnWindowsStartupExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+                <TextBlock
+                    Grid.Column="1"
+                    VerticalAlignment="Center">
+                    <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
+                        <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
             <!-- The language grid. -->
             <Grid
                 Background="{ThemeResource ExpanderHeaderBackground}"
@@ -80,7 +79,7 @@
                 ColumnSpacing="32"
                 CornerRadius="4"
                 Grid.Row="1"
-                Padding="16, 12, 8, 12">
+                Padding="16, 12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -107,6 +106,7 @@
                     x:Name="ComboBoxLanguage"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
+                    Margin="0, 0, -8, 0"
                     MinWidth="152"
                     SelectionChanged="ComboBoxLanguage_OnSelectionChanged"
                     VerticalAlignment="Center">
@@ -129,7 +129,7 @@
                 ColumnSpacing="32"
                 CornerRadius="4"
                 Grid.Row="2"
-                Padding="16, 12, 8, 12">
+                Padding="16, 12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -156,6 +156,7 @@
                     x:Name="ComboBoxTheme"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
+                    Margin="0, 0, -8, 0"
                     MinWidth="152"
                     SelectionChanged="ComboBoxTheme_OnSelectionChanged"
                     VerticalAlignment="Center">
@@ -228,7 +229,7 @@
                     </Grid>
                 </Expander.Header>
             </Expander>
-            <!-- The grid for configuring the main window's top navigation pane. -->
+            <!-- The grid for showing the main window when the app starts. -->
             <Grid
                 Background="{ThemeResource ExpanderHeaderBackground}"
                 BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
@@ -236,6 +237,31 @@
                 ColumnSpacing="32"
                 CornerRadius="4"
                 Grid.Row="4"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    x:Name="TextBlockMainWindowShowWhenAppStarts"
+                    TextWrapping="WrapWholeWords"
+                    VerticalAlignment="Center" />
+                <ToggleSwitch
+                    x:Name="ToggleSwitchMainWindowShowWhenAppStarts"
+                    FlowDirection="RightToLeft"
+                    Grid.Column="1"
+                    Margin="0, -2"
+                    Toggled="ToggleSwitchMainWindowShowWhenAppStarts_OnToggled"
+                    VerticalAlignment="Center" />
+            </Grid>
+            <!-- The grid for configuring the main window's top navigation pane. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="5"
                 Padding="16, 12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

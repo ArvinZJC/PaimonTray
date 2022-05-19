@@ -52,6 +52,15 @@ namespace PaimonTray.Views
         } // end method ShowLanguageSelection
 
         /// <summary>
+        /// Show the selection of showing the main window when the app starts.
+        /// </summary>
+        private void ShowMainWindowShowWhenAppStartsSelection()
+        {
+            ToggleSwitchMainWindowTopNavigationPane.IsOn =
+                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts];
+        } // end method ShowMainWindowShowWhenAppStartsSelection
+
+        /// <summary>
         /// Show the selection of the main window's top navigation pane.
         /// </summary>
         private void ShowMainWindowTopNavigationPaneSelection()
@@ -114,6 +123,7 @@ namespace PaimonTray.Views
             TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
             TextBlockLaunchOnWindowsStartupExplanation.Text =
                 resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
+            TextBlockMainWindowShowWhenAppStarts.Text = resourceLoader.GetString("MainWindowShowWhenAppStarts");
             TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
             TextBlockMainWindowTopNavigationPaneExplanation.Text =
                 resourceLoader.GetString("MainWindowTopNavigationPaneExplanation");
@@ -185,6 +195,7 @@ namespace PaimonTray.Views
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             ShowLanguageSelection();
+            ShowMainWindowShowWhenAppStartsSelection();
             ShowMainWindowTopNavigationPaneSelection();
             ShowNotificationClearSelection();
             ShowNotificationGreetingSelection();
@@ -214,6 +225,13 @@ namespace PaimonTray.Views
         {
             sender.Margin = new Thickness(0);
         } // end method InfoBarLanguageAppliedAfterAppRestart_OnClosing
+
+        // Handle the toggled event of the toggle switch of the setting for showing the main window when the app starts.
+        private void ToggleSwitchMainWindowShowWhenAppStarts_OnToggled(object sender, RoutedEventArgs e)
+        {
+            _propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] =
+                ToggleSwitchMainWindowShowWhenAppStarts.IsOn;
+        } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
 
         // Handle the toggled event of the toggle switch of the setting for the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
