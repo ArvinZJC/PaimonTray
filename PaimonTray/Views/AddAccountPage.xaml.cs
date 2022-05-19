@@ -140,8 +140,10 @@ namespace PaimonTray.Views
             var uriLoginMiHoYo = GetLoginWebPageUri();
             var workArea = DisplayArea
                 .GetFromWindowId(WindowsHelper.ShowMainWindow().WinId, DisplayAreaFallback.Primary).WorkArea;
-            var pageMaxHeight = workArea.Height - 2 * AppConstantsHelper.MainWindowPositionOffset;
-            var pageMaxWidth = workArea.Width - 2 * AppConstantsHelper.MainWindowPositionOffset;
+
+            // The work area's height/width minus the specific constant is primarily for reserving space for the navigation pane.
+            var pageMaxHeight = workArea.Height - 6 * AppConstantsHelper.MainWindowPositionOffset;
+            var pageMaxWidth = workArea.Width - 6 * AppConstantsHelper.MainWindowPositionOffset;
 
             CheckAccountsCount();
 
@@ -206,7 +208,6 @@ namespace PaimonTray.Views
                 {
                     Log.Information(
                         $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
-                    throw new NotImplementedException();
                     _isWebView2Available = true;
                     _webView2LoginWebPage = new WebView2();
                     await _webView2LoginWebPage.EnsureCoreWebView2Async();
