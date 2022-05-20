@@ -198,8 +198,8 @@
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="LanguageAppliedAfterAppRestart" xml:space="preserve">
-    <value>The change to the app language will be applied the next time the app is started.</value>
+  <data name="LanguageAppliedLater" xml:space="preserve">
+    <value>The change to the language will be applied the next time the app is started.</value>
   </data>
   <data name="LanguageEn" xml:space="preserve">
     <value>English</value>
@@ -229,6 +229,9 @@
   </data>
   <data name="LoginAlternativeAlways" xml:space="preserve">
     <value>Always use the alternative login method</value>
+  </data>
+  <data name="LoginAlternativeAlwaysAppliedLater" xml:space="preserve">
+    <value>The change to always using the alternative login method will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
     <value>When enabled, the app will always ask you to enter cookies manually to add your account, even if the web page login method is available.</value>
@@ -324,6 +327,9 @@
   </data>
   <data name="ServerDefault" xml:space="preserve">
     <value>Default server</value>
+  </data>
+  <data name="ServerDefaultAppliedLater" xml:space="preserve">
+    <value>The change to the default server will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
     <value>Select the default server to log in. You can still change the server when adding your account.</value>

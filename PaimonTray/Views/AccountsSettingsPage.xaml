@@ -9,115 +9,132 @@
     <!-- The root grid. -->
     <Grid
         Loaded="GridRoot_OnLoaded"
-        Padding="0, 0, 0, 4"
-        RowSpacing="4">
+        Padding="0, 0, 0, 4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- The accounts management expander. -->
-        <Expander
-            Grid.Row="0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            IsExpanded="True">
-            <Expander.Content>
-                <TextBlock Text="TODO" />
-            </Expander.Content>
-            <Expander.Header>
-                <TextBlock
-                    x:Name="TextBlockAccountsManagement"
-                    Grid.Row="0"
-                    Padding="0, 20"
-                    TextWrapping="WrapWholeWords" />
-            </Expander.Header>
-        </Expander>
-        <!-- The grid for always using the alternative login method. -->
+        <InfoBar
+            x:Name="InfoBarLoginAlternativeAlwaysAppliedLater"
+            Closing="InfoBar_OnClosing"
+            Grid.Row="0" />
+        <InfoBar
+            x:Name="InfoBarServerDefaultAppliedLater"
+            Closing="InfoBar_OnClosing"
+            Grid.Row="1" />
+        <!-- The content grid. -->
         <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="32"
-            CornerRadius="4"
-            Grid.Row="1"
-            Padding="16, 12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid
-                Grid.Column="0"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    x:Name="TextBlockLoginAlternativeAlways"
-                    Grid.Row="0"
-                    TextWrapping="WrapWholeWords" />
-                <TextBlock
-                    x:Name="TextBlockLoginAlternativeAlwaysExplanation"
-                    Foreground="{ThemeResource SystemBaseMediumColor}"
-                    Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}"
-                    TextWrapping="WrapWholeWords" />
-            </Grid>
-            <ToggleSwitch
-                x:Name="ToggleSwitchLoginAlternativeAlways"
-                FlowDirection="RightToLeft"
-                Grid.Column="1"
-                Margin="0, -2"
-                Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
-                VerticalAlignment="Center" />
-        </Grid>
-        <!-- The grid for the default server. -->
-        <Grid
-            Background="{ThemeResource ExpanderHeaderBackground}"
-            BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-            BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-            ColumnSpacing="32"
-            CornerRadius="4"
             Grid.Row="2"
-            Padding="16, 12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            RowSpacing="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- TODO: The accounts management expander. -->
+            <Expander
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                IsExpanded="True">
+                <Expander.Content>
+                    <TextBlock Text="TODO" />
+                </Expander.Content>
+                <Expander.Header>
+                    <TextBlock
+                        x:Name="TextBlockAccountsManagement"
+                        Grid.Row="0"
+                        Padding="0, 20"
+                        TextWrapping="WrapWholeWords" />
+                </Expander.Header>
+            </Expander>
+            <!-- The grid for always using the alternative login method. -->
             <Grid
-                Grid.Column="0"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    x:Name="TextBlockServerDefault"
-                    Grid.Row="0"
-                    TextWrapping="WrapWholeWords" />
-                <TextBlock
-                    x:Name="TextBlockServerDefaultExplanation"
-                    Foreground="{ThemeResource SystemBaseMediumColor}"
-                    Grid.Row="1"
-                    Style="{ThemeResource CaptionTextBlockStyle}"
-                    TextWrapping="WrapWholeWords" />
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="1"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockLoginAlternativeAlways"
+                        Grid.Row="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockLoginAlternativeAlwaysExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+                <ToggleSwitch
+                    x:Name="ToggleSwitchLoginAlternativeAlways"
+                    FlowDirection="RightToLeft"
+                    Grid.Column="1"
+                    Margin="0, -2"
+                    Toggled="ToggleSwitchLoginAlternativeAlways_OnToggled"
+                    VerticalAlignment="Center" />
             </Grid>
-            <ComboBox
-                x:Name="ComboBoxServerDefault"
-                Grid.Column="1"
-                Margin="0, 0, -8, 0"
-                SelectionChanged="ComboBoxServerDefault_OnSelectionChanged"
-                VerticalAlignment="Center">
-                <ComboBoxItem
-                    x:Name="ComboBoxItemServerCn"
-                    Loaded="ComboBoxItemServer_OnLoaded"
-                    Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
-                <ComboBoxItem
-                    x:Name="ComboBoxItemServerGlobal"
-                    Loaded="ComboBoxItemServer_OnLoaded"
-                    Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
-            </ComboBox>
+            <!-- The grid for the default server. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="2"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockServerDefault"
+                        Grid.Row="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockServerDefaultExplanation"
+                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+                <ComboBox
+                    x:Name="ComboBoxServerDefault"
+                    Grid.Column="1"
+                    Margin="0, 0, -8, 0"
+                    SelectionChanged="ComboBoxServerDefault_OnSelectionChanged"
+                    VerticalAlignment="Center">
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemServerCn"
+                        Loaded="ComboBoxItemServer_OnLoaded"
+                        Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemServerGlobal"
+                        Loaded="ComboBoxItemServer_OnLoaded"
+                        Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
+                </ComboBox>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

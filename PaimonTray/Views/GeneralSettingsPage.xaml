@@ -14,10 +14,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- The info bar for informing the language applied after the app restart. -->
+        <!-- The info bar for informing the language applied later. -->
         <InfoBar
-            x:Name="InfoBarLanguageAppliedAfterAppRestart"
-            Closing="InfoBarLanguageAppliedAfterAppRestart_OnClosing"
+            x:Name="InfoBarLanguageAppliedLater"
+            Closing="InfoBarLanguageAppliedLater_OnClosing"
             Grid.Row="0"
             IsClosable="False" />
         <!-- The content grid. -->

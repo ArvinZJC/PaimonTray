@@ -14,7 +14,7 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class GeneralSettingsPage
     {
-        #region Fields;
+        #region Fields
 
         private readonly IPropertySet _propertySetSettings;
 
@@ -115,7 +115,7 @@ namespace PaimonTray.Views
             ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
             ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
             ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
-            InfoBarLanguageAppliedAfterAppRestart.Title = resourceLoader.GetString("LanguageAppliedAfterAppRestart");
+            InfoBarLanguageAppliedLater.Title = resourceLoader.GetString("LanguageAppliedLater");
             RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
             RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
@@ -191,11 +191,10 @@ namespace PaimonTray.Views
 
             _propertySetSettings[SettingsHelper.KeyLanguage] = comboBoxLanguageSelectedItemTag;
 
-            InfoBarLanguageAppliedAfterAppRestart.IsOpen = comboBoxLanguageSelectedItemTag !=
-                                                           (Application.Current as App)?.LanguageSelectionApplied;
+            InfoBarLanguageAppliedLater.IsOpen = comboBoxLanguageSelectedItemTag !=
+                                                 (Application.Current as App)?.LanguageSelectionApplied;
 
-            if (InfoBarLanguageAppliedAfterAppRestart.IsOpen)
-                InfoBarLanguageAppliedAfterAppRestart.Margin = new Thickness(0, 0, 0, 8);
+            if (InfoBarLanguageAppliedLater.IsOpen) InfoBarLanguageAppliedLater.Margin = new Thickness(0, 0, 0, 4);
         } // end method ComboBoxLanguage_OnSelectionChanged
 
         // Handle the theme combo box's selection changed event.
@@ -237,12 +236,12 @@ namespace PaimonTray.Views
         } // end method HyperlinkNotificationsLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static
-        // Handle the closing event of the info bar for informing the language applied after the app restart.
-        private void InfoBarLanguageAppliedAfterAppRestart_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
+        // Handle the closing event of the info bar for informing the language applied later.
+        private void InfoBarLanguageAppliedLater_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
 #pragma warning restore CA1822 // Mark members as static
         {
             sender.Margin = new Thickness(0);
-        } // end method InfoBarLanguageAppliedAfterAppRestart_OnClosing
+        } // end method InfoBarLanguageAppliedLater_OnClosing
 
         // Handle the toggled event of the toggle switch of the setting for showing the main window when the app starts.
         private void ToggleSwitchMainWindowShowWhenAppStarts_OnToggled(object sender, RoutedEventArgs e)

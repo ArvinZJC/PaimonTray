@@ -66,6 +66,9 @@ namespace PaimonTray.Views
 
             ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
             ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            InfoBarLoginAlternativeAlwaysAppliedLater.Title =
+                resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
+            InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
             TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
             TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
             TextBlockLoginAlternativeAlwaysExplanation.Text =
@@ -92,9 +95,17 @@ namespace PaimonTray.Views
         {
             var comboBoxServerDefaultSelectedItem = ComboBoxServerDefault.SelectedItem as ComboBoxItem;
 
-            if (comboBoxServerDefaultSelectedItem == null) return;
+            if (comboBoxServerDefaultSelectedItem == null ||
+                _propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
+                comboBoxServerDefaultSelectedItem.Tag as string) return;
 
             _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
+
+            if ((WindowsHelper.ShowMainWindow().NavigationViewBody.SelectedItem as NavigationViewItem)?.Tag as string !=
+                AccountsHelper.TagAddAccount) return;
+
+            InfoBarServerDefaultAppliedLater.IsOpen = true;
+            InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, 4);
         } // end method ComboBoxServerDefault_OnSelectionChanged
 
         // Handle the root grid's loaded event.
@@ -104,10 +115,27 @@ namespace PaimonTray.Views
             ShowServerDefaultSelection();
         } // end method GridRoot_OnLoaded
 
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the info bar's closing event.
+        private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            sender.Margin = new Thickness(0);
+        } // end method InfoBar_OnClosing
+
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
+            if ((bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] ==
+                ToggleSwitchLoginAlternativeAlways.IsOn) return;
+
             _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
+
+            if ((WindowsHelper.ShowMainWindow().NavigationViewBody.SelectedItem as NavigationViewItem)?.Tag as string !=
+                AccountsHelper.TagAddAccount) return;
+
+            InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
+            InfoBarLoginAlternativeAlwaysAppliedLater.Margin = new Thickness(0, 0, 0, 4);
         } // end method ToggleSwitchLoginAlternativeAlways_OnToggled
 
         #endregion Event Handlers

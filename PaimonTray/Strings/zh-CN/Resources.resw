@@ -198,8 +198,8 @@
   <data name="Language" xml:space="preserve">
     <value>语言</value>
   </data>
-  <data name="LanguageAppliedAfterAppRestart" xml:space="preserve">
-    <value>对应用语言的更改将在下次启动应用时生效。</value>
+  <data name="LanguageAppliedLater" xml:space="preserve">
+    <value>对语言的更改将在下次启动应用时生效。</value>
   </data>
   <data name="LanguageEn" xml:space="preserve">
     <value>English</value>
@@ -229,6 +229,9 @@
   </data>
   <data name="LoginAlternativeAlways" xml:space="preserve">
     <value>总是使用替代的登录方案</value>
+  </data>
+  <data name="LoginAlternativeAlwaysAppliedLater" xml:space="preserve">
+    <value>对总是使用替代的登录方案的更改将在下次进入添加账号的页面时生效。</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
     <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号。</value>
@@ -324,6 +327,9 @@
   </data>
   <data name="ServerDefault" xml:space="preserve">
     <value>默认服务器</value>
+  </data>
+  <data name="ServerDefaultAppliedLater" xml:space="preserve">
+    <value>对默认服务器的更改将在下次进入添加账号的页面时生效。</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
     <value>选择默认要登录的服务器。您仍可在添加您的账号时更改服务器。</value>
