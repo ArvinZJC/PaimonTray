@@ -15,10 +15,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!-- The info bar for informing of applying always using the alternative login method later. -->
         <InfoBar
             x:Name="InfoBarLoginAlternativeAlwaysAppliedLater"
             Closing="InfoBar_OnClosing"
             Grid.Row="0" />
+        <!-- The info bar for informing of applying the default server later. -->
         <InfoBar
             x:Name="InfoBarServerDefaultAppliedLater"
             Closing="InfoBar_OnClosing"

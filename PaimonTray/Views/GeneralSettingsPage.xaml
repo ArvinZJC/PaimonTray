@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- The info bar for informing the language applied later. -->
+        <!-- The info bar for informing of applying the language later. -->
         <InfoBar
             x:Name="InfoBarLanguageAppliedLater"
             Closing="InfoBarLanguageAppliedLater_OnClosing"
