@@ -305,13 +305,13 @@
     <value>Notifications</value>
   </data>
   <data name="NotificationsExplanation" xml:space="preserve">
-    <value>Modify your notification settings.</value>
+    <value>Modify your notifications settings.</value>
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
-    <value>Change notification settings</value>
+    <value>Change notifications settings</value>
   </data>
   <data name="NotificationsNotice" xml:space="preserve">
-    <value>Please note that the following settings regarding sending notifications take effect after you allow notifications from the app in the notification settings.</value>
+    <value>Please note that the following settings regarding sending notifications take effect after you allow notifications from the app in the notifications settings.</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
