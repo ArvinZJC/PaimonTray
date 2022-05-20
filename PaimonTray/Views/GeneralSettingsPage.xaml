@@ -106,17 +106,19 @@
                     x:Name="ComboBoxLanguage"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
-                    MinWidth="152"
                     SelectionChanged="ComboBoxLanguage_OnSelectionChanged"
                     VerticalAlignment="Center">
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageSystem"
+                        Loaded="ComboBoxItemLanguage_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageEn"
+                        Loaded="ComboBoxItemLanguage_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageZhCn"
+                        Loaded="ComboBoxItemLanguage_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
                 </ComboBox>
             </Grid>
@@ -155,17 +157,19 @@
                     x:Name="ComboBoxTheme"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
-                    MinWidth="152"
                     SelectionChanged="ComboBoxTheme_OnSelectionChanged"
                     VerticalAlignment="Center">
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeSystem"
+                        Loaded="ComboBoxItemTheme_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagSystem}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeLight"
+                        Loaded="ComboBoxItemTheme_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeDark"
+                        Loaded="ComboBoxItemTheme_OnLoaded"
                         Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
                 </ComboBox>
             </Grid>

@@ -64,14 +64,15 @@
                     <ComboBox
                         x:Name="ComboBoxServer"
                         Grid.Column="1"
-                        MinWidth="96"
                         SelectionChanged="ComboBoxServer_OnSelectionChanged"
                         VerticalAlignment="Center">
                         <ComboBoxItem
                             x:Name="ComboBoxItemServerCn"
+                            Loaded="ComboBoxItemServer_OnLoaded"
                             Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
                         <ComboBoxItem
                             x:Name="ComboBoxItemServerGlobal"
+                            Loaded="ComboBoxItemServer_OnLoaded"
                             Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
                     </ComboBox>
                 </Grid>

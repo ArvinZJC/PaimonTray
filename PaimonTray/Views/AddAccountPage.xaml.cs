@@ -495,6 +495,15 @@ namespace PaimonTray.Views
             AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOn"); // NormalOffToNormalOn
         } // end method ButtonLoginCompleteConfirm_OnPointerReleased
 
+        // Handle the server combo box item's loaded event.
+        private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemServerActualWidth = ((ComboBoxItem)sender).ActualWidth;
+
+            if (ComboBoxServer.MinWidth < comboBoxItemServerActualWidth)
+                ComboBoxServer.MinWidth = comboBoxItemServerActualWidth;
+        } // end method ComboBoxItemServer_OnLoaded
+
         // Handle the server combo box's selection changed event.
         private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

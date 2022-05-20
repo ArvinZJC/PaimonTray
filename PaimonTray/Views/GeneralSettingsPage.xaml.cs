@@ -14,7 +14,7 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class GeneralSettingsPage
     {
-        #region Fields
+        #region Fields;
 
         private readonly IPropertySet _propertySetSettings;
 
@@ -161,6 +161,24 @@ namespace PaimonTray.Views
         {
             _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = CheckBoxNotificationGreeting.IsChecked;
         } // end method CheckBoxNotificationGreeting_OnUnchecked
+
+        // Handle the language combo box item's loaded event.
+        private void ComboBoxItemLanguage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemLanguageActualWidth = ((ComboBoxItem)sender).ActualWidth;
+
+            if (ComboBoxLanguage.MinWidth < comboBoxItemLanguageActualWidth)
+                ComboBoxLanguage.MinWidth = comboBoxItemLanguageActualWidth;
+        } // end method ComboBoxItemLanguage_OnLoaded
+
+        // Handle the theme combo box item's loaded event.
+        private void ComboBoxItemTheme_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemThemeActualWidth = ((ComboBoxItem)sender).ActualWidth;
+
+            if (ComboBoxTheme.MinWidth < comboBoxItemThemeActualWidth)
+                ComboBoxTheme.MinWidth = comboBoxItemThemeActualWidth;
+        } // end method ComboBoxItemTheme_OnLoaded
 
         // Handle the language combo box's selection changed event.
         private void ComboBoxLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

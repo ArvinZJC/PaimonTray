@@ -78,6 +78,15 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
+        // Handle the server combo box item's loaded event.
+        private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemServerActualWidth = ((ComboBoxItem)sender).ActualWidth;
+
+            if (ComboBoxServerDefault.MinWidth < comboBoxItemServerActualWidth)
+                ComboBoxServerDefault.MinWidth = comboBoxItemServerActualWidth;
+        } // end method ComboBoxItemServer_OnLoaded
+
         // Handle the default server combo box's selection changed event.
         private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

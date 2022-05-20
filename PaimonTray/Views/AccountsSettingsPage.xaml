@@ -107,14 +107,15 @@
                 x:Name="ComboBoxServerDefault"
                 Grid.Column="1"
                 Margin="0, 0, -8, 0"
-                MinWidth="96"
                 SelectionChanged="ComboBoxServerDefault_OnSelectionChanged"
                 VerticalAlignment="Center">
                 <ComboBoxItem
                     x:Name="ComboBoxItemServerCn"
+                    Loaded="ComboBoxItemServer_OnLoaded"
                     Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
                 <ComboBoxItem
                     x:Name="ComboBoxItemServerGlobal"
+                    Loaded="ComboBoxItemServer_OnLoaded"
                     Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
             </ComboBox>
         </Grid>
