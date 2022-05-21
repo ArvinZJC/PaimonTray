@@ -8,7 +8,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Activated="SettingsWindow_OnActivated">
     <!-- The root grid. -->
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        Loaded="GridRoot_OnLoaded">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -69,7 +71,6 @@
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
-            Loaded="NavigationViewBody_OnLoaded"
             SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem x:Name="NavigationViewItemBodyAbout">

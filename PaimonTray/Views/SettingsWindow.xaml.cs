@@ -131,6 +131,12 @@ namespace PaimonTray.Views
 
         #region Events
 
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Activate();
+        } // end method GridRoot_OnLoaded
+
         // Handle the title bar grid's actual theme changed event.
         private void GridTitleBar_OnActualThemeChanged(FrameworkElement sender, object args)
         {
@@ -147,12 +153,6 @@ namespace PaimonTray.Views
                 ? new Thickness(18, 18, 18, 0)
                 : new Thickness(56, 18, 56, 0);
         } // end method NavigationViewBody_OnDisplayModeChanged
-
-        // Handle the body navigation view's loaded event.
-        private void NavigationViewBody_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Activate();
-        } // end method NavigationViewBody_OnLoaded
 
         // Handle the body navigation view's selection changed event.
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
