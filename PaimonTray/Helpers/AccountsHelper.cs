@@ -42,7 +42,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The max number of accounts.
         /// </summary>
-        public const int CountAccountsMax = 2;
+        public const int CountAccountsMax = 5;
 
         /// <summary>
         /// The Accept header value.
