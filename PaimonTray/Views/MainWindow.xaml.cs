@@ -206,7 +206,7 @@ namespace PaimonTray.Views
                 pageType = typeof(AddAccountPage);
             else
             {
-                pageType = typeof(GameDataPage);
+                pageType = typeof(RealTimeNotesPage);
                 parameter = selectedItem.Tag;
             } // end if...else
 

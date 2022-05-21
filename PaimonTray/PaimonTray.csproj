@@ -49,8 +49,8 @@
     <None Remove="Views\AboutAppPage.xaml" />
     <None Remove="Views\AccountsSettingsPage.xaml" />
     <None Remove="Views\AddAccountPage.xaml" />
-    <None Remove="Views\GameDataPage.xaml" />
     <None Remove="Views\GeneralSettingsPage.xaml" />
+    <None Remove="Views\RealTimeNotesPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.48" />
@@ -78,7 +78,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <Page Update="Views\GameDataPage.xaml">
+    <Page Update="Views\RealTimeNotesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\AddAccountPage.xaml">

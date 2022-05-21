@@ -5,28 +5,28 @@ using System.Collections.Generic;
 namespace PaimonTray.Views
 {
     /// <summary>
-    /// The game data page.
+    /// The real-time notes page.
     /// </summary>
-    public sealed partial class GameDataPage
+    public sealed partial class RealTimeNotesPage
     {
         #region Constructors
 
         /// <summary>
-        /// Initialise the game data page.
+        /// Initialise the real-time notes page.
         /// </summary>
-        public GameDataPage()
+        public RealTimeNotesPage()
         {
             InitializeComponent();
-        } // end constructor GameDataPage
+        } // end constructor RealTimeNotesPage
 
         #endregion Constructors
 
         #region Event Handlers
 
         /// <summary>
-        /// Invoked when the <see cref="GameDataPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
+        /// Invoked when the <see cref="RealTimeNotesPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current <see cref="GameDataPage"/>.</param>
+        /// <param name="args">Details about the pending navigation that will load the current <see cref="RealTimeNotesPage"/>.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             var parameter = (KeyValuePair<string, string>)args.Parameter;
@@ -37,5 +37,5 @@ namespace PaimonTray.Views
         } // end method OnNavigatedTo
 
         #endregion Event Handlers
-    } // end class GameDataPage
+    } // end class RealTimeNotesPage
 } // end namespace PaimonTray.Views
