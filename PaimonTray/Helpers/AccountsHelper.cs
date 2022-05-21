@@ -110,9 +110,9 @@ namespace PaimonTray.Helpers
         public const string KeyServer = "server";
 
         /// <summary>
-        /// The tag for adding an account.
+        /// The status key.
         /// </summary>
-        public const string TagAddAccount = "addAccount";
+        public const string KeyStatus = "status";
 
         /// <summary>
         /// The CN server tag.
@@ -123,6 +123,26 @@ namespace PaimonTray.Helpers
         /// The global server tag.
         /// </summary>
         public const string TagServerGlobal = "global";
+
+        /// <summary>
+        /// The adding status tag.
+        /// </summary>
+        public const string TagStatusAdding = "adding";
+
+        /// <summary>
+        /// The expired status tag.
+        /// </summary>
+        public const string TagStatusExpired = "expired";
+
+        /// <summary>
+        /// The ready status tag.
+        /// </summary>
+        public const string TagStatusReady = "ready";
+
+        /// <summary>
+        /// The updating status tag.
+        /// </summary>
+        public const string TagStatusUpdating = "updating";
 
         /// <summary>
         /// The URL for the CN server to get characters.
@@ -190,6 +210,8 @@ namespace PaimonTray.Helpers
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
+
+            CheckAccounts();
         } // end constructor AccountsHelper
 
         #endregion Constructors
@@ -268,6 +290,22 @@ namespace PaimonTray.Helpers
 
             return true;
         } // end method AddOrUpdateCharactersNavigation
+
+        /// <summary>
+        /// Check the accounts.
+        /// </summary>
+        private void CheckAccounts()
+        {
+            // TODO: Status adding/updating consider continue storing characters; expired needs user attention
+            if (CountAccounts() <= 0) return;
+
+            foreach (var propertySetAccount in _applicationDataContainerAccounts.Containers.Values.ToImmutableList()
+                         .Select(applicationDataContainerAccount => applicationDataContainerAccount.Values)
+                         .Where(propertySetAccount =>
+                             !new[] { TagStatusAdding, TagStatusExpired, TagStatusReady, TagStatusUpdating }.Contains(
+                                 propertySetAccount[KeyStatus])))
+                propertySetAccount[KeyStatus] = TagStatusExpired; // TODO: check cookies to change to expired or ready.
+        } // end method CheckAccounts
 
         /// <summary>
         /// Count the accounts added.
@@ -388,11 +426,12 @@ namespace PaimonTray.Helpers
             } // end if
 
             var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
+            var propertySetAccount = applicationDataContainerAccount.Values;
 
             if (characters.Count == 0)
             {
                 applicationDataContainerAccount.DeleteContainer(ContainerKeyCharacters);
-                applicationDataContainerAccount.Values[KeyIsEnabled] = true;
+                propertySetAccount[KeyStatus] = TagStatusReady;
                 RemoveCharactersNavigation(containerKeyAccount);
                 return;
             } // end if
@@ -426,7 +465,7 @@ namespace PaimonTray.Helpers
                 containerKeysCharacter.Add(character.UserId);
             } // end foreach
 
-            applicationDataContainerAccount.Values[KeyIsEnabled] = true;
+            propertySetAccount[KeyStatus] = TagStatusReady;
             AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
         } // end method StoreCharacters
 

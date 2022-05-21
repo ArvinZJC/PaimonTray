@@ -40,7 +40,7 @@ namespace PaimonTray.ViewModels
                     if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };
                 xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend };
-                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AddAccount");
+                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AccountAdd");
                 return xamlUiCommand;
             } // end get
         } // end property AddAccountCommand
@@ -134,6 +134,9 @@ namespace PaimonTray.ViewModels
                         mainWindow.Hide();
                         mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
                             resourceLoader.GetString("MainWindowShow");
+
+                        if (mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled)
+                            mainWindow.NavigationViewBody.SelectedItem = mainWindow.NavigationViewItemBodyRealTimeNotes;
                     }
                     else
                     {

@@ -28,9 +28,9 @@ namespace PaimonTray.Views
         /// <summary>
         /// A flag indicating if it is the 1st time the window is loaded.
         /// </summary>
-        private bool _isFirstLoad = true;
+        private bool _isFirstLoad;
 
-        private readonly App _app;
+        private readonly EntranceNavigationTransitionInfo _entranceNavigationTransitionInfo;
         private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
@@ -41,6 +41,11 @@ namespace PaimonTray.Views
         /// The main window's <see cref="MainWindowViewModel"/>.
         /// </summary>
         public MainWindowViewModel MainWinViewModel { get; }
+
+        /// <summary>
+        /// The parameter for navigating to the real-time notes page.
+        /// </summary>
+        public object RealTimeNotesPageParameter { get; set; }
 
         /// <summary>
         /// The main window's <see cref="WindowId"/>.
@@ -56,7 +61,8 @@ namespace PaimonTray.Views
         /// </summary>
         public MainWindow()
         {
-            _app = Application.Current as App;
+            _entranceNavigationTransitionInfo = new EntranceNavigationTransitionInfo();
+            _isFirstLoad = true;
             _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
                 .Values;
             MainWinViewModel = new MainWindowViewModel();
@@ -64,7 +70,8 @@ namespace PaimonTray.Views
             CustomiseWindow();
             UpdateUiText();
 
-            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = (Application.Current as App)?.LogsDirectory;
+            NavigationViewBody.SelectedItem = NavigationViewItemBodyRealTimeNotes;
             TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
         } // end constructor MainWindow
 
@@ -124,7 +131,7 @@ namespace PaimonTray.Views
             TaskbarIconApp.ToolTipText =
                 $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
-            ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AddAccount"));
+            ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AccountAdd"));
 
             if ((bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting])
                 new ToastContentBuilder()
@@ -181,36 +188,24 @@ namespace PaimonTray.Views
                 new CommandsViewModel().ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var shouldSelectFirst = true;
-
-            foreach (var containerKeyAccount in ApplicationData.Current.LocalSettings
-                         .Containers[AccountsHelper.ContainerKeyAccounts].Containers.Keys)
-                if (_app.AccHelper.AddOrUpdateCharactersNavigation(containerKeyAccount, null, shouldSelectFirst))
-                    shouldSelectFirst = false;
-        } // end method GridRoot_OnLoaded
-
         // Handle the body navigation view's selection changed event.
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
             NavigationViewSelectionChangedEventArgs args)
         {
             Type pageType;
             object parameter = null;
-            var selectedItem = args.SelectedItem as NavigationViewItem;
+            var navigationViewBodySelectedItem = NavigationViewBody.SelectedItem as NavigationViewItem;
 
-            if (selectedItem == null) return;
+            if (navigationViewBodySelectedItem == null) return;
 
-            if (selectedItem == NavigationViewItemBodyAddAccount)
-                pageType = typeof(AddAccountPage);
-            else
+            if (navigationViewBodySelectedItem == NavigationViewItemBodyRealTimeNotes)
             {
                 pageType = typeof(RealTimeNotesPage);
-                parameter = selectedItem.Tag;
-            } // end if...else
+                parameter = RealTimeNotesPageParameter;
+            }
+            else pageType = typeof(AddAccountPage);
 
-            FrameBody.Navigate(pageType, parameter, new EntranceNavigationTransitionInfo());
+            FrameBody.Navigate(pageType, parameter, _entranceNavigationTransitionInfo);
         } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers

@@ -97,9 +97,9 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0">
-                                <!-- The alternative login message info bar. -->
+                                <!-- The info bar for indicating of automatically using the alternative login method. -->
                                 <InfoBar
-                                    x:Name="InfoBarMessageLoginAlternative"
+                                    x:Name="InfoBarLoginAlternativeAutomatically"
                                     Closing="InfoBar_OnClosing"
                                     Severity="Warning">
                                     <InfoBar.ActionButton>
@@ -109,9 +109,9 @@
                                             NavigateUri="{x:Bind h:AppConstantsHelper.UrlWebView2Runtime}" />
                                     </InfoBar.ActionButton>
                                 </InfoBar>
-                                <!-- The login message info bar. -->
+                                <!-- The login info bar. -->
                                 <InfoBar
-                                    x:Name="InfoBarMessageLogin"
+                                    x:Name="InfoBarLogin"
                                     Closing="InfoBar_OnClosing" />
                                 <!-- The login header grid. -->
                                 <Grid ColumnSpacing="12">
@@ -213,9 +213,9 @@
                 </Grid>
             </Grid>
         </Grid>
-        <!-- The busy indicator grid for adding an account. -->
+        <!-- The busy indicator grid. -->
         <Grid
-            x:Name="GridAddingAccount"
+            x:Name="GridBusyIndicator"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             Grid.Row="0"
             Visibility="Collapsed">
@@ -230,7 +230,7 @@
                     Grid.Column="0"
                     IsActive="True" />
                 <TextBlock
-                    x:Name="TextBlockAddingAccount"
+                    x:Name="TextBlockBusyIndicator"
                     Grid.Column="1"
                     VerticalAlignment="Center" />
             </Grid>

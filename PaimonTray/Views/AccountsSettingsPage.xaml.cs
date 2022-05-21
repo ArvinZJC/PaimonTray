@@ -14,6 +14,7 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        private readonly MainWindow _mainWindow;
         private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
@@ -25,6 +26,7 @@ namespace PaimonTray.Views
         /// </summary>
         public AccountsSettingsPage()
         {
+            _mainWindow = WindowsHelper.ShowMainWindow();
             _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
                 .Values;
             InitializeComponent();
@@ -101,8 +103,8 @@ namespace PaimonTray.Views
 
             _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
 
-            if ((WindowsHelper.ShowMainWindow().NavigationViewBody.SelectedItem as NavigationViewItem)?.Tag as string !=
-                AccountsHelper.TagAddAccount) return;
+            if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
+                _mainWindow.NavigationViewItemBodyAddAccount) return;
 
             InfoBarServerDefaultAppliedLater.IsOpen = true;
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, 4);
@@ -131,8 +133,8 @@ namespace PaimonTray.Views
 
             _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
 
-            if ((WindowsHelper.ShowMainWindow().NavigationViewBody.SelectedItem as NavigationViewItem)?.Tag as string !=
-                AccountsHelper.TagAddAccount) return;
+            if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
+                _mainWindow.NavigationViewItemBodyAddAccount) return;
 
             InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
             InfoBarLoginAlternativeAlwaysAppliedLater.Margin = new Thickness(0, 0, 0, 4);

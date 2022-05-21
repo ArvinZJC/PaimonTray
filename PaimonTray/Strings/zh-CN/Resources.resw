@@ -120,11 +120,36 @@
   <data name="About" xml:space="preserve">
     <value>关于</value>
   </data>
+  <data name="AccountAdd" xml:space="preserve">
+    <value>添加账号</value>
+  </data>
+  <data name="AccountAddConfirmation" xml:space="preserve">
+    <value>添加您的账号？</value>
+    <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
+  </data>
+  <data name="AccountAdding" xml:space="preserve">
+    <value>添加您的账号中</value>
+  </data>
+  <data name="AccountAddNoCharacter" xml:space="preserve">
+    <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
+  </data>
+  <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
+    <value>此未绑定角色的账号已添加。</value>
+  </data>
+  <data name="AccountAddReachLimit" xml:space="preserve">
+    <value>您添加了的账号的数量已达上限。您仍可登录已添加的账号来对其更新。</value>
+  </data>
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
   <data name="AccountsManagement" xml:space="preserve">
     <value>您的账号和角色</value>
+  </data>
+  <data name="AccountUpdated" xml:space="preserve">
+    <value>您的账号已在之前添加过了，并刚进行了更新。</value>
+  </data>
+  <data name="AccountUpdating" xml:space="preserve">
+    <value>更新您的账号中</value>
   </data>
   <data name="AcknowledgementApiUses" xml:space="preserve">
     <value>接口用法参考于</value>
@@ -134,25 +159,6 @@
   </data>
   <data name="AcknowledgementInspiration" xml:space="preserve">
     <value>受启发于</value>
-  </data>
-  <data name="AddAccount" xml:space="preserve">
-    <value>添加账号</value>
-  </data>
-  <data name="AddAccountConfirmation" xml:space="preserve">
-    <value>添加您的账号？</value>
-    <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
-  </data>
-  <data name="AddAccountNoCharacter" xml:space="preserve">
-    <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
-  </data>
-  <data name="AddAccountNoCharacterSuccess" xml:space="preserve">
-    <value>此未绑定角色的账号已添加。</value>
-  </data>
-  <data name="AddAccountReachLimit" xml:space="preserve">
-    <value>您添加了的账号的数量已达上限。您仍可登录已添加的账号来同步最新信息。</value>
-  </data>
-  <data name="AddingAccount" xml:space="preserve">
-    <value>添加您的账号中</value>
   </data>
   <data name="And" xml:space="preserve">
     <value>和</value>
@@ -170,6 +176,9 @@
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>如何获取您的 cookie？（临时）</value>
+  </data>
+  <data name="CookiesProcessing" xml:space="preserve">
+    <value>处理 cookie 中</value>
   </data>
   <data name="Enter" xml:space="preserve">
     <value>输入</value>
@@ -191,6 +200,9 @@
   </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
+  </data>
+  <data name="Initialising" xml:space="preserve">
+    <value>初始化中</value>
   </data>
   <data name="IssuesView" xml:space="preserve">
     <value>查看 issues</value>
@@ -236,6 +248,9 @@
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
     <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号。</value>
   </data>
+  <data name="LoginAlternativeAutomatically" xml:space="preserve">
+    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
+  </data>
   <data name="LoginCompleteConfirm" xml:space="preserve">
     <value>在网页上登录您的账号后确认完成登录</value>
   </data>
@@ -268,12 +283,6 @@
   </data>
   <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
     <value>启用后，主界面上的导航窗格将显示于顶部，而不是左侧。</value>
-  </data>
-  <data name="MessageLoginAlternative" xml:space="preserve">
-    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
-  </data>
-  <data name="MessageUpdateAccount" xml:space="preserve">
-    <value>您的账号已在之前添加过了，并刚同步了最新信息。</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>

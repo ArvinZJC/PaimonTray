@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.Generic;
 
 namespace PaimonTray.Views
 {
@@ -29,10 +28,6 @@ namespace PaimonTray.Views
         /// <param name="args">Details about the pending navigation that will load the current <see cref="RealTimeNotesPage"/>.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            var parameter = (KeyValuePair<string, string>)args.Parameter;
-
-            TextBlockTest.Text = $"{parameter.Key}-{parameter.Value}";
-
             base.OnNavigatedTo(args);
         } // end method OnNavigatedTo
 

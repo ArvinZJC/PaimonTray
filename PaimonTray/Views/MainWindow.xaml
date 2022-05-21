@@ -9,9 +9,7 @@
     xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
-    <Grid
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        Loaded="GridRoot_OnLoaded">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.DataContext>
             <vm:CommandsViewModel x:Name="CommandsViewModel" />
         </Grid.DataContext>
@@ -52,9 +50,13 @@
             SelectionChanged="NavigationViewBody_OnSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem
+                    x:FieldModifier="public"
+                    x:Name="NavigationViewItemBodyRealTimeNotes"
+                    Icon="Contact" />
+                <NavigationViewItem
+                    x:FieldModifier="public"
                     x:Name="NavigationViewItemBodyAddAccount"
-                    Icon="Add"
-                    Tag="{x:Bind h:AccountsHelper.TagAddAccount}" />
+                    Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <!-- The main menu button. -->
