@@ -187,8 +187,7 @@ namespace PaimonTray.Views
 
             if (hasReachedLimit)
                 ShowLoginMessage(_resourceLoader.GetString("AddAccountReachLimit"), InfoBarSeverity.Error);
-            else
-                InfoBarMessageLogin.IsOpen = false;
+            else InfoBarMessageLogin.IsOpen = false;
 
             return hasReachedLimit;
         } // end method CheckAccountsCount
@@ -201,8 +200,7 @@ namespace PaimonTray.Views
             var propertySetSettings = ApplicationData.Current.LocalSettings
                 .Containers[SettingsHelper.ContainerKeySettings].Values;
 
-            if ((bool)propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways])
-                UseAlternativeLoginMethod(true);
+            if ((bool)propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways]) UseAlternativeLoginMethod(true);
             else
                 try
                 {
@@ -273,8 +271,7 @@ namespace PaimonTray.Views
         {
             GridAddingAccount.Visibility = Visibility.Visible;
 
-            if (CheckAccountsCount())
-                InitialiseLogin();
+            if (CheckAccountsCount()) InitialiseLogin();
             else
             {
                 string accountId;
@@ -299,8 +296,7 @@ namespace PaimonTray.Views
 
                 // Execute if valid account ID and cookies.
                 if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
-                    cookies.Contains(AccountsHelper.CookieKeyToken))
-                    await AddAccountAsync(accountId, cookies);
+                    cookies.Contains(AccountsHelper.CookieKeyToken)) await AddAccountAsync(accountId, cookies);
                 else
                 {
                     Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
@@ -471,10 +467,8 @@ namespace PaimonTray.Views
         // Handle the click event of the button for assisting login.
         private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_isWebView2Available)
-                _webView2LoginWebPage.Source = GetLoginWebPageUri();
-            else
-                new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
+            if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
+            else new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
         } // end method ButtonLoginAssist_OnClick
 
         // Handle the click event of the button for confirming completing login.

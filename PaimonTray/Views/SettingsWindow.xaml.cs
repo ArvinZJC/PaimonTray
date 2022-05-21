@@ -141,8 +141,9 @@ namespace PaimonTray.Views
         private void NavigationViewBody_OnDisplayModeChanged(NavigationView sender,
             NavigationViewDisplayModeChangedEventArgs args)
         {
-            NavigationViewBody.IsPaneToggleButtonVisible = args.DisplayMode != NavigationViewDisplayMode.Expanded;
-            ScrollViewerBody.Padding = args.DisplayMode == NavigationViewDisplayMode.Minimal
+            NavigationViewBody.IsPaneToggleButtonVisible =
+                NavigationViewBody.DisplayMode != NavigationViewDisplayMode.Expanded;
+            ScrollViewerBody.Padding = NavigationViewBody.DisplayMode == NavigationViewDisplayMode.Minimal
                 ? new Thickness(18, 18, 18, 0)
                 : new Thickness(56, 18, 56, 0);
         } // end method NavigationViewBody_OnDisplayModeChanged
@@ -157,17 +158,16 @@ namespace PaimonTray.Views
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
             NavigationViewSelectionChangedEventArgs args)
         {
+            var navigationViewBodySelectedItem = NavigationViewBody.SelectedItem as NavigationViewItem;
             Type pageType;
 
-            if (args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAbout)
-                pageType = typeof(AboutAppPage);
-            else if (args.SelectedItem as NavigationViewItem == NavigationViewItemBodyAccounts)
+            if (navigationViewBodySelectedItem == NavigationViewItemBodyAbout) pageType = typeof(AboutAppPage);
+            else if (navigationViewBodySelectedItem == NavigationViewItemBodyAccounts)
                 pageType = typeof(AccountsSettingsPage);
-            else
-                pageType = typeof(GeneralSettingsPage);
+            else pageType = typeof(GeneralSettingsPage);
 
             FrameBody.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
-            NavigationViewBody.Header = (args.SelectedItem as NavigationViewItem)?.Content;
+            NavigationViewBody.Header = navigationViewBodySelectedItem?.Content;
         } // end method NavigationViewBody_OnSelectionChanged
 
         // Handle the settings window's activated event.
