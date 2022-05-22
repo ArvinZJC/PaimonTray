@@ -1,20 +1,19 @@
 ﻿<Page
     mc:Ignorable="d"
-    x:Class="PaimonTray.Views.AddAccountPage"
+    x:Class="PaimonTray.Views.AddUpdateAccountPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:av="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    ActualThemeChanged="AddAccountPage_OnActualThemeChanged">
+    ActualThemeChanged="AddUpdateAccountPage_OnActualThemeChanged">
     <!-- The root grid. -->
     <Grid>
         <!-- The body grid. -->
         <Grid
-            Grid.Row="0"
             Padding="12"
-            RowSpacing="12">
+            RowSpacing="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -23,7 +22,7 @@
             <TextBlock
                 x:Name="TextBlockTitle"
                 Grid.Row="0"
-                Style="{ThemeResource TitleTextBlockStyle}" />
+                Style="{ThemeResource SubtitleTextBlockStyle}" />
             <!-- The content grid. -->
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -76,7 +75,7 @@
                             Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
                     </ComboBox>
                 </Grid>
-                <!-- The container grid for the login section. -->
+                <!-- The login section grid. -->
                 <Grid
                     Background="{ThemeResource ExpanderContentBackground}"
                     BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
@@ -91,7 +90,7 @@
                         <Grid
                             x:Name="GridLogin"
                             ColumnSpacing="12"
-                            RowSpacing="8">
+                            RowSpacing="4">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
@@ -173,7 +172,7 @@
                             <Grid
                                 x:Name="GridLoginAlternative"
                                 Grid.Row="1"
-                                RowSpacing="8"
+                                RowSpacing="4"
                                 Visibility="Collapsed">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -217,7 +216,6 @@
         <Grid
             x:Name="GridBusyIndicator"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            Grid.Row="0"
             Visibility="Collapsed">
             <Grid
                 ColumnSpacing="12"

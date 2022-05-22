@@ -7,6 +7,8 @@ namespace PaimonTray.Models
     /// </summary>
     public class Character
     {
+        #region Properties
+
         /// <summary>
         /// The level.
         /// </summary>
@@ -27,5 +29,7 @@ namespace PaimonTray.Models
         /// </summary>
         [JsonPropertyName("game_uid")]
         public string UserId { get; set; }
+
+        #endregion Properties
     } // end class Character
 } // end namespace PaimonTray.Models

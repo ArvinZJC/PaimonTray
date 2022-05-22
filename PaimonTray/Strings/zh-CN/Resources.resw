@@ -120,9 +120,6 @@
   <data name="About" xml:space="preserve">
     <value>关于</value>
   </data>
-  <data name="AccountAdd" xml:space="preserve">
-    <value>添加账号</value>
-  </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
     <value>添加您的账号？</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
@@ -138,6 +135,9 @@
   </data>
   <data name="AccountAddReachLimit" xml:space="preserve">
     <value>您添加了的账号的数量已达上限。您仍可登录已添加的账号来对其更新。</value>
+  </data>
+  <data name="AccountAddUpdate" xml:space="preserve">
+    <value>添加/更新账号</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
@@ -324,6 +324,9 @@
   </data>
   <data name="NotificationsNotice" xml:space="preserve">
     <value>请注意：当您在通知设置中允许来自此应用的通知后，下列关于发送通知的设置才会生效。</value>
+  </data>
+  <data name="RealTimeNotes" xml:space="preserve">
+    <value>实时便笺</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>

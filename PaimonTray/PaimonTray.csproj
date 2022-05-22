@@ -48,7 +48,7 @@
   <ItemGroup>
     <None Remove="Views\AboutAppPage.xaml" />
     <None Remove="Views\AccountsSettingsPage.xaml" />
-    <None Remove="Views\AddAccountPage.xaml" />
+    <None Remove="Views\AddUpdateAccountPage.xaml" />
     <None Remove="Views\GeneralSettingsPage.xaml" />
     <None Remove="Views\RealTimeNotesPage.xaml" />
   </ItemGroup>
@@ -81,7 +81,7 @@
     <Page Update="Views\RealTimeNotesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\AddAccountPage.xaml">
+    <Page Update="Views\AddUpdateAccountPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\AboutAppPage.xaml">

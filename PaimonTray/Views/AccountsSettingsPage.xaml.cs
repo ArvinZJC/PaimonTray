@@ -104,7 +104,7 @@ namespace PaimonTray.Views
             _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
-                _mainWindow.NavigationViewItemBodyAddAccount) return;
+                _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
 
             InfoBarServerDefaultAppliedLater.IsOpen = true;
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, 4);
@@ -134,7 +134,7 @@ namespace PaimonTray.Views
             _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
-                _mainWindow.NavigationViewItemBodyAddAccount) return;
+                _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
 
             InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
             InfoBarLoginAlternativeAlwaysAppliedLater.Margin = new Thickness(0, 0, 0, 4);

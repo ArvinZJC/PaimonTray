@@ -21,9 +21,9 @@ namespace PaimonTray.ViewModels
         #region Properties
 
         /// <summary>
-        /// The command to add an account.
+        /// The command to add/update an account.
         /// </summary>
-        public ICommand AddAccountCommand
+        public ICommand AddUpdateAccountCommand
 
         {
             get
@@ -40,10 +40,10 @@ namespace PaimonTray.ViewModels
                     if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };
                 xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend };
-                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AccountAdd");
+                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AccountAddUpdate");
                 return xamlUiCommand;
             } // end get
-        } // end property AddAccountCommand
+        } // end property AddUpdateAccountCommand
 
 #pragma warning disable CA1822 // Mark members as static
         /// <summary>
@@ -135,8 +135,10 @@ namespace PaimonTray.ViewModels
                         mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
                             resourceLoader.GetString("MainWindowShow");
 
-                        if (mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled)
-                            mainWindow.NavigationViewBody.SelectedItem = mainWindow.NavigationViewItemBodyRealTimeNotes;
+                        var navigationViewItemBodyRealTimeNotes = mainWindow.NavigationViewItemBodyRealTimeNotes;
+
+                        if (navigationViewItemBodyRealTimeNotes.IsEnabled)
+                            mainWindow.NavigationViewBody.SelectedItem = navigationViewItemBodyRealTimeNotes;
                     }
                     else
                     {

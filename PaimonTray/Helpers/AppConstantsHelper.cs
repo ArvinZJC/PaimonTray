@@ -20,7 +20,7 @@
         /// <summary>
         /// The height of the page for adding a CN server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageServerCnHeight = 808;
+        public const int AddAccountPageLoginWebPageServerCnHeight = 788;
 
         /// <summary>
         /// The width of the page for adding a CN server account using the web page login method.
@@ -30,7 +30,7 @@
         /// <summary>
         /// The height of the page for adding a global server account using the web page login method.
         /// </summary>
-        public const int AddAccountPageLoginWebPageServerGlobalHeight = 800;
+        public const int AddAccountPageLoginWebPageServerGlobalHeight = 780;
 
         /// <summary>
         /// The width of the page for adding a global server account using the web page login method.
@@ -61,6 +61,11 @@
         /// The code of the glyph Repair.
         /// </summary>
         public const string GlyphRepair = "\xE90F";
+
+        /// <summary>
+        /// The code of the glyph SwitchUser.
+        /// </summary>
+        public const string GlyphSwitchUser = "\xE748";
 
         /// <summary>
         /// The code of the glyph UpdateRestore.

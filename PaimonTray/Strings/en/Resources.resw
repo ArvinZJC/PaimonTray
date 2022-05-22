@@ -120,9 +120,6 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="AccountAdd" xml:space="preserve">
-    <value>Add an account</value>
-  </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
     <value>Add your account?</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
@@ -138,6 +135,9 @@
   </data>
   <data name="AccountAddReachLimit" xml:space="preserve">
     <value>The number of your accounts added has already reached the limit. You can still log into your added account to update it.</value>
+  </data>
+  <data name="AccountAddUpdate" xml:space="preserve">
+    <value>Add/Update an account</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
@@ -324,6 +324,9 @@
   </data>
   <data name="NotificationsNotice" xml:space="preserve">
     <value>Please note that the following settings regarding sending notifications take effect after you allow notifications from the app in the notifications settings.</value>
+  </data>
+  <data name="RealTimeNotes" xml:space="preserve">
+    <value>Real-time notes</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>

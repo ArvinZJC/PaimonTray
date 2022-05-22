@@ -17,9 +17,9 @@ using Windows.Storage;
 namespace PaimonTray.Views
 {
     /// <summary>
-    /// The page for adding an account.
+    /// The page for adding/updating an account.
     /// </summary>
-    public sealed partial class AddAccountPage
+    public sealed partial class AddUpdateAccountPage
     {
         #region Fields
 
@@ -36,9 +36,9 @@ namespace PaimonTray.Views
         #region Constructors
 
         /// <summary>
-        /// Initialise the page for adding an account.
+        /// Initialise the page for adding/updating an account.
         /// </summary>
-        public AddAccountPage()
+        public AddUpdateAccountPage()
         {
             _app = Application.Current as App;
             _mainWindow = WindowsHelper.ShowMainWindow();
@@ -46,7 +46,7 @@ namespace PaimonTray.Views
             InitializeComponent();
             ChooseLoginMethodAsync();
             UpdateUiText();
-        } // end constructor AddAccountPage
+        } // end constructor AddUpdateAccountPage
 
         #endregion Constructors
 
@@ -103,7 +103,7 @@ namespace PaimonTray.Views
             if (shouldUpdateAccount)
             {
                 _app.AccHelper.StoreCharacters(characters, containerKeyAccount);
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdated"));
+                ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdated")); // TODO: consider also navigating
                 return;
             } // end if
 
@@ -321,9 +321,9 @@ namespace PaimonTray.Views
         } // end method LogInAsync
 
         /// <summary>
-        /// Invoked immediately after the <see cref="AddAccountPage"/> is unloaded and is no longer the current source of a parent <see cref="Frame"/>.
+        /// Invoked immediately after the <see cref="AddUpdateAccountPage"/> is unloaded and is no longer the current source of a parent <see cref="Frame"/>.
         /// </summary>
-        /// <param name="args">Details about the navigation that has unloaded the current <see cref="AddAccountPage"/>.</param>
+        /// <param name="args">Details about the navigation that has unloaded the current <see cref="AddUpdateAccountPage"/>.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Close();
@@ -336,9 +336,9 @@ namespace PaimonTray.Views
         } // end method OnNavigatedFrom
 
         /// <summary>
-        /// Invoked when the <see cref="AddAccountPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
+        /// Invoked when the <see cref="AddUpdateAccountPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current <see cref="AddAccountPage"/>.</param>
+        /// <param name="args">Details about the pending navigation that will load the current <see cref="AddUpdateAccountPage"/>.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
@@ -411,7 +411,7 @@ namespace PaimonTray.Views
         /// <param name="infoBarSeverity">The info bar's severity.</param>
         private void ShowInfoBarLogin(string message, InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
-            InfoBarLogin.Margin = new Thickness(0, 0, 0, 8);
+            InfoBarLogin.Margin = new Thickness(0, 0, 0, 4);
             InfoBarLogin.Message = message;
             InfoBarLogin.Severity = infoBarSeverity;
             InfoBarLogin.IsOpen = true; // Show the info bar when ready.
@@ -427,7 +427,7 @@ namespace PaimonTray.Views
             TextBlockBusyIndicator.Text = _resourceLoader.GetString("Initialising");
             TextBlockServer.Text = _resourceLoader.GetString("Server");
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
-            TextBlockTitle.Text = _resourceLoader.GetString("AccountAdd");
+            TextBlockTitle.Text = _resourceLoader.GetString("AccountAddUpdate");
         } // end method UpdateUiText
 
         /// <summary>
@@ -441,7 +441,7 @@ namespace PaimonTray.Views
             if (!isAlways)
             {
                 HyperlinkButtonWebView2RuntimeDownload.Content = _resourceLoader.GetString("WebView2RuntimeDownload");
-                InfoBarLoginAlternativeAutomatically.Margin = new Thickness(0, 0, 0, 8);
+                InfoBarLoginAlternativeAutomatically.Margin = new Thickness(0, 0, 0, 4);
                 InfoBarLoginAlternativeAutomatically.Message =
                     _resourceLoader.GetString("LoginAlternativeAutomatically");
                 InfoBarLoginAlternativeAutomatically.IsOpen = true; // Show the info bar when ready.
@@ -462,11 +462,11 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the actual theme changed event of the page for adding an account.
-        private void AddAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
+        // Handle the actual theme changed event of the page for adding/updating an account.
+        private void AddUpdateAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
         {
             if (_contentDialogue != null) _contentDialogue.RequestedTheme = SettingsHelper.GetTheme();
-        } // end method AddAccountPage_OnActualThemeChanged
+        } // end method AddUpdateAccountPage_OnActualThemeChanged
 
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
@@ -569,5 +569,5 @@ namespace PaimonTray.Views
         } // end method WebView2LoginWebPage_OnNavigationCompleted
 
         #endregion Event Handlers
-    } // end class AddAccountPage
+    } // end class AddUpdateAccountPage
 } // end namespace PaimonTray.Views

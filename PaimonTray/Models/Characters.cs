@@ -5,10 +5,12 @@ using System.Text.Json.Serialization;
 namespace PaimonTray.Models
 {
     /// <summary>
-    /// The account model.
+    /// The characters model.
     /// </summary>
-    internal class Account
+    internal class Characters
     {
+        #region Properties
+
         /// <summary>
         /// The character data.
         /// </summary>
@@ -24,5 +26,7 @@ namespace PaimonTray.Models
         /// </summary>
         [JsonPropertyName("retcode")]
         public int ReturnCode { get; set; }
-    } // end class Account
+
+        #endregion Properties
+    } // end class Characters
 } // end namespace PaimonTray.Models

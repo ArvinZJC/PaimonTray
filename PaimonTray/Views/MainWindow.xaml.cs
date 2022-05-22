@@ -17,7 +17,7 @@ using Windows.Storage;
 namespace PaimonTray.Views
 {
     /// <summary>
-    /// The main window to show the retrieved Genshin data.
+    /// The main window.
     /// </summary>
     public sealed partial class MainWindow
     {
@@ -131,7 +131,9 @@ namespace PaimonTray.Views
             TaskbarIconApp.ToolTipText =
                 $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
-            ToolTipService.SetToolTip(NavigationViewItemBodyAddAccount, resourceLoader.GetString("AccountAdd"));
+            ToolTipService.SetToolTip(NavigationViewItemBodyAddUpdateAccount,
+                resourceLoader.GetString("AccountAddUpdate"));
+            ToolTipService.SetToolTip(NavigationViewItemBodyRealTimeNotes, resourceLoader.GetString("RealTimeNotes"));
 
             if ((bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting])
                 new ToastContentBuilder()
@@ -198,12 +200,13 @@ namespace PaimonTray.Views
 
             if (navigationViewBodySelectedItem == null) return;
 
-            if (navigationViewBodySelectedItem == NavigationViewItemBodyRealTimeNotes)
+            if (navigationViewBodySelectedItem == NavigationViewItemBodyAddUpdateAccount)
+                pageType = typeof(AddUpdateAccountPage);
+            else
             {
                 pageType = typeof(RealTimeNotesPage);
                 parameter = RealTimeNotesPageParameter;
-            }
-            else pageType = typeof(AddAccountPage);
+            } // end if...else
 
             FrameBody.Navigate(pageType, parameter, _entranceNavigationTransitionInfo);
         } // end method NavigationViewBody_OnSelectionChanged

@@ -3,11 +3,113 @@
     x:Class="PaimonTray.Views.RealTimeNotesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m="using:PaimonTray.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Height="300"
-    Width="300">
+    xmlns:h="using:PaimonTray.Helpers"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- The root grid. -->
     <Grid>
-        <TextBlock x:Name="TextBlockTest" />
+        <!-- The body grid. -->
+        <Grid
+            x:Name="GridBody"
+            HorizontalAlignment="Left"
+            Padding="12"
+            RowSpacing="8"
+            SizeChanged="GridBody_OnSizeChanged"
+            VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- The title text block. -->
+            <TextBlock
+                x:Name="TextBlockTitle"
+                Grid.Row="0"
+                Style="{ThemeResource SubtitleTextBlockStyle}" />
+            <!-- The content grid. -->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid
+                    Background="{ThemeResource ExpanderHeaderBackground}"
+                    BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                    BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                    CornerRadius="4, 4, 0, 0"
+                    Grid.Row="0"
+                    Padding="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Text="In progress: character" />
+                    <Button
+                        Click="ButtonCharacterSwitch_OnClick"
+                        Grid.Column="1">
+                        <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphSwitchUser}" />
+                    </Button>
+                </Grid>
+                <!-- The character's real-time notes grid. -->
+                <Grid
+                    Background="{ThemeResource ExpanderContentBackground}"
+                    BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
+                    BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
+                    CornerRadius="0, 0, 4, 4"
+                    Grid.Row="1">
+                    <TextBlock
+                        Height="300"
+                        Margin="12"
+                        Text="In progress: data"
+                        Width="300" />
+                </Grid>
+            </Grid>
+        </Grid>
+        <!-- TODO: The grid for indicating no account. -->
+        <Grid
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            Visibility="Collapsed">
+        </Grid>
+        <!-- The characters content dialogue. -->
+        <ContentDialog x:Name="ContentDialogueCharacters">
+            <StackPanel>
+                <ListView
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind CollectionViewSourceCharacters.View, Mode=OneWay}">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate x:DataType="m:GroupInfoList">
+                                    <TextBlock Text="{x:Bind Key}" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="m:AccountCharacter">
+                            <Grid Padding="0, 4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Text="{x:Bind Nickname}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Text="{x:Bind Region}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Resources>
+                        <CollectionViewSource
+                            x:Name="CollectionViewSourceCharacters"
+                            IsSourceGrouped="True" />
+                    </ListView.Resources>
+                </ListView>
+            </StackPanel>
+        </ContentDialog>
     </Grid>
 </Page>

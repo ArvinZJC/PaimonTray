@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -219,7 +220,7 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
-        /// Add the specific account's characters to the main window's navigation view, or update the specific navigation view items.
+        /// TODO: Add the specific account's characters to the main window's navigation view, or update the specific navigation view items.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeysCharacter">A list of characters to add or update for the navigation if possible. Do for all characters if <c>null</c>.</param>
@@ -365,7 +366,7 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
-            var account = JsonSerializer.Deserialize<Account>(httpResponseBody,
+            var account = JsonSerializer.Deserialize<Characters>(httpResponseBody,
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             if (account == null)
@@ -389,7 +390,40 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
-        /// Remove the specific account's characters from the main window's navigation view.
+        /// Get the characters grouped by account from local.
+        /// </summary>
+        /// <returns>The characters grouped by account.</returns>
+        public ObservableCollection<GroupInfoList> GetGroupedCharactersFromLocal()
+        {
+            if (CountAccounts() <= 0) return null;
+
+            return new ObservableCollection<GroupInfoList>(
+                from character in (from applicationDataContainerAccount in _applicationDataContainerAccounts.Containers
+                        .Values
+                    where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
+                    let applicationDataContainerCharacters =
+                        applicationDataContainerAccount.Containers[ContainerKeyCharacters]
+                    where applicationDataContainerCharacters.Containers.Count > 0
+                    let propertySetAccount = applicationDataContainerAccount.Values
+                    from keyValuePairCharacter in applicationDataContainerCharacters.Containers
+                    let propertySetCharacter = keyValuePairCharacter.Value.Values
+                    select new AccountCharacter()
+                    {
+                        AccountId = propertySetAccount[KeyId] as string,
+                        Level = (int)propertySetCharacter[KeyLevel],
+                        Nickname = propertySetCharacter[KeyNickname] as string,
+                        Region = propertySetCharacter[KeyRegion] as string,
+                        Server = propertySetAccount[KeyServer] as string,
+                        UserId = keyValuePairCharacter.Key
+                    }).ToList()
+                group character by $"{character.Server}{character.AccountId}"
+                into accountGroup
+                orderby accountGroup.Key
+                select new GroupInfoList(accountGroup) { Key = accountGroup.Key });
+        } // end method GetGroupedCharactersFromLocal
+
+        /// <summary>
+        /// TODO: Remove the specific account's characters from the main window's navigation view.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeysCharacter">A list of characters to remove for the navigation if possible. Do for all characters if <c>null</c>.</param>
