@@ -292,7 +292,8 @@
     <comment>No need to translate.</comment>
   </data>
   <data name="NameGitHubRepoApiUsesSecondary" xml:space="preserve">
-    <value>Genshin Dailynote Helper</value>
+    <value>DGP Studio</value>
+    <comment>No need to translate.</comment>
   </data>
   <data name="NameGitHubRepoInspiration" xml:space="preserve">
     <value>PaimonMenuBar</value>

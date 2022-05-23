@@ -130,7 +130,7 @@
         /// <summary>
         /// The URL of the GitHub repository secondarily referred for API uses.
         /// </summary>
-        public const string UrlGitHubRepoApiUsesSecondary = "https://github.com/Xm798/Genshin-Dailynote-Helper";
+        public const string UrlGitHubRepoApiUsesSecondary = "https://github.com/DGP-Studio";
 
         /// <summary>
         /// The URL of the GitHub repository inspiring the app.
