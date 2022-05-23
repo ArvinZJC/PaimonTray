@@ -377,6 +377,9 @@
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>
   </data>

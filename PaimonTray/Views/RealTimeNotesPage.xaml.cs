@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using Windows.ApplicationModel.Resources;
 
 namespace PaimonTray.Views
@@ -52,18 +51,12 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the click event of the button for switching the character.
-        private async void ButtonCharacterSwitch_OnClick(object sender, RoutedEventArgs e)
+        // Handle the body stack panel's size changed event.
+        private void StackPanelBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            await ContentDialogueCharacters.ShowAsync();
-        } // end method ButtonCharacterSwitch_OnClick
-
-        // Handle the body grid's size changed event.
-        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Height = GridBody.ActualHeight;
-            Width = GridBody.ActualWidth;
-        } // end method GridBody_OnSizeChanged
+            Height = StackPanelBody.ActualHeight;
+            Width = StackPanelBody.ActualWidth;
+        } // end method StackPanelBody_OnSizeChanged
 
         #endregion Event Handlers
     } // end class RealTimeNotesPage

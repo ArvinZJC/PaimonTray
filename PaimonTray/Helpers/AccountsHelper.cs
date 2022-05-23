@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Web.Http;
 
@@ -194,6 +195,7 @@ namespace PaimonTray.Helpers
 
         private readonly ApplicationDataContainer _applicationDataContainerAccounts;
         private readonly HttpClient _httpClient;
+        private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
 
@@ -211,6 +213,7 @@ namespace PaimonTray.Helpers
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
+            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
             CheckAccounts();
         } // end constructor AccountsHelper
@@ -413,10 +416,15 @@ namespace PaimonTray.Helpers
                         Level = (int)propertySetCharacter[KeyLevel],
                         Nickname = propertySetCharacter[KeyNickname] as string,
                         Region = propertySetCharacter[KeyRegion] as string,
-                        Server = propertySetAccount[KeyServer] as string,
+                        Server = propertySetAccount[KeyServer] switch
+                        {
+                            TagServerCn => _resourceLoader.GetString("ServerCn"),
+                            TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
+                            _ => _resourceLoader.GetString("Unknown")
+                        },
                         UserId = keyValuePairCharacter.Key
                     }).ToList()
-                group character by $"{character.Server}{character.AccountId}"
+                group character by $"{character.Server} | {character.AccountId}"
                 into accountGroup
                 orderby accountGroup.Key
                 select new GroupInfoList(accountGroup) { Key = accountGroup.Key });
