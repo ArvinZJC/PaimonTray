@@ -2,10 +2,8 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
-using PaimonTray.ViewModels;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
-using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -16,6 +14,14 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
+        /// The settings property set.
+        /// </summary>
         private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
@@ -27,8 +33,8 @@ namespace PaimonTray.Views
         /// </summary>
         public GeneralSettingsPage()
         {
-            _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
-                .Values;
+            _app = Application.Current as App;
+            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             InitializeComponent();
             UpdateUiText();
         } // end constructor GeneralSettingsPage
@@ -36,69 +42,6 @@ namespace PaimonTray.Views
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Show the language selection.
-        /// </summary>
-        private void ShowLanguageSelection()
-        {
-            ComboBoxLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
-            {
-                SettingsHelper.TagLanguageEn => ComboBoxItemLanguageEn,
-                SettingsHelper.TagLanguageZhCn => ComboBoxItemLanguageZhCn,
-                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
-                _ => null
-            };
-        } // end method ShowLanguageSelection
-
-        /// <summary>
-        /// Show the selection of showing the main window when the app starts.
-        /// </summary>
-        private void ShowMainWindowShowWhenAppStartsSelection()
-        {
-            ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts];
-        } // end method ShowMainWindowShowWhenAppStartsSelection
-
-        /// <summary>
-        /// Show the selection of the main window's top navigation pane.
-        /// </summary>
-        private void ShowMainWindowTopNavigationPaneSelection()
-        {
-            ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane];
-            SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
-        } // end method ShowMainWindowTopNavigationPaneSelection
-
-        /// <summary>
-        /// Show the selection for clearing notifications when the app exits.
-        /// </summary>
-        private void ShowNotificationClearSelection()
-        {
-            CheckBoxNotificationClear.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
-        } // end method ShowNotificationClearSelection
-
-        /// <summary>
-        /// Show the greeting notification selection.
-        /// </summary>
-        private void ShowNotificationGreetingSelection()
-        {
-            CheckBoxNotificationGreeting.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
-        } // end method ShowNotificationGreetingSelection
-
-        /// <summary>
-        /// Show the theme selection.
-        /// </summary>
-        private void ShowThemeSelection()
-        {
-            ComboBoxTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
-            {
-                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
-                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
-                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
-                _ => null
-            };
-        } // end method ShowThemeSelection
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -191,10 +134,11 @@ namespace PaimonTray.Views
 
             _propertySetSettings[SettingsHelper.KeyLanguage] = comboBoxLanguageSelectedItemTag;
 
-            InfoBarLanguageAppliedLater.IsOpen = comboBoxLanguageSelectedItemTag !=
-                                                 (Application.Current as App)?.LanguageSelectionApplied;
+            InfoBarLanguageAppliedLater.IsOpen =
+                comboBoxLanguageSelectedItemTag != _app.SettingsH.LanguageSelectionApplied;
 
-            if (InfoBarLanguageAppliedLater.IsOpen) InfoBarLanguageAppliedLater.Margin = new Thickness(0, 0, 0, 4);
+            if (InfoBarLanguageAppliedLater.IsOpen)
+                InfoBarLanguageAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ComboBoxLanguage_OnSelectionChanged
 
         // Handle the theme combo box's selection changed event.
@@ -205,34 +149,45 @@ namespace PaimonTray.Views
             if (comboBoxThemeSelectedItem == null) return;
 
             _propertySetSettings[SettingsHelper.KeyTheme] = comboBoxThemeSelectedItem.Tag as string;
-            SettingsHelper.ApplyThemeSelection();
+            _app.SettingsH.ApplyThemeSelection();
         } // end method ComboBoxTheme_OnSelectionChanged
 
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ShowLanguageSelection();
-            ShowMainWindowShowWhenAppStartsSelection();
-            ShowMainWindowTopNavigationPaneSelection();
-            ShowNotificationClearSelection();
-            ShowNotificationGreetingSelection();
-            ShowThemeSelection();
+            // Show the settings' selection.
+            CheckBoxNotificationClear.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
+            CheckBoxNotificationGreeting.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
+            ComboBoxLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
+            {
+                SettingsHelper.TagLanguageEn => ComboBoxItemLanguageEn,
+                SettingsHelper.TagLanguageZhCn => ComboBoxItemLanguageZhCn,
+                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
+                _ => null
+            };
+            ComboBoxTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
+            {
+                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
+                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
+                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
+                _ => null
+            };
+            ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
+                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts];
+            ToggleSwitchMainWindowTopNavigationPane.IsOn =
+                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane];
         } // end method GridRoot_OnLoaded
 
-#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
         private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
-#pragma warning restore CA1822 // Mark members as static
         {
-            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsStartupApps);
+            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsStartupApps);
         } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
 
-#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the notifications setting.
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
-#pragma warning restore CA1822 // Mark members as static
         {
-            new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
+            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static
@@ -255,7 +210,7 @@ namespace PaimonTray.Views
         {
             _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] =
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
-            SettingsHelper.ApplyMainWindowTopNavigationPaneSelection();
+            _app.SettingsH.ApplyMainWindowTopNavigationPaneSelection(); // Apply after changing.
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
 
         #endregion Event Handlers

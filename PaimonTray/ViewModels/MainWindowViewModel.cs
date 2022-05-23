@@ -1,5 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using PaimonTray.Helpers;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -15,8 +15,7 @@ namespace PaimonTray.ViewModels
         /// <summary>
         /// The navigation view's pane display mode.
         /// </summary>
-        private NavigationViewPaneDisplayMode _navigationViewPaneDisplayMode =
-            SettingsHelper.DecideMainWindowNavigationViewPaneDisplayMode();
+        private NavigationViewPaneDisplayMode _navigationViewPaneDisplayMode;
 
         /// <summary>
         /// The property changed event handler.
@@ -43,6 +42,19 @@ namespace PaimonTray.ViewModels
         } // end property NavViewPaneDisplayMode
 
         #endregion Properties
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the main window view model.
+        /// </summary>
+        public MainWindowViewModel()
+        {
+            _navigationViewPaneDisplayMode =
+                ((App)Application.Current).SettingsH.DecideMainWindowNavigationViewPaneDisplayMode();
+        } // end constructor MainWindowViewModel
+
+        #endregion Constructors
 
         #region Methods
 

@@ -6,34 +6,30 @@
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ni="using:H.NotifyIcon"
-    xmlns:vm="using:PaimonTray.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.DataContext>
-            <vm:CommandsViewModel x:Name="CommandsViewModel" />
-        </Grid.DataContext>
         <!-- The app's task bar icon. -->
         <!-- TODO: ContextMenuMode="SecondWindow" if qualified. -->
         <ni:TaskbarIcon
             x:Name="TaskbarIconApp"
-            LeftClickCommand="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}"
+            LeftClickCommand="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}"
             IconSource="{x:Bind h:AppConstantsHelper.UriAppIcon}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
             Visibility="Collapsed">
             <ni:TaskbarIcon.ContextFlyout>
                 <MenuFlyout AreOpenCloseAnimationsEnabled="False">
-                    <MenuFlyoutItem Command="{x:Bind CommandsViewModel.AddUpdateAccountCommand}" />
+                    <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.AddUpdateAccountCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
+                    <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.ShowSettingsWindowCommand}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         x:FieldModifier="public"
                         x:Name="MenuFlyoutItemAppMenuMainWindowVisibility"
-                        Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
+                        Command="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}" />
                     <MenuFlyoutItem
-                        Command="{x:Bind CommandsViewModel.ExitAppCommand}"
+                        Command="{x:Bind _app.CommandsVm.ExitAppCommand}"
                         CommandParameter="{x:Bind TaskbarIconApp}" />
                 </MenuFlyout>
             </ni:TaskbarIcon.ContextFlyout>
@@ -69,9 +65,9 @@
                     Width="40">
                     <Button.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Command="{x:Bind CommandsViewModel.AddUpdateAccountCommand}" />
+                            <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.AddUpdateAccountCommand}" />
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Command="{x:Bind CommandsViewModel.ShowSettingsWindowCommand}" />
+                            <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.ShowSettingsWindowCommand}" />
                             <MenuFlyoutSubItem
                                 x:Name="MenuFlyoutSubItemMainMenuHelp"
                                 Icon="Help">
@@ -89,30 +85,30 @@
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGitHubRepo"
-                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepo}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGiteeRepo"
                                     IsEnabled="False" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuIssuesView"
-                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuReleaseNotes"
-                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
                                     CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpLogsShow"
-                                    Command="{x:Bind CommandsViewModel.OpenLinkInDefaultCommand}" />
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}" />
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
                                 x:Name="MenuFlyoutItemMainMenuMainWindowHide"
-                                Command="{x:Bind CommandsViewModel.ToggleMainWindowVisibilityCommand}" />
+                                Command="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}" />
                             <MenuFlyoutItem
-                                Command="{x:Bind CommandsViewModel.ExitAppCommand}"
+                                Command="{x:Bind _app.CommandsVm.ExitAppCommand}"
                                 CommandParameter="{x:Bind TaskbarIconApp}" />
                         </MenuFlyout>
                     </Button.Flyout>

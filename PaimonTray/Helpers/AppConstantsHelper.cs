@@ -8,36 +8,6 @@
         #region Constants
 
         /// <summary>
-        /// The height of the page for adding an account using the alternative login method.
-        /// </summary>
-        public const int AddAccountPageLoginAlternativeHeight = 500;
-
-        /// <summary>
-        /// The width of the page for adding an account using the alternative login method.
-        /// </summary>
-        public const int AddAccountPageLoginAlternativeWidth = 500;
-
-        /// <summary>
-        /// The height of the page for adding a CN server account using the web page login method.
-        /// </summary>
-        public const int AddAccountPageLoginWebPageServerCnHeight = 788;
-
-        /// <summary>
-        /// The width of the page for adding a CN server account using the web page login method.
-        /// </summary>
-        public const int AddAccountPageLoginWebPageServerCnWidth = 680;
-
-        /// <summary>
-        /// The height of the page for adding a global server account using the web page login method.
-        /// </summary>
-        public const int AddAccountPageLoginWebPageServerGlobalHeight = 780;
-
-        /// <summary>
-        /// The width of the page for adding a global server account using the web page login method.
-        /// </summary>
-        public const int AddAccountPageLoginWebPageServerGlobalWidth = 800;
-
-        /// <summary>
         /// The code of the glyph Accept.
         /// </summary>
         public const string GlyphAccept = "\xE8FB";
@@ -73,14 +43,9 @@
         public const string GlyphUpdateRestore = "\xE777";
 
         /// <summary>
-        /// The main window's position offset.
+        /// The info bar's bottom margin.
         /// </summary>
-        public const int MainWindowPositionOffset = 12;
-
-        /// <summary>
-        /// The main window's side length offset.
-        /// </summary>
-        public const int MainWindowSideLengthOffset = 2;
+        public const int InfoBarMarginBottom = 4;
 
         /// <summary>
         /// The greeting notification tag.

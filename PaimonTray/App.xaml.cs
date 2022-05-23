@@ -1,9 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using Serilog;
 using System.IO;
 using Windows.ApplicationModel;
-using Windows.Globalization;
 using Windows.Storage;
 
 namespace PaimonTray
@@ -16,14 +16,19 @@ namespace PaimonTray
         #region Properties
 
         /// <summary>
+        /// The accounts helper.
+        /// </summary>
+        public AccountsHelper AccountsH { get; }
+
+        /// <summary>
         /// The app version.
         /// </summary>
         public string AppVersion { get; private set; }
 
         /// <summary>
-        /// The accounts helper.
+        /// The commands view model.
         /// </summary>
-        public AccountsHelper AccHelper { get; }
+        public CommandsViewModel CommandsVm { get; private set; }
 
         /// <summary>
         /// The logs directory.
@@ -31,9 +36,14 @@ namespace PaimonTray
         public string LogsDirectory { get; private set; }
 
         /// <summary>
-        /// The language selection applied at present since the changes will be applied after app restart.
+        /// The settings helper.
         /// </summary>
-        public string LanguageSelectionApplied { get; }
+        public SettingsHelper SettingsH { get; }
+
+        /// <summary>
+        /// The windows helper.
+        /// </summary>
+        public WindowsHelper WindowsH { get; }
 
         #endregion Properties
 
@@ -47,16 +57,9 @@ namespace PaimonTray
             ConfigLogger();
             GenerateAppVersion();
             Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
-            SettingsHelper.InitialiseSettings();
-
-            // Apply the language selection.
-            LanguageSelectionApplied = ApplicationData.Current.LocalSettings
-                .Containers[SettingsHelper.ContainerKeySettings].Values[SettingsHelper.KeyLanguage] as string;
-            ApplicationLanguages.PrimaryLanguageOverride = LanguageSelectionApplied == SettingsHelper.TagSystem
-                ? string.Empty
-                : LanguageSelectionApplied;
-
-            AccHelper = new AccountsHelper();
+            SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
+            AccountsH = new AccountsHelper();
+            WindowsH = new WindowsHelper();
             InitializeComponent();
         } // end constructor App
 
@@ -64,7 +67,9 @@ namespace PaimonTray
 
         #region Methods
 
-        // Configure the logger.
+        /// <summary>
+        /// Configure the logger.
+        /// </summary>
         private void ConfigLogger()
         {
             LoggerConfiguration loggerConfig = new();
@@ -79,7 +84,9 @@ namespace PaimonTray
                     rollingInterval: RollingInterval.Day)).CreateLogger();
         } // end method ConfigLogger
 
-        // Generate the app version from the package version.
+        /// <summary>
+        /// Generate the app version from the package version.
+        /// </summary>
         private void GenerateAppVersion()
         {
             var packageVersion = Package.Current.Id.Version;
@@ -101,7 +108,7 @@ namespace PaimonTray
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            WindowsHelper.ShowMainWindow();
+            CommandsVm = new CommandsViewModel(WindowsH.GetMainWindow());
         } // end method OnLaunched
 
         #endregion Methods

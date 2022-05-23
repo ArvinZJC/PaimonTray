@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
-using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -14,7 +13,14 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        /// <summary>
+        /// The main window.
+        /// </summary>
         private readonly MainWindow _mainWindow;
+
+        /// <summary>
+        /// The settings property set.
+        /// </summary>
         private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
@@ -26,9 +32,10 @@ namespace PaimonTray.Views
         /// </summary>
         public AccountsSettingsPage()
         {
-            _mainWindow = WindowsHelper.ShowMainWindow();
-            _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
-                .Values;
+            var app = Application.Current as App;
+
+            _mainWindow = app?.WindowsH.GetMainWindow();
+            _propertySetSettings = app?.SettingsH.PropertySetSettings;
             InitializeComponent();
             UpdateUiText();
         } // end constructor AccountsSettingsPage
@@ -36,28 +43,6 @@ namespace PaimonTray.Views
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Show the selection for always using the alternative login method.
-        /// </summary>
-        private void ShowLoginAlternativeAlwaysSelection()
-        {
-            ToggleSwitchLoginAlternativeAlways.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways];
-        } // end method ShowLoginAlternativeAlwaysSelection
-
-        /// <summary>
-        /// Show the selection for the default server.
-        /// </summary>
-        private void ShowServerDefaultSelection()
-        {
-            ComboBoxServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] switch
-            {
-                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
-                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
-                _ => null
-            };
-        } // end method ShowServerDefaultExplanation
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -107,14 +92,21 @@ namespace PaimonTray.Views
                 _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
 
             InfoBarServerDefaultAppliedLater.IsOpen = true;
-            InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, 4);
+            InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ComboBoxServerDefault_OnSelectionChanged
 
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ShowLoginAlternativeAlwaysSelection();
-            ShowServerDefaultSelection();
+            // Show the settings' selection.
+            ComboBoxServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
+            ToggleSwitchLoginAlternativeAlways.IsOn =
+                (bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways];
         } // end method GridRoot_OnLoaded
 
 #pragma warning disable CA1822 // Mark members as static
@@ -137,7 +129,8 @@ namespace PaimonTray.Views
                 _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
 
             InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
-            InfoBarLoginAlternativeAlwaysAppliedLater.Margin = new Thickness(0, 0, 0, 4);
+            InfoBarLoginAlternativeAlwaysAppliedLater.Margin =
+                new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ToggleSwitchLoginAlternativeAlways_OnToggled
 
         #endregion Event Handlers

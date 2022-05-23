@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using PaimonTray.Helpers;
-using PaimonTray.ViewModels;
 using Serilog;
 using System;
 using System.Collections.Immutable;
@@ -23,13 +22,35 @@ namespace PaimonTray.Views
     {
         #region Fields
 
-        private ContentDialog _contentDialogue;
-        private bool _isWebView2Available;
-        private WebView2 _webView2LoginWebPage;
-
+        /// <summary>
+        /// The app.
+        /// </summary>
         private readonly App _app;
+
+        /// <summary>
+        /// The content dialogue.
+        /// </summary>
+        private ContentDialog _contentDialogue;
+
+        /// <summary>
+        /// A flag indicating if the WebView2 is available.
+        /// </summary>
+        private bool _isWebView2Available;
+
+        /// <summary>
+        /// The main window.
+        /// </summary>
         private readonly MainWindow _mainWindow;
+
+        /// <summary>
+        /// The resource loader.
+        /// </summary>
         private readonly ResourceLoader _resourceLoader;
+
+        /// <summary>
+        /// The login web page WebView2.
+        /// </summary>
+        private WebView2 _webView2LoginWebPage;
 
         #endregion Fields
 
@@ -41,7 +62,7 @@ namespace PaimonTray.Views
         public AddUpdateAccountPage()
         {
             _app = Application.Current as App;
-            _mainWindow = WindowsHelper.ShowMainWindow();
+            _mainWindow = _app?.WindowsH.GetMainWindow();
             _resourceLoader = ResourceLoader.GetForViewIndependentUse();
             InitializeComponent();
             ChooseLoginMethodAsync();
@@ -57,12 +78,10 @@ namespace PaimonTray.Views
         /// </summary>
         /// <param name="accountId">The account ID.</param>
         /// <param name="cookies">The cookies.</param>
-        /// <returns>A <see cref="Task"/> object just to indicate that any later operation needs to wait.</returns>
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
         private async Task AddOrUpdateAccountAsync(string accountId, string cookies)
         {
-            var applicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.CreateContainer(AccountsHelper.ContainerKeyAccounts,
-                    ApplicationDataCreateDisposition.Always);
+            var applicationDataContainerAccounts = _app.AccountsH.ApplicationDataContainerAccounts;
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
@@ -85,7 +104,7 @@ namespace PaimonTray.Views
                 ? AccountsHelper.TagStatusUpdating
                 : AccountsHelper.TagStatusAdding;
 
-            var characters = await _app.AccHelper.GetCharactersFromApiAsync(containerKeyAccount)!;
+            var characters = await _app.AccountsH.GetCharactersFromApiAsync(containerKeyAccount)!;
 
             InitialiseLogin();
 
@@ -102,7 +121,7 @@ namespace PaimonTray.Views
 
             if (shouldUpdateAccount)
             {
-                _app.AccHelper.StoreCharacters(characters, containerKeyAccount);
+                _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
                 ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdated")); // TODO: consider also navigating
                 return;
             } // end if
@@ -115,7 +134,7 @@ namespace PaimonTray.Views
                     CloseButtonText = _resourceLoader.GetString("No"),
                     DefaultButton = ContentDialogButton.Close,
                     PrimaryButtonText = _resourceLoader.GetString("Yes"),
-                    RequestedTheme = SettingsHelper.GetTheme(),
+                    RequestedTheme = _app.SettingsH.GetTheme(),
                     Title = _resourceLoader.GetString("AccountAddConfirmation"),
                     XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
                 };
@@ -133,7 +152,7 @@ namespace PaimonTray.Views
                 ShowInfoBarLogin(_resourceLoader.GetString("AccountAddNoCharacterSuccess"), InfoBarSeverity.Success);
             } // end if
 
-            _app.AccHelper.StoreCharacters(characters, containerKeyAccount);
+            _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
         } // end method AddOrUpdateAccountAsync
 
         /// <summary>
@@ -149,8 +168,8 @@ namespace PaimonTray.Views
             var workArea = DisplayArea.GetFromWindowId(_mainWindow.WinId, DisplayAreaFallback.Primary).WorkArea;
 
             // The work area's height/width minus the specific constant is primarily for reserving space for the navigation pane.
-            var pageMaxHeight = workArea.Height - 6 * AppConstantsHelper.MainWindowPositionOffset;
-            var pageMaxWidth = workArea.Width - 6 * AppConstantsHelper.MainWindowPositionOffset;
+            var pageMaxHeight = workArea.Height - 6 * WindowsHelper.MainWindowPositionOffset;
+            var pageMaxWidth = workArea.Width - 6 * WindowsHelper.MainWindowPositionOffset;
 
             CheckAccountsCount();
 
@@ -158,12 +177,8 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
-                var pageSuggestedHeight = isServerCn
-                    ? AppConstantsHelper.AddAccountPageLoginWebPageServerCnHeight
-                    : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalHeight;
-                var pageSuggestedWidth = isServerCn
-                    ? AppConstantsHelper.AddAccountPageLoginWebPageServerCnWidth
-                    : AppConstantsHelper.AddAccountPageLoginWebPageServerGlobalWidth;
+                var pageSuggestedHeight = isServerCn ? 788 : 780;
+                var pageSuggestedWidth = isServerCn ? 680 : 800;
 
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
                 ButtonLoginCompleteConfirm.IsEnabled = false;
@@ -173,14 +188,10 @@ namespace PaimonTray.Views
             }
             else
             {
-                Height = pageMaxHeight < AppConstantsHelper.AddAccountPageLoginAlternativeHeight
-                    ? pageMaxHeight
-                    : AppConstantsHelper.AddAccountPageLoginAlternativeHeight;
+                Height = pageMaxHeight < 500 ? pageMaxHeight : 500;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
-                Width = pageMaxWidth < AppConstantsHelper.AddAccountPageLoginAlternativeWidth
-                    ? pageMaxWidth
-                    : AppConstantsHelper.AddAccountPageLoginAlternativeWidth;
+                Width = pageMaxWidth < 500 ? pageMaxWidth : 500;
             } // end if...else
         } // end method ApplyServerSelection
 
@@ -190,7 +201,7 @@ namespace PaimonTray.Views
         /// <returns>A flag indicating if the number of the accounts added has already reached the limit.</returns>
         private bool CheckAccountsCount()
         {
-            var hasReachedLimit = _app.AccHelper.CountAccounts() >= AccountsHelper.CountAccountsMax;
+            var hasReachedLimit = _app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax;
 
             if (hasReachedLimit)
                 ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
@@ -204,8 +215,7 @@ namespace PaimonTray.Views
         /// </summary>
         private async void ChooseLoginMethodAsync()
         {
-            var propertySetSettings = ApplicationData.Current.LocalSettings
-                .Containers[SettingsHelper.ContainerKeySettings].Values;
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
             if ((bool)propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways]) UseAlternativeLoginMethod(true);
             else
@@ -321,9 +331,9 @@ namespace PaimonTray.Views
         } // end method LogInAsync
 
         /// <summary>
-        /// Invoked immediately after the <see cref="AddUpdateAccountPage"/> is unloaded and is no longer the current source of a parent <see cref="Frame"/>.
+        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the navigation that has unloaded the current <see cref="AddUpdateAccountPage"/>.</param>
+        /// <param name="args">Details about the navigation that has unloaded the current page.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Close();
@@ -336,9 +346,9 @@ namespace PaimonTray.Views
         } // end method OnNavigatedFrom
 
         /// <summary>
-        /// Invoked when the <see cref="AddUpdateAccountPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
+        /// Invoked when the page is loaded and becomes the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current <see cref="AddUpdateAccountPage"/>.</param>
+        /// <param name="args">Details about the pending navigation that will load the current page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
@@ -411,7 +421,7 @@ namespace PaimonTray.Views
         /// <param name="infoBarSeverity">The info bar's severity.</param>
         private void ShowInfoBarLogin(string message, InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
-            InfoBarLogin.Margin = new Thickness(0, 0, 0, 4);
+            InfoBarLogin.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
             InfoBarLogin.Message = message;
             InfoBarLogin.Severity = infoBarSeverity;
             InfoBarLogin.IsOpen = true; // Show the info bar when ready.
@@ -441,7 +451,8 @@ namespace PaimonTray.Views
             if (!isAlways)
             {
                 HyperlinkButtonWebView2RuntimeDownload.Content = _resourceLoader.GetString("WebView2RuntimeDownload");
-                InfoBarLoginAlternativeAutomatically.Margin = new Thickness(0, 0, 0, 4);
+                InfoBarLoginAlternativeAutomatically.Margin =
+                    new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
                 InfoBarLoginAlternativeAutomatically.Message =
                     _resourceLoader.GetString("LoginAlternativeAutomatically");
                 InfoBarLoginAlternativeAutomatically.IsOpen = true; // Show the info bar when ready.
@@ -465,7 +476,7 @@ namespace PaimonTray.Views
         // Handle the actual theme changed event of the page for adding/updating an account.
         private void AddUpdateAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
         {
-            if (_contentDialogue != null) _contentDialogue.RequestedTheme = SettingsHelper.GetTheme();
+            if (_contentDialogue != null) _contentDialogue.RequestedTheme = _app.SettingsH.GetTheme();
         } // end method AddUpdateAccountPage_OnActualThemeChanged
 
         // Handle the alternative login button's click event.
@@ -484,7 +495,7 @@ namespace PaimonTray.Views
         private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-            else new CommandsViewModel().OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
+            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
         } // end method ButtonLoginAssist_OnClick
 
         // Handle the click event of the button for confirming completing login.

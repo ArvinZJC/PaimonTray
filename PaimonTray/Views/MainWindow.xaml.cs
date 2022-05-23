@@ -12,7 +12,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
-using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -23,6 +22,14 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
+        /// The app window.
+        /// </summary>
         private AppWindow _appWindow;
 
         /// <summary>
@@ -30,7 +37,9 @@ namespace PaimonTray.Views
         /// </summary>
         private bool _isFirstLoad;
 
-        private readonly EntranceNavigationTransitionInfo _entranceNavigationTransitionInfo;
+        /// <summary>
+        /// The settings property set.
+        /// </summary>
         private readonly IPropertySet _propertySetSettings;
 
         #endregion Fields
@@ -38,7 +47,7 @@ namespace PaimonTray.Views
         #region Properties
 
         /// <summary>
-        /// The main window's <see cref="MainWindowViewModel"/>.
+        /// The main window view model.
         /// </summary>
         public MainWindowViewModel MainWinViewModel { get; }
 
@@ -48,7 +57,7 @@ namespace PaimonTray.Views
         public object RealTimeNotesPageParameter { get; set; }
 
         /// <summary>
-        /// The main window's <see cref="WindowId"/>.
+        /// The main window's window ID.
         /// </summary>
         public WindowId WinId { get; private set; }
 
@@ -61,16 +70,15 @@ namespace PaimonTray.Views
         /// </summary>
         public MainWindow()
         {
-            _entranceNavigationTransitionInfo = new EntranceNavigationTransitionInfo();
+            _app = Application.Current as App;
             _isFirstLoad = true;
-            _propertySetSettings = ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
-                .Values;
+            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             MainWinViewModel = new MainWindowViewModel();
             InitializeComponent();
             CustomiseWindow();
             UpdateUiText();
 
-            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = (Application.Current as App)?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
             NavigationViewBody.SelectedItem = NavigationViewItemBodyRealTimeNotes;
             TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
         } // end constructor MainWindow
@@ -156,29 +164,27 @@ namespace PaimonTray.Views
             var frameBodyContent = (FrameworkElement)FrameBody.Content;
             int winHeight;
             int winWidth;
-            var workArea = DisplayArea.GetFromWindowId(WinId, DisplayAreaFallback.Primary).WorkArea;
+            var workArea = WindowsHelper.GetWorkArea(WinId);
 
             // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
             {
                 winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
-                            AppConstantsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) +
-                           AppConstantsHelper.MainWindowSideLengthOffset;
+                            WindowsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) + WindowsHelper.MainWindowSideLengthOffset;
             }
             else
             {
-                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) +
-                            AppConstantsHelper.MainWindowSideLengthOffset;
+                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) + WindowsHelper.MainWindowSideLengthOffset;
                 winWidth = (int)(Math.Ceiling(frameBodyContent.ActualWidth) + NavigationViewBody.CompactPaneLength) +
-                           AppConstantsHelper.MainWindowSideLengthOffset;
+                           WindowsHelper.MainWindowSideLengthOffset;
             } // end if...else
 
             _appWindow.MoveAndResize(new RectInt32
             {
                 Height = winHeight, Width = winWidth,
-                X = workArea.Width - winWidth - AppConstantsHelper.MainWindowPositionOffset,
-                Y = workArea.Height - winHeight - AppConstantsHelper.MainWindowPositionOffset
+                X = workArea.Width - winWidth - WindowsHelper.MainWindowPositionOffset,
+                Y = workArea.Height - winHeight - WindowsHelper.MainWindowPositionOffset
             });
 
             if (!_isFirstLoad) return;
@@ -187,7 +193,7 @@ namespace PaimonTray.Views
             _isFirstLoad = false;
 
             if (!(bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts])
-                new CommandsViewModel().ToggleMainWindowVisibilityCommand.Execute(null);
+                _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 
         // Handle the body navigation view's selection changed event.
@@ -208,7 +214,7 @@ namespace PaimonTray.Views
                 parameter = RealTimeNotesPageParameter;
             } // end if...else
 
-            FrameBody.Navigate(pageType, parameter, _entranceNavigationTransitionInfo);
+            FrameBody.Navigate(pageType, parameter, new EntranceNavigationTransitionInfo());
         } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers

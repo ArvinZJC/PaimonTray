@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Models;
 using Serilog;
 using System;
@@ -193,11 +194,31 @@ namespace PaimonTray.Helpers
 
         #region Fields
 
-        private readonly ApplicationDataContainer _applicationDataContainerAccounts;
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
+        /// The HTTP client.
+        /// </summary>
         private readonly HttpClient _httpClient;
+
+        /// <summary>
+        /// The resource loader.
+        /// </summary>
         private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
+
+        #region Properties
+
+        /// <summary>
+        /// The accounts application data container.
+        /// </summary>
+        public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
+
+        #endregion Properties
 
         #region Constructors
 
@@ -206,14 +227,15 @@ namespace PaimonTray.Helpers
         /// </summary>
         public AccountsHelper()
         {
-            _applicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
-                    ApplicationDataCreateDisposition
-                        .Always); // The container's containers are in a read-only dictionary, and should not be stored.
+            _app = Application.Current as App;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
             _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            ApplicationDataContainerAccounts =
+                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
+                    ApplicationDataCreateDisposition
+                        .Always); // The container's containers are in a read-only dictionary, and should not be stored.
 
             CheckAccounts();
         } // end constructor AccountsHelper
@@ -232,13 +254,13 @@ namespace PaimonTray.Helpers
         public bool AddOrUpdateCharactersNavigation(string containerKeyAccount,
             ImmutableList<string> containerKeysCharacter = null, bool shouldSelectFirst = true)
         {
-            if (!_applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return false;
             } // end if
 
-            var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
+            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
 
             if (!applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters))
             {
@@ -247,7 +269,7 @@ namespace PaimonTray.Helpers
                 return false;
             } // end if
 
-            var navigationViewBody = WindowsHelper.ShowMainWindow().NavigationViewBody;
+            var navigationViewBody = _app.WindowsH.GetMainWindow().NavigationViewBody;
             var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
 
             foreach (var keyValuePairCharacter in applicationDataContainerAccount.Containers[ContainerKeyCharacters]
@@ -303,7 +325,7 @@ namespace PaimonTray.Helpers
             // TODO: Status adding/updating consider continue storing characters; expired needs user attention
             if (CountAccounts() <= 0) return;
 
-            foreach (var propertySetAccount in _applicationDataContainerAccounts.Containers.Values.ToImmutableList()
+            foreach (var propertySetAccount in ApplicationDataContainerAccounts.Containers.Values.ToImmutableList()
                          .Select(applicationDataContainerAccount => applicationDataContainerAccount.Values)
                          .Where(propertySetAccount =>
                              !new[] { TagStatusAdding, TagStatusExpired, TagStatusReady, TagStatusUpdating }.Contains(
@@ -317,7 +339,7 @@ namespace PaimonTray.Helpers
         /// <returns>The number of the accounts added.</returns>
         public int CountAccounts()
         {
-            return _applicationDataContainerAccounts.Containers.Count;
+            return ApplicationDataContainerAccounts.Containers.Count;
         } // end method CountAccounts
 
         /// <summary>
@@ -327,14 +349,14 @@ namespace PaimonTray.Helpers
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
         public async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
         {
-            if (!_applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return null;
             } // end if
 
             string headerValueUserAgent;
-            var propertySetAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+            var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
             string urlCharacters;
 
             if (propertySetAccount[KeyServer] as string == TagServerCn)
@@ -401,7 +423,7 @@ namespace PaimonTray.Helpers
             if (CountAccounts() <= 0) return null;
 
             return new ObservableCollection<GroupInfoList>(
-                from character in (from applicationDataContainerAccount in _applicationDataContainerAccounts.Containers
+                from character in (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers
                         .Values
                     where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
                     let applicationDataContainerCharacters =
@@ -435,10 +457,10 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeysCharacter">A list of characters to remove for the navigation if possible. Do for all characters if <c>null</c>.</param>
-        private static void RemoveCharactersNavigation(string containerKeyAccount,
+        private void RemoveCharactersNavigation(string containerKeyAccount,
             ImmutableList<string> containerKeysCharacter = null)
         {
-            var navigationViewBody = WindowsHelper.ShowMainWindow().NavigationViewBody;
+            var navigationViewBody = _app.WindowsH.GetMainWindow().NavigationViewBody;
             var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
 
             foreach (var navigationViewBodyMenuItem in from NavigationViewItem navigationViewBodyMenuItem in
@@ -461,13 +483,13 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         public void StoreCharacters(ImmutableList<Character> characters, string containerKeyAccount)
         {
-            if (!_applicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return;
             } // end if
 
-            var applicationDataContainerAccount = _applicationDataContainerAccounts.Containers[containerKeyAccount];
+            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
             var propertySetAccount = applicationDataContainerAccount.Values;
 
             if (characters.Count == 0)

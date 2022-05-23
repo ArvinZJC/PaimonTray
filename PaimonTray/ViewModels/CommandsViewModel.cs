@@ -3,9 +3,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
+using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -16,8 +16,27 @@ namespace PaimonTray.ViewModels
     /// <summary>
     /// The commands view model.
     /// </summary>
-    internal class CommandsViewModel
+    public class CommandsViewModel
     {
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        private readonly MainWindow _mainWindow;
+
+        /// <summary>
+        /// The resource loader.
+        /// </summary>
+        private readonly ResourceLoader _resourceLoader;
+
+        #endregion Fields
+
         #region Properties
 
         /// <summary>
@@ -28,33 +47,30 @@ namespace PaimonTray.ViewModels
         {
             get
             {
-                XamlUICommand xamlUiCommand = new();
+                XamlUICommand xamlUiCommand = new()
+                {
+                    IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend },
+                    Label = _resourceLoader.GetString("AccountAddUpdate")
+                };
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
-                    var mainWindow = WindowsHelper.ShowMainWindow();
-                    var navigationViewBody = mainWindow.NavigationViewBody;
+                    _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAddUpdateAccount;
 
-                    navigationViewBody.SelectedItem = navigationViewBody.MenuItems.LastOrDefault();
-
-                    if (!mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
+                    if (!_mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null); // TODO
                 };
-                xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend };
-                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("AccountAddUpdate");
                 return xamlUiCommand;
             } // end get
         } // end property AddUpdateAccountCommand
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// The command to exit the app.
         /// </summary>
         public ICommand ExitAppCommand
-#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
-                XamlUICommand xamlUiCommand = new();
+                XamlUICommand xamlUiCommand = new() { Label = _resourceLoader.GetString("Exit") };
 
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
@@ -69,7 +85,6 @@ namespace PaimonTray.ViewModels
                     Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
-                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("Exit");
                 return xamlUiCommand;
             } // end get
         } // end property ExitAppCommand
@@ -94,30 +109,28 @@ namespace PaimonTray.ViewModels
             } // end get
         } // end property OpenLinkInDefaultCommand
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// The command to open or activate the settings window.
+        /// The command to open/activate the settings window.
         /// </summary>
         public ICommand ShowSettingsWindowCommand
-#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
-                XamlUICommand xamlUiCommand = new();
+                XamlUICommand xamlUiCommand = new()
+                {
+                    IconSource = new SymbolIconSource() { Symbol = Symbol.Setting },
+                    Label = _resourceLoader.GetString("Settings")
+                };
 
-                xamlUiCommand.ExecuteRequested += (_, _) => WindowsHelper.ShowSettingsWindow();
-                xamlUiCommand.IconSource = new SymbolIconSource() { Symbol = Symbol.Setting };
-                xamlUiCommand.Label = ResourceLoader.GetForViewIndependentUse().GetString("Settings");
+                xamlUiCommand.ExecuteRequested += (_, _) => _app.WindowsH.ShowSettingsWindow();
                 return xamlUiCommand;
             } // end get
         } // end property ShowSettingsWindowCommand
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
-        /// The command to show or hide the main window.
+        /// The command to show/hide the main window.
         /// </summary>
         public ICommand ToggleMainWindowVisibilityCommand
-#pragma warning restore CA1822 // Mark members as static
         {
             get
             {
@@ -125,26 +138,23 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
-                    var mainWindow = WindowsHelper.ShowMainWindow();
-                    var resourceLoader = ResourceLoader.GetForViewIndependentUse();
-
                     // Set the text of the main window's menu flyout item for the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
-                    if (mainWindow.Visible)
+                    if (_mainWindow.Visible)
                     {
-                        mainWindow.Hide();
-                        mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
-                            resourceLoader.GetString("MainWindowShow");
+                        _mainWindow.Hide();
+                        _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
+                            _resourceLoader.GetString("MainWindowShow");
 
-                        var navigationViewItemBodyRealTimeNotes = mainWindow.NavigationViewItemBodyRealTimeNotes;
+                        var navigationViewItemBodyRealTimeNotes = _mainWindow.NavigationViewItemBodyRealTimeNotes;
 
                         if (navigationViewItemBodyRealTimeNotes.IsEnabled)
-                            mainWindow.NavigationViewBody.SelectedItem = navigationViewItemBodyRealTimeNotes;
+                            _mainWindow.NavigationViewBody.SelectedItem = navigationViewItemBodyRealTimeNotes;
                     }
                     else
                     {
-                        mainWindow.Show();
-                        mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
-                            resourceLoader.GetString("MainWindowHide");
+                        _mainWindow.Show();
+                        _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
+                            _resourceLoader.GetString("MainWindowHide");
                     } // end if...else
                 };
                 return xamlUiCommand;
@@ -152,5 +162,19 @@ namespace PaimonTray.ViewModels
         } // end property ToggleMainWindowVisibilityCommand
 
         #endregion Properties
+
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the commands view model.
+        /// </summary>
+        public CommandsViewModel(MainWindow mainWindow)
+        {
+            _app = Application.Current as App;
+            _mainWindow = mainWindow;
+            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+        } // end constructor CommandsViewModel
+
+        #endregion Constructors
     } // end class CommandsViewModel
 } // end namespace PaimonTray.ViewModels

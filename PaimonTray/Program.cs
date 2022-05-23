@@ -1,8 +1,6 @@
-﻿using H.NotifyIcon;
-using Microsoft.UI.Dispatching;
+﻿using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
-using PaimonTray.Helpers;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -34,36 +32,55 @@ namespace PaimonTray
 
         #region Methods
 
+        /// <summary>
+        /// Wait for specified objects to be signaled or for a specified timeout period to elapse.
+        /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cowaitformultipleobjects
+        /// </summary>
+        /// <param name="dwFlags">A flag controlling whether call/window message re-entrance is enabled from this wait.</param>
+        /// <param name="dwTimeout">The timeout in milliseconds of the wait.</param>
+        /// <param name="cHandles">The length of the <see cref="pHandles"/> array.</param>
+        /// <param name="pHandles">An array of handles to awaitable kernel objects.</param>
+        /// <param name="lpdwindex">The index of the handle that satisfied the wait.</param>
+        /// <returns>The return code.</returns>
         [DllImport("ole32.dll")]
-        private static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwMilliseconds, ulong nHandles,
-            IntPtr[] pHandles, out uint dwIndex);
+        private static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwTimeout, ulong cHandles,
+            IntPtr[] pHandles, out uint lpdwindex);
 
+        /// <summary>
+        /// Create/Open a named or unnamed event object.
+        /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventa
+        /// </summary>
+        /// <param name="lpEventAttributes">A pointer to a SECURITY_ATTRIBUTES structure.</param>
+        /// <param name="bManualReset">A flag indicating if the function creates a manual-reset event object.</param>
+        /// <param name="bInitialState">A flag indicating if the initial state of the event object is signaled.</param>
+        /// <param name="lpName">The name of the event object.</param>
+        /// <returns>A handle to the event object, or <c>null</c> if the function fails.</returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateEvent(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState,
+        private static extern IntPtr CreateEventA(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState,
             string lpName);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool SetEvent(IntPtr hEvent);
-
-        // Decide if the app should be redirected to the new app instance.
+        /// <summary>
+        /// Decide if the app should be redirected to the new app instance.
+        /// </summary>
+        /// <returns>A flag indicating if the app should be redirected to the new app instance.</returns>
         private static bool DecideRedirection()
         {
             var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.DisplayName);
 
-            if (appInstance.IsCurrent)
-            {
-                appInstance.Activated += (_, _) => WindowsHelper.ShowMainWindow().Show();
-                return false;
-            } // end if
+            if (appInstance.IsCurrent) return false;
 
             RedirectActivation(AppInstance.GetCurrent().GetActivatedEventArgs(), appInstance);
             return true;
         } // end method DecideRedirection
 
-        // Redirect the activation on another thread, and use a non-blocking wait method to wait for the redirection to complete.
+        /// <summary>
+        /// Redirect the activation on another thread, and use a non-blocking wait method to wait for the redirection to complete.
+        /// </summary>
+        /// <param name="args">The app activation arguments.</param>
+        /// <param name="appInstance">The app instance.</param>
         private static void RedirectActivation(AppActivationArguments args, AppInstance appInstance)
         {
-            var redirectEventHandle = CreateEvent(IntPtr.Zero, true, false, null);
+            var redirectEventHandle = CreateEventA(IntPtr.Zero, true, false, null);
 
             Task.Run(() =>
             {
@@ -72,6 +89,15 @@ namespace PaimonTray
             });
             _ = CoWaitForMultipleObjects(0, 0xFFFFFFFF, 1, new[] { redirectEventHandle }, out _);
         } // end method RedirectActivation
+
+        /// <summary>
+        /// Set the specified event object to the signaled state.
+        /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent
+        /// </summary>
+        /// <param name="hEvent">A handle to the event object.</param>
+        /// <returns>A flag indicating if the function succeeds.</returns>
+        [DllImport("kernel32.dll")]
+        private static extern bool SetEvent(IntPtr hEvent);
 
         #endregion Methods
     } // end class Program

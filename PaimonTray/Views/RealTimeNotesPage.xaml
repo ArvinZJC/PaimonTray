@@ -9,136 +9,139 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid>
-        <!-- The body stack panel. -->
-        <StackPanel
-            x:Name="StackPanelBody"
-            HorizontalAlignment="Left"
-            Padding="12"
-            SizeChanged="StackPanelBody_OnSizeChanged"
-            VerticalAlignment="Top">
-            <!-- The title text block. -->
-            <TextBlock
-                x:Name="TextBlockTitle"
-                Margin="0, 0, 0, 8"
-                Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <!-- The content stack panel. -->
-            <StackPanel>
-                <Grid
-                    Background="{ThemeResource ExpanderHeaderBackground}"
-                    BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-                    BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-                    ColumnSpacing="32"
-                    CornerRadius="4, 4, 0, 0"
-                    Padding="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        Text="In progress: character" />
-                    <Button Grid.Column="1">
-                        <Button.Flyout>
-                            <!-- The characters flyout. -->
-                            <Flyout>
-                                <ListView
-                                    HorizontalAlignment="Stretch"
-                                    ItemsSource="{x:Bind CollectionViewSourceCharacters.View, Mode=OneWay}"
-                                    Margin="-8">
-                                    <ListView.GroupStyle>
-                                        <GroupStyle>
-                                            <GroupStyle.HeaderTemplate>
-                                                <DataTemplate x:DataType="m:GroupInfoList">
-                                                    <Grid ColumnSpacing="12">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <Ellipse
-                                                            Fill="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
-                                                            Grid.Column="0"
-                                                            Grid.Row="0"
-                                                            Grid.RowSpan="2"
-                                                            Height="32"
-                                                            Width="32" />
-                                                        <TextBlock
-                                                            Grid.Column="1"
-                                                            Grid.Row="0"
-                                                            Style="{ThemeResource BaseTextBlockStyle}"
-                                                            Text="Nickname?" />
-                                                        <TextBlock
-                                                            Grid.Column="1"
-                                                            Grid.Row="1"
-                                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                                            Text="{x:Bind Key}" />
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </GroupStyle.HeaderTemplate>
-                                        </GroupStyle>
-                                    </ListView.GroupStyle>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate x:DataType="m:AccountCharacter">
-                                            <Grid Padding="0, 4">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-                                                <TextBlock
-                                                    Grid.Row="0"
-                                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                                    Text="{x:Bind Nickname}" />
-                                                <TextBlock
-                                                    Grid.Row="1"
-                                                    Style="{ThemeResource CaptionTextBlockStyle}"
-                                                    Text="{x:Bind Region}" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                    <ListView.Resources>
-                                        <CollectionViewSource
-                                            x:Name="CollectionViewSourceCharacters"
-                                            IsSourceGrouped="True" />
-                                    </ListView.Resources>
-                                </ListView>
-                            </Flyout>
-                        </Button.Flyout>
-                        <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphSwitchUser}" />
-                    </Button>
-                </Grid>
-                <!-- The character's real-time notes grid. -->
-                <Grid
-                    Background="{ThemeResource ExpanderContentBackground}"
-                    BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
-                    BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
-                    CornerRadius="0, 0, 4, 4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <ListView SelectionMode="None">
-                        <ListViewHeaderItem Content="Current Resin" />
-                        <ListViewItem Content="160/160" />
-                        <ListViewItem Content="Fully replenished                 0m" />
-                        <ListViewItem Content="ETA Today                      10.51" />
-                        <MenuFlyoutSeparator />
-                        <ListViewHeaderItem Content="Expeditions 5/5" />
-                        <ListViewItem Content="Complete                          0m" />
-                        <ListViewItem Content="Complete                          0m" />
-                        <ListViewItem Content="Complete                          0m" />
-                        <ListViewItem Content="Complete                          0m" />
-                        <ListViewItem Content="Complete                          0m" />
-                        <MenuFlyoutSeparator />
-                        <ListViewItem Content="Daily commissions                0/4" />
-                        <ListViewItem Content="Realm currency             2400/2400" />
-                        <ListViewItem Content="Weekly bosses                    3/3" />
-                        <ListViewItem Content="Parametric Transformer             √" />
-                    </ListView>
-                </Grid>
+        <!-- The body scroll viewer. -->
+        <ScrollViewer>
+            <!-- The body stack panel. -->
+            <StackPanel
+                x:Name="StackPanelBody"
+                HorizontalAlignment="Left"
+                Padding="12"
+                SizeChanged="StackPanelBody_OnSizeChanged"
+                VerticalAlignment="Top">
+                <!-- The title text block. -->
+                <TextBlock
+                    x:Name="TextBlockTitle"
+                    Margin="0, 0, 0, 8"
+                    Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <!-- The content stack panel. -->
+                <StackPanel>
+                    <Grid
+                        Background="{ThemeResource ExpanderHeaderBackground}"
+                        BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                        BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                        ColumnSpacing="32"
+                        CornerRadius="4, 4, 0, 0"
+                        Padding="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="In progress: character" />
+                        <Button Grid.Column="1">
+                            <Button.Flyout>
+                                <!-- The characters flyout. -->
+                                <Flyout>
+                                    <ListView
+                                        HorizontalAlignment="Stretch"
+                                        ItemsSource="{x:Bind CollectionViewSourceCharacters.View, Mode=OneWay}"
+                                        Margin="-8">
+                                        <ListView.GroupStyle>
+                                            <GroupStyle>
+                                                <GroupStyle.HeaderTemplate>
+                                                    <DataTemplate x:DataType="m:GroupInfoList">
+                                                        <Grid ColumnSpacing="12">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Ellipse
+                                                                Fill="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                                                                Grid.Column="0"
+                                                                Grid.Row="0"
+                                                                Grid.RowSpan="2"
+                                                                Height="32"
+                                                                Width="32" />
+                                                            <TextBlock
+                                                                Grid.Column="1"
+                                                                Grid.Row="0"
+                                                                Style="{ThemeResource BaseTextBlockStyle}"
+                                                                Text="Nickname?" />
+                                                            <TextBlock
+                                                                Grid.Column="1"
+                                                                Grid.Row="1"
+                                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                                Text="{x:Bind Key}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GroupStyle.HeaderTemplate>
+                                            </GroupStyle>
+                                        </ListView.GroupStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="m:AccountCharacter">
+                                                <Grid Padding="0, 4">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock
+                                                        Grid.Row="0"
+                                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                                        Text="{x:Bind Nickname}" />
+                                                    <TextBlock
+                                                        Grid.Row="1"
+                                                        Style="{ThemeResource CaptionTextBlockStyle}"
+                                                        Text="{x:Bind Region}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                        <ListView.Resources>
+                                            <CollectionViewSource
+                                                x:Name="CollectionViewSourceCharacters"
+                                                IsSourceGrouped="True" />
+                                        </ListView.Resources>
+                                    </ListView>
+                                </Flyout>
+                            </Button.Flyout>
+                            <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphSwitchUser}" />
+                        </Button>
+                    </Grid>
+                    <!-- The character's real-time notes grid. -->
+                    <Grid
+                        Background="{ThemeResource ExpanderContentBackground}"
+                        BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
+                        BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
+                        CornerRadius="0, 0, 4, 4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ListView SelectionMode="None">
+                            <ListViewHeaderItem Content="Current Resin" />
+                            <ListViewItem Content="160/160" />
+                            <ListViewItem Content="Fully replenished                 0m" />
+                            <ListViewItem Content="ETA Today                      10.51" />
+                            <MenuFlyoutSeparator />
+                            <ListViewHeaderItem Content="Expeditions 5/5" />
+                            <ListViewItem Content="Complete                          0m" />
+                            <ListViewItem Content="Complete                          0m" />
+                            <ListViewItem Content="Complete                          0m" />
+                            <ListViewItem Content="Complete                          0m" />
+                            <ListViewItem Content="Complete                          0m" />
+                            <MenuFlyoutSeparator />
+                            <ListViewItem Content="Daily commissions                0/4" />
+                            <ListViewItem Content="Realm currency             2400/2400" />
+                            <ListViewItem Content="Weekly bosses                    3/3" />
+                            <ListViewItem Content="Parametric Transformer             √" />
+                        </ListView>
+                    </Grid>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
         <!-- TODO: The grid for indicating no account. -->
         <Grid
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"

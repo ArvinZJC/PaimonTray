@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Resources;
 
@@ -21,7 +20,7 @@ namespace PaimonTray.Views
             UpdateUiText();
 
             CollectionViewSourceCharacters.Source =
-                (Application.Current as App)?.AccHelper.GetGroupedCharactersFromLocal();
+                (Application.Current as App)?.AccountsH.GetGroupedCharactersFromLocal();
         } // end constructor RealTimeNotesPage
 
         #endregion Constructors
@@ -29,9 +28,9 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
-        /// Invoked when the <see cref="RealTimeNotesPage"/> is loaded and becomes the current source of a parent <see cref="Frame"/>.
+        /// Invoked when the page is loaded and becomes the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current <see cref="RealTimeNotesPage"/>.</param>
+        /// <param name="args">Details about the pending navigation that will load the current page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             base.OnNavigatedTo(args);

@@ -21,6 +21,9 @@ namespace PaimonTray.Views
     {
         #region Fields
 
+        /// <summary>
+        /// The app window.
+        /// </summary>
         private AppWindow _appWindow;
 
         #endregion Fields
@@ -107,7 +110,7 @@ namespace PaimonTray.Views
                 (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppConstantsHelper.UriAppIcon))).Path);
             CustomiseTitleBar();
 
-            var workArea = DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Primary).WorkArea;
+            var workArea = WindowsHelper.GetWorkArea(windowId);
 
             _appWindow.Move(new PointInt32((workArea.Width - _appWindow.Size.Width) / 2,
                 (workArea.Height - _appWindow.Size.Height) / 2));
