@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Graphics;
+using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
 
 namespace PaimonTray.Helpers
@@ -31,6 +32,15 @@ namespace PaimonTray.Helpers
 
         #endregion Constants
 
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        #endregion Fields
+
         #region Properties
 
         /// <summary>
@@ -47,6 +57,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         public WindowsHelper()
         {
+            _app = Application.Current as App;
             ExistingWindowList = new List<Window>();
         } // end constructor WindowsHelper
 
@@ -73,6 +84,23 @@ namespace PaimonTray.Helpers
         {
             return ShowWindow(typeof(MainWindow), false) as MainWindow;
         } // end method GetMainWindow
+
+        /// <summary>
+        /// Get the main window's page's max size.
+        /// </summary>
+        /// <returns>The max size.</returns>
+        public SizeInt32 GetMainWindowPageMaxSize()
+        {
+            var isMainWindowTopNavigationPane = _app.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() ==
+                                                NavigationViewPaneDisplayMode.Top;
+            var workArea = GetWorkArea(GetWindowId(GetMainWindow()));
+            const int workAreaOffset = 2 * MainWindowPositionOffset;
+            const int workAreaAdditionalOffset = 4 * MainWindowPositionOffset; // Reserved for the navigation pane.
+
+            return new SizeInt32(
+                workArea.Width - workAreaOffset - (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset),
+                workArea.Height - workAreaOffset - (isMainWindowTopNavigationPane ? workAreaAdditionalOffset : 0));
+        } // end method GetMainWindowPageMaxSize
 
         /// <summary>
         /// Get the window ID for the given window.
@@ -126,10 +154,9 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            ExistingWindowList.Add(window);
-            (Application.Current as App)?.SettingsH.ApplyThemeSelection();
+            ExistingWindowList.Add(window); // Must add the window first.
+            _app.SettingsH.ApplyThemeSelection();
             window.Closed += (_, _) => ExistingWindowList.Remove(window);
-
             return window;
         } // end method ShowWindow
 

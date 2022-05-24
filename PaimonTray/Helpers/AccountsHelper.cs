@@ -50,7 +50,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The Accept header value.
         /// </summary>
-        private const string HeaderValueAccept = "application/json, text/plain, */*";
+        private const string HeaderValueAccept = "application/json";
 
         /// <summary>
         /// The app version RPC header value for the CN server.

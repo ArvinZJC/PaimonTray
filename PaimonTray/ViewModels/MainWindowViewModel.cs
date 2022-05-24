@@ -10,6 +10,15 @@ namespace PaimonTray.ViewModels
     /// </summary>
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        #region Constants
+
+        /// <summary>
+        /// The property name for the navigation view's pane display mode.
+        /// </summary>
+        public const string PropertyNameNavViewPaneDisplayMode = nameof(NavViewPaneDisplayMode);
+
+        #endregion Constants
+
         #region Fields
 
         /// <summary>

@@ -1,13 +1,14 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using Serilog;
 using System;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -164,34 +165,24 @@ namespace PaimonTray.Views
 
             if (comboBoxServerSelectedItem == null) return;
 
+            var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
             var uriLoginMiHoYo = GetLoginWebPageUri();
-            var workArea = DisplayArea.GetFromWindowId(_mainWindow.WinId, DisplayAreaFallback.Primary).WorkArea;
-
-            // The work area's height/width minus the specific constant is primarily for reserving space for the navigation pane.
-            var pageMaxHeight = workArea.Height - 6 * WindowsHelper.MainWindowPositionOffset;
-            var pageMaxWidth = workArea.Width - 6 * WindowsHelper.MainWindowPositionOffset;
 
             CheckAccountsCount();
 
-            var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
-
             if (_isWebView2Available)
             {
-                var pageSuggestedHeight = isServerCn ? 788 : 780;
-                var pageSuggestedWidth = isServerCn ? 680 : 800;
-
+                _webView2LoginWebPage.Height = isServerCn ? 616 : 608;
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
                 ButtonLoginCompleteConfirm.IsEnabled = false;
                 ButtonLoginCompleteConfirm.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
-                Height = pageMaxHeight < pageSuggestedHeight ? pageMaxHeight : pageSuggestedHeight;
-                Width = pageMaxWidth < pageSuggestedWidth ? pageMaxWidth : pageSuggestedWidth;
+                StackPanelLogin.Width = isServerCn ? 632 : 740;
             }
             else
             {
-                Height = pageMaxHeight < 500 ? pageMaxHeight : 500;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
-                Width = pageMaxWidth < 500 ? pageMaxWidth : 500;
+                StackPanelLogin.Width = 400;
             } // end if...else
         } // end method ApplyServerSelection
 
@@ -333,29 +324,34 @@ namespace PaimonTray.Views
         /// <summary>
         /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the navigation that has unloaded the current page.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if (_isWebView2Available) _webView2LoginWebPage.Close();
+            if (_isWebView2Available)
+            {
+                _webView2LoginWebPage.CoreWebView2.SourceChanged -= CoreWebView2LoginWebPage_OnSourceChanged;
+                _webView2LoginWebPage.NavigationCompleted -= WebView2LoginWebPage_OnNavigationCompleted;
+                _webView2LoginWebPage.Close(); // Close at last to avoid the null reference exception.
+            } // end if
 
             ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
                 (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
             ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
                 (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
-            base.OnNavigatedFrom(args);
+            base.OnNavigatedFrom(e);
         } // end method OnNavigatedFrom
 
         /// <summary>
         /// Invoked when the page is loaded and becomes the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs args)
+        /// <param name="e">Details about the pending navigation that will load the current page.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
                 new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
             ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
                 new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
-            base.OnNavigatedTo(args);
+            base.OnNavigatedTo(e);
         } // end method OnNavigatedTo
 
         /// <summary>
@@ -404,6 +400,17 @@ namespace PaimonTray.Views
 
             return (accountId, stringBuilderCookies.ToString());
         } // end generic method ProcessCookies
+
+        /// <summary>
+        /// Set the page size.
+        /// </summary>
+        private void SetPageSize()
+        {
+            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
+
+            Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
+            Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;
+        } // end method SetPageSize
 
         /// <summary>
         /// Show the busy indicator grid.
@@ -547,6 +554,18 @@ namespace PaimonTray.Views
                   (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
+        // Handle the body grid's size changed event.
+        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetPageSize();
+        } // end method GridBody_OnSizeChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+        } // end method GridRoot_OnLoaded
+
 #pragma warning disable CA1822 // Mark members as static
         // Handle the info bar's closing event.
         private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
@@ -554,6 +573,12 @@ namespace PaimonTray.Views
         {
             sender.Margin = new Thickness(0);
         } // end method InfoBar_OnClosing
+
+        // Handle the main window view model's property changed event.
+        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+        } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the alternative login text box's text changed event.
         private void TextBoxLoginAlternative_OnTextChanged(object sender, TextChangedEventArgs e)

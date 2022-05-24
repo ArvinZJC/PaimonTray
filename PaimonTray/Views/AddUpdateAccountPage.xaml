@@ -9,209 +9,209 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     ActualThemeChanged="AddUpdateAccountPage_OnActualThemeChanged">
     <!-- The root grid. -->
-    <Grid>
-        <!-- The body grid. -->
-        <Grid
-            Padding="12"
-            RowSpacing="8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <!-- The title text block. -->
-            <TextBlock
-                x:Name="TextBlockTitle"
-                Grid.Row="0"
-                Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <!-- The content grid. -->
-            <Grid Grid.Row="1">
+    <Grid Loaded="GridRoot_OnLoaded">
+        <!-- The body scroll viewer. -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <!-- The body grid. -->
+            <Grid
+                x:Name="GridBody"
+                HorizontalAlignment="Left"
+                Padding="12"
+                RowSpacing="8"
+                SizeChanged="GridBody_OnSizeChanged"
+                VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <!-- The server grid. -->
-                <Grid
-                    Background="{ThemeResource ExpanderHeaderBackground}"
-                    BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
-                    BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-                    ColumnSpacing="32"
-                    CornerRadius="4, 4, 0, 0"
+                <!-- The title text block. -->
+                <TextBlock
+                    x:Name="TextBlockTitle"
                     Grid.Row="0"
-                    Padding="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                    Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <!-- The content stack panel. -->
+                <StackPanel Grid.Row="1">
+                    <!-- The server grid. -->
                     <Grid
-                        Grid.Column="0"
-                        VerticalAlignment="Center">
+                        Background="{ThemeResource ExpanderHeaderBackground}"
+                        BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                        BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                        ColumnSpacing="32"
+                        CornerRadius="4, 4, 0, 0"
+                        Padding="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid
+                            Grid.Column="0"
+                            VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                x:Name="TextBlockServer"
+                                Grid.Row="0"
+                                TextWrapping="WrapWholeWords" />
+                            <TextBlock
+                                x:Name="TextBlockServerExplanation"
+                                Foreground="{ThemeResource SystemBaseMediumColor}"
+                                Grid.Row="1"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                TextWrapping="WrapWholeWords" />
+                        </Grid>
+                        <ComboBox
+                            x:Name="ComboBoxServer"
+                            Grid.Column="1"
+                            SelectionChanged="ComboBoxServer_OnSelectionChanged"
+                            VerticalAlignment="Center">
+                            <ComboBoxItem
+                                x:Name="ComboBoxItemServerCn"
+                                Loaded="ComboBoxItemServer_OnLoaded"
+                                Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                            <ComboBoxItem
+                                x:Name="ComboBoxItemServerGlobal"
+                                Loaded="ComboBoxItemServer_OnLoaded"
+                                Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
+                        </ComboBox>
+                    </Grid>
+                    <!-- The login grid. -->
+                    <Grid
+                        x:Name="GridLogin"
+                        Background="{ThemeResource ExpanderContentBackground}"
+                        BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
+                        BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
+                        ColumnSpacing="12"
+                        CornerRadius="0, 0, 4, 4"
+                        Padding="12"
+                        RowSpacing="4">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock
-                            x:Name="TextBlockServer"
-                            Grid.Row="0"
-                            TextWrapping="WrapWholeWords" />
-                        <TextBlock
-                            x:Name="TextBlockServerExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
-                            Grid.Row="1"
-                            Style="{ThemeResource CaptionTextBlockStyle}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
-                    <ComboBox
-                        x:Name="ComboBoxServer"
-                        Grid.Column="1"
-                        SelectionChanged="ComboBoxServer_OnSelectionChanged"
-                        VerticalAlignment="Center">
-                        <ComboBoxItem
-                            x:Name="ComboBoxItemServerCn"
-                            Loaded="ComboBoxItemServer_OnLoaded"
-                            Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
-                        <ComboBoxItem
-                            x:Name="ComboBoxItemServerGlobal"
-                            Loaded="ComboBoxItemServer_OnLoaded"
-                            Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
-                    </ComboBox>
-                </Grid>
-                <!-- The login section grid. -->
-                <Grid
-                    Background="{ThemeResource ExpanderContentBackground}"
-                    BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
-                    BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
-                    CornerRadius="0, 0, 4, 4"
-                    Grid.Row="1">
-                    <!-- The login scroll viewer. -->
-                    <ScrollViewer
-                        Padding="12"
-                        VerticalScrollBarVisibility="Auto">
-                        <!-- The login grid. -->
+                        <StackPanel
+                            x:Name="StackPanelLogin"
+                            Grid.Row="0">
+                            <!-- The info bar for indicating of automatically using the alternative login method. -->
+                            <InfoBar
+                                x:Name="InfoBarLoginAlternativeAutomatically"
+                                Closing="InfoBar_OnClosing"
+                                Severity="Warning">
+                                <InfoBar.ActionButton>
+                                    <HyperlinkButton
+                                        x:Name="HyperlinkButtonWebView2RuntimeDownload"
+                                        Grid.Column="1"
+                                        NavigateUri="{x:Bind h:AppConstantsHelper.UrlWebView2Runtime}" />
+                                </InfoBar.ActionButton>
+                            </InfoBar>
+                            <!-- The login info bar. -->
+                            <InfoBar
+                                x:Name="InfoBarLogin"
+                                Closing="InfoBar_OnClosing" />
+                            <!-- The login header grid. -->
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                                    <TextBlock x:Name="TextBlockLoginHeaderWebPage" />
+                                    <TextBlock
+                                        x:Name="TextBlockLoginHeaderAlternative"
+                                        Visibility="Collapsed">
+                                        <Run x:Name="RunLoginHeaderEnter" />
+                                        <Hyperlink x:Name="HyperlinkLoginHeaderPlace">
+                                            <Run x:Name="RunLoginHeaderPlace" />
+                                        </Hyperlink>
+                                        <Run x:Name="RunLoginHeaderCookies" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <Button
+                                    x:Name="ButtonLoginAssist"
+                                    Click="ButtonLoginAssist_OnClick"
+                                    Grid.Column="1"
+                                    Padding="4">
+                                    <FontIcon
+                                        x:Name="FontIconLoginAssist"
+                                        FontSize="{ThemeResource ToolTipContentThemeFontSize}" />
+                                </Button>
+                                <Button
+                                    x:Name="ButtonLoginCompleteConfirm"
+                                    Click="ButtonLoginCompleteConfirm_OnClick"
+                                    Grid.Column="2"
+                                    Height="22"
+                                    HorizontalAlignment="Right"
+                                    IsEnabled="False"
+                                    Margin="8, 0, 0, 0"
+                                    Padding="0"
+                                    Style="{ThemeResource AccentButtonStyle}"
+                                    Visibility="Collapsed"
+                                    Width="22">
+                                    <AnimatedIcon x:Name="AnimatedIconLoginCompleteConfirm">
+                                        <AnimatedIcon.FallbackIconSource>
+                                            <FontIconSource
+                                                FontSize="{ThemeResource ToolTipContentThemeFontSize}"
+                                                Glyph="{x:Bind h:AppConstantsHelper.GlyphAccept}" />
+                                        </AnimatedIcon.FallbackIconSource>
+                                        <AnimatedIcon.Source>
+                                            <av:AnimatedAcceptVisualSource />
+                                        </AnimatedIcon.Source>
+                                    </AnimatedIcon>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                        <!-- The web page login WebView2 (inserted by code when necessary). -->
+                        <!-- The alternative login grid. -->
                         <Grid
-                            x:Name="GridLogin"
-                            ColumnSpacing="12"
-                            RowSpacing="4">
+                            x:Name="GridLoginAlternative"
+                            Grid.Row="1"
+                            RowSpacing="4"
+                            Visibility="Collapsed">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0">
-                                <!-- The info bar for indicating of automatically using the alternative login method. -->
-                                <InfoBar
-                                    x:Name="InfoBarLoginAlternativeAutomatically"
-                                    Closing="InfoBar_OnClosing"
-                                    Severity="Warning">
-                                    <InfoBar.ActionButton>
-                                        <HyperlinkButton
-                                            x:Name="HyperlinkButtonWebView2RuntimeDownload"
-                                            Grid.Column="1"
-                                            NavigateUri="{x:Bind h:AppConstantsHelper.UrlWebView2Runtime}" />
-                                    </InfoBar.ActionButton>
-                                </InfoBar>
-                                <!-- The login info bar. -->
-                                <InfoBar
-                                    x:Name="InfoBarLogin"
-                                    Closing="InfoBar_OnClosing" />
-                                <!-- The login header grid. -->
-                                <Grid ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel
-                                        Grid.Column="0"
-                                        Orientation="Horizontal"
-                                        VerticalAlignment="Center">
-                                        <TextBlock x:Name="TextBlockLoginHeaderWebPage" />
-                                        <TextBlock
-                                            x:Name="TextBlockLoginHeaderAlternative"
-                                            Visibility="Collapsed">
-                                            <Run x:Name="RunLoginHeaderEnter" />
-                                            <Hyperlink x:Name="HyperlinkLoginHeaderPlace">
-                                                <Run x:Name="RunLoginHeaderPlace" />
-                                            </Hyperlink>
-                                            <Run x:Name="RunLoginHeaderCookies" />
-                                        </TextBlock>
-                                    </StackPanel>
-                                    <Button
-                                        x:Name="ButtonLoginAssist"
-                                        Click="ButtonLoginAssist_OnClick"
-                                        Grid.Column="1"
-                                        Padding="4">
-                                        <FontIcon
-                                            x:Name="FontIconLoginAssist"
-                                            FontSize="{ThemeResource ToolTipContentThemeFontSize}" />
-                                    </Button>
-                                    <Button
-                                        x:Name="ButtonLoginCompleteConfirm"
-                                        Click="ButtonLoginCompleteConfirm_OnClick"
-                                        Grid.Column="2"
-                                        Height="22"
-                                        HorizontalAlignment="Right"
-                                        IsEnabled="False"
-                                        Margin="8, 0, 0, 0"
-                                        Padding="0"
-                                        Style="{ThemeResource AccentButtonStyle}"
-                                        Visibility="Collapsed"
-                                        Width="22">
-                                        <AnimatedIcon x:Name="AnimatedIconLoginCompleteConfirm">
-                                            <AnimatedIcon.FallbackIconSource>
-                                                <FontIconSource
-                                                    FontSize="{ThemeResource ToolTipContentThemeFontSize}"
-                                                    Glyph="{x:Bind h:AppConstantsHelper.GlyphAccept}" />
-                                            </AnimatedIcon.FallbackIconSource>
-                                            <AnimatedIcon.Source>
-                                                <av:AnimatedAcceptVisualSource />
-                                            </AnimatedIcon.Source>
-                                        </AnimatedIcon>
-                                    </Button>
-                                </Grid>
-                            </StackPanel>
-                            <!-- The alternative login grid. -->
+                            <TextBox
+                                x:Name="TextBoxLoginAlternative"
+                                Grid.Row="0"
+                                IsSpellCheckEnabled="False"
+                                MinHeight="72"
+                                TextChanged="TextBoxLoginAlternative_OnTextChanged"
+                                TextWrapping="Wrap" />
                             <Grid
-                                x:Name="GridLoginAlternative"
-                                Grid.Row="1"
-                                RowSpacing="4"
-                                Visibility="Collapsed">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBox
-                                    x:Name="TextBoxLoginAlternative"
-                                    Grid.Row="0"
-                                    IsSpellCheckEnabled="False"
-                                    MinHeight="48"
-                                    TextChanged="TextBoxLoginAlternative_OnTextChanged"
-                                    TextWrapping="Wrap" />
-                                <Grid
-                                    ColumnSpacing="8"
-                                    Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Button
-                                        x:Name="ButtonLoginAlternative"
-                                        Click="ButtonLoginAlternative_OnClick"
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Stretch"
-                                        IsEnabled="False"
-                                        Style="{ThemeResource AccentButtonStyle}" />
-                                    <Button
-                                        x:Name="ButtonLoginAlternativeClear"
-                                        Click="ButtonLoginAlternativeClear_OnClick"
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Stretch"
-                                        IsEnabled="False" />
-                                </Grid>
+                                ColumnSpacing="8"
+                                Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button
+                                    x:Name="ButtonLoginAlternative"
+                                    Click="ButtonLoginAlternative_OnClick"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="False"
+                                    Style="{ThemeResource AccentButtonStyle}" />
+                                <Button
+                                    x:Name="ButtonLoginAlternativeClear"
+                                    Click="ButtonLoginAlternativeClear_OnClick"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="False" />
                             </Grid>
                         </Grid>
-                    </ScrollViewer>
-                </Grid>
+                    </Grid>
+                </StackPanel>
             </Grid>
-        </Grid>
+        </ScrollViewer>
         <!-- The busy indicator grid. -->
         <Grid
             x:Name="GridBusyIndicator"

@@ -1,5 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
+using PaimonTray.ViewModels;
+using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
 
 namespace PaimonTray.Views
@@ -9,6 +11,20 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class RealTimeNotesPage
     {
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        private MainWindow _mainWindow;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -16,11 +32,11 @@ namespace PaimonTray.Views
         /// </summary>
         public RealTimeNotesPage()
         {
+            _app = Application.Current as App;
             InitializeComponent();
             UpdateUiText();
 
-            CollectionViewSourceCharacters.Source =
-                (Application.Current as App)?.AccountsH.GetGroupedCharactersFromLocal();
+            CollectionViewSourceCharacters.Source = _app?.AccountsH.GetGroupedCharactersFromLocal();
         } // end constructor RealTimeNotesPage
 
         #endregion Constructors
@@ -28,13 +44,25 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
-        /// Invoked when the page is loaded and becomes the current source of a parent frame.
+        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
         /// </summary>
-        /// <param name="args">Details about the pending navigation that will load the current page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs args)
+        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(args);
-        } // end method OnNavigatedTo
+            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
+            base.OnNavigatedFrom(e);
+        } // end method OnNavigatedFrom
+
+        /// <summary>
+        /// Set the page size.
+        /// </summary>
+        private void SetPageSize()
+        {
+            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
+
+            Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
+            Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;
+        } // end method SetPageSize
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -50,12 +78,26 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
-        // Handle the body stack panel's size changed event.
-        private void StackPanelBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        // Handle the body grid's size changed event.
+        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Height = StackPanelBody.ActualHeight;
-            Width = StackPanelBody.ActualWidth;
-        } // end method StackPanelBody_OnSizeChanged
+            SetPageSize();
+        } // end method GridBody_OnSizeChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _mainWindow =
+                _app.WindowsH
+                    .GetMainWindow(); // Need to get the main window here to avoid any possible exception, as the page is navigated first when the app starts.
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+        } // end method GridRoot_OnLoaded
+
+        // Handle the main window view model's property changed event.
+        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+        } // end method MainWindowViewModel_OnPropertyChanged
 
         #endregion Event Handlers
     } // end class RealTimeNotesPage

@@ -8,23 +8,32 @@
     xmlns:h="using:PaimonTray.Helpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
-    <Grid>
+    <Grid Loaded="GridRoot_OnLoaded">
         <!-- The body scroll viewer. -->
-        <ScrollViewer>
-            <!-- The body stack panel. -->
-            <StackPanel
-                x:Name="StackPanelBody"
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <!-- The body grid. -->
+            <Grid
+                x:Name="GridBody"
                 HorizontalAlignment="Left"
                 Padding="12"
-                SizeChanged="StackPanelBody_OnSizeChanged"
+                RowSpacing="8"
+                SizeChanged="GridBody_OnSizeChanged"
                 VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <!-- The title text block. -->
                 <TextBlock
                     x:Name="TextBlockTitle"
-                    Margin="0, 0, 0, 8"
+                    Grid.Row="0"
                     Style="{ThemeResource SubtitleTextBlockStyle}" />
                 <!-- The content stack panel. -->
-                <StackPanel>
+                <StackPanel Grid.Row="1">
+                    <!-- The character grid. -->
                     <Grid
                         Background="{ThemeResource ExpanderHeaderBackground}"
                         BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
@@ -33,7 +42,7 @@
                         CornerRadius="4, 4, 0, 0"
                         Padding="12">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock
@@ -140,7 +149,7 @@
                         </ListView>
                     </Grid>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </ScrollViewer>
         <!-- TODO: The grid for indicating no account. -->
         <Grid
