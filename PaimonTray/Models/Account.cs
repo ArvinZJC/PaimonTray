@@ -3,16 +3,16 @@
 namespace PaimonTray.Models
 {
     /// <summary>
-    /// The character model.
+    /// The account model.
     /// </summary>
-    public class Character
+    public class Account
     {
         #region Properties
 
         /// <summary>
-        /// The level.
+        /// The avatar. Should be a code.
         /// </summary>
-        public int Level { get; set; }
+        public string Avatar { get; set; }
 
         /// <summary>
         /// The nickname.
@@ -20,16 +20,11 @@ namespace PaimonTray.Models
         public string Nickname { get; set; }
 
         /// <summary>
-        /// The region.
-        /// </summary>
-        public string Region { get; set; }
-
-        /// <summary>
         /// The UID.
         /// </summary>
-        [JsonPropertyName("game_uid")]
+        [JsonPropertyName("uid")]
         public string Uid { get; set; }
 
         #endregion Properties
-    } // end class Character
+    } // end class Account
 } // end namespace PaimonTray.Models

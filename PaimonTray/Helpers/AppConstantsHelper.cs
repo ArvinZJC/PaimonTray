@@ -53,6 +53,11 @@
         public const string TagNotificationGreeting = "NotificationGreeting";
 
         /// <summary>
+        /// The representation of the unknown value.
+        /// </summary>
+        public const string Unknown = "-";
+
+        /// <summary>
         /// The app icon (.ico) URI.
         /// </summary>
         public const string UriAppIcon = "ms-appx:///Assets/AppIcon/AppIcon.ico";

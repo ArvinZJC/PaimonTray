@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using PaimonTray.Helpers;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 
 namespace PaimonTray.Models
 {
     /// <summary>
-    /// The characters model.
+    /// The characters response model.
     /// </summary>
-    internal class Characters
+    internal class CharactersResponse
     {
         #region Properties
 
@@ -24,9 +25,9 @@ namespace PaimonTray.Models
         /// <summary>
         /// The response return code.
         /// </summary>
-        [JsonPropertyName("retcode")]
+        [JsonPropertyName(AccountsHelper.KeyReturnCode)]
         public int ReturnCode { get; set; }
 
         #endregion Properties
-    } // end class Characters
+    } // end class CharactersResponse
 } // end namespace PaimonTray.Models

@@ -378,9 +378,6 @@
   <data name="ThemeLight" xml:space="preserve">
     <value>浅色</value>
   </data>
-  <data name="Unknown" xml:space="preserve">
-    <value>未知</value>
-  </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>
   </data>

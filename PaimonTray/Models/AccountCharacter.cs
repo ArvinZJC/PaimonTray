@@ -3,17 +3,47 @@
     /// <summary>
     /// The account's character model.
     /// </summary>
-    internal class AccountCharacter : Character
+    internal class AccountCharacter
     {
         #region Properties
 
         /// <summary>
-        /// The account ID.
+        /// The account's nickname.
         /// </summary>
-        public string AccountId { get; set; }
+        public string ANickname { get; set; }
 
         /// <summary>
-        /// The server.
+        /// The account's UID.
+        /// </summary>
+        public string AUid { get; set; }
+
+        /// <summary>
+        /// The account's avatar. Should be a code.
+        /// </summary>
+        public string Avatar { get; set; }
+
+        /// <summary>
+        /// The character's nickname.
+        /// </summary>
+        public string CNickname { get; set; }
+
+        /// <summary>
+        /// The character's UID.
+        /// </summary>
+        public string CUid { get; set; }
+
+        /// <summary>
+        /// The character's level.
+        /// </summary>
+        public string Level { get; set; }
+
+        /// <summary>
+        /// The character's region.
+        /// </summary>
+        public string Region { get; set; }
+
+        /// <summary>
+        /// The account's server.
         /// </summary>
         public string Server { get; set; }
 

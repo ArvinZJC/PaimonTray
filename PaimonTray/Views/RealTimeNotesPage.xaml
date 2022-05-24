@@ -101,11 +101,16 @@
                                                     <TextBlock
                                                         Grid.Row="0"
                                                         Style="{ThemeResource BaseTextBlockStyle}"
-                                                        Text="{x:Bind Nickname}" />
+                                                        Text="{x:Bind CNickname}" />
                                                     <TextBlock
                                                         Grid.Row="1"
-                                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                                        Text="{x:Bind Region}" />
+                                                        Style="{ThemeResource CaptionTextBlockStyle}">
+                                                        <Run Text="{x:Bind Region}" />
+                                                        |
+                                                        <Run Text="{x:Bind Level}" />
+                                                        |
+                                                        <Run Text="{x:Bind CUid}" />
+                                                    </TextBlock>
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>

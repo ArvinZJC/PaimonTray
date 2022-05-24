@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -73,14 +74,19 @@ namespace PaimonTray.Helpers
         private const string HeaderValueUserAgentServerGlobal = $"miHoYoBBSOversea/{HeaderValueAppVersionServerGlobal}";
 
         /// <summary>
+        /// The avatar key.
+        /// </summary>
+        public const string KeyAvatar = "avatar";
+
+        /// <summary>
         /// The cookies key.
         /// </summary>
         public const string KeyCookies = "cookies";
 
         /// <summary>
-        /// The ID key.
+        /// The data key.
         /// </summary>
-        public const string KeyId = "id";
+        private const string KeyData = "data";
 
         /// <summary>
         /// The IsEnabled key.
@@ -95,7 +101,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The list key.
         /// </summary>
-        public const string KeyList = "list";
+        private const string KeyList = "list";
+
+        /// <summary>
+        /// The message key.
+        /// </summary>
+        private const string KeyMessage = "message";
 
         /// <summary>
         /// The nickname key.
@@ -108,6 +119,11 @@ namespace PaimonTray.Helpers
         public const string KeyRegion = "region";
 
         /// <summary>
+        /// The return code key.
+        /// </summary>
+        public const string KeyReturnCode = "retcode";
+
+        /// <summary>
         /// The server key.
         /// </summary>
         public const string KeyServer = "server";
@@ -116,6 +132,21 @@ namespace PaimonTray.Helpers
         /// The status key.
         /// </summary>
         public const string KeyStatus = "status";
+
+        /// <summary>
+        /// The UID key.
+        /// </summary>
+        public const string KeyUid = "uid";
+
+        /// <summary>
+        /// The user info key.
+        /// </summary>
+        private const string KeyUserInfo = "user_info";
+
+        /// <summary>
+        /// The level prefix.
+        /// </summary>
+        private const string PrefixLevel = "Lv.";
 
         /// <summary>
         /// The CN server tag.
@@ -146,6 +177,16 @@ namespace PaimonTray.Helpers
         /// The updating status tag.
         /// </summary>
         public const string TagStatusUpdating = "updating";
+
+        /// <summary>
+        /// The URL for the CN server to get an account.
+        /// </summary>
+        private const string UrlAccountServerCn = "https://bbs-api.mihoyo.com/user/wapi/getUserFullInfo?gids=2";
+
+        /// <summary>
+        /// The URL for the global server to get an account.
+        /// </summary>
+        private const string UrlAccountServerGlobal = "https://bbs-api-os.hoyolab.com/community/painter/wapi/user/full";
 
         /// <summary>
         /// The URL for the CN server to get characters.
@@ -342,6 +383,110 @@ namespace PaimonTray.Helpers
             return ApplicationDataContainerAccounts.Containers.Count;
         } // end method CountAccounts
 
+        public async void GetAccountFromApiAsync(string containerKeyAccount)
+        {
+            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            {
+                Log.Warning($"No such account container key ({containerKeyAccount}).");
+                return;
+            } // end if
+
+            string headerValueUserAgent;
+            var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+            string urlAccount;
+
+            if (propertySetAccount[KeyServer] as string == TagServerCn)
+            {
+                headerValueUserAgent = HeaderValueUserAgentServerCn;
+                urlAccount = UrlAccountServerCn;
+            }
+            else
+            {
+                headerValueUserAgent = HeaderValueUserAgentServerGlobal;
+                urlAccount = UrlAccountServerGlobal;
+            } // end if...else
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(urlAccount));
+            var headers = httpRequestMessage.Headers;
+
+            headers.Cookie.ParseAdd(propertySetAccount[KeyCookies] as string);
+            headers.UserAgent.ParseAdd(headerValueUserAgent);
+
+            var httpResponseMessage = await _httpClient.SendRequestAsync(httpRequestMessage);
+
+            try
+            {
+                httpResponseMessage.EnsureSuccessStatusCode();
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"The HTTP response to get an account was unsuccessful (account container key: {containerKeyAccount}).");
+                Log.Error(exception.ToString());
+                return;
+            } // end try...catch
+
+            var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse == null)
+                {
+                    Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                    Log.Information(httpResponseBody);
+                    return;
+                } // end if
+
+                var returnCode = (int)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode != 0)
+                {
+                    Log.Warning(
+                        $"Failed to get an account from the specific API (account container key: {containerKeyAccount}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    return;
+                } // end if
+
+                var userInfo = jsonNodeResponse[KeyData]?[KeyUserInfo];
+
+                if (userInfo == null)
+                {
+                    Log.Warning($"Failed to get the user info (account container key: {containerKeyAccount}).");
+                    return;
+                } // end if
+
+                var uid = (string)userInfo[KeyUid];
+
+                if (uid != propertySetAccount[KeyUid] as string)
+                {
+                    Log.Warning(
+                        $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {uid}).");
+                    return;
+                } // end if
+
+                var avatar = (string)userInfo[KeyAvatar];
+
+                if (avatar == null)
+                    Log.Warning(
+                        $"Failed to get the avatar from the user info (account container key: {containerKeyAccount}).");
+                else propertySetAccount[KeyAvatar] = avatar;
+
+                var nickname = (string)userInfo[KeyNickname];
+
+                if (nickname == null)
+                    Log.Warning(
+                        $"Failed to get the nickname from the user info (account container key: {containerKeyAccount}).");
+                else propertySetAccount[KeyNickname] = nickname;
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                Log.Information(httpResponseBody);
+                Log.Error(exception.ToString());
+            } // end try...catch
+        } // end method GetAccountFromApiAsync
+
         /// <summary>
         /// Get the specific account's characters from the API.
         /// </summary>
@@ -391,24 +536,24 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
-            var account = JsonSerializer.Deserialize<Characters>(httpResponseBody,
+            var charactersRaw = JsonSerializer.Deserialize<CharactersResponse>(httpResponseBody,
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-            if (account == null)
+            if (charactersRaw == null)
             {
                 Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
                 Log.Information(httpResponseBody);
                 return null;
             } // end if
 
-            if (account.ReturnCode != 0)
+            if (charactersRaw.ReturnCode != 0)
             {
                 Log.Warning(
-                    $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {account.Message}, return code: {account.ReturnCode}).");
+                    $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {charactersRaw.Message}, return code: {charactersRaw.ReturnCode}).");
                 return null;
             } // end if
 
-            if (account.Data.TryGetValue(KeyList, out var characters)) return characters;
+            if (charactersRaw.Data.TryGetValue(KeyList, out var characters)) return characters;
 
             Log.Warning($"Failed to get the character data list (account container key: {containerKeyAccount}).");
             return null;
@@ -434,19 +579,19 @@ namespace PaimonTray.Helpers
                     let propertySetCharacter = keyValuePairCharacter.Value.Values
                     select new AccountCharacter()
                     {
-                        AccountId = propertySetAccount[KeyId] as string,
-                        Level = (int)propertySetCharacter[KeyLevel],
-                        Nickname = propertySetCharacter[KeyNickname] as string,
+                        AUid = propertySetAccount[KeyUid] as string,
+                        CNickname = propertySetCharacter[KeyNickname] as string,
+                        CUid = keyValuePairCharacter.Key,
+                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
                         Region = propertySetCharacter[KeyRegion] as string,
                         Server = propertySetAccount[KeyServer] switch
                         {
                             TagServerCn => _resourceLoader.GetString("ServerCn"),
                             TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
-                            _ => _resourceLoader.GetString("Unknown")
-                        },
-                        UserId = keyValuePairCharacter.Key
+                            _ => AppConstantsHelper.Unknown
+                        }
                     }).ToList()
-                group character by $"{character.Server} | {character.AccountId}"
+                group character by $"{character.Server} | {character.AUid}"
                 into accountGroup
                 orderby accountGroup.Key
                 select new GroupInfoList(accountGroup) { Key = accountGroup.Key });
@@ -506,7 +651,7 @@ namespace PaimonTray.Helpers
             var containerKeysCharacter = new List<string>();
 
             foreach (var keyValuePairCharacter in applicationDataContainerCharacters.Containers.Where(
-                         keyValuePairCharacter => !characters.Select(character => character.UserId).ToImmutableList()
+                         keyValuePairCharacter => !characters.Select(character => character.Uid).ToImmutableList()
                              .Contains(keyValuePairCharacter.Key)))
             {
                 applicationDataContainerCharacters.DeleteContainer(keyValuePairCharacter.Key);
@@ -519,14 +664,14 @@ namespace PaimonTray.Helpers
             foreach (var character in characters)
             {
                 var propertySetCharacter = applicationDataContainerCharacters
-                    .CreateContainer(character.UserId, ApplicationDataCreateDisposition.Always).Values;
+                    .CreateContainer(character.Uid, ApplicationDataCreateDisposition.Always).Values;
 
                 if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
 
                 propertySetCharacter[KeyLevel] = character.Level;
                 propertySetCharacter[KeyNickname] = character.Nickname;
                 propertySetCharacter[KeyRegion] = character.Region;
-                containerKeysCharacter.Add(character.UserId);
+                containerKeysCharacter.Add(character.Uid);
             } // end foreach
 
             propertySetAccount[KeyStatus] = TagStatusReady;

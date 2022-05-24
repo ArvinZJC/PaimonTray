@@ -77,16 +77,16 @@ namespace PaimonTray.Views
         /// <summary>
         /// Add or update an account.
         /// </summary>
-        /// <param name="accountId">The account ID.</param>
+        /// <param name="aUid">The account's UID.</param>
         /// <param name="cookies">The cookies.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
-        private async Task AddOrUpdateAccountAsync(string accountId, string cookies)
+        private async Task AddOrUpdateAccountAsync(string aUid, string cookies)
         {
             var applicationDataContainerAccounts = _app.AccountsH.ApplicationDataContainerAccounts;
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                 ? AccountsHelper.TagServerCn
                 : AccountsHelper.TagServerGlobal;
-            var containerKeyAccount = $"{server}{accountId}";
+            var containerKeyAccount = $"{server}{aUid}";
             var shouldUpdateAccount =
                 applicationDataContainerAccounts.Containers
                     .ContainsKey(containerKeyAccount); // A flag indicating if the account should be updated or added.
@@ -99,11 +99,12 @@ namespace PaimonTray.Views
                 .Values; // Need to declare after the flag indicating if the account should be updated or added.
 
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
-            propertySetAccount[AccountsHelper.KeyId] = accountId;
             propertySetAccount[AccountsHelper.KeyServer] = server;
             propertySetAccount[AccountsHelper.KeyStatus] = shouldUpdateAccount
                 ? AccountsHelper.TagStatusUpdating
                 : AccountsHelper.TagStatusAdding;
+            propertySetAccount[AccountsHelper.KeyUid] = aUid;
+            _app.AccountsH.GetAccountFromApiAsync(containerKeyAccount);
 
             var characters = await _app.AccountsH.GetCharactersFromApiAsync(containerKeyAccount)!;
 
@@ -282,7 +283,7 @@ namespace PaimonTray.Views
             if (CheckAccountsCount()) InitialiseLogin();
             else
             {
-                string accountId;
+                string aUid;
                 string cookies;
 
                 TextBlockBusyIndicator.Text = _resourceLoader.GetString("CookiesProcessing");
@@ -294,19 +295,19 @@ namespace PaimonTray.Views
                             ? AccountsHelper.UrlCookiesMiHoYo
                             : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList();
 
-                    (accountId, cookies) = ProcessCookies(ref rawCookies);
+                    (aUid, cookies) = ProcessCookies(ref rawCookies);
                 }
                 else
                 {
                     var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
                         StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
 
-                    (accountId, cookies) = ProcessCookies(ref rawCookies);
+                    (aUid, cookies) = ProcessCookies(ref rawCookies);
                 } // end if...else
 
-                // Execute if valid account ID and cookies.
-                if (accountId != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
-                    cookies.Contains(AccountsHelper.CookieKeyToken)) await AddOrUpdateAccountAsync(accountId, cookies);
+                // Execute if the account's UID and cookies are valid.
+                if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
+                    cookies.Contains(AccountsHelper.CookieKeyToken)) await AddOrUpdateAccountAsync(aUid, cookies);
                 else
                 {
                     Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
@@ -359,10 +360,10 @@ namespace PaimonTray.Views
         /// </summary>
         /// <typeparam name="T">Should be a <see cref="string"/> or <see cref="CoreWebView2Cookie"/> type.</typeparam>
         /// <param name="rawCookies">The raw cookies.</param>
-        /// <returns>1st item: the account ID; 2nd item: the processed cookies.</returns>
+        /// <returns>1st item: the account's UID; 2nd item: the processed cookies.</returns>
         private static (string, string) ProcessCookies<T>(ref ImmutableList<T> rawCookies)
         {
-            var accountId = string.Empty;
+            var aUid = string.Empty;
             var cookieName = string.Empty;
             var cookieValue = string.Empty;
             var stringBuilderCookies = new StringBuilder(string.Empty);
@@ -393,12 +394,12 @@ namespace PaimonTray.Views
                 stringBuilderCookies.Append($"{cookieName}={cookieValue};");
                 validCookieNameCount++;
 
-                if (cookieName == AccountsHelper.CookieKeyUserId) accountId = cookieValue;
+                if (cookieName == AccountsHelper.CookieKeyUserId) aUid = cookieValue;
 
                 if (validCookieNameCount == 2) break;
             } // end foreach
 
-            return (accountId, stringBuilderCookies.ToString());
+            return (aUid, stringBuilderCookies.ToString());
         } // end generic method ProcessCookies
 
         /// <summary>
