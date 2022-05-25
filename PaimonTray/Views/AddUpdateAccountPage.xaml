@@ -216,6 +216,7 @@
         <Grid
             x:Name="GridBusyIndicator"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            Padding="12"
             Visibility="Collapsed">
             <Grid
                 ColumnSpacing="12"

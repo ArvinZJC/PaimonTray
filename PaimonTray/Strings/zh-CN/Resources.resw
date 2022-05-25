@@ -120,6 +120,9 @@
   <data name="About" xml:space="preserve">
     <value>关于</value>
   </data>
+  <data name="AccountAddCharacter" xml:space="preserve">
+    <value>哎呀，没绑定角色呀！让我们开始添加/更新账号吧。</value>
+  </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
     <value>添加您的账号？</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>

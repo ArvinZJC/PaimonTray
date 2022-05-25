@@ -53,7 +53,9 @@
                         <TextBlock
                             Grid.Column="0"
                             Text="In progress: character" />
-                        <Button Grid.Column="1">
+                        <Button
+                            Grid.Column="1"
+                            Padding="4">
                             <Button.Flyout>
                                 <!-- The characters flyout. -->
                                 <Flyout>
@@ -83,7 +85,7 @@
                                                                 <PersonPicture.ProfilePicture>
                                                                     <BitmapImage
                                                                         DecodePixelHeight="32"
-                                                                        UriSource="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=avatar}"/>
+                                                                        UriSource="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=avatar}" />
                                                                 </PersonPicture.ProfilePicture>
                                                             </PersonPicture>
                                                             <TextBlock
@@ -166,10 +168,46 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
-        <!-- TODO: The grid for indicating no account. -->
+        <!-- The grid for indicating no character. -->
         <Grid
+            x:Name="GridAccountAddCharacter"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            Padding="12"
             Visibility="Collapsed">
+            <Grid
+                HorizontalAlignment="Center"
+                RowSpacing="4"
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image
+                    Grid.Row="0"
+                    Height="96"
+                    Source="{x:Bind h:AppConstantsHelper.UriImagePaimonSurprise}"
+                    Width="96" />
+                <Grid
+                    ColumnSpacing="12"
+                    Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockAccountAddCharacter"
+                        Grid.Column="0"
+                        TextWrapping="WrapWholeWords" />
+                    <Button
+                        x:Name="ButtonAccountAddCharacter"
+                        Click="ButtonAccountAddCharacter_OnClick"
+                        Grid.Column="1"
+                        Padding="4"
+                        Style="{ThemeResource AccentButtonStyle}">
+                        <SymbolIcon Symbol="Forward" />
+                    </Button>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

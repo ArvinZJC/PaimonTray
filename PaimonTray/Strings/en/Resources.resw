@@ -120,6 +120,9 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="AccountAddCharacter" xml:space="preserve">
+    <value>Oops, no character linked! Let's start to add/update an account.</value>
+  </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
     <value>Add your account?</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>

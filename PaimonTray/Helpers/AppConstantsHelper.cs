@@ -68,6 +68,11 @@
         public const string UriAppIconImage = "ms-appx:///Assets/AppIcon/AppIcon.png";
 
         /// <summary>
+        /// The Paimon surprise image URI.
+        /// </summary>
+        public const string UriImagePaimonSurprise = "ms-appx:///Assets/PaimonSurprise.png";
+
+        /// <summary>
         /// The URI of the system settings page configuring notifications.
         /// </summary>
         public const string UriSystemSettingsNotifications = "ms-settings:notifications";
