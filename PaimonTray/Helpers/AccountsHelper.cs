@@ -74,6 +74,11 @@ namespace PaimonTray.Helpers
         private const string HeaderValueUserAgentServerGlobal = $"miHoYoBBSOversea/{HeaderValueAppVersionServerGlobal}";
 
         /// <summary>
+        /// The account key.
+        /// </summary>
+        public const string KeyAccount = "account";
+
+        /// <summary>
         /// The avatar key.
         /// </summary>
         public const string KeyAvatar = "avatar";
@@ -149,6 +154,11 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
+        /// The login fail return code.
+        /// </summary>
+        private const int ReturnCodeLoginFail = -100;
+
+        /// <summary>
         /// The CN server tag.
         /// </summary>
         public const string TagServerCn = "cn";
@@ -167,6 +177,11 @@ namespace PaimonTray.Helpers
         /// The expired status tag.
         /// </summary>
         public const string TagStatusExpired = "expired";
+
+        /// <summary>
+        /// The fail status tag.
+        /// </summary>
+        public const string TagStatusFail = "fail";
 
         /// <summary>
         /// The ready status tag.
@@ -189,6 +204,21 @@ namespace PaimonTray.Helpers
         private const string UrlAccountServerGlobal = "https://bbs-api-os.hoyolab.com/community/painter/wapi/user/full";
 
         /// <summary>
+        /// The base URL for the CN server to get an avatar.
+        /// </summary>
+        private const string UrlBaseAvatarServerCn = "https://img-static.mihoyo.com/avatar/avatar";
+
+        /// <summary>
+        /// The base URL for the global server to get an avatar.
+        /// </summary>
+        private const string UrlBaseAvatarServerGlobal = "https://img-os-static.hoyolab.com/avatar/avatar";
+
+        /// <summary>
+        /// The base URL for indicating the success of logging into miHoYo.
+        /// </summary>
+        public const string UrlBaseLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
+
+        /// <summary>
         /// The URL for the CN server to get characters.
         /// </summary>
         private const string UrlCharactersServerCn =
@@ -209,11 +239,6 @@ namespace PaimonTray.Helpers
         /// The miHoYo cookies URL.
         /// </summary>
         public const string UrlCookiesMiHoYo = "https://bbs.mihoyo.com";
-
-        /// <summary>
-        /// The URL for indicating the success of logging into miHoYo.
-        /// </summary>
-        public const string UrlLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
 
         /// <summary>
         /// The URL for logging into HoYoLAB.
@@ -245,11 +270,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private readonly HttpClient _httpClient;
 
-        /// <summary>
-        /// The resource loader.
-        /// </summary>
-        private readonly ResourceLoader _resourceLoader;
-
         #endregion Fields
 
         #region Properties
@@ -272,13 +292,12 @@ namespace PaimonTray.Helpers
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
-            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
             ApplicationDataContainerAccounts =
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
 
-            CheckAccounts();
+            CheckAccountsAsync();
         } // end constructor AccountsHelper
 
         #endregion Constructors
@@ -361,18 +380,36 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Check the accounts.
         /// </summary>
-        private void CheckAccounts()
+        private async void CheckAccountsAsync(bool shouldForceUpdate = false)
         {
-            // TODO: Status adding/updating consider continue storing characters; expired needs user attention
             if (CountAccounts() <= 0) return;
 
-            foreach (var propertySetAccount in ApplicationDataContainerAccounts.Containers.Values.ToImmutableList()
-                         .Select(applicationDataContainerAccount => applicationDataContainerAccount.Values)
-                         .Where(propertySetAccount =>
-                             !new[] { TagStatusAdding, TagStatusExpired, TagStatusReady, TagStatusUpdating }.Contains(
-                                 propertySetAccount[KeyStatus])))
-                propertySetAccount[KeyStatus] = TagStatusExpired; // TODO: check cookies to change to expired or ready.
-        } // end method CheckAccounts
+            foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
+                         .ToImmutableList())
+            {
+                var propertySetAccount = applicationDataContainerAccount.Values;
+
+                propertySetAccount[KeyStatus] ??= TagStatusAdding;
+
+                var statusAccount = propertySetAccount[KeyStatus] as string;
+
+                if (statusAccount == TagStatusExpired ||
+                    (shouldForceUpdate && statusAccount == TagStatusReady)) continue;
+
+                if (statusAccount == TagStatusAdding && (propertySetAccount[KeyCookies] == null ||
+                                                         propertySetAccount[KeyServer] == null ||
+                                                         propertySetAccount[KeyUid] == null))
+                {
+                    ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
+                    continue;
+                } // end if
+
+                StoreCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
+                    applicationDataContainerAccount.Name);
+            } // end foreach
+
+            // TODO: GetGroupedCharactersFromLocal();
+        } // end method CheckAccountsAsync
 
         /// <summary>
         /// Count the accounts added.
@@ -383,7 +420,24 @@ namespace PaimonTray.Helpers
             return ApplicationDataContainerAccounts.Containers.Count;
         } // end method CountAccounts
 
-        public async void GetAccountFromApiAsync(string containerKeyAccount)
+        /// <summary>
+        /// Get the account and its characters from the API.
+        /// NOTE: Remember to change the account status to adding/updating.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
+        public async Task<ImmutableList<Character>> GetAccountCharactersFromApiAsync(string containerKeyAccount)
+        {
+            await GetAccountFromApiAsync(containerKeyAccount);
+            return await GetCharactersFromApiAsync(containerKeyAccount);
+        } // end method GetAccountCharactersFromApiAsync
+
+        /// <summary>
+        /// Get the account from the API.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        private async Task GetAccountFromApiAsync(string containerKeyAccount)
         {
             if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
@@ -391,8 +445,16 @@ namespace PaimonTray.Helpers
                 return;
             } // end if
 
-            string headerValueUserAgent;
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+
+            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
+            {
+                Log.Warning(
+                    $"Cannot get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
+                return;
+            } // end if
+
+            string headerValueUserAgent;
             string urlAccount;
 
             if (propertySetAccount[KeyServer] as string == TagServerCn)
@@ -423,6 +485,7 @@ namespace PaimonTray.Helpers
                 Log.Error(
                     $"The HTTP response to get an account was unsuccessful (account container key: {containerKeyAccount}).");
                 Log.Error(exception.ToString());
+                propertySetAccount[KeyStatus] = TagStatusFail;
                 return;
             } // end try...catch
 
@@ -436,6 +499,7 @@ namespace PaimonTray.Helpers
                 {
                     Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
+                    propertySetAccount[KeyStatus] = TagStatusFail;
                     return;
                 } // end if
 
@@ -445,6 +509,8 @@ namespace PaimonTray.Helpers
                 {
                     Log.Warning(
                         $"Failed to get an account from the specific API (account container key: {containerKeyAccount}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    propertySetAccount[KeyStatus] =
+                        returnCode == ReturnCodeLoginFail ? TagStatusExpired : TagStatusFail;
                     return;
                 } // end if
 
@@ -453,6 +519,7 @@ namespace PaimonTray.Helpers
                 if (userInfo == null)
                 {
                     Log.Warning($"Failed to get the user info (account container key: {containerKeyAccount}).");
+                    propertySetAccount[KeyStatus] = TagStatusFail;
                     return;
                 } // end if
 
@@ -462,21 +529,28 @@ namespace PaimonTray.Helpers
                 {
                     Log.Warning(
                         $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {uid}).");
+                    propertySetAccount[KeyStatus] = TagStatusFail;
                     return;
                 } // end if
 
                 var avatar = (string)userInfo[KeyAvatar];
 
                 if (avatar == null)
+                {
                     Log.Warning(
                         $"Failed to get the avatar from the user info (account container key: {containerKeyAccount}).");
+                    propertySetAccount[KeyStatus] = TagStatusFail;
+                }
                 else propertySetAccount[KeyAvatar] = avatar;
 
                 var nickname = (string)userInfo[KeyNickname];
 
                 if (nickname == null)
+                {
                     Log.Warning(
                         $"Failed to get the nickname from the user info (account container key: {containerKeyAccount}).");
+                    propertySetAccount[KeyStatus] = TagStatusFail;
+                }
                 else propertySetAccount[KeyNickname] = nickname;
             }
             catch (Exception exception)
@@ -484,15 +558,16 @@ namespace PaimonTray.Helpers
                 Log.Error($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
                 Log.Information(httpResponseBody);
                 Log.Error(exception.ToString());
+                propertySetAccount[KeyStatus] = TagStatusFail;
             } // end try...catch
         } // end method GetAccountFromApiAsync
 
         /// <summary>
-        /// Get the specific account's characters from the API.
+        /// Get the avatar URI.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
-        /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
-        public async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
+        /// <returns>The avatar URI, or <c>null</c> if no such account container key.</returns>
+        public Uri GetAvatarUri(string containerKeyAccount)
         {
             if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
@@ -500,8 +575,37 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            string headerValueUserAgent;
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+            var urlBaseAvatar = propertySetAccount[KeyServer] as string == TagServerCn
+                ? UrlBaseAvatarServerCn
+                : UrlBaseAvatarServerGlobal;
+
+            return new Uri($"{urlBaseAvatar}{propertySetAccount[KeyAvatar]}.png");
+        } // end method GetAvatarUri
+
+        /// <summary>
+        /// Get the specific account's characters from the API.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
+        private async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
+        {
+            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            {
+                Log.Warning($"No such account container key ({containerKeyAccount}).");
+                return null;
+            } // end if
+
+            var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+
+            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
+            {
+                Log.Warning(
+                    $"Cannot get characters from the API due to the specific account's expired status (account container key: {containerKeyAccount}).");
+                return null;
+            } // end if
+
+            string headerValueUserAgent;
             string urlCharacters;
 
             if (propertySetAccount[KeyServer] as string == TagServerCn)
@@ -532,17 +636,19 @@ namespace PaimonTray.Helpers
                 Log.Error(
                     $"The HTTP response to get characters was unsuccessful (account container key: {containerKeyAccount}).");
                 Log.Error(exception.ToString());
+                propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
             } // end try...catch
 
             var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
             var charactersRaw = JsonSerializer.Deserialize<CharactersResponse>(httpResponseBody,
-                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (charactersRaw == null)
             {
                 Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
                 Log.Information(httpResponseBody);
+                propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
             } // end if
 
@@ -550,12 +656,15 @@ namespace PaimonTray.Helpers
             {
                 Log.Warning(
                     $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {charactersRaw.Message}, return code: {charactersRaw.ReturnCode}).");
+                propertySetAccount[KeyStatus] =
+                    charactersRaw.ReturnCode == ReturnCodeLoginFail ? TagStatusExpired : TagStatusFail;
                 return null;
             } // end if
 
             if (charactersRaw.Data.TryGetValue(KeyList, out var characters)) return characters;
 
             Log.Warning($"Failed to get the character data list (account container key: {containerKeyAccount}).");
+            propertySetAccount[KeyStatus] = TagStatusFail;
             return null;
         } // end method GetCharactersFromApiAsync
 
@@ -568,33 +677,41 @@ namespace PaimonTray.Helpers
             if (CountAccounts() <= 0) return null;
 
             return new ObservableCollection<GroupInfoList>(
-                from character in (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers
-                        .Values
-                    where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
-                    let applicationDataContainerCharacters =
-                        applicationDataContainerAccount.Containers[ContainerKeyCharacters]
-                    where applicationDataContainerCharacters.Containers.Count > 0
-                    let propertySetAccount = applicationDataContainerAccount.Values
-                    from keyValuePairCharacter in applicationDataContainerCharacters.Containers
-                    let propertySetCharacter = keyValuePairCharacter.Value.Values
-                    select new AccountCharacter()
-                    {
-                        AUid = propertySetAccount[KeyUid] as string,
-                        CNickname = propertySetCharacter[KeyNickname] as string,
-                        CUid = keyValuePairCharacter.Key,
-                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
-                        Region = propertySetCharacter[KeyRegion] as string,
-                        Server = propertySetAccount[KeyServer] switch
+                from accountCharacter in
+                    (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
+                        where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
+                        let applicationDataContainerCharacters =
+                            applicationDataContainerAccount.Containers[ContainerKeyCharacters]
+                        where applicationDataContainerCharacters.Containers.Count > 0
+                        let propertySetAccount = applicationDataContainerAccount.Values
+                        from keyValuePairCharacter in applicationDataContainerCharacters.Containers
+                        let propertySetCharacter = keyValuePairCharacter.Value.Values
+                        select new AccountCharacter()
                         {
-                            TagServerCn => _resourceLoader.GetString("ServerCn"),
-                            TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
-                            _ => AppConstantsHelper.Unknown
-                        }
-                    }).ToList()
-                group character by $"{character.Server} | {character.AUid}"
+                            ANickname = propertySetAccount[KeyNickname] as string,
+                            AUid = propertySetAccount[KeyUid] as string,
+                            CNickname = propertySetCharacter[KeyNickname] as string,
+                            CUid = keyValuePairCharacter.Key,
+                            Key = applicationDataContainerAccount.Name,
+                            Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                            Region = propertySetCharacter[KeyRegion] as string,
+                            Server = propertySetAccount[KeyServer] switch
+                            {
+                                TagServerCn => ResourceLoader.GetForViewIndependentUse().GetString("ServerCn"),
+                                TagServerGlobal => ResourceLoader.GetForViewIndependentUse().GetString("ServerGlobal"),
+                                _ => AppConstantsHelper.Unknown
+                            },
+                        }).ToList()
+                group accountCharacter by new Dictionary<string, object>
+                {
+                    [KeyAccount] = accountCharacter.Key,
+                    [KeyNickname] = accountCharacter.ANickname,
+                    [KeyServer] = accountCharacter.Server,
+                    [KeyUid] = accountCharacter.AUid
+                }
                 into accountGroup
-                orderby accountGroup.Key
-                select new GroupInfoList(accountGroup) { Key = accountGroup.Key });
+                orderby accountGroup.Key[KeyUid]
+                select new GroupInfoList(accountGroup) { Key = accountGroup.Key }); // TODO: ordered by datetime?
         } // end method GetGroupedCharactersFromLocal
 
         /// <summary>
@@ -622,7 +739,7 @@ namespace PaimonTray.Helpers
         } // end method RemoveAccountNavigation
 
         /// <summary>
-        /// Add or update the specific account's characters, and do necessary operations on the relevant UI elements.
+        /// TODO: Add or update the specific account's characters, and do necessary operations on the relevant UI elements.
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
@@ -641,25 +758,25 @@ namespace PaimonTray.Helpers
             {
                 applicationDataContainerAccount.DeleteContainer(ContainerKeyCharacters);
                 propertySetAccount[KeyStatus] = TagStatusReady;
-                RemoveCharactersNavigation(containerKeyAccount);
+                // RemoveCharactersNavigation(containerKeyAccount);
                 return;
             } // end if
 
             var applicationDataContainerCharacters =
                 applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
                     ApplicationDataCreateDisposition.Always);
-            var containerKeysCharacter = new List<string>();
+            // var containerKeysCharacter = new List<string>();
 
             foreach (var keyValuePairCharacter in applicationDataContainerCharacters.Containers.Where(
                          keyValuePairCharacter => !characters.Select(character => character.Uid).ToImmutableList()
                              .Contains(keyValuePairCharacter.Key)))
             {
                 applicationDataContainerCharacters.DeleteContainer(keyValuePairCharacter.Key);
-                containerKeysCharacter.Add(keyValuePairCharacter.Key);
+                // containerKeysCharacter.Add(keyValuePairCharacter.Key);
             } // end foreach
 
-            RemoveCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
-            containerKeysCharacter.Clear();
+            // RemoveCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
+            // containerKeysCharacter.Clear();
 
             foreach (var character in characters)
             {
@@ -671,11 +788,11 @@ namespace PaimonTray.Helpers
                 propertySetCharacter[KeyLevel] = character.Level;
                 propertySetCharacter[KeyNickname] = character.Nickname;
                 propertySetCharacter[KeyRegion] = character.Region;
-                containerKeysCharacter.Add(character.Uid);
+                // containerKeysCharacter.Add(character.Uid);
             } // end foreach
 
             propertySetAccount[KeyStatus] = TagStatusReady;
-            AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
+            // AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
         } // end method StoreCharacters
 
         #endregion Methods

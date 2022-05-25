@@ -18,11 +18,6 @@
         public string AUid { get; set; }
 
         /// <summary>
-        /// The account's avatar. Should be a code.
-        /// </summary>
-        public string Avatar { get; set; }
-
-        /// <summary>
         /// The character's nickname.
         /// </summary>
         public string CNickname { get; set; }
@@ -31,6 +26,11 @@
         /// The character's UID.
         /// </summary>
         public string CUid { get; set; }
+
+        /// <summary>
+        /// The account's key in the application data.
+        /// </summary>
+        public string Key { get; set; }
 
         /// <summary>
         /// The character's level.

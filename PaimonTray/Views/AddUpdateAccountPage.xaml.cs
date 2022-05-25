@@ -89,24 +89,22 @@ namespace PaimonTray.Views
             var containerKeyAccount = $"{server}{aUid}";
             var shouldUpdateAccount =
                 applicationDataContainerAccounts.Containers
-                    .ContainsKey(containerKeyAccount); // A flag indicating if the account should be updated or added.
+                    .ContainsKey(
+                        containerKeyAccount); // A flag indicating whether the account should be updated or added.
+            var propertySetAccount = applicationDataContainerAccounts
+                .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
+                .Values; // Need to declare after the flag indicating whether the account should be updated or added.
 
             TextBlockBusyIndicator.Text =
                 _resourceLoader.GetString(shouldUpdateAccount ? "AccountUpdating" : "AccountAdding");
-
-            var propertySetAccount = applicationDataContainerAccounts
-                .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
-                .Values; // Need to declare after the flag indicating if the account should be updated or added.
-
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
             propertySetAccount[AccountsHelper.KeyServer] = server;
             propertySetAccount[AccountsHelper.KeyStatus] = shouldUpdateAccount
                 ? AccountsHelper.TagStatusUpdating
                 : AccountsHelper.TagStatusAdding;
             propertySetAccount[AccountsHelper.KeyUid] = aUid;
-            _app.AccountsH.GetAccountFromApiAsync(containerKeyAccount);
 
-            var characters = await _app.AccountsH.GetCharactersFromApiAsync(containerKeyAccount)!;
+            var characters = await _app.AccountsH.GetAccountCharactersFromApiAsync(containerKeyAccount)!;
 
             InitialiseLogin();
 
@@ -546,7 +544,7 @@ namespace PaimonTray.Views
             var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
             var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
 
-            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginEndMiHoYo))
+            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
                 ShowGridBusyIndicator();
 
             ButtonLoginAssist.IsEnabled =
@@ -595,7 +593,7 @@ namespace PaimonTray.Views
             switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
             {
                 // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
-                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlLoginEndMiHoYo):
+                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlBaseLoginEndMiHoYo):
                     LogInAsync();
                     break;
 

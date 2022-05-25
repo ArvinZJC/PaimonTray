@@ -49,7 +49,7 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new()
                 {
-                    IconSource = new SymbolIconSource() { Symbol = Symbol.AddFriend },
+                    IconSource = new SymbolIconSource { Symbol = Symbol.AddFriend },
                     Label = _resourceLoader.GetString("AccountAddUpdate")
                 };
 
@@ -118,7 +118,7 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new()
                 {
-                    IconSource = new SymbolIconSource() { Symbol = Symbol.Setting },
+                    IconSource = new SymbolIconSource { Symbol = Symbol.Setting },
                     Label = _resourceLoader.GetString("Settings")
                 };
 

@@ -2,11 +2,16 @@
     mc:Ignorable="d"
     x:Class="PaimonTray.Views.RealTimeNotesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:c="using:PaimonTray.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:h="using:PaimonTray.Helpers"
     xmlns:m="using:PaimonTray.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:h="using:PaimonTray.Helpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Page.Resources>
+        <!-- Put converters here to make them work with x:Bind. Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/3442#issuecomment-772898950 -->
+        <c:GroupInfoListKeyConverter x:Key="GroupInfoListKeyConverter" />
+    </Page.Resources>
     <!-- The root grid. -->
     <Grid Loaded="GridRoot_OnLoaded">
         <!-- The body scroll viewer. -->
@@ -69,23 +74,28 @@
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <Ellipse
-                                                                Fill="{ThemeResource SystemControlBackgroundBaseMediumBrush}"
+                                                            <PersonPicture
                                                                 Grid.Column="0"
                                                                 Grid.Row="0"
                                                                 Grid.RowSpan="2"
                                                                 Height="32"
-                                                                Width="32" />
+                                                                Width="32">
+                                                                <PersonPicture.ProfilePicture>
+                                                                    <BitmapImage
+                                                                        DecodePixelHeight="32"
+                                                                        UriSource="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=avatar}"/>
+                                                                </PersonPicture.ProfilePicture>
+                                                            </PersonPicture>
                                                             <TextBlock
                                                                 Grid.Column="1"
                                                                 Grid.Row="0"
                                                                 Style="{ThemeResource BaseTextBlockStyle}"
-                                                                Text="Nickname?" />
+                                                                Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
                                                             <TextBlock
                                                                 Grid.Column="1"
                                                                 Grid.Row="1"
                                                                 Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{x:Bind Key}" />
+                                                                Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aOtherInfo}" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
