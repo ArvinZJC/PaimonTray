@@ -12,7 +12,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The key.
         /// </summary>
-        public Dictionary<string, object> Key { get; set; }
+        public string Key { get; set; }
 
         #endregion Properties
 

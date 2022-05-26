@@ -1,9 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PaimonTray.Helpers;
 using PaimonTray.Models;
 using PaimonTray.ViewModels;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
@@ -22,12 +22,15 @@ namespace PaimonTray.Views
         /// </summary>
         private readonly App _app;
 
-        private readonly ObservableCollection<GroupInfoList> _groupedCharacters;
-
         /// <summary>
         /// The main window.
         /// </summary>
         private MainWindow _mainWindow;
+
+        /// <summary>
+        /// The resource loader.
+        /// </summary>
+        private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
 
@@ -39,15 +42,11 @@ namespace PaimonTray.Views
         public RealTimeNotesPage()
         {
             _app = Application.Current as App;
-            _groupedCharacters = _app?.AccountsH.GetGroupedCharactersFromLocal();
+            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
 
             InitializeComponent();
+            ToggleStatusVisibility();
             UpdateUiText();
-            ToggleGridAccountAddCharacterVisibility();
-
-            if (_groupedCharacters != null) _groupedCharacters.CollectionChanged += GroupedCharacters_CollectionChanged;
-
-            CollectionViewSourceCharacters.Source = _groupedCharacters;
         } // end constructor RealTimeNotesPage
 
         #endregion Constructors
@@ -60,52 +59,78 @@ namespace PaimonTray.Views
         /// <param name="e">Details about the navigation that has unloaded the current page.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            _app.AccountsH.GroupedCharacters.CollectionChanged -= GroupedCharacters_CollectionChanged;
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
-            _groupedCharacters.CollectionChanged -= GroupedCharacters_CollectionChanged;
             base.OnNavigatedFrom(e);
         } // end method OnNavigatedFrom
 
         /// <summary>
-        /// Set the page size.
+        /// Invoked when the page is loaded and becomes the current source of a parent frame.
+        /// </summary>
+        /// <param name="e">Details about the pending navigation that will load the current page.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            _app.AccountsH.GroupedCharacters.CollectionChanged += GroupedCharacters_CollectionChanged;
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            CollectionViewSourceGroupedCharacters.Source = _app.AccountsH.GroupedCharacters;
+            base.OnNavigatedTo(e);
+        } // end method OnNavigatedTo
+
+        /// <summary>
+        /// Set the page size and other controls' sizes related to the page size.
         /// </summary>
         private void SetPageSize()
         {
             var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
 
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
+            ListViewGroupedCharacters.MaxHeight = Height - 2 * WindowsHelper.MainWindowPositionOffset;
             Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;
         } // end method SetPageSize
 
         /// <summary>
-        /// Show/Hide the grid for indicating no character.
+        /// Show/Hide the status.
         /// </summary>
-        private void ToggleGridAccountAddCharacterVisibility()
+        private void ToggleStatusVisibility()
         {
-            GridAccountAddCharacter.Visibility =
-                _groupedCharacters.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
-        } // end method ToggleGridAccountAddCharacterVisibility
+            if (_app.AccountsH.AreChecked)
+            {
+                if (_app.AccountsH.GroupedCharacters.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
+                else
+                {
+                    GridStatusWarning.Visibility = Visibility.Visible;
+                    ProgressRingStatusInitialising.Visibility = Visibility.Collapsed;
+                    TextBlockStatus.Text = _resourceLoader.GetString("AccountGroupNoCharacter");
+                    GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+                } // end if...else
+            }
+            else
+            {
+                GridStatusWarning.Visibility = Visibility.Collapsed;
+                ProgressRingStatusInitialising.Visibility = Visibility.Visible;
+                TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
+                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+            } // end if...else
+        } // end method ToggleStatusVisibility
 
         /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
-
-            TextBlockAccountAddCharacter.Text = resourceLoader.GetString("AccountAddCharacter");
-            TextBlockTitle.Text = resourceLoader.GetString("RealTimeNotes");
-            ToolTipService.SetToolTip(ButtonAccountAddCharacter, resourceLoader.GetString("AccountAddUpdate"));
+            TextBlockTitle.Text = _resourceLoader.GetString("RealTimeNotes");
         } // end method UpdateUiText
 
         #endregion Methods
 
         #region Event Handlers
 
-        // Handle the click event of the button for navigating to adding/updating an account.
-        private void ButtonAccountAddCharacter_OnClick(object sender, RoutedEventArgs e)
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAddUpdateAccount;
-        } // end method ButtonAccountAddCharacter_OnClick
+            if (e.PropertyName == AccountsHelper.PropertyNameAreChecked) ToggleStatusVisibility();
+        } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the body grid's size changed event.
         private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -125,8 +150,14 @@ namespace PaimonTray.Views
         // Handle the grouped characters' collection changed event.
         private void GroupedCharacters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            ToggleGridAccountAddCharacterVisibility();
+            ToggleStatusVisibility();
         } // end method GroupedCharacters_CollectionChanged
+
+        // Handle the grouped characters list view's selection changed event.
+        private void ListViewGroupedCharacters_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Serilog.Log.Debug((ListViewGroupedCharacters.SelectedItem as AccountCharacter)?.CUid); // TODO
+        } // end method ListViewGroupedCharacters_OnSelectionChanged
 
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

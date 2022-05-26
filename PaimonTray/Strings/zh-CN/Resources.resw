@@ -120,39 +120,42 @@
   <data name="About" xml:space="preserve">
     <value>关于</value>
   </data>
-  <data name="AccountAddCharacter" xml:space="preserve">
-    <value>哎呀，没绑定角色呀！让我们开始添加/更新账号吧。</value>
-  </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
     <value>添加您的账号？</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
-  </data>
-  <data name="AccountAdding" xml:space="preserve">
-    <value>添加您的账号中</value>
   </data>
   <data name="AccountAddNoCharacter" xml:space="preserve">
     <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
   </data>
   <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
-    <value>此未绑定角色的账号已添加。</value>
+    <value>此未绑定角色的账号已成功添加。</value>
   </data>
   <data name="AccountAddReachLimit" xml:space="preserve">
-    <value>您添加了的账号的数量已达上限。您仍可登录已添加的账号来对其更新。</value>
+    <value>您添加了的账号的数量已达上限。</value>
+  </data>
+  <data name="AccountAddReachLimitExtraInfo" xml:space="preserve">
+    <value>您仍可登录已添加的账号来对其更新。</value>
   </data>
   <data name="AccountAddUpdate" xml:space="preserve">
     <value>添加/更新账号</value>
+  </data>
+  <data name="AccountGroupNoCharacter" xml:space="preserve">
+    <value>哎呀，没有角色呀！您可添加/更新账号，或前往设置来管理您添加的账号。</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
   <data name="AccountsManagement" xml:space="preserve">
-    <value>您的账号和角色</value>
+    <value>您的账号</value>
+  </data>
+  <data name="AccountsManagementExplanation" xml:space="preserve">
+    <value>管理您添加的账号和账号绑定的角色。</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
-    <value>您的账号已在之前添加过了，并刚进行了更新。</value>
+    <value>您的账号刚进行了更新。</value>
   </data>
-  <data name="AccountUpdating" xml:space="preserve">
-    <value>更新您的账号中</value>
+  <data name="AccountUpdatedExtraInfo" xml:space="preserve">
+    <value>此账号已在之前添加过了。</value>
   </data>
   <data name="AcknowledgementApiUses" xml:space="preserve">
     <value>接口用法参考于</value>
@@ -180,9 +183,6 @@
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>如何获取您的 cookie？（临时）</value>
   </data>
-  <data name="CookiesProcessing" xml:space="preserve">
-    <value>处理 cookie 中</value>
-  </data>
   <data name="Enter" xml:space="preserve">
     <value>输入</value>
   </data>
@@ -203,9 +203,6 @@
   </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
-  </data>
-  <data name="Initialising" xml:space="preserve">
-    <value>初始化中</value>
   </data>
   <data name="IssuesView" xml:space="preserve">
     <value>查看 issues</value>
@@ -252,13 +249,19 @@
     <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号。</value>
   </data>
   <data name="LoginAlternativeAutomatically" xml:space="preserve">
-    <value>由于未能检测到 Microsoft Edge WebView2 运行环境，应用自动使用替代的登录方案。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
+    <value>应用自动使用替代的登录方案。</value>
+  </data>
+  <data name="LoginAlternativeAutomaticallyExtraInfo" xml:space="preserve">
+    <value>未能检测到 Microsoft Edge WebView2 运行环境。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
   </data>
   <data name="LoginCompleteConfirm" xml:space="preserve">
     <value>在网页上登录您的账号后确认完成登录</value>
   </data>
   <data name="LoginFail" xml:space="preserve">
-    <value>登录您的账号失败。请重试。</value>
+    <value>登录您的账号失败。</value>
+  </data>
+  <data name="LoginFailExtraInfo" xml:space="preserve">
+    <value>您可再重新登录试试。</value>
   </data>
   <data name="LoginHeaderWebPage" xml:space="preserve">
     <value>在网页上登录您的账号</value>
@@ -362,6 +365,18 @@
   <data name="Site" xml:space="preserve">
     <value>网站</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
+  </data>
+  <data name="StatusAccountAdding" xml:space="preserve">
+    <value>添加您的账号中</value>
+  </data>
+  <data name="StatusAccountUpdating" xml:space="preserve">
+    <value>更新您的账号中</value>
+  </data>
+  <data name="StatusCookiesProcessing" xml:space="preserve">
+    <value>处理 cookie 中</value>
+  </data>
+  <data name="StatusInitialising" xml:space="preserve">
+    <value>初始化中</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>

@@ -26,11 +26,6 @@ namespace PaimonTray.ViewModels
         /// </summary>
         private NavigationViewPaneDisplayMode _navigationViewPaneDisplayMode;
 
-        /// <summary>
-        /// The property changed event handler.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
         #endregion Fields
 
         #region Properties
@@ -64,6 +59,15 @@ namespace PaimonTray.ViewModels
         } // end constructor MainWindowViewModel
 
         #endregion Constructors
+
+        #region Events
+
+        /// <summary>
+        /// The property changed event handler.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Events
 
         #region Methods
 

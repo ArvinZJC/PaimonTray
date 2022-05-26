@@ -1,8 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using PaimonTray.Helpers;
+using PaimonTray.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace PaimonTray.Converters
 {
@@ -24,17 +26,19 @@ namespace PaimonTray.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var groupInfoListKey = (Dictionary<string, object>)value;
+            var groupInfoListKey = (string)value;
 
             if (parameter == null) return null;
 
+            var accountGroup = JsonSerializer.Deserialize<AccountCharacter>(groupInfoListKey);
+
+            if (accountGroup == null) return null;
+
             return parameter switch
             {
-                "aNickname" => groupInfoListKey[AccountsHelper.KeyNickname],
-                "avatar" => (Application.Current as App)?.AccountsH.GetAvatarUri(
-                    groupInfoListKey[AccountsHelper.KeyAccount] as string),
-                "aOtherInfo" =>
-                    $"{groupInfoListKey[AccountsHelper.KeyServer]} | {groupInfoListKey[AccountsHelper.KeyUid]}",
+                "aNickname" => accountGroup.ANickname,
+                "avatar" => (Application.Current as App)?.AccountsH.GetAvatarUri(accountGroup.Key),
+                "aOtherInfo" => $"{accountGroup.Server} | {accountGroup.AUid}",
                 _ => null
             };
         } // end method Convert

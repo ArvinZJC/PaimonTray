@@ -212,9 +212,9 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
-        <!-- The busy indicator grid. -->
+        <!-- The status grid. -->
         <Grid
-            x:Name="GridBusyIndicator"
+            x:Name="GridStatus"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             Padding="12"
             Visibility="Collapsed">
@@ -223,14 +223,15 @@
                 HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <ProgressRing
                     Grid.Column="0"
                     IsActive="True" />
                 <TextBlock
-                    x:Name="TextBlockBusyIndicator"
+                    x:Name="TextBlockStatus"
                     Grid.Column="1"
+                    TextWrapping="WrapWholeWords"
                     VerticalAlignment="Center" />
             </Grid>
         </Grid>

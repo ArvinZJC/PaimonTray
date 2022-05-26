@@ -57,6 +57,7 @@ namespace PaimonTray.Views
                 resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
             InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
             TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
+            TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
             TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
             TextBlockLoginAlternativeAlwaysExplanation.Text =
                 resourceLoader.GetString("LoginAlternativeAlwaysExplanation");

@@ -95,8 +95,8 @@ namespace PaimonTray.Views
                 .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
                 .Values; // Need to declare after the flag indicating whether the account should be updated or added.
 
-            TextBlockBusyIndicator.Text =
-                _resourceLoader.GetString(shouldUpdateAccount ? "AccountUpdating" : "AccountAdding");
+            TextBlockStatus.Text =
+                _resourceLoader.GetString(shouldUpdateAccount ? "StatusAccountUpdating" : "StatusAccountAdding");
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
             propertySetAccount[AccountsHelper.KeyServer] = server;
             propertySetAccount[AccountsHelper.KeyStatus] = shouldUpdateAccount
@@ -112,7 +112,8 @@ namespace PaimonTray.Views
             {
                 Log.Warning(
                     $"Failed to add the account due to null characters (account container key: {containerKeyAccount}).");
-                ShowInfoBarLogin(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+                ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
+                    _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
 
                 if (!shouldUpdateAccount) applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
@@ -122,7 +123,8 @@ namespace PaimonTray.Views
             if (shouldUpdateAccount)
             {
                 _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdated")); // TODO: consider also navigating
+                ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdatedExtraInfo"),
+                    _resourceLoader.GetString("AccountUpdated")); // TODO: consider also navigating
                 return;
             } // end if
 
@@ -149,7 +151,8 @@ namespace PaimonTray.Views
                     return;
                 } // end if
 
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddNoCharacterSuccess"), InfoBarSeverity.Success);
+                ShowInfoBarLogin(null, _resourceLoader.GetString("AccountAddNoCharacterSuccess"),
+                    InfoBarSeverity.Success);
             } // end if
 
             _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
@@ -194,7 +197,8 @@ namespace PaimonTray.Views
             var hasReachedLimit = _app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax;
 
             if (hasReachedLimit)
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
+                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
+                    _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
             else InfoBarLogin.IsOpen = false;
 
             return hasReachedLimit;
@@ -284,7 +288,7 @@ namespace PaimonTray.Views
                 string aUid;
                 string cookies;
 
-                TextBlockBusyIndicator.Text = _resourceLoader.GetString("CookiesProcessing");
+                TextBlockStatus.Text = _resourceLoader.GetString("StatusCookiesProcessing");
 
                 if (_isWebView2Available)
                 {
@@ -311,13 +315,14 @@ namespace PaimonTray.Views
                     Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
                                 $" login failed due to invalid cookies ({cookies}).");
                     InitialiseLogin();
-                    ShowInfoBarLogin(_resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+                    ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
+                        _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
                 } // end if...else
             } // end if
 
             _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = true;
-            GridBusyIndicator.Visibility = Visibility.Collapsed;
-            TextBlockBusyIndicator.Text = _resourceLoader.GetString("Initialising");
+            GridStatus.Visibility = Visibility.Collapsed;
+            TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
         } // end method LogInAsync
 
         /// <summary>
@@ -417,19 +422,22 @@ namespace PaimonTray.Views
         private void ShowGridBusyIndicator()
         {
             _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = false;
-            GridBusyIndicator.Visibility = Visibility.Visible;
+            GridStatus.Visibility = Visibility.Visible;
         } // end method ShowGridBusyIndicator
 
         /// <summary>
         /// Show the login info bar.
         /// </summary>
         /// <param name="message">The login message.</param>
+        /// <param name="title">The login title.</param>
         /// <param name="infoBarSeverity">The info bar's severity.</param>
-        private void ShowInfoBarLogin(string message, InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
+        private void ShowInfoBarLogin(string message, string title,
+            InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
             InfoBarLogin.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
             InfoBarLogin.Message = message;
             InfoBarLogin.Severity = infoBarSeverity;
+            InfoBarLogin.Title = title;
             InfoBarLogin.IsOpen = true; // Show the info bar when ready.
         } // end method ShowInfoBarLogin
 
@@ -440,9 +448,9 @@ namespace PaimonTray.Views
         {
             ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
             ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
-            TextBlockBusyIndicator.Text = _resourceLoader.GetString("Initialising");
             TextBlockServer.Text = _resourceLoader.GetString("Server");
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
+            TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
             TextBlockTitle.Text = _resourceLoader.GetString("AccountAddUpdate");
         } // end method UpdateUiText
 
@@ -460,7 +468,8 @@ namespace PaimonTray.Views
                 InfoBarLoginAlternativeAutomatically.Margin =
                     new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
                 InfoBarLoginAlternativeAutomatically.Message =
-                    _resourceLoader.GetString("LoginAlternativeAutomatically");
+                    _resourceLoader.GetString("LoginAlternativeAutomaticallyExtraInfo");
+                InfoBarLoginAlternativeAutomatically.Title = _resourceLoader.GetString("LoginAlternativeAutomatically");
                 InfoBarLoginAlternativeAutomatically.IsOpen = true; // Show the info bar when ready.
             } // end if
 

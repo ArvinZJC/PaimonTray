@@ -42,11 +42,22 @@
                     <TextBlock Text="TODO" />
                 </Expander.Content>
                 <Expander.Header>
-                    <TextBlock
-                        x:Name="TextBlockAccountsManagement"
-                        Grid.Row="0"
-                        Padding="0, 20"
-                        TextWrapping="WrapWholeWords" />
+                    <Grid Padding="0, 12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="TextBlockAccountsManagement"
+                            Grid.Row="0"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            x:Name="TextBlockAccountsManagementExplanation"
+                            Foreground="{ThemeResource SystemBaseMediumColor}"
+                            Grid.Row="1"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            TextWrapping="WrapWholeWords" />
+                    </Grid>
                 </Expander.Header>
             </Expander>
             <!-- The grid for always using the alternative login method. -->

@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -19,7 +21,7 @@ namespace PaimonTray.Helpers
     /// <summary>
     /// The accounts helper.
     /// </summary>
-    public class AccountsHelper
+    public class AccountsHelper : INotifyPropertyChanged
     {
         #region Constants
 
@@ -72,11 +74,6 @@ namespace PaimonTray.Helpers
         /// The User-Agent header value for the global server.
         /// </summary>
         private const string HeaderValueUserAgentServerGlobal = $"miHoYoBBSOversea/{HeaderValueAppVersionServerGlobal}";
-
-        /// <summary>
-        /// The account key.
-        /// </summary>
-        public const string KeyAccount = "account";
 
         /// <summary>
         /// The avatar key.
@@ -152,6 +149,11 @@ namespace PaimonTray.Helpers
         /// The level prefix.
         /// </summary>
         private const string PrefixLevel = "Lv.";
+
+        /// <summary>
+        /// The property name for the flag indicating if the accounts are checked.
+        /// </summary>
+        public const string PropertyNameAreChecked = nameof(AreChecked);
 
         /// <summary>
         /// The login fail return code.
@@ -266,6 +268,11 @@ namespace PaimonTray.Helpers
         private readonly App _app;
 
         /// <summary>
+        /// A flag indicating if the accounts are checked.
+        /// </summary>
+        private bool _areChecked;
+
+        /// <summary>
         /// The HTTP client.
         /// </summary>
         private readonly HttpClient _httpClient;
@@ -279,6 +286,26 @@ namespace PaimonTray.Helpers
         /// </summary>
         public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
 
+        /// <summary>
+        /// A flag indicating if the accounts are checked.
+        /// </summary>
+        public bool AreChecked
+        {
+            get => _areChecked;
+            set
+            {
+                if (_areChecked == value) return;
+
+                _areChecked = value;
+                NotifyPropertyChanged();
+            } // end set
+        } // end property AreChecked
+
+        /// <summary>
+        /// The grouped characters.
+        /// </summary>
+        public ObservableCollection<GroupInfoList> GroupedCharacters { get; }
+
         #endregion Properties
 
         #region Constructors
@@ -289,6 +316,7 @@ namespace PaimonTray.Helpers
         public AccountsHelper()
         {
             _app = Application.Current as App;
+            _areChecked = false;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept
                 .ParseAdd(HeaderValueAccept); // The specific Accept header should be sent with each request.
@@ -296,11 +324,21 @@ namespace PaimonTray.Helpers
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
+            GroupedCharacters = new ObservableCollection<GroupInfoList>();
 
             CheckAccountsAsync();
         } // end constructor AccountsHelper
 
         #endregion Constructors
+
+        #region Events
+
+        /// <summary>
+        /// The property changed event handler.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Events
 
         #region Methods
 
@@ -380,35 +418,71 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Check the accounts.
         /// </summary>
-        private async void CheckAccountsAsync(bool shouldForceUpdate = false)
+        /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
+        private async void CheckAccountsAsync(bool shouldForceCheck = false)
         {
-            if (CountAccounts() <= 0) return;
+            _areChecked = false;
 
-            foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
-                         .ToImmutableList())
+            if (CountAccounts() > 0)
             {
-                var propertySetAccount = applicationDataContainerAccount.Values;
-
-                propertySetAccount[KeyStatus] ??= TagStatusAdding;
-
-                var statusAccount = propertySetAccount[KeyStatus] as string;
-
-                if (statusAccount == TagStatusExpired ||
-                    (shouldForceUpdate && statusAccount == TagStatusReady)) continue;
-
-                if (statusAccount == TagStatusAdding && (propertySetAccount[KeyCookies] == null ||
-                                                         propertySetAccount[KeyServer] == null ||
-                                                         propertySetAccount[KeyUid] == null))
+                foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
+                             .ToImmutableList())
                 {
-                    ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
-                    continue;
-                } // end if
+                    var propertySetAccount = applicationDataContainerAccount.Values;
 
-                StoreCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
-                    applicationDataContainerAccount.Name);
-            } // end foreach
+                    propertySetAccount[KeyStatus] ??= TagStatusAdding;
 
-            // TODO: GetGroupedCharactersFromLocal();
+                    var statusAccount = propertySetAccount[KeyStatus] as string;
+
+                    if (statusAccount == TagStatusExpired ||
+                        (!shouldForceCheck && statusAccount == TagStatusReady)) continue;
+
+                    if (statusAccount == TagStatusAdding && (propertySetAccount[KeyCookies] == null ||
+                                                             propertySetAccount[KeyServer] == null ||
+                                                             propertySetAccount[KeyUid] == null))
+                    {
+                        ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
+                        continue;
+                    } // end if
+
+                    StoreCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
+                        applicationDataContainerAccount.Name);
+                } // end foreach
+
+                // TODO: test purposes only.
+                for (var i = 0; i < 3; i++)
+                {
+                    var containerKeyAccount = i.ToString();
+                    var propertySetAccount = ApplicationDataContainerAccounts
+                        .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always).Values;
+                    var server = i % 2 == 0 ? TagServerCn : TagServerGlobal;
+
+                    propertySetAccount[KeyCookies] = containerKeyAccount;
+                    propertySetAccount[KeyNickname] = "TEST_ACCOUNT";
+                    propertySetAccount[KeyServer] = server;
+                    propertySetAccount[KeyStatus] = TagStatusReady;
+                    propertySetAccount[KeyUid] = containerKeyAccount;
+
+                    var characters = new List<Character>();
+
+                    for (var j = 0; j < 3; j++)
+                    {
+                        characters.Add(new Character()
+                        {
+                            Level = 56,
+                            Nickname = "TEST_CHARACTER",
+                            Region = server == TagServerCn ? "cn_qd01" : "os_cht",
+                            Uid = j.ToString()
+                        });
+                    } // end for
+
+                    StoreCharacters(characters.ToImmutableList(), containerKeyAccount);
+                } // end for
+
+                GetGroupedCharactersFromLocal();
+            } // end if
+
+            _areChecked = true;
         } // end method CheckAccountsAsync
 
         /// <summary>
@@ -671,48 +745,55 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Get the characters grouped by account from local.
         /// </summary>
-        /// <returns>The characters grouped by account.</returns>
-        public ObservableCollection<GroupInfoList> GetGroupedCharactersFromLocal()
+        private void GetGroupedCharactersFromLocal()
         {
-            if (CountAccounts() <= 0) return null;
+            GroupedCharacters.Clear();
 
-            return new ObservableCollection<GroupInfoList>(
-                from accountCharacter in
-                    (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
-                        where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
-                        let applicationDataContainerCharacters =
-                            applicationDataContainerAccount.Containers[ContainerKeyCharacters]
-                        where applicationDataContainerCharacters.Containers.Count > 0
-                        let propertySetAccount = applicationDataContainerAccount.Values
-                        from keyValuePairCharacter in applicationDataContainerCharacters.Containers
-                        let propertySetCharacter = keyValuePairCharacter.Value.Values
-                        select new AccountCharacter()
-                        {
-                            ANickname = propertySetAccount[KeyNickname] as string,
-                            AUid = propertySetAccount[KeyUid] as string,
-                            CNickname = propertySetCharacter[KeyNickname] as string,
-                            CUid = keyValuePairCharacter.Key,
-                            Key = applicationDataContainerAccount.Name,
-                            Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
-                            Region = propertySetCharacter[KeyRegion] as string,
-                            Server = propertySetAccount[KeyServer] switch
+            if (CountAccounts() <= 0) return;
+
+            // TODO: Ordered by datetime? Need ToList to allow modification? Allow showing all accounts and characters to better reuse?
+            (from accountCharacter in
+                        (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
+                            where applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters)
+                            let applicationDataContainerCharacters =
+                                applicationDataContainerAccount.Containers[ContainerKeyCharacters]
+                            where applicationDataContainerCharacters.Containers.Count > 0
+                            let propertySetAccount = applicationDataContainerAccount.Values
+                            from keyValuePairCharacter in applicationDataContainerCharacters.Containers
+                            let propertySetCharacter = keyValuePairCharacter.Value.Values
+                            where propertySetCharacter[KeyIsEnabled] is true
+                            select new AccountCharacter()
                             {
-                                TagServerCn => ResourceLoader.GetForViewIndependentUse().GetString("ServerCn"),
-                                TagServerGlobal => ResourceLoader.GetForViewIndependentUse().GetString("ServerGlobal"),
-                                _ => AppConstantsHelper.Unknown
-                            },
-                        }).ToList()
-                group accountCharacter by new Dictionary<string, object>
-                {
-                    [KeyAccount] = accountCharacter.Key,
-                    [KeyNickname] = accountCharacter.ANickname,
-                    [KeyServer] = accountCharacter.Server,
-                    [KeyUid] = accountCharacter.AUid
-                }
-                into accountGroup
-                orderby accountGroup.Key[KeyUid]
-                select new GroupInfoList(accountGroup) { Key = accountGroup.Key }); // TODO: ordered by datetime?
+                                ANickname = propertySetAccount[KeyNickname] as string,
+                                AUid = propertySetAccount[KeyUid] as string,
+                                CNickname = propertySetCharacter[KeyNickname] as string,
+                                CUid = keyValuePairCharacter.Key,
+                                Key = applicationDataContainerAccount.Name,
+                                Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                                Region = propertySetCharacter[KeyRegion] as string,
+                                Server = propertySetAccount[KeyServer] switch
+                                {
+                                    TagServerCn => ResourceLoader.GetForViewIndependentUse().GetString("ServerCn"),
+                                    TagServerGlobal => ResourceLoader.GetForViewIndependentUse()
+                                        .GetString("ServerGlobal"),
+                                    _ => AppConstantsHelper.Unknown
+                                },
+                            }).ToImmutableList()
+                    group accountCharacter by JsonSerializer.Serialize(accountCharacter)
+                    into accountGroup
+                    orderby accountGroup.Key
+                    select new GroupInfoList(accountGroup) { Key = accountGroup.Key }).ToImmutableList()
+                .ForEach(GroupedCharacters.Add);
         } // end method GetGroupedCharactersFromLocal
+
+        /// <summary>
+        /// Notify the property changed event.
+        /// </summary>
+        /// <param name="propertyName">The name of the property for the event.</param>
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        } // end method NotifyPropertyChanged
 
         /// <summary>
         /// TODO: Remove the specific account's characters from the main window's navigation view.

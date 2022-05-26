@@ -57,12 +57,14 @@
                             Grid.Column="1"
                             Padding="4">
                             <Button.Flyout>
-                                <!-- The characters flyout. -->
+                                <!-- The grouped characters flyout. -->
                                 <Flyout>
                                     <ListView
+                                        x:Name="ListViewGroupedCharacters"
                                         HorizontalAlignment="Stretch"
-                                        ItemsSource="{x:Bind CollectionViewSourceCharacters.View, Mode=OneWay}"
-                                        Margin="-8">
+                                        ItemsSource="{x:Bind CollectionViewSourceGroupedCharacters.View, Mode=OneWay}"
+                                        Margin="-12"
+                                        SelectionChanged="ListViewGroupedCharacters_OnSelectionChanged">
                                         <ListView.GroupStyle>
                                             <GroupStyle>
                                                 <GroupStyle.HeaderTemplate>
@@ -105,7 +107,7 @@
                                         </ListView.GroupStyle>
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="m:AccountCharacter">
-                                                <Grid Padding="0, 4">
+                                                <Grid Padding="0, 8">
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="Auto" />
@@ -128,7 +130,7 @@
                                         </ListView.ItemTemplate>
                                         <ListView.Resources>
                                             <CollectionViewSource
-                                                x:Name="CollectionViewSourceCharacters"
+                                                x:Name="CollectionViewSourceGroupedCharacters"
                                                 IsSourceGrouped="True" />
                                         </ListView.Resources>
                                     </ListView>
@@ -168,45 +170,38 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
-        <!-- The grid for indicating no character. -->
+        <!-- The status grid. -->
         <Grid
-            x:Name="GridAccountAddCharacter"
+            x:Name="GridStatus"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            Padding="12"
-            Visibility="Collapsed">
+            Padding="12">
             <Grid
-                HorizontalAlignment="Center"
-                RowSpacing="4"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Image
-                    Grid.Row="0"
-                    Height="96"
-                    Source="{x:Bind h:AppConstantsHelper.UriImagePaimonSurprise}"
-                    Width="96" />
+                ColumnSpacing="12"
+                HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                 <Grid
-                    ColumnSpacing="12"
-                    Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        x:Name="TextBlockAccountAddCharacter"
-                        Grid.Column="0"
-                        TextWrapping="WrapWholeWords" />
-                    <Button
-                        x:Name="ButtonAccountAddCharacter"
-                        Click="ButtonAccountAddCharacter_OnClick"
-                        Grid.Column="1"
-                        Padding="4"
-                        Style="{ThemeResource AccentButtonStyle}">
-                        <SymbolIcon Symbol="Forward" />
-                    </Button>
+                    x:Name="GridStatusWarning"
+                    Grid.Column="0"
+                    Visibility="Collapsed">
+                    <FontIcon
+                        Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                    <FontIcon
+                        Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
+                        Glyph="{ThemeResource InfoBarWarningIconGlyph}" />
                 </Grid>
+                <ProgressRing
+                    x:Name="ProgressRingStatusInitialising"
+                    Grid.Column="0"
+                    IsActive="True" />
+                <TextBlock
+                    x:Name="TextBlockStatus"
+                    Grid.Column="1"
+                    TextWrapping="WrapWholeWords"
+                    VerticalAlignment="Center" />
             </Grid>
         </Grid>
     </Grid>

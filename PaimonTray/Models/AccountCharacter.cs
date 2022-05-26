@@ -1,4 +1,6 @@
-﻿namespace PaimonTray.Models
+﻿using System.Text.Json.Serialization;
+
+namespace PaimonTray.Models
 {
     /// <summary>
     /// The account's character model.
@@ -6,6 +8,11 @@
     internal class AccountCharacter
     {
         #region Properties
+
+        /// <summary>
+        /// The account's key in the application data.
+        /// </summary>
+        public string Key { get; set; } // It is put first because of being used to order grouped characters.
 
         /// <summary>
         /// The account's nickname.
@@ -20,26 +27,25 @@
         /// <summary>
         /// The character's nickname.
         /// </summary>
+        [JsonIgnore]
         public string CNickname { get; set; }
 
         /// <summary>
         /// The character's UID.
         /// </summary>
+        [JsonIgnore]
         public string CUid { get; set; }
-
-        /// <summary>
-        /// The account's key in the application data.
-        /// </summary>
-        public string Key { get; set; }
 
         /// <summary>
         /// The character's level.
         /// </summary>
+        [JsonIgnore]
         public string Level { get; set; }
 
         /// <summary>
         /// The character's region.
         /// </summary>
+        [JsonIgnore]
         public string Region { get; set; }
 
         /// <summary>
