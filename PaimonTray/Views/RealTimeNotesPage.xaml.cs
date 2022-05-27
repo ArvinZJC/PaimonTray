@@ -129,7 +129,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == AccountsHelper.PropertyNameAreChecked) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameAreChecked) ToggleStatusVisibility();
+            Serilog.Log.Debug(_app.AccountsH.GroupedCharacters.Count.ToString()); // TODO
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the body grid's size changed event.
@@ -162,7 +163,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         #endregion Event Handlers

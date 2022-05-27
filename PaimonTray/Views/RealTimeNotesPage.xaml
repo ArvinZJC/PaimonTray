@@ -69,7 +69,9 @@
                                             <GroupStyle>
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate x:DataType="m:GroupInfoList">
-                                                        <Grid ColumnSpacing="12">
+                                                        <Grid
+                                                            ColumnSpacing="12"
+                                                            Margin="0, 4, 0, 0">
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="Auto" />
@@ -96,9 +98,10 @@
                                                                 Style="{ThemeResource BaseTextBlockStyle}"
                                                                 Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
                                                             <TextBlock
+                                                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                                 Grid.Column="1"
                                                                 Grid.Row="1"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                                Style="{ThemeResource BodyTextBlockStyle}"
                                                                 Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aOtherInfo}" />
                                                         </Grid>
                                                     </DataTemplate>
@@ -107,25 +110,28 @@
                                         </ListView.GroupStyle>
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="m:AccountCharacter">
-                                                <Grid Padding="0, 8">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBlock
-                                                        Grid.Row="0"
-                                                        Style="{ThemeResource BaseTextBlockStyle}"
-                                                        Text="{x:Bind CNickname}" />
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Style="{ThemeResource CaptionTextBlockStyle}">
-                                                        <Run Text="{x:Bind Region}" />
-                                                        |
-                                                        <Run Text="{x:Bind Level}" />
-                                                        |
-                                                        <Run Text="{x:Bind CUid}" />
-                                                    </TextBlock>
-                                                </Grid>
+                                                <ListViewItem IsEnabled="True">
+                                                    <Grid Padding="0, 8">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Style="{ThemeResource BaseTextBlockStyle}"
+                                                            Text="{x:Bind CNickname}" />
+                                                        <TextBlock
+                                                            Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                            Grid.Row="1"
+                                                            Style="{ThemeResource BodyTextBlockStyle}">
+                                                            <Run Text="{x:Bind Region}" />
+                                                            |
+                                                            <Run Text="{x:Bind Level}" />
+                                                            |
+                                                            <Run Text="{x:Bind CUid}" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </ListViewItem>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                         <ListView.Resources>
@@ -148,7 +154,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ListView SelectionMode="None">
+                        <ListView SelectionMode="Single">
                             <ListViewHeaderItem Content="Current Resin" />
                             <ListViewItem Content="160/160" />
                             <ListViewItem Content="Fully replenished                 0m" />

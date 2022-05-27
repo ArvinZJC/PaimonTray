@@ -103,19 +103,21 @@ namespace PaimonTray.Views
                 ? AccountsHelper.TagStatusUpdating
                 : AccountsHelper.TagStatusAdding;
             propertySetAccount[AccountsHelper.KeyUid] = aUid;
-
-            var characters = await _app.AccountsH.GetAccountCharactersFromApiAsync(containerKeyAccount)!;
-
             InitialiseLogin();
 
-            if (characters == null)
+            var characters = await _app.AccountsH.GetAccountCharactersFromApiAsync(containerKeyAccount);
+
+            if (characters is null)
             {
+                var action = shouldUpdateAccount ? "update" : "add";
+
                 Log.Warning(
-                    $"Failed to add the account due to null characters (account container key: {containerKeyAccount}).");
+                    $"Failed to {action} the account due to null characters (account container key: {containerKeyAccount}).");
                 ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
 
-                if (!shouldUpdateAccount) applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
+                if (shouldUpdateAccount) _app.AccountsH.StoreCharacters(null, containerKeyAccount);
+                else applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
                 return;
             } // end if
@@ -163,14 +165,15 @@ namespace PaimonTray.Views
         /// </summary>
         private void ApplyServerSelection()
         {
-            var comboBoxServerSelectedItem = ComboBoxServer.SelectedItem as ComboBoxItem;
-
-            if (comboBoxServerSelectedItem == null) return;
+            if (ComboBoxServer.SelectedItem is not ComboBoxItem comboBoxServerSelectedItem) return;
 
             var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
             var uriLoginMiHoYo = GetLoginWebPageUri();
 
-            CheckAccountsCount();
+            if (_app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax)
+                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
+                    _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
+            else InfoBarLogin.IsOpen = false;
 
             if (_isWebView2Available)
             {
@@ -185,24 +188,9 @@ namespace PaimonTray.Views
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
                 StackPanelLogin.Width = 400;
+                TextBoxLoginAlternative.MaxWidth = StackPanelLogin.Width;
             } // end if...else
         } // end method ApplyServerSelection
-
-        /// <summary>
-        /// Check if the number of the accounts added has already reached the limit.
-        /// </summary>
-        /// <returns>A flag indicating if the number of the accounts added has already reached the limit.</returns>
-        private bool CheckAccountsCount()
-        {
-            var hasReachedLimit = _app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax;
-
-            if (hasReachedLimit)
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
-                    _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
-            else InfoBarLogin.IsOpen = false;
-
-            return hasReachedLimit;
-        } // end method CheckAccountsCount
 
         /// <summary>
         /// Choose the login method automatically.
@@ -282,43 +270,39 @@ namespace PaimonTray.Views
         {
             ShowGridBusyIndicator();
 
-            if (CheckAccountsCount()) InitialiseLogin();
+            string aUid;
+            string cookies;
+
+            TextBlockStatus.Text = _resourceLoader.GetString("StatusCookiesProcessing");
+
+            if (_isWebView2Available)
+            {
+                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+                    ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
+                        ? AccountsHelper.UrlCookiesMiHoYo
+                        : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList();
+
+                (aUid, cookies) = ProcessCookies(ref rawCookies);
+            }
             else
             {
-                string aUid;
-                string cookies;
+                var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
 
-                TextBlockStatus.Text = _resourceLoader.GetString("StatusCookiesProcessing");
+                (aUid, cookies) = ProcessCookies(ref rawCookies);
+            } // end if...else
 
-                if (_isWebView2Available)
-                {
-                    var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
-                        ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                            ? AccountsHelper.UrlCookiesMiHoYo
-                            : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList();
-
-                    (aUid, cookies) = ProcessCookies(ref rawCookies);
-                }
-                else
-                {
-                    var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
-                        StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
-
-                    (aUid, cookies) = ProcessCookies(ref rawCookies);
-                } // end if...else
-
-                // Execute if the account's UID and cookies are valid.
-                if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
-                    cookies.Contains(AccountsHelper.CookieKeyToken)) await AddOrUpdateAccountAsync(aUid, cookies);
-                else
-                {
-                    Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                                $" login failed due to invalid cookies ({cookies}).");
-                    InitialiseLogin();
-                    ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
-                        _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
-                } // end if...else
-            } // end if
+            // Execute if the account's UID and cookies are valid.
+            if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
+                cookies.Contains(AccountsHelper.CookieKeyToken)) await AddOrUpdateAccountAsync(aUid, cookies);
+            else
+            {
+                Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
+                            $" login failed due to invalid cookies ({cookies}).");
+                InitialiseLogin();
+                ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
+                    _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+            } // end if...else
 
             _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = true;
             GridStatus.Visibility = Visibility.Collapsed;
@@ -397,7 +381,7 @@ namespace PaimonTray.Views
                 stringBuilderCookies.Append($"{cookieName}={cookieValue};");
                 validCookieNameCount++;
 
-                if (cookieName == AccountsHelper.CookieKeyUserId) aUid = cookieValue;
+                if (cookieName is AccountsHelper.CookieKeyUserId) aUid = cookieValue;
 
                 if (validCookieNameCount == 2) break;
             } // end foreach
@@ -585,7 +569,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the alternative login text box's text changed event.

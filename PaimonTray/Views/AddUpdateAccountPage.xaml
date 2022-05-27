@@ -59,7 +59,7 @@
                                 TextWrapping="WrapWholeWords" />
                             <TextBlock
                                 x:Name="TextBlockServerExplanation"
-                                Foreground="{ThemeResource SystemBaseMediumColor}"
+                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                 Grid.Row="1"
                                 Style="{ThemeResource CaptionTextBlockStyle}"
                                 TextWrapping="WrapWholeWords" />

@@ -200,7 +200,9 @@ namespace PaimonTray.Helpers
         public void InitialiseSettings()
         {
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
-                !new[] { TagLanguageEn, TagLanguageZhCn, TagSystem }.Contains(PropertySetSettings[KeyLanguage]))
+                (PropertySetSettings[KeyLanguage] is not TagLanguageEn &&
+                 PropertySetSettings[KeyLanguage] is not TagLanguageZhCn &&
+                 PropertySetSettings[KeyLanguage] is not TagSystem))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
             if (!PropertySetSettings.ContainsKey(KeyLoginAlternativeAlways) ||
@@ -228,18 +230,19 @@ namespace PaimonTray.Helpers
                 InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
 
             if (!PropertySetSettings.ContainsKey(KeyServerDefault) ||
-                !new[] { AccountsHelper.TagServerCn, AccountsHelper.TagServerGlobal }.Contains(
-                    PropertySetSettings[KeyServerDefault]))
+                (PropertySetSettings[KeyServerDefault] is not AccountsHelper.TagServerCn &&
+                 PropertySetSettings[KeyServerDefault] is not AccountsHelper.TagServerGlobal))
                 InitialiseSetting(KeyServerDefault, "The setting for the default server", AccountsHelper.TagServerCn);
 
-            if (!PropertySetSettings.ContainsKey(KeyTheme) ||
-                !new[] { TagSystem, TagThemeDark, TagThemeLight }.Contains(PropertySetSettings[KeyTheme]))
+            if (!PropertySetSettings.ContainsKey(KeyTheme) || (PropertySetSettings[KeyTheme] is not TagSystem &&
+                                                               PropertySetSettings[KeyTheme] is not TagThemeDark &&
+                                                               PropertySetSettings[KeyTheme] is not TagThemeLight))
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
 
             // Apply the language selection.
             LanguageSelectionApplied = PropertySetSettings[KeyLanguage] as string;
             ApplicationLanguages.PrimaryLanguageOverride =
-                LanguageSelectionApplied == TagSystem ? string.Empty : LanguageSelectionApplied;
+                LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
         } // end method InitialiseSettings
 
         #endregion Methods

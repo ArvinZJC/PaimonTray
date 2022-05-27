@@ -100,7 +100,7 @@ namespace PaimonTray.Views
 
             _appWindow = WindowsHelper.GetAppWindow(windowId);
 
-            if (_appWindow == null)
+            if (_appWindow is null)
             {
                 Log.Warning("The settings window's AppWindow is null.");
                 return;

@@ -96,7 +96,7 @@ namespace PaimonTray.Views
             WinId = WindowsHelper.GetWindowId(this);
             _appWindow = WindowsHelper.GetAppWindow(WinId);
 
-            if (_appWindow == null)
+            if (_appWindow is null)
             {
                 Log.Warning("The main window's AppWindow is null.");
                 return;
@@ -104,9 +104,7 @@ namespace PaimonTray.Views
 
             _appWindow.IsShownInSwitchers = false;
 
-            var appWindowOverlappedPresenter = _appWindow.Presenter as OverlappedPresenter;
-
-            if (appWindowOverlappedPresenter == null)
+            if (_appWindow.Presenter is not OverlappedPresenter appWindowOverlappedPresenter)
             {
                 Log.Warning("The main window's AppWindow's presenter is null.");
                 return;
@@ -202,9 +200,8 @@ namespace PaimonTray.Views
         {
             Type pageType;
             object parameter = null;
-            var navigationViewBodySelectedItem = NavigationViewBody.SelectedItem as NavigationViewItem;
 
-            if (navigationViewBodySelectedItem == null) return;
+            if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
 
             if (navigationViewBodySelectedItem == NavigationViewItemBodyAddUpdateAccount)
                 pageType = typeof(AddUpdateAccountPage);

@@ -37,6 +37,12 @@ namespace PaimonTray.Models
         public string CUid { get; set; }
 
         /// <summary>
+        /// The character's flag indicating if the character is enabled.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
         /// The character's level.
         /// </summary>
         [JsonIgnore]
@@ -52,6 +58,11 @@ namespace PaimonTray.Models
         /// The account's server.
         /// </summary>
         public string Server { get; set; }
+
+        /// <summary>
+        /// The account's status.
+        /// </summary>
+        public string Status { get; set; }
 
         #endregion Properties
     } // end class AccountCharacter

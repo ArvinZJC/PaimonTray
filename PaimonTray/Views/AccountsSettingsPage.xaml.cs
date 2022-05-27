@@ -81,9 +81,7 @@ namespace PaimonTray.Views
         // Handle the default server combo box's selection changed event.
         private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBoxServerDefaultSelectedItem = ComboBoxServerDefault.SelectedItem as ComboBoxItem;
-
-            if (comboBoxServerDefaultSelectedItem == null ||
+            if (ComboBoxServerDefault.SelectedItem is not ComboBoxItem comboBoxServerDefaultSelectedItem ||
                 _propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
                 comboBoxServerDefaultSelectedItem.Tag as string) return;
 

@@ -148,7 +148,7 @@ namespace PaimonTray.Helpers
 
             var window = Activator.CreateInstance(windowType) as Window;
 
-            if (window == null)
+            if (window is null)
             {
                 Log.Warning($"Failed to open the specific window based on the provided window type ({windowType}).");
                 return null;

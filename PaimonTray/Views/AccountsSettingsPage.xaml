@@ -53,7 +53,7 @@
                             TextWrapping="WrapWholeWords" />
                         <TextBlock
                             x:Name="TextBlockAccountsManagementExplanation"
-                            Foreground="{ThemeResource SystemBaseMediumColor}"
+                            Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                             Grid.Row="1"
                             Style="{ThemeResource CaptionTextBlockStyle}"
                             TextWrapping="WrapWholeWords" />
@@ -86,7 +86,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockLoginAlternativeAlwaysExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />
@@ -125,7 +125,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockServerDefaultExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />

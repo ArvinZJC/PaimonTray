@@ -126,9 +126,7 @@ namespace PaimonTray.Views
         // Handle the language combo box's selection changed event.
         private void ComboBoxLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBoxLanguageSelectedItem = ComboBoxLanguage.SelectedItem as ComboBoxItem;
-
-            if (comboBoxLanguageSelectedItem == null) return;
+            if (ComboBoxLanguage.SelectedItem is not ComboBoxItem comboBoxLanguageSelectedItem) return;
 
             var comboBoxLanguageSelectedItemTag = comboBoxLanguageSelectedItem.Tag as string;
 
@@ -144,9 +142,7 @@ namespace PaimonTray.Views
         // Handle the theme combo box's selection changed event.
         private void ComboBoxTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBoxThemeSelectedItem = ComboBoxTheme.SelectedItem as ComboBoxItem;
-
-            if (comboBoxThemeSelectedItem == null) return;
+            if (ComboBoxTheme.SelectedItem is not ComboBoxItem comboBoxThemeSelectedItem) return;
 
             _propertySetSettings[SettingsHelper.KeyTheme] = comboBoxThemeSelectedItem.Tag as string;
             _app.SettingsH.ApplyThemeSelection();

@@ -56,7 +56,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockLaunchOnWindowsStartupExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />
@@ -95,7 +95,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockLanguageExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />
@@ -146,7 +146,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockThemeExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />
@@ -214,7 +214,7 @@
                                 TextWrapping="WrapWholeWords" />
                             <TextBlock
                                 x:Name="TextBlockNotificationsExplanation"
-                                Foreground="{ThemeResource SystemBaseMediumColor}"
+                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                 Grid.Row="1"
                                 Style="{ThemeResource CaptionTextBlockStyle}"
                                 TextWrapping="WrapWholeWords" />
@@ -280,7 +280,7 @@
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
                         x:Name="TextBlockMainWindowTopNavigationPaneExplanation"
-                        Foreground="{ThemeResource SystemBaseMediumColor}"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
                         TextWrapping="WrapWholeWords" />
