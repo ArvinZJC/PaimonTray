@@ -10,7 +10,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Page.Resources>
         <!-- Put converters here to make them work with x:Bind. Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/3442#issuecomment-772898950 -->
-        <c:GroupInfoListKeyConverter x:Key="GroupInfoListKeyConverter" />
+        <c:AccountGroupInfoListKeyConverter x:Key="AccountGroupInfoListKeyConverter" />
     </Page.Resources>
     <!-- The root grid. -->
     <Grid Loaded="GridRoot_OnLoaded">
@@ -89,20 +89,20 @@
                                                                 <PersonPicture.ProfilePicture>
                                                                     <BitmapImage
                                                                         DecodePixelHeight="32"
-                                                                        UriSource="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=avatar}" />
+                                                                        UriSource="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=avatar}" />
                                                                 </PersonPicture.ProfilePicture>
                                                             </PersonPicture>
                                                             <TextBlock
                                                                 Grid.Column="1"
                                                                 Grid.Row="0"
                                                                 Style="{ThemeResource BaseTextBlockStyle}"
-                                                                Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
+                                                                Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
                                                             <TextBlock
                                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                                 Grid.Column="1"
                                                                 Grid.Row="1"
                                                                 Style="{ThemeResource BodyTextBlockStyle}"
-                                                                Text="{x:Bind Key, Converter={StaticResource GroupInfoListKeyConverter}, ConverterParameter=aOtherInfo}" />
+                                                                Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aOtherInfo}" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
@@ -110,7 +110,7 @@
                                         </ListView.GroupStyle>
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="m:AccountCharacter">
-                                                <ListViewItem IsEnabled="True">
+                                                <ListViewItem Visibility="{x:Bind IsEnabled}">
                                                     <Grid Padding="0, 8">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="Auto" />
@@ -154,7 +154,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ListView SelectionMode="Single">
+                        <ListView SelectionMode="None">
                             <ListViewHeaderItem Content="Current Resin" />
                             <ListViewItem Content="160/160" />
                             <ListViewItem Content="Fully replenished                 0m" />

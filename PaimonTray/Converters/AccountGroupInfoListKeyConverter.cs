@@ -1,17 +1,15 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using PaimonTray.Helpers;
 using PaimonTray.Models;
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace PaimonTray.Converters
 {
     /// <summary>
-    /// The group info list key converter.
+    /// The account group info list key converter.
     /// </summary>
-    internal class GroupInfoListKeyConverter : IValueConverter
+    internal class AccountGroupInfoListKeyConverter : IValueConverter
     {
         #region Methods
 
@@ -59,5 +57,5 @@ namespace PaimonTray.Converters
         } // end method ConvertBack
 
         #endregion Methods
-    } // end class GroupInfoListKeyConverter
+    } // end class AccountGroupInfoListKeyConverter
 } // end namespace PaimonTray.Converters
