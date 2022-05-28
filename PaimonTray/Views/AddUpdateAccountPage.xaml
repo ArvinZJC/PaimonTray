@@ -39,45 +39,48 @@
                         Background="{ThemeResource ExpanderHeaderBackground}"
                         BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
                         BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
-                        ColumnSpacing="32"
                         CornerRadius="4, 4, 0, 0"
                         Padding="12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
                         <Grid
-                            Grid.Column="0"
-                            VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                x:Name="TextBlockServer"
-                                Grid.Row="0"
-                                TextWrapping="WrapWholeWords" />
-                            <TextBlock
-                                x:Name="TextBlockServerExplanation"
-                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                Grid.Row="1"
-                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                TextWrapping="WrapWholeWords" />
+                            x:Name="GridServer"
+                            ColumnSpacing="32">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid
+                                Grid.Column="0"
+                                VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    x:Name="TextBlockServer"
+                                    Grid.Row="0"
+                                    TextWrapping="WrapWholeWords" />
+                                <TextBlock
+                                    x:Name="TextBlockServerExplanation"
+                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                    Grid.Row="1"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    TextWrapping="WrapWholeWords" />
+                            </Grid>
+                            <ComboBox
+                                x:Name="ComboBoxServer"
+                                Grid.Column="1"
+                                SelectionChanged="ComboBoxServer_OnSelectionChanged"
+                                VerticalAlignment="Center">
+                                <ComboBoxItem
+                                    x:Name="ComboBoxItemServerCn"
+                                    Loaded="ComboBoxItemServer_OnLoaded"
+                                    Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
+                                <ComboBoxItem
+                                    x:Name="ComboBoxItemServerGlobal"
+                                    Loaded="ComboBoxItemServer_OnLoaded"
+                                    Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
+                            </ComboBox>
                         </Grid>
-                        <ComboBox
-                            x:Name="ComboBoxServer"
-                            Grid.Column="1"
-                            SelectionChanged="ComboBoxServer_OnSelectionChanged"
-                            VerticalAlignment="Center">
-                            <ComboBoxItem
-                                x:Name="ComboBoxItemServerCn"
-                                Loaded="ComboBoxItemServer_OnLoaded"
-                                Tag="{x:Bind h:AccountsHelper.TagServerCn}" />
-                            <ComboBoxItem
-                                x:Name="ComboBoxItemServerGlobal"
-                                Loaded="ComboBoxItemServer_OnLoaded"
-                                Tag="{x:Bind h:AccountsHelper.TagServerGlobal}" />
-                        </ComboBox>
                     </Grid>
                     <!-- The login grid. -->
                     <Grid

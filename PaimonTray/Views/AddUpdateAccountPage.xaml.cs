@@ -64,7 +64,7 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             _mainWindow = _app?.WindowsH.GetMainWindow();
-            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             ChooseLoginMethodAsync();
             UpdateUiText();
@@ -181,14 +181,16 @@ namespace PaimonTray.Views
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
                 ButtonLoginCompleteConfirm.IsEnabled = false;
                 ButtonLoginCompleteConfirm.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
-                StackPanelLogin.Width = isServerCn ? 632 : 740;
+                GridServer.Width = isServerCn ? 632 : 740;
+                StackPanelLogin.Width = GridServer.Width;
             }
             else
             {
+                GridServer.Width = 400;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
-                StackPanelLogin.Width = 400;
-                TextBoxLoginAlternative.MaxWidth = StackPanelLogin.Width;
+                StackPanelLogin.Width = GridServer.Width;
+                TextBoxLoginAlternative.Width = GridServer.Width;
             } // end if...else
         } // end method ApplyServerSelection
 
