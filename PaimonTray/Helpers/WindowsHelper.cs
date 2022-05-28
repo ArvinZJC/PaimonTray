@@ -6,6 +6,7 @@ using PaimonTray.Views;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Graphics;
 using Microsoft.UI.Xaml.Controls;
@@ -136,7 +137,7 @@ namespace PaimonTray.Helpers
         /// <param name="windowType">The window type.</param>
         /// <param name="activateIfExists">A flag indicating if the window should be activated if exists.</param>
         /// <returns>The window.</returns>
-        private Window ShowWindow(Type windowType, bool activateIfExists = true)
+        private Window ShowWindow([DisallowNull] Type windowType, bool activateIfExists = true)
         {
             foreach (var existingWindow in ExistingWindowList.Where(existingWindow =>
                          existingWindow.GetType() == windowType))
@@ -146,9 +147,7 @@ namespace PaimonTray.Helpers
                 return existingWindow;
             } // end foreach
 
-            var window = Activator.CreateInstance(windowType) as Window;
-
-            if (window is null)
+            if (Activator.CreateInstance(windowType) is not Window window)
             {
                 Log.Warning($"Failed to open the specific window based on the provided window type ({windowType}).");
                 return null;
