@@ -126,6 +126,36 @@ namespace PaimonTray.Helpers
         private const string KeyRegion = "region";
 
         /// <summary>
+        /// The region key for the CN server's Bilibili game server.
+        /// </summary>
+        private const string KeyRegionCnBilibili = "cn_qd01";
+
+        /// <summary>
+        /// The region key for the CN server's official game server.
+        /// </summary>
+        private const string KeyRegionCnOfficial = "cn_gf01";
+
+        /// <summary>
+        /// The region key for the global server's game server for America.
+        /// </summary>
+        private const string KeyRegionGlobalAmerica = "os_usa";
+
+        /// <summary>
+        /// The region key for the global server's game server for Asia.
+        /// </summary>
+        private const string KeyRegionGlobalAsia = "os_asia";
+
+        /// <summary>
+        /// The region key for the global server's game server for Europe.
+        /// </summary>
+        private const string KeyRegionGlobalEurope = "os_euro";
+
+        /// <summary>
+        /// The region key for the global server's game server for the special administrative regions (SARs).
+        /// </summary>
+        private const string KeyRegionGlobalSars = "os_cht";
+
+        /// <summary>
         /// The return code key.
         /// </summary>
         public const string KeyReturnCode = "retcode";
@@ -280,7 +310,18 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The HTTP client's lazy initialisation.
         /// </summary>
-        private readonly Lazy<HttpClient> _lazyHttpClient;
+        private readonly Lazy<HttpClient>
+            _lazyHttpClient; // System.Net.Http is used rather than the recommended Windows.Web.Http because of disabling automatic cookies handling, which the latter seems to perform badly.
+
+        /// <summary>
+        /// The regions dictionary.
+        /// </summary>
+        private readonly Dictionary<string, string> _regions;
+
+        /// <summary>
+        /// The resource loader.
+        /// </summary>
+        private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
 
@@ -323,7 +364,17 @@ namespace PaimonTray.Helpers
             _app = Application.Current as App;
             _areChecked = false;
             _lazyHttpClient =
-                new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler() { UseCookies = false }));
+                new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
+            _resourceLoader = _app?.SettingsH.ResLoader;
+            _regions = new Dictionary<string, string>
+            {
+                [KeyRegionCnBilibili] = _resourceLoader?.GetString("RegionCnBilibili"),
+                [KeyRegionCnOfficial] = _resourceLoader?.GetString("RegionCnOfficial"),
+                [KeyRegionGlobalAmerica] = _resourceLoader?.GetString("RegionGlobalAmerica"),
+                [KeyRegionGlobalAsia] = _resourceLoader?.GetString("RegionGlobalAsia"),
+                [KeyRegionGlobalEurope] = _resourceLoader?.GetString("RegionGlobalEurope"),
+                [KeyRegionGlobalSars] = _resourceLoader?.GetString("RegionGlobalSars"),
+            };
             ApplicationDataContainerAccounts =
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
@@ -347,7 +398,7 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
-        /// TODO: Add the specific account's characters to the main window's navigation view, or update the specific navigation view items.
+        /// TODO: Add the specific account's characters to the main window's navigation view, or update the specific navigation view items. ATTENTION: string null check
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeysCharacter">A list of characters to add or update for the navigation if possible. Do for all characters if <c>null</c>.</param>
@@ -447,9 +498,9 @@ namespace PaimonTray.Helpers
                 {
                     characters.Add(new Character()
                     {
-                        Level = 56,
+                        Level = 55,
                         Nickname = "TEST_CHARACTER",
-                        Region = server is TagServerCn ? "cn_qd01" : "os_cht",
+                        Region = server is TagServerCn ? KeyRegionCnBilibili : KeyRegionGlobalSars,
                         Uid = j.ToString()
                     });
                 } // end for
@@ -517,7 +568,8 @@ namespace PaimonTray.Helpers
         /// <returns>A flag indicating if getting the account's characters from the API can be safe to execute.</returns>
         private async Task<bool> GetAccountFromApiAsync(string containerKeyAccount)
         {
-            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (containerKeyAccount is null ||
+                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return false;
@@ -652,7 +704,8 @@ namespace PaimonTray.Helpers
         /// <returns>The avatar URI, or <c>null</c> if no such account container key.</returns>
         public Uri GetAvatarUri(string containerKeyAccount)
         {
-            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (containerKeyAccount is null ||
+                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return null;
@@ -673,7 +726,8 @@ namespace PaimonTray.Helpers
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
         private async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
         {
-            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (containerKeyAccount is null ||
+                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return null;
@@ -781,12 +835,11 @@ namespace PaimonTray.Helpers
                                 IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
                                 Key = applicationDataContainerAccount.Name,
                                 Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
-                                Region = propertySetCharacter[KeyRegion] as string, // TODO
+                                Region = GetRegion(propertySetCharacter[KeyRegion] as string),
                                 Server = propertySetAccount[KeyServer] switch
                                 {
-                                    TagServerCn => ResourceLoader.GetForViewIndependentUse().GetString("ServerCn"),
-                                    TagServerGlobal => ResourceLoader.GetForViewIndependentUse()
-                                        .GetString("ServerGlobal"),
+                                    TagServerCn => _resourceLoader.GetString("ServerCn"),
+                                    TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
                                     _ => AppConstantsHelper.Unknown
                                 },
                                 Status = propertySetAccount[KeyStatus] as string
@@ -799,6 +852,18 @@ namespace PaimonTray.Helpers
         } // end method GetGroupedCharactersFromLocal
 
         /// <summary>
+        /// Get the region.
+        /// </summary>
+        /// <param name="keyRegion">The region key.</param>
+        /// <returns>The region.</returns>
+        private string GetRegion(string keyRegion)
+        {
+            return keyRegion is null || !_regions.TryGetValue(keyRegion, out var region)
+                ? AppConstantsHelper.Unknown
+                : region;
+        } // end method GetRegion
+
+        /// <summary>
         /// Notify the property changed event.
         /// </summary>
         /// <param name="propertyName">The name of the property for the event.</param>
@@ -808,7 +873,7 @@ namespace PaimonTray.Helpers
         } // end method NotifyPropertyChanged
 
         /// <summary>
-        /// TODO: Remove the specific account's characters from the main window's navigation view.
+        /// TODO: Remove the specific account's characters from the main window's navigation view. ATTENTION: string null check
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeysCharacter">A list of characters to remove for the navigation if possible. Do for all characters if <c>null</c>.</param>
@@ -838,7 +903,8 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         public void StoreCharacters(ImmutableList<Character> characters, string containerKeyAccount)
         {
-            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (containerKeyAccount is null ||
+                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
             {
                 Log.Warning($"No such account container key ({containerKeyAccount}).");
                 return;

@@ -335,6 +335,24 @@
   <data name="RealTimeNotes" xml:space="preserve">
     <value>Real-time notes</value>
   </data>
+  <data name="RegionCnBilibili" xml:space="preserve">
+    <value>Irminsul</value>
+  </data>
+  <data name="RegionCnOfficial" xml:space="preserve">
+    <value>Celestia</value>
+  </data>
+  <data name="RegionGlobalAmerica" xml:space="preserve">
+    <value>America</value>
+  </data>
+  <data name="RegionGlobalAsia" xml:space="preserve">
+    <value>Asia</value>
+  </data>
+  <data name="RegionGlobalEurope" xml:space="preserve">
+    <value>Europe</value>
+  </data>
+  <data name="RegionGlobalSars" xml:space="preserve">
+    <value>TW, HK, MO</value>
+  </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
   </data>
@@ -351,10 +369,10 @@
     <value>The change to the default server will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>Select the default server to log in. You can still change the server when adding your account.</value>
+    <value>Select the default server to log in. You can still change the server when adding your account. The app will automatically recognise the game region.</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
-    <value>Select the server to log in.</value>
+    <value>Select the server to log in. The app will automatically recognise the game region.</value>
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>Global</value>

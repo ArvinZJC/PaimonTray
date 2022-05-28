@@ -335,6 +335,24 @@
   <data name="RealTimeNotes" xml:space="preserve">
     <value>实时便笺</value>
   </data>
+  <data name="RegionCnBilibili" xml:space="preserve">
+    <value>世界树</value>
+  </data>
+  <data name="RegionCnOfficial" xml:space="preserve">
+    <value>天空岛</value>
+  </data>
+  <data name="RegionGlobalAmerica" xml:space="preserve">
+    <value>美区</value>
+  </data>
+  <data name="RegionGlobalAsia" xml:space="preserve">
+    <value>亚区</value>
+  </data>
+  <data name="RegionGlobalEurope" xml:space="preserve">
+    <value>欧区</value>
+  </data>
+  <data name="RegionGlobalSars" xml:space="preserve">
+    <value>台港澳区</value>
+  </data>
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
   </data>
@@ -351,10 +369,10 @@
     <value>对默认服务器的更改将在下次进入添加账号的页面时生效。</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>选择默认要登录的服务器。您仍可在添加您的账号时更改服务器。</value>
+    <value>选择默认要登录的服务器。您仍可在添加您的账号时更改服务器。应用会自动识别游戏区域。</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
-    <value>选择要登录的服务器。</value>
+    <value>选择要登录的服务器。应用会自动识别游戏区域。</value>
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>国际服</value>
