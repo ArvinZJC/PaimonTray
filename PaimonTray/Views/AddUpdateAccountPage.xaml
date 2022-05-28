@@ -219,8 +219,7 @@
         <Grid
             x:Name="GridStatus"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            Padding="12"
-            Visibility="Collapsed">
+            Padding="12">
             <Grid
                 ColumnSpacing="12"
                 HorizontalAlignment="Center">

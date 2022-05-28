@@ -200,7 +200,7 @@
                         Glyph="{ThemeResource InfoBarWarningIconGlyph}" />
                 </Grid>
                 <ProgressRing
-                    x:Name="ProgressRingStatusInitialising"
+                    x:Name="ProgressRingStatusLoading"
                     Grid.Column="0"
                     IsActive="True" />
                 <TextBlock

@@ -393,8 +393,8 @@
   <data name="StatusCookiesProcessing" xml:space="preserve">
     <value>Processing cookies</value>
   </data>
-  <data name="StatusInitialising" xml:space="preserve">
-    <value>Initialising</value>
+  <data name="StatusLoading" xml:space="preserve">
+    <value>Loading</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>Use system default</value>

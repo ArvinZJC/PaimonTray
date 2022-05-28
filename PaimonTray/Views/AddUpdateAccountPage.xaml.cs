@@ -67,6 +67,7 @@ namespace PaimonTray.Views
             _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             ChooseLoginMethodAsync();
+            ToggleStatusVisibility();
             UpdateUiText();
         } // end constructor AddUpdateAccountPage
 
@@ -80,7 +81,7 @@ namespace PaimonTray.Views
         /// <param name="aUid">The account's UID.</param>
         /// <param name="cookies">The cookies.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
-        private async Task AddOrUpdateAccountAsync(string aUid, string cookies)
+        private async Task AddUpdateAccountAsync(string aUid, string cookies)
         {
             var applicationDataContainerAccounts = _app.AccountsH.ApplicationDataContainerAccounts;
             var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
@@ -158,7 +159,7 @@ namespace PaimonTray.Views
             } // end if
 
             _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
-        } // end method AddOrUpdateAccountAsync
+        } // end method AddUpdateAccountAsync
 
         /// <summary>
         /// Apply the server selection.
@@ -270,7 +271,7 @@ namespace PaimonTray.Views
         /// </summary>
         private async void LogInAsync()
         {
-            ShowGridBusyIndicator();
+            ToggleStatusVisibility(true);
 
             string aUid;
             string cookies;
@@ -296,7 +297,7 @@ namespace PaimonTray.Views
 
             // Execute if the account's UID and cookies are valid.
             if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
-                cookies.Contains(AccountsHelper.CookieKeyToken)) await AddOrUpdateAccountAsync(aUid, cookies);
+                cookies.Contains(AccountsHelper.CookieKeyToken)) await AddUpdateAccountAsync(aUid, cookies);
             else
             {
                 Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
@@ -306,9 +307,7 @@ namespace PaimonTray.Views
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
             } // end if...else
 
-            _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = true;
-            GridStatus.Visibility = Visibility.Collapsed;
-            TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
+            ToggleStatusVisibility();
         } // end method LogInAsync
 
         /// <summary>
@@ -324,6 +323,7 @@ namespace PaimonTray.Views
                 _webView2LoginWebPage.Close(); // Close at last to avoid the null reference exception.
             } // end if
 
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
                 (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
             ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
@@ -337,6 +337,7 @@ namespace PaimonTray.Views
         /// <param name="e">Details about the pending navigation that will load the current page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
             ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
                 new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
             ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
@@ -403,15 +404,6 @@ namespace PaimonTray.Views
         } // end method SetPageSize
 
         /// <summary>
-        /// Show the busy indicator grid.
-        /// </summary>
-        private void ShowGridBusyIndicator()
-        {
-            _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = false;
-            GridStatus.Visibility = Visibility.Visible;
-        } // end method ShowGridBusyIndicator
-
-        /// <summary>
         /// Show the login info bar.
         /// </summary>
         /// <param name="message">The login message.</param>
@@ -428,6 +420,30 @@ namespace PaimonTray.Views
         } // end method ShowInfoBarLogin
 
         /// <summary>
+        /// Show/Hide the status.
+        /// </summary>
+        /// <param name="isAddingUpdating">A flag indicating if the program is adding or updating an account.</param>
+        private void ToggleStatusVisibility(bool isAddingUpdating = false)
+        {
+            TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+
+            if (_app.AccountsH.IsChecking) GridStatus.Visibility = Visibility.Visible;
+            else
+            {
+                if (isAddingUpdating)
+                {
+                    _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = false;
+                    GridStatus.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = true;
+                    GridStatus.Visibility = Visibility.Collapsed;
+                } // end if...else
+            } // end if...else
+        } // end method ToggleStatusVisibility
+
+        /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
@@ -436,7 +452,6 @@ namespace PaimonTray.Views
             ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
             TextBlockServer.Text = _resourceLoader.GetString("Server");
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
-            TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
             TextBlockTitle.Text = _resourceLoader.GetString("AccountAddUpdate");
         } // end method UpdateUiText
 
@@ -473,6 +488,12 @@ namespace PaimonTray.Views
         #endregion Methods
 
         #region Event Handlers
+
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking) ToggleStatusVisibility();
+        } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the actual theme changed event of the page for adding/updating an account.
         private void AddUpdateAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
@@ -540,7 +561,7 @@ namespace PaimonTray.Views
             var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
 
             if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
-                ShowGridBusyIndicator();
+                ToggleStatusVisibility(true);
 
             ButtonLoginAssist.IsEnabled =
                 !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||

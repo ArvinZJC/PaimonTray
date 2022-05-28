@@ -186,9 +186,9 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
-        /// The property name for the flag indicating if the accounts are checked.
+        /// The property name for the flag indicating if the program is checking the accounts.
         /// </summary>
-        public const string PropertyNameAreChecked = nameof(AreChecked);
+        public const string PropertyNameIsChecking = nameof(IsChecking);
 
         /// <summary>
         /// The login fail return code.
@@ -303,9 +303,9 @@ namespace PaimonTray.Helpers
         private readonly App _app;
 
         /// <summary>
-        /// A flag indicating if the accounts are checked.
+        /// A flag indicating if the program is checking the accounts.
         /// </summary>
-        private bool _areChecked;
+        private bool _isChecking;
 
         /// <summary>
         /// The HTTP client's lazy initialisation.
@@ -333,24 +333,24 @@ namespace PaimonTray.Helpers
         public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
 
         /// <summary>
-        /// A flag indicating if the accounts are checked.
-        /// </summary>
-        public bool AreChecked
-        {
-            get => _areChecked;
-            set
-            {
-                if (_areChecked == value) return;
-
-                _areChecked = value;
-                NotifyPropertyChanged();
-            } // end set
-        } // end property AreChecked
-
-        /// <summary>
         /// The grouped characters.
         /// </summary>
         public ObservableCollection<GroupInfoList> GroupedCharacters { get; }
+
+        /// <summary>
+        /// A flag indicating if the program is checking the accounts.
+        /// </summary>
+        public bool IsChecking
+        {
+            get => _isChecking;
+            set
+            {
+                if (_isChecking == value) return;
+
+                _isChecking = value;
+                NotifyPropertyChanged();
+            } // end set
+        } // end property IsChecking
 
         #endregion Properties
 
@@ -362,7 +362,7 @@ namespace PaimonTray.Helpers
         public AccountsHelper()
         {
             _app = Application.Current as App;
-            _areChecked = false;
+            _isChecking = false;
             _lazyHttpClient =
                 new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
             _resourceLoader = _app?.SettingsH.ResLoader;
@@ -476,7 +476,7 @@ namespace PaimonTray.Helpers
         /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
         private async void CheckAccountsAsync(bool shouldForceCheck = false)
         {
-            AreChecked = false;
+            IsChecking = true;
 
             // TODO: test purposes only.
             for (var i = 0; i < 3; i++)
@@ -535,7 +535,7 @@ namespace PaimonTray.Helpers
                 GetGroupedCharactersFromLocal();
             } // end if
 
-            AreChecked = true;
+            IsChecking = false;
         } // end method CheckAccountsAsync
 
         /// <summary>

@@ -393,8 +393,8 @@
   <data name="StatusCookiesProcessing" xml:space="preserve">
     <value>处理 cookie 中</value>
   </data>
-  <data name="StatusInitialising" xml:space="preserve">
-    <value>初始化中</value>
+  <data name="StatusLoading" xml:space="preserve">
+    <value>加载中</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>

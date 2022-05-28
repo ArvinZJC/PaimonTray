@@ -94,23 +94,23 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
-            if (_app.AccountsH.AreChecked)
+            if (_app.AccountsH.IsChecking)
+            {
+                GridStatusWarning.Visibility = Visibility.Collapsed;
+                ProgressRingStatusLoading.Visibility = Visibility.Visible;
+                TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+            }
+            else
             {
                 if (_app.AccountsH.GroupedCharacters.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
                 else
                 {
                     GridStatusWarning.Visibility = Visibility.Visible;
-                    ProgressRingStatusInitialising.Visibility = Visibility.Collapsed;
+                    ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
                     TextBlockStatus.Text = _resourceLoader.GetString("AccountGroupNoCharacter");
                     GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
                 } // end if...else
-            }
-            else
-            {
-                GridStatusWarning.Visibility = Visibility.Collapsed;
-                ProgressRingStatusInitialising.Visibility = Visibility.Visible;
-                TextBlockStatus.Text = _resourceLoader.GetString("StatusInitialising");
-                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
             } // end if...else
         } // end method ToggleStatusVisibility
 
@@ -129,8 +129,7 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameAreChecked) ToggleStatusVisibility();
-            Serilog.Log.Debug(_app.AccountsH.GroupedCharacters.Count.ToString()); // TODO
+            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the body grid's size changed event.
