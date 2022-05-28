@@ -93,11 +93,13 @@
                                                                 </PersonPicture.ProfilePicture>
                                                             </PersonPicture>
                                                             <TextBlock
+                                                                x:Phase="1"
                                                                 Grid.Column="1"
                                                                 Grid.Row="0"
                                                                 Style="{ThemeResource BaseTextBlockStyle}"
                                                                 Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
                                                             <TextBlock
+                                                                x:Phase="2"
                                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                                 Grid.Column="1"
                                                                 Grid.Row="1"
@@ -111,18 +113,13 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="m:AccountCharacter">
                                                 <ListViewItem Visibility="{x:Bind IsEnabled}">
-                                                    <Grid Padding="0, 8">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
+                                                    <StackPanel Padding="0, 8">
                                                         <TextBlock
-                                                            Grid.Row="0"
+                                                            x:Phase="1"
                                                             Style="{ThemeResource BaseTextBlockStyle}"
                                                             Text="{x:Bind CNickname}" />
                                                         <TextBlock
                                                             Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                            Grid.Row="1"
                                                             Style="{ThemeResource BodyTextBlockStyle}">
                                                             <Run Text="{x:Bind Region}" />
                                                             |
@@ -130,7 +127,7 @@
                                                             |
                                                             <Run Text="{x:Bind CUid}" />
                                                         </TextBlock>
-                                                    </Grid>
+                                                    </StackPanel>
                                                 </ListViewItem>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
