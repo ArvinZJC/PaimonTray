@@ -8,7 +8,6 @@ using PaimonTray.Helpers;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Resources;
 using Windows.Graphics;
 using Windows.Storage;
 
@@ -76,14 +75,14 @@ namespace PaimonTray.Views
             }
             else
             {
-                var app = Application.Current;
+                var application = Application.Current;
 
                 // It is necessary to set the colour rather than the solid colour brush to avoid strange performance.
-                ((SolidColorBrush)app.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color =
+                ((SolidColorBrush)application.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarButtonHoverBackground"]).Color;
-                ((SolidColorBrush)app.Resources["WindowCaptionForeground"]).Color =
+                ((SolidColorBrush)application.Resources["WindowCaptionForeground"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionForeground"]).Color;
-                ((SolidColorBrush)app.Resources["WindowCaptionForegroundDisabled"]).Color =
+                ((SolidColorBrush)application.Resources["WindowCaptionForegroundDisabled"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionInactiveForeground"]).Color;
 
                 ExtendsContentIntoTitleBar = true;
@@ -121,13 +120,13 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            var resourceLoader = (Application.Current as App)?.SettingsH.ResLoader;
 
-            NavigationViewItemBodyAbout.Content = resourceLoader.GetString("About");
-            NavigationViewItemBodyAccounts.Content = resourceLoader.GetString("Accounts");
-            NavigationViewItemBodyGeneral.Content = resourceLoader.GetString("General");
-            TextBlockWindowTitle.Text = resourceLoader.GetString("Settings");
-            Title = $"{resourceLoader.GetString("Settings")} - {Package.Current.DisplayName}";
+            NavigationViewItemBodyAbout.Content = resourceLoader?.GetString("About");
+            NavigationViewItemBodyAccounts.Content = resourceLoader?.GetString("Accounts");
+            NavigationViewItemBodyGeneral.Content = resourceLoader?.GetString("General");
+            TextBlockWindowTitle.Text = resourceLoader?.GetString("Settings");
+            Title = $"{resourceLoader?.GetString("Settings")} - {Package.Current.DisplayName}";
         } // end method UpdateUiText
 
         #endregion Methods

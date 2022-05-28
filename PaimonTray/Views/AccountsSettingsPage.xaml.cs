@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
@@ -12,6 +11,11 @@ namespace PaimonTray.Views
     public sealed partial class AccountsSettingsPage
     {
         #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
 
         /// <summary>
         /// The main window.
@@ -32,10 +36,9 @@ namespace PaimonTray.Views
         /// </summary>
         public AccountsSettingsPage()
         {
-            var app = Application.Current as App;
-
-            _mainWindow = app?.WindowsH.GetMainWindow();
-            _propertySetSettings = app?.SettingsH.PropertySetSettings;
+            _app = Application.Current as App;
+            _mainWindow = _app?.WindowsH.GetMainWindow();
+            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             InitializeComponent();
             UpdateUiText();
         } // end constructor AccountsSettingsPage
@@ -49,7 +52,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
             ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");

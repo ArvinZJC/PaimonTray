@@ -9,7 +9,6 @@ using PaimonTray.ViewModels;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
 
@@ -122,7 +121,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             MenuFlyoutItemAppMenuMainWindowVisibility.Text = resourceLoader.GetString("MainWindowHide");
             MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");

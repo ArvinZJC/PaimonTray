@@ -1,7 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Serilog;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
 using Windows.Storage;
@@ -108,12 +109,14 @@ namespace PaimonTray.Helpers
         /// </summary>
         public IPropertySet PropertySetSettings { get; }
 
+        public ResourceLoader ResLoader { get; private set; }
+
         #endregion Properties
 
         #region Constructors
 
         /// <summary>
-        /// Initialise the settings helper.
+        /// Initialise the settings helper. Must be done as early as possible for the app.
         /// </summary>
         public SettingsHelper()
         {
@@ -121,12 +124,24 @@ namespace PaimonTray.Helpers
             PropertySetSettings = ApplicationData.Current.LocalSettings
                 .CreateContainer(ContainerKeySettings, ApplicationDataCreateDisposition.Always).Values;
 
-            InitialiseSettings();
+            InitialiseSettings(); // Initialise the settings first.
+            ApplyLanguageSelection();
         } // end constructor SettingsHelper
 
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>
+        /// Apply the language selection.
+        /// </summary>
+        private void ApplyLanguageSelection()
+        {
+            LanguageSelectionApplied = PropertySetSettings[KeyLanguage] as string;
+            ApplicationLanguages.PrimaryLanguageOverride =
+                LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
+            ResLoader = ResourceLoader.GetForViewIndependentUse();
+        } // end method ApplyLanguageSelection
 
         /// <summary>
         /// Apply the selection of the main window's top navigation pane.
@@ -188,16 +203,16 @@ namespace PaimonTray.Helpers
         /// <param name="key">The setting key.</param>
         /// <param name="name">The setting name with the 1st letter capitalised.</param>
         /// <param name="value">The setting value.</param>
-        private void InitialiseSetting(string key, string name, object value)
+        private void InitialiseSetting([DisallowNull] string key, [DisallowNull] string name, object value)
         {
             PropertySetSettings[key] = value;
             Log.Information($"{name} initialised to default.");
         } // end method InitialiseSetting
 
         /// <summary>
-        /// Initialise the settings when initialising the app. It should be invoked earlier than any other operations on the settings.
+        /// Initialise the settings when initialising the app. Must be invoked earlier than any other operations on the settings.
         /// </summary>
-        public void InitialiseSettings()
+        private void InitialiseSettings()
         {
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
                 (PropertySetSettings[KeyLanguage] is not TagLanguageEn &&
@@ -238,11 +253,6 @@ namespace PaimonTray.Helpers
                                                                PropertySetSettings[KeyTheme] is not TagThemeDark &&
                                                                PropertySetSettings[KeyTheme] is not TagThemeLight))
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
-
-            // Apply the language selection.
-            LanguageSelectionApplied = PropertySetSettings[KeyLanguage] as string;
-            ApplicationLanguages.PrimaryLanguageOverride =
-                LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
         } // end method InitialiseSettings
 
         #endregion Methods

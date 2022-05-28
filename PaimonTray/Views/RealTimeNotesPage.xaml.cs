@@ -42,7 +42,7 @@ namespace PaimonTray.Views
         public RealTimeNotesPage()
         {
             _app = Application.Current as App;
-            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            _resourceLoader = _app?.SettingsH.ResLoader;
 
             InitializeComponent();
             ToggleStatusVisibility();

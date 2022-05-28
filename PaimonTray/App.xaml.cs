@@ -109,6 +109,7 @@ namespace PaimonTray
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             CommandsVm = new CommandsViewModel(WindowsH.GetMainWindow());
+            base.OnLaunched(e);
         } // end method OnLaunched
 
         #endregion Methods

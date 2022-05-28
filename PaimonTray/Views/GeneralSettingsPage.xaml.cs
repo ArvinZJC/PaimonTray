@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
@@ -48,7 +47,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = ResourceLoader.GetForViewIndependentUse();
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             CheckBoxNotificationClear.Content = resourceLoader.GetString("NotificationClear");
             CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
