@@ -2,16 +2,12 @@
     mc:Ignorable="d"
     x:Class="PaimonTray.Views.RealTimeNotesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:c="using:PaimonTray.Converters"
+    xmlns:controls="using:PaimonTray.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:h="using:PaimonTray.Helpers"
-    xmlns:m="using:PaimonTray.Models"
+    xmlns:helpers="using:PaimonTray.Helpers"
+    xmlns:models="using:PaimonTray.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Page.Resources>
-        <!-- Put converters here to make them work with x:Bind. Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/3442#issuecomment-772898950 -->
-        <c:AccountGroupInfoListKeyConverter x:Key="AccountGroupInfoListKeyConverter" />
-    </Page.Resources>
     <!-- The root grid. -->
     <Grid Loaded="GridRoot_OnLoaded">
         <!-- The body scroll viewer. -->
@@ -67,51 +63,22 @@
                                         SelectionChanged="ListViewGroupedCharacters_OnSelectionChanged">
                                         <ListView.GroupStyle>
                                             <GroupStyle>
+                                                <GroupStyle.HeaderContainerStyle>
+                                                    <Style TargetType="ListViewHeaderItem">
+                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                    </Style>
+                                                </GroupStyle.HeaderContainerStyle>
                                                 <GroupStyle.HeaderTemplate>
-                                                    <DataTemplate x:DataType="m:GroupInfoList">
-                                                        <Grid
-                                                            ColumnSpacing="12"
-                                                            Margin="0, 4, 0, 0">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <PersonPicture
-                                                                Grid.Column="0"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                Height="32"
-                                                                Width="32">
-                                                                <PersonPicture.ProfilePicture>
-                                                                    <BitmapImage
-                                                                        DecodePixelHeight="32"
-                                                                        UriSource="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=avatar}" />
-                                                                </PersonPicture.ProfilePicture>
-                                                            </PersonPicture>
-                                                            <TextBlock
-                                                                x:Phase="1"
-                                                                Grid.Column="1"
-                                                                Grid.Row="0"
-                                                                Style="{ThemeResource BaseTextBlockStyle}"
-                                                                Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aNickname}" />
-                                                            <TextBlock
-                                                                x:Phase="2"
-                                                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                                Grid.Column="1"
-                                                                Grid.Row="1"
-                                                                Style="{ThemeResource BodyTextBlockStyle}"
-                                                                Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aOtherInfo}" />
-                                                        </Grid>
+                                                    <DataTemplate x:DataType="models:GroupInfoList">
+                                                        <controls:AccountGroupHeader
+                                                            x:Phase="2"
+                                                            Key="{x:Bind Key}" />
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
                                         </ListView.GroupStyle>
                                         <ListView.ItemTemplate>
-                                            <DataTemplate x:DataType="m:AccountCharacter">
+                                            <DataTemplate x:DataType="models:AccountCharacter">
                                                 <ListViewItem Visibility="{x:Bind IsEnabled}">
                                                     <StackPanel Padding="0, 8">
                                                         <TextBlock
@@ -139,7 +106,7 @@
                                     </ListView>
                                 </Flyout>
                             </Button.Flyout>
-                            <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphSwitchUser}" />
+                            <FontIcon Glyph="{x:Bind helpers:AppConstantsHelper.GlyphSwitchUser}" />
                         </Button>
                     </Grid>
                     <!-- The character's real-time notes grid. -->

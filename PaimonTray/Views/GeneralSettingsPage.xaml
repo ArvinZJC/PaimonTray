@@ -3,7 +3,7 @@
     x:Class="PaimonTray.Views.GeneralSettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:h="using:PaimonTray.Helpers"
+    xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
@@ -109,15 +109,15 @@
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageSystem"
                         Loaded="ComboBoxItemLanguage_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagSystem}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageEn"
                         Loaded="ComboBoxItemLanguage_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagLanguageEn}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageEn}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageZhCn"
                         Loaded="ComboBoxItemLanguage_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagLanguageZhCn}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageZhCn}" />
                 </ComboBox>
             </Grid>
             <!-- The theme grid. -->
@@ -160,15 +160,15 @@
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeSystem"
                         Loaded="ComboBoxItemTheme_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagSystem}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagSystem}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeLight"
                         Loaded="ComboBoxItemTheme_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeLight}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagThemeLight}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemThemeDark"
                         Loaded="ComboBoxItemTheme_OnLoaded"
-                        Tag="{x:Bind h:SettingsHelper.TagThemeDark}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagThemeDark}" />
                 </ComboBox>
             </Grid>
             <!-- The notifications expander. -->

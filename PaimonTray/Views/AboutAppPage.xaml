@@ -2,9 +2,9 @@
     mc:Ignorable="d"
     x:Class="PaimonTray.Views.AboutAppPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:am="using:Windows.ApplicationModel"
+    xmlns:applicationModel="using:Windows.ApplicationModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:h="using:PaimonTray.Helpers"
+    xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
@@ -25,12 +25,12 @@
             <Image
                 Height="96"
                 Margin="0, 0, 16, 0"
-                Source="{x:Bind h:AppConstantsHelper.UriAppIconImage}"
+                Source="{x:Bind helpers:AppConstantsHelper.UriAppIconImage}"
                 Width="96" />
             <TextBlock
                 FontWeight="SemiBold"
                 FontSize="48"
-                Text="{x:Bind am:Package.Current.DisplayName}"
+                Text="{x:Bind applicationModel:Package.Current.DisplayName}"
                 VerticalAlignment="Center" />
         </StackPanel>
         <TextBlock
@@ -50,7 +50,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementInspiration" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoInspiration}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoInspiration}">
                     <Run x:Name="RunNameGitHubRepoInspiration" />
                 </Hyperlink>
             </TextBlock>
@@ -58,11 +58,11 @@
                 Grid.Row="1"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementApiUses" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
                     <Run x:Name="RunNameGitHubRepoApiUsesPrimary" />
                 </Hyperlink>
                 <Run x:Name="RunAcknowledgementApiUsesAnd" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
                     <Run x:Name="RunNameGitHubRepoApiUsesSecondary" />
                 </Hyperlink>
             </TextBlock>
@@ -70,7 +70,7 @@
                 Grid.Row="2"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementAppIcon" />
-                <Hyperlink NavigateUri="{x:Bind h:AppConstantsHelper.UrlAppIconSource}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlAppIconSource}">
                     <Run x:Name="RunAppIconAuthor" />
                 </Hyperlink>
             </TextBlock>
@@ -78,7 +78,7 @@
         <HyperlinkButton
             x:Name="HyperlinkButtonLicense"
             Grid.Row="4"
-            NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoLicense}" />
+            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoLicense}" />
         <StackPanel Grid.Row="5">
             <HyperlinkButton
                 x:Name="HyperlinkButtonHome"
@@ -90,16 +90,16 @@
         <StackPanel Grid.Row="6">
             <HyperlinkButton
                 x:Name="HyperlinkButtonGitHubRepo"
-                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepo}" />
+                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepo}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonGiteeRepo"
                 IsEnabled="False" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonIssuesView"
-                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
+                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoIssues}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonReleaseNotes"
-                NavigateUri="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
+                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoReleases}" />
         </StackPanel>
     </Grid>
 </Page>

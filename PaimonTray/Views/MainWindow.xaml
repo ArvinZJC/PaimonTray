@@ -3,22 +3,22 @@
     x:Class="PaimonTray.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:h="using:PaimonTray.Helpers"
+    xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ni="using:H.NotifyIcon"
+    xmlns:notifyIcon="using:H.NotifyIcon"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <!-- The app's task bar icon. -->
         <!-- TODO: ContextMenuMode="SecondWindow" if qualified. -->
-        <ni:TaskbarIcon
+        <notifyIcon:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}"
-            IconSource="{x:Bind h:AppConstantsHelper.UriAppIcon}"
+            IconSource="{x:Bind helpers:AppConstantsHelper.UriAppIcon}"
             MenuActivation="RightClick"
             NoLeftClickDelay="True"
             Visibility="Collapsed">
-            <ni:TaskbarIcon.ContextFlyout>
+            <notifyIcon:TaskbarIcon.ContextFlyout>
                 <MenuFlyout AreOpenCloseAnimationsEnabled="False">
                     <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.AddUpdateAccountCommand}" />
                     <MenuFlyoutSeparator />
@@ -32,8 +32,8 @@
                         Command="{x:Bind _app.CommandsVm.ExitAppCommand}"
                         CommandParameter="{x:Bind TaskbarIconApp}" />
                 </MenuFlyout>
-            </ni:TaskbarIcon.ContextFlyout>
-        </ni:TaskbarIcon>
+            </notifyIcon:TaskbarIcon.ContextFlyout>
+        </notifyIcon:TaskbarIcon>
         <!-- The body navigation view. -->
         <NavigationView
             x:FieldModifier="public"
@@ -79,25 +79,25 @@
                                     x:Name="MenuFlyoutItemMainMenuUserManual"
                                     IsEnabled="False">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="{x:Bind h:AppConstantsHelper.GlyphDictionary}" />
+                                        <FontIcon Glyph="{x:Bind helpers:AppConstantsHelper.GlyphDictionary}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGitHubRepo"
                                     Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepo}" />
+                                    CommandParameter="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepo}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuGiteeRepo"
                                     IsEnabled="False" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuIssuesView"
                                     Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoIssues}" />
+                                    CommandParameter="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoIssues}" />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuReleaseNotes"
                                     Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                    CommandParameter="{x:Bind h:AppConstantsHelper.UrlGitHubRepoReleases}" />
+                                    CommandParameter="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoReleases}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpLogsShow"

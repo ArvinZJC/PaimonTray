@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
+using PaimonTray.Helpers;
 using PaimonTray.Models;
 using System;
 using System.Text.Json;
@@ -24,9 +25,11 @@ namespace PaimonTray.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (parameter == null) return null;
+
             var groupInfoListKey = (string)value;
 
-            if (parameter == null) return null;
+            if (groupInfoListKey == null) return null;
 
             var accountGroup = JsonSerializer.Deserialize<AccountCharacter>(groupInfoListKey);
 
@@ -37,6 +40,19 @@ namespace PaimonTray.Converters
                 "aNickname" => accountGroup.ANickname,
                 "avatar" => (Application.Current as App)?.AccountsH.GetAvatarUri(accountGroup.Key),
                 "aOtherInfo" => $"{accountGroup.Server} | {accountGroup.AUid}",
+                "statusAddingUpdating" => accountGroup.Status is AccountsHelper.TagStatusAdding
+                    or AccountsHelper.TagStatusUpdating
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                "statusExpired" => accountGroup.Status is AccountsHelper.TagStatusExpired
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                "statusFail" => accountGroup.Status is AccountsHelper.TagStatusFail
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                "statusReady" => accountGroup.Status is AccountsHelper.TagStatusReady
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
                 _ => null
             };
         } // end method Convert

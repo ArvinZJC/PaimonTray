@@ -46,6 +46,7 @@
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\AccountGroupHeader.xaml" />
     <None Remove="Views\AboutAppPage.xaml" />
     <None Remove="Views\AccountsSettingsPage.xaml" />
     <None Remove="Views\AddUpdateAccountPage.xaml" />
@@ -78,6 +79,12 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <Page Update="Controls\AccountGroupHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Controls\AccountGroupHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\RealTimeNotesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

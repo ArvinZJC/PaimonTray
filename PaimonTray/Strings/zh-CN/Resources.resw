@@ -387,6 +387,18 @@
   <data name="StatusAccountAdding" xml:space="preserve">
     <value>添加您的账号中</value>
   </data>
+  <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
+    <value>正在添加/更新此账号。若您确定此状态是错误的，您可重新添加/更新此账号，或前往设置来检查此账号。</value>
+  </data>
+  <data name="StatusAccountExpiredExplanation" xml:space="preserve">
+    <value>此账号的 cookie 过期了。您需要更新此账号。</value>
+  </data>
+  <data name="StatusAccountFailExplanation" xml:space="preserve">
+    <value>检索此账号的信息失败。您可更新此账号，或前往设置来检查此账号。</value>
+  </data>
+  <data name="StatusAccountReadyExplanation" xml:space="preserve">
+    <value>已成功检索此账号的信息。</value>
+  </data>
   <data name="StatusAccountUpdating" xml:space="preserve">
     <value>更新您的账号中</value>
   </data>

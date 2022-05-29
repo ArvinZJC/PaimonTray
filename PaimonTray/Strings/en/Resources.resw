@@ -387,6 +387,18 @@
   <data name="StatusAccountAdding" xml:space="preserve">
     <value>Adding your account</value>
   </data>
+  <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
+    <value>The account is being added/updated. If you confirm this status is improper, you can add/update the account again, or go to the settings to check the account.</value>
+  </data>
+  <data name="StatusAccountExpiredExplanation" xml:space="preserve">
+    <value>The account's cookies are expired. You need to update the account.</value>
+  </data>
+  <data name="StatusAccountFailExplanation" xml:space="preserve">
+    <value>Failed to retrieve the account's information. You can update the account, or go to the settings to check the account.</value>
+  </data>
+  <data name="StatusAccountReadyExplanation" xml:space="preserve">
+    <value>The account's information has been retrieved successfully.</value>
+  </data>
   <data name="StatusAccountUpdating" xml:space="preserve">
     <value>Updating your account</value>
   </data>

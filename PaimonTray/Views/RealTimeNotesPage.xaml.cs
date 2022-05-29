@@ -87,7 +87,7 @@ namespace PaimonTray.Views
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
             ListViewGroupedCharacters.MaxHeight = Height * 2 / 3;
             Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;
-            ListViewGroupedCharacters.MaxWidth = Width;
+            ListViewGroupedCharacters.Width = Width;
         } // end method SetPageSize
 
         /// <summary>
