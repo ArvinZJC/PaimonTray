@@ -489,7 +489,7 @@ namespace PaimonTray.Helpers
                 propertySetAccount[KeyCookies] = $"test={containerKeyAccount}";
                 propertySetAccount[KeyNickname] = "TEST_ACCOUNT";
                 propertySetAccount[KeyServer] = server;
-                propertySetAccount[KeyStatus] = TagStatusReady;
+                propertySetAccount[KeyStatus] = TagStatusFail; // Should show as expired after checking
                 propertySetAccount[KeyUid] = containerKeyAccount;
 
                 var characters = new List<Character>();
@@ -515,18 +515,41 @@ namespace PaimonTray.Helpers
                 {
                     var propertySetAccount = applicationDataContainerAccount.Values;
 
-                    propertySetAccount[KeyStatus] ??= TagStatusAdding;
+                    if (propertySetAccount[KeyStatus] is not TagStatusAdding &&
+                        propertySetAccount[KeyStatus] is not TagStatusExpired &&
+                        propertySetAccount[KeyStatus] is not TagStatusFail &&
+                        propertySetAccount[KeyStatus] is not TagStatusReady &&
+                        propertySetAccount[KeyStatus] is not TagStatusUpdating)
+                        propertySetAccount[KeyStatus] = TagStatusAdding;
 
-                    if (propertySetAccount[KeyStatus] is TagStatusExpired ||
-                        (!shouldForceCheck && propertySetAccount[KeyStatus] is TagStatusReady)) continue;
-
-                    if (propertySetAccount[KeyStatus] is TagStatusAdding && (propertySetAccount[KeyCookies] is null ||
-                                                                             propertySetAccount[KeyServer] is null ||
-                                                                             propertySetAccount[KeyUid] is null))
+                    switch (propertySetAccount[KeyStatus])
                     {
-                        ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
-                        continue;
-                    } // end if
+                        case TagStatusAdding:
+                            if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
+                                propertySetAccount[KeyUid] is null)
+                            {
+                                ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
+                                continue;
+                            } // end if
+
+                            break;
+
+                        case TagStatusExpired:
+                            continue;
+
+                        case TagStatusFail:
+                            propertySetAccount[KeyStatus] = TagStatusUpdating;
+                            break;
+
+                        case TagStatusReady:
+                            if (shouldForceCheck)
+                            {
+                                propertySetAccount[KeyStatus] = TagStatusUpdating;
+                                break;
+                            } // end if
+
+                            continue;
+                    } // end switch-case
 
                     StoreCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
                         applicationDataContainerAccount.Name);
@@ -930,7 +953,9 @@ namespace PaimonTray.Helpers
                 foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
                     applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
 
-                propertySetAccount[KeyStatus] = TagStatusReady;
+                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                    propertySetAccount[KeyStatus] = TagStatusReady;
+
                 // RemoveCharactersNavigation(containerKeyAccount);
                 return;
             } // end if
@@ -961,7 +986,9 @@ namespace PaimonTray.Helpers
                 // containerKeysCharacter.Add(character.Uid);
             } // end foreach
 
-            propertySetAccount[KeyStatus] = TagStatusReady;
+            if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                propertySetAccount[KeyStatus] = TagStatusReady;
+
             // AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
         } // end method StoreCharacters
 
