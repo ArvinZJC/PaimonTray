@@ -1,17 +1,14 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using PaimonTray.Helpers;
 using PaimonTray.Models;
-using Serilog;
 using System;
-using System.Text.Json;
 
 namespace PaimonTray.Converters
 {
     /// <summary>
-    /// The account group info list key converter.
+    /// The account's character converter.
     /// </summary>
-    internal class AccountGroupInfoListKeyConverter : IValueConverter
+    internal class AccountCharacterConverter : IValueConverter
     {
         #region Methods
 
@@ -28,44 +25,24 @@ namespace PaimonTray.Converters
         {
             if (parameter == null) return null;
 
-            var groupInfoListKey = (string)value;
+            var accountCharacter = (AccountCharacter)value;
 
-            if (groupInfoListKey == null) return null;
+            if (accountCharacter == null) return null;
 
-            try
+            var hasNoCharacterLinked = accountCharacter.CNickname is null && accountCharacter.CUid is null &&
+                                       accountCharacter.Level is null && accountCharacter.Region is null;
+
+            return parameter switch
             {
-                var accountGroup = JsonSerializer.Deserialize<AccountCharacter>(groupInfoListKey);
-
-                if (accountGroup == null) return null;
-
-                return parameter switch
-                {
-                    "aNickname" => accountGroup.ANickname,
-                    "avatar" => (Application.Current as App)?.AccountsH.GetAvatarUri(accountGroup.Key),
-                    "aOtherInfo" => $"{accountGroup.Server} | {accountGroup.AUid}",
-                    "statusAddingUpdating" => accountGroup.Status is AccountsHelper.TagStatusAdding
-                        or AccountsHelper.TagStatusUpdating
-                        ? Visibility.Visible
-                        : Visibility.Collapsed,
-                    "statusExpired" => accountGroup.Status is AccountsHelper.TagStatusExpired
-                        ? Visibility.Visible
-                        : Visibility.Collapsed,
-                    "statusFail" => accountGroup.Status is AccountsHelper.TagStatusFail
-                        ? Visibility.Visible
-                        : Visibility.Collapsed,
-                    "statusReady" => accountGroup.Status is AccountsHelper.TagStatusReady
-                        ? Visibility.Visible
-                        : Visibility.Collapsed,
-                    _ => null
-                };
-            }
-            catch (Exception exception)
-            {
-                Log.Error($"Failed to parse the group info list key:");
-                Log.Information(groupInfoListKey);
-                Log.Error(exception.ToString());
-                return null;
-            } // end try...catch
+                "cNickname" => hasNoCharacterLinked
+                    ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
+                    : accountCharacter.CNickname,
+                "cOtherInfo" => hasNoCharacterLinked
+                    ? null
+                    : $"{accountCharacter.Region} | {accountCharacter.Level} | {accountCharacter.CUid}",
+                "cOtherInfoVisibility" => hasNoCharacterLinked ? Visibility.Collapsed : Visibility.Visible,
+                _ => null
+            };
         } // end method Convert
 
         /// <summary>
@@ -84,5 +61,5 @@ namespace PaimonTray.Converters
         } // end method ConvertBack
 
         #endregion Methods
-    } // end class AccountGroupInfoListKeyConverter
+    } // end class AccountCharacterConverter
 } // end namespace PaimonTray.Converters

@@ -125,10 +125,10 @@
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
   <data name="AccountAddNoCharacter" xml:space="preserve">
-    <value>No character is linked to your account. Do you still want to add the account?</value>
+    <value>No character is linked with your account. Do you still want to add the account?</value>
   </data>
   <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
-    <value>The account with no character linked has been added successfully.</value>
+    <value>The account linked with no character has been added successfully.</value>
   </data>
   <data name="AccountAddReachLimit" xml:space="preserve">
     <value>The number of your accounts added has already reached the limit.</value>
@@ -142,6 +142,9 @@
   <data name="AccountGroupNoCharacter" xml:space="preserve">
     <value>Oops, no character! You can add/update an account, or go to the settings to manage your account(s) added.</value>
   </data>
+  <data name="AccountNoCharacter" xml:space="preserve">
+    <value>No character is linked with the account.</value>
+  </data>
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
@@ -149,7 +152,7 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and the characters linked to each account.</value>
+    <value>Manage your account(s) added and the characters linked with each account.</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>Your account has just been updated.</value>

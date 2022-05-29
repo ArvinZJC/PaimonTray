@@ -510,8 +510,7 @@ namespace PaimonTray.Helpers
 
             if (CountAccounts() > 0)
             {
-                foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
-                             .ToImmutableList())
+                foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values)
                 {
                     var propertySetAccount = applicationDataContainerAccount.Values;
 
@@ -804,31 +803,43 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
-            var charactersRaw = JsonSerializer.Deserialize<CharactersResponse>(httpResponseBody,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (charactersRaw is null)
+            try
             {
-                Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
-                Log.Information(httpResponseBody);
+                var charactersRaw = JsonSerializer.Deserialize<CharactersResponse>(httpResponseBody,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (charactersRaw is null)
+                {
+                    Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                    Log.Information(httpResponseBody);
+                    propertySetAccount[KeyStatus] = TagStatusFail;
+                    return null;
+                } // end if
+
+                if (charactersRaw.ReturnCode != 0)
+                {
+                    Log.Warning(
+                        $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {charactersRaw.Message}, return code: {charactersRaw.ReturnCode}).");
+                    propertySetAccount[KeyStatus] =
+                        charactersRaw.ReturnCode is ReturnCodeLoginFail ? TagStatusExpired : TagStatusFail;
+                    return null;
+                } // end if
+
+                if (charactersRaw.Data.TryGetValue(KeyList, out var characters)) return characters;
+
+                Log.Warning($"Failed to get the character data list (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
-            } // end if
-
-            if (charactersRaw.ReturnCode != 0)
+            }
+            catch (Exception exception)
             {
-                Log.Warning(
-                    $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {charactersRaw.Message}, return code: {charactersRaw.ReturnCode}).");
-                propertySetAccount[KeyStatus] =
-                    charactersRaw.ReturnCode is ReturnCodeLoginFail ? TagStatusExpired : TagStatusFail;
+                Log.Error($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                Log.Information(httpResponseBody);
+                Log.Error(exception.ToString());
+                propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
-            } // end if
-
-            if (charactersRaw.Data.TryGetValue(KeyList, out var characters)) return characters;
-
-            Log.Warning($"Failed to get the character data list (account container key: {containerKeyAccount}).");
-            propertySetAccount[KeyStatus] = TagStatusFail;
-            return null;
+            } // end try...catch
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
@@ -840,33 +851,55 @@ namespace PaimonTray.Helpers
 
             if (CountAccounts() <= 0) return;
 
+            var accountCharacters = new List<AccountCharacter>();
+
+            foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values)
+            {
+                var applicationDataContainersCharacter = applicationDataContainerAccount
+                    .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
+                var propertySetAccount = applicationDataContainerAccount.Values; // Get the account property set first.
+                var aNickname = propertySetAccount[KeyNickname] as string;
+                var aUid = propertySetAccount[KeyUid] as string;
+                var server = propertySetAccount[KeyServer] switch
+                {
+                    TagServerCn => _resourceLoader.GetString("ServerCn"),
+                    TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
+                    _ => AppConstantsHelper.Unknown
+                };
+                var status = propertySetAccount[KeyStatus] as string;
+
+                if (applicationDataContainersCharacter.Count == 0)
+                {
+                    accountCharacters.Add(new AccountCharacter
+                    {
+                        ANickname = aNickname,
+                        AUid = aUid,
+                        Key = applicationDataContainerAccount.Name,
+                        Server = server,
+                        Status = status
+                    });
+                    continue;
+                } // end if
+
+                accountCharacters.AddRange(from keyValuePairCharacter in applicationDataContainersCharacter
+                    let propertySetCharacter = keyValuePairCharacter.Value.Values
+                    select new AccountCharacter
+                    {
+                        ANickname = aNickname,
+                        AUid = aUid,
+                        CNickname = propertySetCharacter[KeyNickname] as string,
+                        CUid = keyValuePairCharacter.Key,
+                        IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
+                        Key = applicationDataContainerAccount.Name,
+                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                        Region = GetRegion(propertySetCharacter[KeyRegion] as string),
+                        Server = server,
+                        Status = status
+                    });
+            } // end foreach
+
             // TODO: Ordered by datetime? Need ToList to allow modification?
-            (from accountCharacter in
-                        (from applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values
-                            let applicationDataContainerCharacters =
-                                applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
-                                    ApplicationDataCreateDisposition.Always)
-                            let propertySetAccount = applicationDataContainerAccount.Values
-                            from keyValuePairCharacter in applicationDataContainerCharacters.Containers
-                            let propertySetCharacter = keyValuePairCharacter.Value.Values
-                            select new AccountCharacter()
-                            {
-                                ANickname = propertySetAccount[KeyNickname] as string,
-                                AUid = propertySetAccount[KeyUid] as string,
-                                CNickname = propertySetCharacter[KeyNickname] as string,
-                                CUid = keyValuePairCharacter.Key,
-                                IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
-                                Key = applicationDataContainerAccount.Name,
-                                Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
-                                Region = GetRegion(propertySetCharacter[KeyRegion] as string),
-                                Server = propertySetAccount[KeyServer] switch
-                                {
-                                    TagServerCn => _resourceLoader.GetString("ServerCn"),
-                                    TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
-                                    _ => AppConstantsHelper.Unknown
-                                },
-                                Status = propertySetAccount[KeyStatus] as string
-                            }).ToImmutableList()
+            (from accountCharacter in accountCharacters.ToImmutableList()
                     group accountCharacter by JsonSerializer.Serialize(accountCharacter)
                     into accountGroup
                     orderby accountGroup.Key

@@ -142,6 +142,9 @@
   <data name="AccountGroupNoCharacter" xml:space="preserve">
     <value>哎呀，没有角色呀！您可添加/更新账号，或前往设置来管理您添加的账号。</value>
   </data>
+  <data name="AccountNoCharacter" xml:space="preserve">
+    <value>此账号未绑定角色。</value>
+  </data>
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
   </data>
