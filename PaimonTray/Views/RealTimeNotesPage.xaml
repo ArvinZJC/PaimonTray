@@ -50,9 +50,15 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            Text="In progress: character" />
+                        <StackPanel Grid.Column="0">
+                            <TextBlock
+                                x:Name="TextBlockCharacterNickname"
+                                Style="{ThemeResource BaseTextBlockStyle}" />
+                            <TextBlock
+                                x:Name="TextBlockCharacterOtherInfo"
+                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                Style="{ThemeResource BodyTextBlockStyle}" />
+                        </StackPanel>
                         <Button
                             Grid.Column="1"
                             Padding="4">

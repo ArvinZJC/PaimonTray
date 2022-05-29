@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using PaimonTray.Converters;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
 using PaimonTray.ViewModels;
@@ -104,7 +105,12 @@ namespace PaimonTray.Views
             }
             else
             {
-                if (_app.AccountsH.GroupedCharacters.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
+                if (_app.AccountsH.GroupedCharacters.Count > 0)
+                {
+                    GridStatus.Visibility = Visibility.Collapsed;
+
+                    if (ListViewGroupedCharacters.SelectedIndex == -1) ListViewGroupedCharacters.SelectedIndex = 0;
+                }
                 else
                 {
                     GridStatusWarning.Visibility = Visibility.Visible;
@@ -157,7 +163,13 @@ namespace PaimonTray.Views
         // Handle the grouped characters list view's selection changed event.
         private void ListViewGroupedCharacters_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Serilog.Log.Debug((ListViewGroupedCharacters.SelectedItem as AccountCharacter)?.CUid); // TODO
+            var accountCharacter = ListViewGroupedCharacters.SelectedItem as AccountCharacter;
+            var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+
+            TextBlockCharacterNickname.Text =
+                accountCharacterConverter?.Convert(accountCharacter, null, "cNickname", null) as string;
+            TextBlockCharacterOtherInfo.Text =
+                accountCharacterConverter?.Convert(accountCharacter, null, "cOtherInfo", null) as string;
         } // end method ListViewGroupedCharacters_OnSelectionChanged
 
         // Handle the main window view model's property changed event.
