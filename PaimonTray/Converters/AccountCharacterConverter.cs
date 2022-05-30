@@ -29,18 +29,15 @@ namespace PaimonTray.Converters
 
             if (accountCharacter == null) return null;
 
-            var hasNoCharacterLinked = accountCharacter.CNickname is null && accountCharacter.CUid is null &&
-                                       accountCharacter.Level is null && accountCharacter.Region is null;
-
             return parameter switch
             {
-                "cNickname" => hasNoCharacterLinked
+                "cNickname" => accountCharacter.CUid is null
                     ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
                     : accountCharacter.CNickname,
-                "cOtherInfo" => hasNoCharacterLinked
+                "cOtherInfo" => accountCharacter.CUid is null
                     ? null
                     : $"{accountCharacter.Region} | {accountCharacter.Level} | {accountCharacter.CUid}",
-                "cOtherInfoVisibility" => hasNoCharacterLinked ? Visibility.Collapsed : Visibility.Visible,
+                "cOtherInfoVisibility" => accountCharacter.CUid is null ? Visibility.Collapsed : Visibility.Visible,
                 _ => null
             };
         } // end method Convert

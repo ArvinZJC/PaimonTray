@@ -176,6 +176,9 @@
     <value>Chawong</value>
     <comment>No need to translate.</comment>
   </data>
+  <data name="CharacterSwitch" xml:space="preserve">
+    <value>切换角色</value>
+  </data>
   <data name="Clear" xml:space="preserve">
     <value>清除</value>
   </data>

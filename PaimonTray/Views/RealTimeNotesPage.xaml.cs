@@ -127,6 +127,7 @@ namespace PaimonTray.Views
         private void UpdateUiText()
         {
             TextBlockTitle.Text = _resourceLoader.GetString("RealTimeNotes");
+            ToolTipService.SetToolTip(ButtonSwitchCharacter, _resourceLoader.GetString("CharacterSwitch"));
         } // end method UpdateUiText
 
         #endregion Methods
@@ -159,6 +160,13 @@ namespace PaimonTray.Views
         {
             ToggleStatusVisibility();
         } // end method GroupedCharacters_CollectionChanged
+
+        // Handle the character's real-time notes list view's size changed event.
+        private void ListViewCharacterRealTimeNotes_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            GridCharacter.Width = ListViewCharacterRealTimeNotes.ActualWidth;
+            GridCharacterRealTimeNotes.Width = GridCharacter.Width;
+        } // end method ListViewCharacterRealTimeNotes_OnSizeChanged
 
         // Handle the grouped characters list view's selection changed event.
         private void ListViewGroupedCharacters_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

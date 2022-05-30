@@ -40,6 +40,7 @@
                 <StackPanel Grid.Row="1">
                     <!-- The character grid. -->
                     <Grid
+                        x:Name="GridCharacter"
                         Background="{ThemeResource ExpanderHeaderBackground}"
                         BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
                         BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
@@ -60,6 +61,7 @@
                                 Style="{ThemeResource BodyTextBlockStyle}" />
                         </StackPanel>
                         <Button
+                            x:Name="ButtonSwitchCharacter"
                             Grid.Column="1"
                             Padding="4">
                             <Button.Flyout>
@@ -115,11 +117,14 @@
                                     </ListView>
                                 </Flyout>
                             </Button.Flyout>
-                            <FontIcon Glyph="{x:Bind helpers:AppConstantsHelper.GlyphSwitchUser}" />
+                            <FontIcon
+                                FontSize="{ThemeResource ControlContentThemeFontSize}"
+                                Glyph="{x:Bind helpers:AppConstantsHelper.GlyphSwitchUser}" />
                         </Button>
                     </Grid>
                     <!-- The character's real-time notes grid. -->
                     <Grid
+                        x:Name="GridCharacterRealTimeNotes"
                         Background="{ThemeResource ExpanderContentBackground}"
                         BorderBrush="{ThemeResource ExpanderContentBorderBrush}"
                         BorderThickness="{ThemeResource ExpanderContentDownBorderThickness}"
@@ -127,7 +132,12 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ListView SelectionMode="None">
+                        <ListView
+                            x:Name="ListViewCharacterRealTimeNotes"
+                            HorizontalAlignment="Left"
+                            Margin="-4, 0, 0, 0"
+                            SelectionMode="None"
+                            SizeChanged="ListViewCharacterRealTimeNotes_OnSizeChanged">
                             <ListViewHeaderItem Content="Current Resin" />
                             <ListViewItem Content="160/160" />
                             <ListViewItem Content="Fully replenished                 0m" />
