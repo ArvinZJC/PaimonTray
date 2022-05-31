@@ -116,7 +116,8 @@ namespace PaimonTray.Helpers
         #region Constructors
 
         /// <summary>
-        /// Initialise the settings helper. Must be done as early as possible for the app.
+        /// Initialise the settings helper.
+        /// NOTE: Must be done as early as possible for the app.
         /// </summary>
         public SettingsHelper()
         {
@@ -210,7 +211,8 @@ namespace PaimonTray.Helpers
         } // end method InitialiseSetting
 
         /// <summary>
-        /// Initialise the settings when initialising the app. Must be invoked earlier than any other operations on the settings.
+        /// Initialise the settings when initialising the app.
+        /// NOTE: Must be invoked earlier than any other operations on the settings.
         /// </summary>
         private void InitialiseSettings()
         {

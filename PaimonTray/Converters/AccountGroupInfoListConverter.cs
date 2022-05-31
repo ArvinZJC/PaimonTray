@@ -1,33 +1,54 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
+using PaimonTray.Helpers;
 using PaimonTray.Models;
 using System;
 
 namespace PaimonTray.Converters
 {
     /// <summary>
-    /// The account's character converter.
+    /// The account group info list converter.
     /// </summary>
-    internal class AccountCharacterConverter : IValueConverter
+    internal class AccountGroupInfoListConverter : IValueConverter
     {
         #region Constants
 
-        /// <summary>
-        /// The character's nickname parameter.
-        /// </summary>
-        public const string ParameterNicknameCharacter = "nicknameCharacter";
-
-        /// <summary>
-        /// The character's other info parameter.
-        /// </summary>
-        public const string ParameterOtherInfoCharacter = "otherInfoCharacter";
-
-        /// <summary>
-        /// The character's other info visibility parameter.
-        /// </summary>
-        private const string ParameterOtherInfoVisibilityCharacter = "otherInfoVisibilityCharacter";
-
         #endregion Constants
+
+        /// <summary>
+        /// The avatar parameter.
+        /// </summary>
+        private const string ParameterAvatar = "avatar";
+
+        /// <summary>
+        /// The account's nickname parameter.
+        /// </summary>
+        private const string ParameterNicknameAccount = "nicknameAccount";
+
+        /// <summary>
+        /// The account's other info parameter.
+        /// </summary>
+        private const string ParameterOtherInfoAccount = "otherInfoAccount";
+
+        /// <summary>
+        /// The adding/updating status parameter.
+        /// </summary>
+        private const string ParameterStatusAddingUpdating = "statusAddingUpdating";
+
+        /// <summary>
+        /// The expired status parameter.
+        /// </summary>
+        private const string ParameterStatusExpired = "statusExpired";
+
+        /// <summary>
+        /// The fail status parameter.
+        /// </summary>
+        private const string ParameterStatusFail = "statusFail";
+
+        /// <summary>
+        /// The ready status parameter.
+        /// </summary>
+        private const string ParameterStatusReady = "statusReady";
 
         #region Methods
 
@@ -44,19 +65,28 @@ namespace PaimonTray.Converters
         {
             if (parameter == null) return null;
 
-            if (value is not AccountCharacter accountCharacter) return null;
+            if (value is not GroupInfoList { Count: > 0 } groupInfoList) return null;
+
+            if (groupInfoList[0] is not AccountCharacter accountCharacter) return null;
 
             return parameter switch
             {
-                ParameterNicknameCharacter => accountCharacter.UidCharacter is null
-                    ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
-                    : accountCharacter.NicknameCharacter,
-                ParameterOtherInfoCharacter => accountCharacter.UidCharacter is null
-                    ? null
-                    : $"{accountCharacter.Region} | {accountCharacter.Level} | {accountCharacter.UidCharacter}",
-                ParameterOtherInfoVisibilityCharacter => accountCharacter.UidCharacter is null
-                    ? Visibility.Collapsed
-                    : Visibility.Visible,
+                ParameterAvatar => (Application.Current as App)?.AccountsH.GetAvatarUri(accountCharacter.Key),
+                ParameterNicknameAccount => accountCharacter.NicknameAccount,
+                ParameterOtherInfoAccount => $"{accountCharacter.Server} | {accountCharacter.UidAccount}",
+                ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding
+                    or AccountsHelper.TagStatusUpdating
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                ParameterStatusExpired => accountCharacter.Status is AccountsHelper.TagStatusExpired
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                ParameterStatusFail => accountCharacter.Status is AccountsHelper.TagStatusFail
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                ParameterStatusReady => accountCharacter.Status is AccountsHelper.TagStatusReady
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
                 _ => null
             };
         } // end method Convert
@@ -77,5 +107,5 @@ namespace PaimonTray.Converters
         } // end method ConvertBack
 
         #endregion Methods
-    } // end class AccountCharacterConverter
+    } // end class AccountGroupInfoListConverter
 } // end namespace PaimonTray.Converters

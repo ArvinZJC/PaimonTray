@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
-        <converters:AccountGroupInfoListKeyConverter x:Key="AccountGroupInfoListKeyConverter" />
+        <converters:AccountGroupInfoListConverter x:Key="AccountGroupInfoListConverter" />
     </UserControl.Resources>
     <Grid Margin="0, 4, 0, 0">
         <Grid.RowDefinitions>
@@ -29,26 +29,26 @@
             <PersonPicture.ProfilePicture>
                 <BitmapImage
                     DecodePixelHeight="32"
-                    UriSource="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=avatar, Mode=OneWay}" />
+                    UriSource="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=avatar, Mode=OneWay}" />
             </PersonPicture.ProfilePicture>
         </PersonPicture>
         <TextBlock
             Grid.Column="1"
             Grid.Row="0"
             Style="{ThemeResource BaseTextBlockStyle}"
-            Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aNickname, Mode=OneWay}" />
+            Text="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount, Mode=OneWay}" />
         <TextBlock
             Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
             Grid.Column="1"
             Grid.Row="1"
             Style="{ThemeResource BodyTextBlockStyle}"
-            Text="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=aOtherInfo, Mode=OneWay}" />
+            Text="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount, Mode=OneWay}" />
         <Grid
             Grid.Column="2"
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="12, 0, 0, 0"
-            Visibility="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=statusAddingUpdating, Mode=OneWay}">
+            Visibility="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdating, Mode=OneWay}">
             <FontIcon
                 Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
                 Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
@@ -62,7 +62,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="12, 0, 0, 0"
-            Visibility="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=statusExpired, Mode=OneWay}">
+            Visibility="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpired, Mode=OneWay}">
             <FontIcon
                 Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
                 Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
@@ -76,7 +76,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="12, 0, 0, 0"
-            Visibility="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=statusFail, Mode=OneWay}">
+            Visibility="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFail, Mode=OneWay}">
             <FontIcon
                 Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
                 Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
@@ -90,7 +90,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="12, 0, 0, 0"
-            Visibility="{x:Bind Key, Converter={StaticResource AccountGroupInfoListKeyConverter}, ConverterParameter=statusReady, Mode=OneWay}">
+            Visibility="{x:Bind GroupInfo, Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReady, Mode=OneWay}">
             <FontIcon
                 Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
                 Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />

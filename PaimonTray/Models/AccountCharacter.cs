@@ -12,29 +12,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The account's key in the application data.
         /// </summary>
-        public string Key { get; set; } // It is put first because of being used to order grouped characters.
-
-        /// <summary>
-        /// The account's nickname.
-        /// </summary>
-        public string ANickname { get; set; }
-
-        /// <summary>
-        /// The account's UID.
-        /// </summary>
-        public string AUid { get; set; }
-
-        /// <summary>
-        /// The character's nickname.
-        /// </summary>
-        [JsonIgnore]
-        public string CNickname { get; set; }
-
-        /// <summary>
-        /// The character's UID.
-        /// </summary>
-        [JsonIgnore]
-        public string CUid { get; set; }
+        public string Key { get; set; } // It is put first because of being primarily used to order grouped characters.
 
         /// <summary>
         /// The character's flag indicating if the character is enabled.
@@ -47,6 +25,17 @@ namespace PaimonTray.Models
         /// </summary>
         [JsonIgnore]
         public string Level { get; set; }
+
+        /// <summary>
+        /// The account's nickname.
+        /// </summary>
+        public string NicknameAccount { get; set; }
+
+        /// <summary>
+        /// The character's nickname.
+        /// </summary>
+        [JsonIgnore]
+        public string NicknameCharacter { get; set; }
 
         /// <summary>
         /// The character's region.
@@ -63,6 +52,17 @@ namespace PaimonTray.Models
         /// The account's status.
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// The account's UID.
+        /// </summary>
+        public string UidAccount { get; set; }
+
+        /// <summary>
+        /// The character UID.
+        /// </summary>
+        [JsonIgnore]
+        public string UidCharacter { get; set; }
 
         #endregion Properties
     } // end class AccountCharacter

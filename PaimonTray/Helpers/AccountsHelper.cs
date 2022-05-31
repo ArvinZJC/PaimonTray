@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Models;
 using Serilog;
 using System;
@@ -176,6 +175,11 @@ namespace PaimonTray.Helpers
         public const string KeyUid = "uid";
 
         /// <summary>
+        /// The selected character's UID key.
+        /// </summary>
+        public const string KeyUidCharacterSelected = "uidCharacterSelected";
+
+        /// <summary>
         /// The user info key.
         /// </summary>
         private const string KeyUserInfo = "user_info";
@@ -298,11 +302,6 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
-        /// The app.
-        /// </summary>
-        private readonly App _app;
-
-        /// <summary>
         /// A flag indicating if the program is checking the accounts.
         /// </summary>
         private bool _isChecking;
@@ -333,9 +332,9 @@ namespace PaimonTray.Helpers
         public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
 
         /// <summary>
-        /// The grouped characters.
+        /// The account group info lists.
         /// </summary>
-        public ObservableCollection<GroupInfoList> GroupedCharacters { get; }
+        public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
 
         /// <summary>
         /// A flag indicating if the program is checking the accounts.
@@ -361,11 +360,12 @@ namespace PaimonTray.Helpers
         /// </summary>
         public AccountsHelper()
         {
-            _app = Application.Current as App;
+            var app = Application.Current as App;
+
             _isChecking = false;
             _lazyHttpClient =
                 new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
-            _resourceLoader = _app?.SettingsH.ResLoader;
+            _resourceLoader = app?.SettingsH.ResLoader;
             _regions = new Dictionary<string, string>
             {
                 [KeyRegionCnBilibili] = _resourceLoader?.GetString("RegionCnBilibili"),
@@ -375,12 +375,11 @@ namespace PaimonTray.Helpers
                 [KeyRegionGlobalEurope] = _resourceLoader?.GetString("RegionGlobalEurope"),
                 [KeyRegionGlobalSars] = _resourceLoader?.GetString("RegionGlobalSars"),
             };
+            AccountGroupInfoLists = new ObservableCollection<GroupInfoList>();
             ApplicationDataContainerAccounts =
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
-            GroupedCharacters = new ObservableCollection<GroupInfoList>();
-
             CheckAccountsAsync();
         } // end constructor AccountsHelper
 
@@ -398,77 +397,131 @@ namespace PaimonTray.Helpers
         #region Methods
 
         /// <summary>
-        /// TODO: Add the specific account's characters to the main window's navigation view, or update the specific navigation view items. ATTENTION: string null check
+        /// Add/Update an account group.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
-        /// <param name="containerKeysCharacter">A list of characters to add or update for the navigation if possible. Do for all characters if <c>null</c>.</param>
-        /// <param name="shouldSelectFirst">A flag indicating if the account's 1st character added in the navigation view should be selected.</param>
-        /// <returns>A flag indicating if the operations are successful.</returns>
-        public bool AddOrUpdateCharactersNavigation(string containerKeyAccount,
-            ImmutableList<string> containerKeysCharacter = null, bool shouldSelectFirst = true)
+        private void AddUpdateAccountGroup(string containerKeyAccount)
         {
-            if (!ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
+            if (!ValidateContainerKeyAccount(containerKeyAccount)) return;
+
+            var accountCharacters = new List<AccountCharacter>();
+            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
+            var applicationDataContainersCharacter = applicationDataContainerAccount
+                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
+            var propertySetAccount = applicationDataContainerAccount.Values; // Get the account property set first.
+            var nicknameAccount = propertySetAccount[KeyNickname] as string;
+            var server = propertySetAccount[KeyServer] switch
             {
-                Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return false;
-            } // end if
+                TagServerCn => _resourceLoader.GetString("ServerCn"),
+                TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
+                _ => AppConstantsHelper.Unknown
+            };
+            var status = propertySetAccount[KeyStatus] as string;
+            var uidAccount = propertySetAccount[KeyUid] as string;
+
+            if (applicationDataContainersCharacter.Count > 0)
+                accountCharacters.AddRange(from keyValuePairCharacter in applicationDataContainersCharacter
+                    orderby keyValuePairCharacter.Key // Order by the character's UID.
+                    let propertySetCharacter = keyValuePairCharacter.Value.Values
+                    select new AccountCharacter
+                    {
+                        IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
+                        Key = containerKeyAccount,
+                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                        NicknameAccount = nicknameAccount,
+                        NicknameCharacter = propertySetCharacter[KeyNickname] as string,
+                        Region = GetRegion(propertySetCharacter[KeyRegion] as string),
+                        Server = server,
+                        Status = status,
+                        UidAccount = uidAccount,
+                        UidCharacter = keyValuePairCharacter.Key
+                    });
+            else
+                accountCharacters.Add(new AccountCharacter
+                {
+                    Key = containerKeyAccount,
+                    NicknameAccount = nicknameAccount,
+                    Server = server,
+                    Status = status,
+                    UidAccount = uidAccount
+                });
+
+            var accountGroupInfoListTarget = AccountGroupInfoLists.ToImmutableList()
+                .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key.Contains(containerKeyAccount), null);
+
+            if (accountGroupInfoListTarget is null)
+                // TODO: account ordered by datetime?
+                (from accountCharacter in accountCharacters
+                        group accountCharacter by accountCharacter.Key
+                        into accountGroup
+                        orderby accountGroup.Key
+                        select new GroupInfoList(accountGroup) { Key = accountGroup.Key }).ToImmutableList()
+                    .ForEach(AccountGroupInfoLists.Add);
+            else
+            {
+                accountGroupInfoListTarget.Key =
+                    accountCharacters[0].Key; // The previous logic ensures at least 1 account's character.
+                accountGroupInfoListTarget.Clear();
+                accountGroupInfoListTarget.AddRange(accountCharacters);
+            } // end if...else
+        } // end method AddUpdateAccountGroup
+
+        /// <summary>
+        /// Add/Update the specific account's characters to the application data.
+        /// </summary>
+        /// <param name="characters">A list of characters.</param>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        public void AddUpdateCharactersToApplicationData(ImmutableList<Character> characters,
+            string containerKeyAccount)
+        {
+            if (!ValidateContainerKeyAccount(containerKeyAccount)) return;
 
             var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
+            var applicationDataContainerCharacters =
+                applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
+                    ApplicationDataCreateDisposition.Always);
+            var propertySetAccount = applicationDataContainerAccount.Values;
 
-            if (!applicationDataContainerAccount.Containers.ContainsKey(ContainerKeyCharacters))
+            if (characters is null)
             {
-                Log.Warning(
-                    $"No character for adding the main window's navigation view items (account container key: {containerKeyAccount}).");
-                return false;
+                Log.Warning($"Cannot store null characters (account container key: {containerKeyAccount}).");
+                propertySetAccount[KeyStatus] = propertySetAccount[KeyStatus] is TagStatusExpired
+                    ? TagStatusExpired
+                    : TagStatusFail;
+                return;
             } // end if
 
-            var navigationViewBody = _app.WindowsH.GetMainWindow().NavigationViewBody;
-            var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
-
-            foreach (var keyValuePairCharacter in applicationDataContainerAccount.Containers[ContainerKeyCharacters]
-                         .Containers)
+            if (characters.Count == 0)
             {
-                if (containerKeysCharacter != null &&
-                    !containerKeysCharacter.Contains(keyValuePairCharacter.Key)) continue;
+                foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
+                    applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
 
-                var navigationViewItemCharacter =
-                    (from NavigationViewItem navigationViewBodyMenuItem in
-                            navigationViewBodyMenuItems.Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
-                        let navigationViewBodyMenuItemTag = (KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag
-                        where navigationViewBodyMenuItemTag.Key == containerKeyAccount &&
-                              navigationViewBodyMenuItemTag.Value == keyValuePairCharacter.Key
-                        select navigationViewBodyMenuItem).FirstOrDefault();
-                var propertySetCharacter = keyValuePairCharacter.Value.Values;
+                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                    propertySetAccount[KeyStatus] = TagStatusReady;
 
-                if ((bool)propertySetCharacter[KeyIsEnabled])
-                {
-                    if (navigationViewItemCharacter is null)
-                    {
-                        navigationViewItemCharacter = new NavigationViewItem()
-                        {
-                            Icon = new SymbolIcon(Symbol.Contact),
-                            Tag = new KeyValuePair<string, string>(containerKeyAccount, keyValuePairCharacter.Key)
-                        };
-                        navigationViewBodyMenuItems.Insert(navigationViewBodyMenuItems.Count - 1,
-                            navigationViewItemCharacter);
-                    } // end if
+                return;
+            } // end if
 
-                    ToolTipService.SetToolTip(navigationViewItemCharacter,
-                        $"{propertySetCharacter[KeyNickname]} ({keyValuePairCharacter.Key})");
-                }
-                else if (navigationViewItemCharacter != null)
-                    navigationViewBodyMenuItems.Remove(navigationViewItemCharacter);
+            foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys.ToImmutableList()
+                         .Where(containerKeyCharacter => !characters.Select(character => character.Uid)
+                             .ToImmutableList().Contains(containerKeyCharacter)))
+                applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
+
+            foreach (var character in characters)
+            {
+                var propertySetCharacter = applicationDataContainerCharacters
+                    .CreateContainer(character.Uid, ApplicationDataCreateDisposition.Always).Values;
+
+                if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
+
+                propertySetCharacter[KeyLevel] = character.Level;
+                propertySetCharacter[KeyNickname] = character.Nickname;
+                propertySetCharacter[KeyRegion] = character.Region;
             } // end foreach
 
-            if (shouldSelectFirst)
-                navigationViewBody.SelectedItem =
-                    (from NavigationViewItem navigationViewBodyMenuItem in navigationViewBodyMenuItems
-                            .Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
-                        where ((KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag).Key == containerKeyAccount
-                        select navigationViewBodyMenuItem).FirstOrDefault();
-
-            return true;
-        } // end method AddOrUpdateCharactersNavigation
+            if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                propertySetAccount[KeyStatus] = TagStatusReady;
+        } // end method AddUpdateCharactersToApplicationData
 
         /// <summary>
         /// Check the accounts.
@@ -481,16 +534,18 @@ namespace PaimonTray.Helpers
             // TODO: test purposes only.
             for (var i = 0; i < 3; i++)
             {
-                var containerKeyAccount = i.ToString();
+                var server = i % 2 == 0 ? TagServerCn : TagServerGlobal;
+                var uidAccount = i.ToString();
+                var containerKeyAccount = $"{server}{uidAccount}";
                 var propertySetAccount = ApplicationDataContainerAccounts
                     .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always).Values;
-                var server = i % 2 == 0 ? TagServerCn : TagServerGlobal;
 
-                propertySetAccount[KeyCookies] = $"test={containerKeyAccount}";
+
+                propertySetAccount[KeyCookies] = $"test={uidAccount}";
                 propertySetAccount[KeyNickname] = "TEST_ACCOUNT";
                 propertySetAccount[KeyServer] = server;
                 propertySetAccount[KeyStatus] = TagStatusFail; // Should show as expired after checking
-                propertySetAccount[KeyUid] = containerKeyAccount;
+                propertySetAccount[KeyUid] = uidAccount;
 
                 var characters = new List<Character>();
 
@@ -501,11 +556,11 @@ namespace PaimonTray.Helpers
                         Level = 55,
                         Nickname = "TEST_CHARACTER",
                         Region = server is TagServerCn ? KeyRegionCnBilibili : KeyRegionGlobalSars,
-                        Uid = j.ToString()
+                        Uid = (i * 3 + j).ToString()
                     });
                 } // end for
 
-                StoreCharacters(characters.ToImmutableList(), containerKeyAccount);
+                AddUpdateCharactersToApplicationData(characters.ToImmutableList(), containerKeyAccount);
             } // end for
 
             if (CountAccounts() > 0)
@@ -547,18 +602,50 @@ namespace PaimonTray.Helpers
                                 break;
                             } // end if
 
+                            AddUpdateAccountGroup(applicationDataContainerAccount.Name);
                             continue;
                     } // end switch-case
 
-                    StoreCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
-                        applicationDataContainerAccount.Name);
+                    AddUpdateCharactersToApplicationData(
+                        await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
+                        applicationDataContainerAccount.Name); // Add/Update the account's characters first.
+                    AddUpdateAccountGroup(applicationDataContainerAccount.Name);
                 } // end foreach
 
-                GetGroupedCharactersFromLocal();
+                CheckUidCharacterSelected();
             } // end if
 
             IsChecking = false;
         } // end method CheckAccountsAsync
+
+        /// <summary>
+        /// Check if the selected character's UID can be found in the account group info lists.
+        /// NOTE: Should be invoked after finishing modifying account groups.
+        /// </summary>
+        private void CheckUidCharacterSelected()
+        {
+            var propertySetAccounts = ApplicationDataContainerAccounts.Values;
+
+            if (AccountGroupInfoLists.Count > 0)
+            {
+                if (propertySetAccounts[KeyUidCharacterSelected] is null) return;
+
+                var canFindCharacterSelected = false;
+                var uidCharacterSelected = propertySetAccounts[KeyUidCharacterSelected] as string;
+
+                foreach (var accountCharacters in AccountGroupInfoLists.Select(accountGroupInfoList =>
+                             accountGroupInfoList.Cast<AccountCharacter>()))
+                {
+                    canFindCharacterSelected = accountCharacters.Any(accountCharacter =>
+                        accountCharacter.UidCharacter == uidCharacterSelected);
+
+                    if (canFindCharacterSelected) break;
+                } // end foreach
+
+                if (!canFindCharacterSelected) propertySetAccounts[KeyUidCharacterSelected] = null;
+            }
+            else propertySetAccounts[KeyUidCharacterSelected] = null;
+        } // end method CheckUidCharacterSelected
 
         /// <summary>
         /// Count the accounts added.
@@ -590,12 +677,7 @@ namespace PaimonTray.Helpers
         /// <returns>A flag indicating if getting the account's characters from the API can be safe to execute.</returns>
         private async Task<bool> GetAccountFromApiAsync(string containerKeyAccount)
         {
-            if (containerKeyAccount is null ||
-                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
-            {
-                Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return false;
-            } // end if
+            if (!ValidateContainerKeyAccount(containerKeyAccount)) return false;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
@@ -726,12 +808,7 @@ namespace PaimonTray.Helpers
         /// <returns>The avatar URI, or <c>null</c> if no such account container key.</returns>
         public Uri GetAvatarUri(string containerKeyAccount)
         {
-            if (containerKeyAccount is null ||
-                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
-            {
-                Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return null;
-            } // end if
+            if (!ValidateContainerKeyAccount(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
             var urlBaseAvatar = propertySetAccount[KeyServer] is TagServerCn
@@ -748,12 +825,7 @@ namespace PaimonTray.Helpers
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
         private async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
         {
-            if (containerKeyAccount is null ||
-                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
-            {
-                Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return null;
-            } // end if
+            if (!ValidateContainerKeyAccount(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
@@ -843,71 +915,6 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
-        /// Get the characters grouped by account from local.
-        /// </summary>
-        private void GetGroupedCharactersFromLocal()
-        {
-            GroupedCharacters.Clear();
-
-            if (CountAccounts() <= 0) return;
-
-            var accountCharacters = new List<AccountCharacter>();
-
-            foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values)
-            {
-                var applicationDataContainersCharacter = applicationDataContainerAccount
-                    .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
-                var propertySetAccount = applicationDataContainerAccount.Values; // Get the account property set first.
-                var aNickname = propertySetAccount[KeyNickname] as string;
-                var aUid = propertySetAccount[KeyUid] as string;
-                var server = propertySetAccount[KeyServer] switch
-                {
-                    TagServerCn => _resourceLoader.GetString("ServerCn"),
-                    TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
-                    _ => AppConstantsHelper.Unknown
-                };
-                var status = propertySetAccount[KeyStatus] as string;
-
-                if (applicationDataContainersCharacter.Count == 0)
-                {
-                    accountCharacters.Add(new AccountCharacter
-                    {
-                        ANickname = aNickname,
-                        AUid = aUid,
-                        Key = applicationDataContainerAccount.Name,
-                        Server = server,
-                        Status = status
-                    });
-                    continue;
-                } // end if
-
-                accountCharacters.AddRange(from keyValuePairCharacter in applicationDataContainersCharacter
-                    let propertySetCharacter = keyValuePairCharacter.Value.Values
-                    select new AccountCharacter
-                    {
-                        ANickname = aNickname,
-                        AUid = aUid,
-                        CNickname = propertySetCharacter[KeyNickname] as string,
-                        CUid = keyValuePairCharacter.Key,
-                        IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
-                        Key = applicationDataContainerAccount.Name,
-                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
-                        Region = GetRegion(propertySetCharacter[KeyRegion] as string),
-                        Server = server,
-                        Status = status
-                    });
-            } // end foreach
-
-            // TODO: Ordered by datetime? Need ToList to allow modification?
-            (from accountCharacter in accountCharacters.ToImmutableList()
-                    group accountCharacter by JsonSerializer.Serialize(accountCharacter)
-                    into accountGroup
-                    orderby accountGroup.Key
-                    select new GroupInfoList(accountGroup) { Key = accountGroup.Key }).ToImmutableList()
-                .ForEach(GroupedCharacters.Add);
-        } // end method GetGroupedCharactersFromLocal
-
-        /// <summary>
         /// Get the region.
         /// </summary>
         /// <param name="keyRegion">The region key.</param>
@@ -929,101 +936,18 @@ namespace PaimonTray.Helpers
         } // end method NotifyPropertyChanged
 
         /// <summary>
-        /// TODO: Remove the specific account's characters from the main window's navigation view. ATTENTION: string null check
+        /// Validate the account container key.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
-        /// <param name="containerKeysCharacter">A list of characters to remove for the navigation if possible. Do for all characters if <c>null</c>.</param>
-        private void RemoveCharactersNavigation(string containerKeyAccount,
-            ImmutableList<string> containerKeysCharacter = null)
+        /// <returns>A flag indicating if the account container key is valid.</returns>
+        private bool ValidateContainerKeyAccount(string containerKeyAccount)
         {
-            var navigationViewBody = _app.WindowsH.GetMainWindow().NavigationViewBody;
-            var navigationViewBodyMenuItems = navigationViewBody.MenuItems;
+            if (containerKeyAccount is not null &&
+                ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount)) return true;
 
-            foreach (var navigationViewBodyMenuItem in from NavigationViewItem navigationViewBodyMenuItem in
-                         navigationViewBodyMenuItems
-                             .Take(navigationViewBodyMenuItems.Count - 1).ToImmutableList()
-                     let navigationViewBodyMenuItemTag = (KeyValuePair<string, string>)navigationViewBodyMenuItem.Tag
-                     where navigationViewBodyMenuItemTag.Key == containerKeyAccount &&
-                           (containerKeysCharacter is null ||
-                            containerKeysCharacter.Contains(navigationViewBodyMenuItemTag.Value))
-                     select navigationViewBodyMenuItem)
-                navigationViewBodyMenuItems.Remove(navigationViewBodyMenuItem);
-
-            navigationViewBody.SelectedItem ??= navigationViewBodyMenuItems.FirstOrDefault();
-        } // end method RemoveAccountNavigation
-
-        /// <summary>
-        /// TODO: Add or update the specific account's characters, and do necessary operations on the relevant UI elements.
-        /// </summary>
-        /// <param name="characters">A list of characters.</param>
-        /// <param name="containerKeyAccount">The account container key.</param>
-        public void StoreCharacters(ImmutableList<Character> characters, string containerKeyAccount)
-        {
-            if (containerKeyAccount is null ||
-                !ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount))
-            {
-                Log.Warning($"No such account container key ({containerKeyAccount}).");
-                return;
-            } // end if
-
-            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
-            var applicationDataContainerCharacters =
-                applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
-                    ApplicationDataCreateDisposition.Always);
-            var propertySetAccount = applicationDataContainerAccount.Values;
-
-            if (characters is null)
-            {
-                Log.Warning($"Cannot store null characters (account container key: {containerKeyAccount}).");
-                propertySetAccount[KeyStatus] = propertySetAccount[KeyStatus] is TagStatusExpired
-                    ? TagStatusExpired
-                    : TagStatusFail;
-                return;
-            } // end if
-
-            if (characters.Count == 0)
-            {
-                foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
-                    applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
-
-                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
-                    propertySetAccount[KeyStatus] = TagStatusReady;
-
-                // RemoveCharactersNavigation(containerKeyAccount);
-                return;
-            } // end if
-
-            // var containerKeysCharacter = new List<string>();
-
-            foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys.ToImmutableList()
-                         .Where(containerKeyCharacter => !characters.Select(character => character.Uid)
-                             .ToImmutableList().Contains(containerKeyCharacter)))
-            {
-                applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
-                // containerKeysCharacter.Add(keyValuePairCharacter.Key);
-            } // end foreach
-
-            // RemoveCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
-            // containerKeysCharacter.Clear();
-
-            foreach (var character in characters)
-            {
-                var propertySetCharacter = applicationDataContainerCharacters
-                    .CreateContainer(character.Uid, ApplicationDataCreateDisposition.Always).Values;
-
-                if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
-
-                propertySetCharacter[KeyLevel] = character.Level;
-                propertySetCharacter[KeyNickname] = character.Nickname;
-                propertySetCharacter[KeyRegion] = character.Region;
-                // containerKeysCharacter.Add(character.Uid);
-            } // end foreach
-
-            if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
-                propertySetAccount[KeyStatus] = TagStatusReady;
-
-            // AddOrUpdateCharactersNavigation(containerKeyAccount, containerKeysCharacter.ToImmutableList());
-        } // end method StoreCharacters
+            Log.Warning($"No such account container key ({containerKeyAccount}).");
+            return false;
+        } // end method ValidateContainerKeyAccount
 
         #endregion Methods
     } // end class AccountsHelper

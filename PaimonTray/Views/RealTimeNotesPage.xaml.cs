@@ -5,9 +5,12 @@ using PaimonTray.Converters;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
 using PaimonTray.ViewModels;
+using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
 {
@@ -29,6 +32,11 @@ namespace PaimonTray.Views
         private MainWindow _mainWindow;
 
         /// <summary>
+        /// The accounts property set.
+        /// </summary>
+        private readonly IPropertySet _propertySetAccounts;
+
+        /// <summary>
         /// The resource loader.
         /// </summary>
         private readonly ResourceLoader _resourceLoader;
@@ -43,6 +51,7 @@ namespace PaimonTray.Views
         public RealTimeNotesPage()
         {
             _app = Application.Current as App;
+            _propertySetAccounts = _app?.AccountsH.ApplicationDataContainerAccounts.Values;
             _resourceLoader = _app?.SettingsH.ResLoader;
 
             InitializeComponent();
@@ -60,7 +69,7 @@ namespace PaimonTray.Views
         /// <param name="e">Details about the navigation that has unloaded the current page.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            _app.AccountsH.GroupedCharacters.CollectionChanged -= GroupedCharacters_CollectionChanged;
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
             base.OnNavigatedFrom(e);
@@ -72,9 +81,10 @@ namespace PaimonTray.Views
         /// <param name="e">Details about the pending navigation that will load the current page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _app.AccountsH.GroupedCharacters.CollectionChanged += GroupedCharacters_CollectionChanged;
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            CollectionViewSourceGroupedCharacters.Source = _app.AccountsH.GroupedCharacters;
+            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
+                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
             base.OnNavigatedTo(e);
         } // end method OnNavigatedTo
 
@@ -86,9 +96,9 @@ namespace PaimonTray.Views
             var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
 
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
-            ListViewGroupedCharacters.MaxHeight = Height * 2 / 3;
+            ListViewAccountGroups.MaxHeight = Height * 2 / 3;
             Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;
-            ListViewGroupedCharacters.Width = Width;
+            ListViewAccountGroups.Width = Width;
         } // end method SetPageSize
 
         /// <summary>
@@ -105,11 +115,25 @@ namespace PaimonTray.Views
             }
             else
             {
-                if (_app.AccountsH.GroupedCharacters.Count > 0)
-                {
-                    GridStatus.Visibility = Visibility.Collapsed;
+                var accountGroupInfoLists = CollectionViewSourceAccountGroups.Source as ImmutableList<GroupInfoList>;
 
-                    if (ListViewGroupedCharacters.SelectedIndex == -1) ListViewGroupedCharacters.SelectedIndex = 0;
+                if (accountGroupInfoLists?.Count > 0)
+                {
+                    var uidCharacterSelected = _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+
+                    foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
+                                 accountGroupInfoList.Cast<AccountCharacter>()))
+                    {
+                        ListViewAccountGroups.SelectedItem = uidCharacterSelected is null
+                            ? accountCharacters.FirstOrDefault(
+                                accountCharacter => accountCharacter.UidCharacter is not null, null)
+                            : accountCharacters.FirstOrDefault(
+                                accountCharacter => accountCharacter.UidCharacter == uidCharacterSelected, null);
+
+                        if (ListViewAccountGroups.SelectedItem is not null) break;
+                    } // end foreach
+
+                    GridStatus.Visibility = Visibility.Collapsed; // Hide the status grid when ready.
                 }
                 else
                 {
@@ -134,6 +158,14 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
+        // Handle the account group info lists' collection changed event.
+        private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
+                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            ToggleStatusVisibility();
+        } // end method AccountGroupInfoLists_CollectionChanged
+
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -155,11 +187,27 @@ namespace PaimonTray.Views
             _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
         } // end method GridRoot_OnLoaded
 
-        // Handle the grouped characters' collection changed event.
-        private void GroupedCharacters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        // Handle the account groups list view's selection changed event.
+        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ToggleStatusVisibility();
-        } // end method GroupedCharacters_CollectionChanged
+            if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
+            {
+                TextBlockCharacterNickname.Text = string.Empty;
+                TextBlockCharacterOtherInfo.Text = string.Empty;
+            }
+            else
+            {
+                var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+
+                _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
+                TextBlockCharacterNickname.Text =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterNicknameCharacter, null) as string;
+                TextBlockCharacterOtherInfo.Text =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string;
+            } // end if...else
+        } // end method ListViewAccountGroups_OnSelectionChanged
 
         // Handle the character's real-time notes list view's size changed event.
         private void ListViewCharacterRealTimeNotes_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -167,18 +215,6 @@ namespace PaimonTray.Views
             GridCharacter.Width = ListViewCharacterRealTimeNotes.ActualWidth;
             GridCharacterRealTimeNotes.Width = GridCharacter.Width;
         } // end method ListViewCharacterRealTimeNotes_OnSizeChanged
-
-        // Handle the grouped characters list view's selection changed event.
-        private void ListViewGroupedCharacters_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var accountCharacter = ListViewGroupedCharacters.SelectedItem as AccountCharacter;
-            var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
-
-            TextBlockCharacterNickname.Text =
-                accountCharacterConverter?.Convert(accountCharacter, null, "cNickname", null) as string;
-            TextBlockCharacterOtherInfo.Text =
-                accountCharacterConverter?.Convert(accountCharacter, null, "cOtherInfo", null) as string;
-        } // end method ListViewGroupedCharacters_OnSelectionChanged
 
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

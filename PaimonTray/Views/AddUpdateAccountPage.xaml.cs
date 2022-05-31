@@ -76,7 +76,7 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
-        /// Add or update an account.
+        /// Add/Update an account.
         /// </summary>
         /// <param name="aUid">The account's UID.</param>
         /// <param name="cookies">The cookies.</param>
@@ -117,7 +117,7 @@ namespace PaimonTray.Views
                 ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
 
-                if (shouldUpdateAccount) _app.AccountsH.StoreCharacters(null, containerKeyAccount);
+                if (shouldUpdateAccount) _app.AccountsH.AddUpdateCharactersToApplicationData(null, containerKeyAccount);
                 else applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
                 return;
@@ -125,9 +125,11 @@ namespace PaimonTray.Views
 
             if (shouldUpdateAccount)
             {
-                _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
+                _app.AccountsH.AddUpdateCharactersToApplicationData(characters, containerKeyAccount);
                 ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdatedExtraInfo"),
-                    _resourceLoader.GetString("AccountUpdated")); // TODO: consider also navigating
+                    _resourceLoader
+                        .GetString(
+                            "AccountUpdated")); // TODO: navigating to the first enabled character, otherwise show the info bar.
                 return;
             } // end if
 
@@ -158,7 +160,7 @@ namespace PaimonTray.Views
                     InfoBarSeverity.Success);
             } // end if
 
-            _app.AccountsH.StoreCharacters(characters, containerKeyAccount);
+            _app.AccountsH.AddUpdateCharactersToApplicationData(characters, containerKeyAccount);
         } // end method AddUpdateAccountAsync
 
         /// <summary>

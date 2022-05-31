@@ -65,14 +65,14 @@
                             Grid.Column="1"
                             Padding="4">
                             <Button.Flyout>
-                                <!-- The grouped characters flyout. -->
+                                <!-- The account groups flyout. -->
                                 <Flyout>
                                     <ListView
-                                        x:Name="ListViewGroupedCharacters"
+                                        x:Name="ListViewAccountGroups"
                                         HorizontalAlignment="Stretch"
-                                        ItemsSource="{x:Bind CollectionViewSourceGroupedCharacters.View, Mode=OneWay}"
+                                        ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View, Mode=OneWay}"
                                         Margin="-12"
-                                        SelectionChanged="ListViewGroupedCharacters_OnSelectionChanged">
+                                        SelectionChanged="ListViewAccountGroups_OnSelectionChanged">
                                         <ListView.GroupStyle>
                                             <GroupStyle>
                                                 <GroupStyle.HeaderContainerStyle>
@@ -84,7 +84,7 @@
                                                     <DataTemplate x:DataType="models:GroupInfoList">
                                                         <controls:AccountGroupHeader
                                                             x:Phase="2"
-                                                            Key="{x:Bind Key}" />
+                                                            GroupInfo="{x:Bind}" />
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
@@ -96,22 +96,22 @@
                                                     <StackPanel
                                                         x:Phase="1"
                                                         Padding="0, 8"
-                                                        Tag="{x:Bind CUid}">
+                                                        Tag="{x:Bind UidCharacter}">
                                                         <TextBlock
                                                             Style="{ThemeResource BaseTextBlockStyle}"
-                                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=cNickname}" />
+                                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                                         <TextBlock
                                                             Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                             Style="{ThemeResource BodyTextBlockStyle}"
-                                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=cOtherInfo}"
-                                                            Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=cOtherInfoVisibility}" />
+                                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
+                                                            Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoVisibilityCharacter}" />
                                                     </StackPanel>
                                                 </ListViewItem>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                         <ListView.Resources>
                                             <CollectionViewSource
-                                                x:Name="CollectionViewSourceGroupedCharacters"
+                                                x:Name="CollectionViewSourceAccountGroups"
                                                 IsSourceGrouped="True" />
                                         </ListView.Resources>
                                     </ListView>

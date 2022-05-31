@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Models;
 
 namespace PaimonTray.Controls
 {
@@ -8,23 +9,23 @@ namespace PaimonTray.Controls
         #region Fields
 
         /// <summary>
-        /// The key property.
+        /// The group info property.
         /// </summary>
-        public static readonly DependencyProperty KeyProperty = DependencyProperty.Register(nameof(Key), typeof(string),
-            typeof(AccountGroupHeader), new PropertyMetadata(null));
+        public static readonly DependencyProperty GroupInfoProperty = DependencyProperty.Register(nameof(GroupInfo),
+            typeof(GroupInfoList), typeof(AccountGroupHeader), new PropertyMetadata(null));
 
         #endregion Fields
 
         #region Properties
 
         /// <summary>
-        /// The key.
+        /// The group info.
         /// </summary>
-        public string Key
+        public GroupInfoList GroupInfo
         {
-            get => (string)GetValue(KeyProperty);
-            set => SetValue(KeyProperty, value);
-        } // end property Key
+            get => GetValue(GroupInfoProperty) as GroupInfoList;
+            set => SetValue(GroupInfoProperty, value);
+        } // end property GroupInfo
 
         #endregion Properties
 
@@ -51,7 +52,8 @@ namespace PaimonTray.Controls
             var resourceLoader = (Application.Current as App)?.SettingsH.ResLoader;
 
             ToolTipService.SetToolTip(FontIconError, resourceLoader?.GetString("StatusAccountFailExplanation"));
-            ToolTipService.SetToolTip(FontIconInformational, resourceLoader?.GetString("StatusAccountAddingUpdatingExplanation"));
+            ToolTipService.SetToolTip(FontIconInformational,
+                resourceLoader?.GetString("StatusAccountAddingUpdatingExplanation"));
             ToolTipService.SetToolTip(FontIconSuccess, resourceLoader?.GetString("StatusAccountReadyExplanation"));
             ToolTipService.SetToolTip(FontIconWarning, resourceLoader?.GetString("StatusAccountExpiredExplanation"));
         } // end method UpdateUiText
