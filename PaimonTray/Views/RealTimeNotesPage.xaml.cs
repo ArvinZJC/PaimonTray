@@ -55,7 +55,6 @@ namespace PaimonTray.Views
             _resourceLoader = _app?.SettingsH.ResLoader;
 
             InitializeComponent();
-            ToggleStatusVisibility();
             UpdateUiText();
         } // end constructor RealTimeNotesPage
 
@@ -83,8 +82,7 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
-                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            ToggleStatusVisibility();
             base.OnNavigatedTo(e);
         } // end method OnNavigatedTo
 
@@ -115,9 +113,12 @@ namespace PaimonTray.Views
             }
             else
             {
-                var accountGroupInfoLists = CollectionViewSourceAccountGroups.Source as ImmutableList<GroupInfoList>;
+                var accountGroupInfoLists = _app.AccountsH.AccountGroupInfoLists
+                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
 
-                if (accountGroupInfoLists?.Count > 0)
+                CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+
+                if (accountGroupInfoLists.Count > 0)
                 {
                     var uidCharacterSelected = _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
 
@@ -161,8 +162,6 @@ namespace PaimonTray.Views
         // Handle the account group info lists' collection changed event.
         private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
-                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
             ToggleStatusVisibility();
         } // end method AccountGroupInfoLists_CollectionChanged
 
