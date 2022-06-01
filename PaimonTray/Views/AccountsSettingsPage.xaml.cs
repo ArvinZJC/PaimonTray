@@ -1,6 +1,11 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using PaimonTray.Helpers;
+using System.Collections.Immutable;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
@@ -48,6 +53,30 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
+        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
+        /// </summary>
+        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            base.OnNavigatedFrom(e);
+        } // end method OnNavigatedFrom
+
+        /// <summary>
+        /// Invoked when the page is loaded and becomes the current source of a parent frame.
+        /// </summary>
+        /// <param name="e">Details about the pending navigation that will load the current page.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
+                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            base.OnNavigatedTo(e);
+        } // end method OnNavigatedTo
+
+        /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
@@ -71,6 +100,21 @@ namespace PaimonTray.Views
         #endregion Methods
 
         #region Event Handlers
+
+        // Handle the account group info lists' collection changed event.
+        private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
+                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+        } // end method AccountGroupInfoLists_CollectionChanged
+
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking)
+                CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
+                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+        } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the server combo box item's loaded event.
         private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)

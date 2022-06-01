@@ -103,7 +103,7 @@
                 <Frame
                     x:Name="FrameBody"
                     IsNavigationStackEnabled="False"
-                    Padding="0, 0, 0, 4" />
+                    Padding="0, 0, 0, 12" />
             </ScrollViewer>
         </NavigationView>
     </Grid>

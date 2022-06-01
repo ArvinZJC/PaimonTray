@@ -13,6 +13,11 @@ namespace PaimonTray.Converters
         #region Constants
 
         /// <summary>
+        /// The parameter for the flag indicating if the account has any character.
+        /// </summary>
+        private const string ParameterHasCharacter = "hasCharacter";
+
+        /// <summary>
         /// The character's nickname parameter.
         /// </summary>
         public const string ParameterNicknameCharacter = "nicknameCharacter";
@@ -48,6 +53,7 @@ namespace PaimonTray.Converters
 
             return parameter switch
             {
+                ParameterHasCharacter => accountCharacter.UidCharacter is not null,
                 ParameterNicknameCharacter => accountCharacter.UidCharacter is null
                     ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
                     : accountCharacter.NicknameCharacter,
