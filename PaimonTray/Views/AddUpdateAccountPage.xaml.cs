@@ -114,10 +114,10 @@ namespace PaimonTray.Views
 
                 Log.Warning(
                     $"Failed to {action} the account due to null characters (account container key: {containerKeyAccount}).");
-                ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
+                ShowLoginInfoBar(_resourceLoader.GetString("LoginFailExtraInfo"),
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
 
-                if (shouldUpdateAccount) _app.AccountsH.AddUpdateCharactersToApplicationData(null, containerKeyAccount);
+                if (shouldUpdateAccount) _app.AccountsH.AddUpdateCharacters(null, containerKeyAccount);
                 else applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
                 return;
@@ -125,11 +125,14 @@ namespace PaimonTray.Views
 
             if (shouldUpdateAccount)
             {
-                _app.AccountsH.AddUpdateCharactersToApplicationData(characters, containerKeyAccount);
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountUpdatedExtraInfo"),
-                    _resourceLoader
-                        .GetString(
-                            "AccountUpdated")); // TODO: navigating to the first enabled character, otherwise show the info bar.
+                _app.AccountsH.AddUpdateCharacters(characters, containerKeyAccount);
+
+                if (_app.AccountsH.TrySelectAccountGroupFirstEnabledCharacter(containerKeyAccount))
+                    _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyRealTimeNotes;
+                else
+                    ShowLoginInfoBar(_resourceLoader.GetString("AccountUpdatedExtraInfo"),
+                        _resourceLoader.GetString("AccountUpdated"));
+
                 return;
             } // end if
 
@@ -156,11 +159,14 @@ namespace PaimonTray.Views
                     return;
                 } // end if
 
-                ShowInfoBarLogin(null, _resourceLoader.GetString("AccountAddNoCharacterSuccess"),
+                ShowLoginInfoBar(null, _resourceLoader.GetString("AccountAddNoCharacterSuccess"),
                     InfoBarSeverity.Success);
             } // end if
 
-            _app.AccountsH.AddUpdateCharactersToApplicationData(characters, containerKeyAccount);
+            _app.AccountsH.AddUpdateCharacters(characters, containerKeyAccount);
+
+            if (_app.AccountsH.TrySelectAccountGroupFirstEnabledCharacter(containerKeyAccount))
+                _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyRealTimeNotes;
         } // end method AddUpdateAccountAsync
 
         /// <summary>
@@ -174,7 +180,7 @@ namespace PaimonTray.Views
             var uriLoginMiHoYo = GetLoginWebPageUri();
 
             if (_app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax)
-                ShowInfoBarLogin(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
+                ShowLoginInfoBar(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
                     _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
             else InfoBarLogin.IsOpen = false;
 
@@ -305,7 +311,7 @@ namespace PaimonTray.Views
                 Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
                             $" login failed due to invalid cookies ({cookies}).");
                 InitialiseLogin();
-                ShowInfoBarLogin(_resourceLoader.GetString("LoginFailExtraInfo"),
+                ShowLoginInfoBar(_resourceLoader.GetString("LoginFailExtraInfo"),
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
             } // end if...else
 
@@ -411,7 +417,7 @@ namespace PaimonTray.Views
         /// <param name="message">The login message.</param>
         /// <param name="title">The login title.</param>
         /// <param name="infoBarSeverity">The info bar's severity.</param>
-        private void ShowInfoBarLogin(string message, string title,
+        private void ShowLoginInfoBar(string message, string title,
             InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
             InfoBarLogin.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
@@ -419,7 +425,7 @@ namespace PaimonTray.Views
             InfoBarLogin.Severity = infoBarSeverity;
             InfoBarLogin.Title = title;
             InfoBarLogin.IsOpen = true; // Show the info bar when ready.
-        } // end method ShowInfoBarLogin
+        } // end method ShowLoginInfoBar
 
         /// <summary>
         /// Show/Hide the status.

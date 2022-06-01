@@ -57,7 +57,7 @@ namespace PaimonTray.ViewModels
                 {
                     _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAddUpdateAccount;
 
-                    if (!_mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null); // TODO
+                    if (!_mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };
                 return xamlUiCommand;
             } // end get

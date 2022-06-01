@@ -402,7 +402,7 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         private void AddUpdateAccountGroup(string containerKeyAccount)
         {
-            if (!ValidateContainerKeyAccount(containerKeyAccount)) return;
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
             var accountCharacters = new List<AccountCharacter>();
             var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
@@ -467,14 +467,15 @@ namespace PaimonTray.Helpers
         } // end method AddUpdateAccountGroup
 
         /// <summary>
-        /// Add/Update the specific account's characters to the application data.
+        /// Add/Update the specific account's characters.
+        /// NOTE: If the account container key is valid and the characters list is not <c>null</c>, the relevant account group will also be added/updated.
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
-        public void AddUpdateCharactersToApplicationData(ImmutableList<Character> characters,
+        public void AddUpdateCharacters(ImmutableList<Character> characters,
             string containerKeyAccount)
         {
-            if (!ValidateContainerKeyAccount(containerKeyAccount)) return;
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
             var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
             var applicationDataContainerCharacters =
@@ -498,30 +499,33 @@ namespace PaimonTray.Helpers
 
                 if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
                     propertySetAccount[KeyStatus] = TagStatusReady;
-
-                return;
-            } // end if
-
-            foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys.ToImmutableList()
-                         .Where(containerKeyCharacter => !characters.Select(character => character.Uid)
-                             .ToImmutableList().Contains(containerKeyCharacter)))
-                applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
-
-            foreach (var character in characters)
+            }
+            else
             {
-                var propertySetCharacter = applicationDataContainerCharacters
-                    .CreateContainer(character.Uid, ApplicationDataCreateDisposition.Always).Values;
+                foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys
+                             .ToImmutableList()
+                             .Where(containerKeyCharacter => !characters.Select(character => character.Uid)
+                                 .ToImmutableList().Contains(containerKeyCharacter)))
+                    applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
 
-                if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
+                foreach (var character in characters)
+                {
+                    var propertySetCharacter = applicationDataContainerCharacters
+                        .CreateContainer(character.Uid, ApplicationDataCreateDisposition.Always).Values;
 
-                propertySetCharacter[KeyLevel] = character.Level;
-                propertySetCharacter[KeyNickname] = character.Nickname;
-                propertySetCharacter[KeyRegion] = character.Region;
-            } // end foreach
+                    if (!propertySetCharacter.ContainsKey(KeyIsEnabled)) propertySetCharacter[KeyIsEnabled] = true;
 
-            if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
-                propertySetAccount[KeyStatus] = TagStatusReady;
-        } // end method AddUpdateCharactersToApplicationData
+                    propertySetCharacter[KeyLevel] = character.Level;
+                    propertySetCharacter[KeyNickname] = character.Nickname;
+                    propertySetCharacter[KeyRegion] = character.Region;
+                } // end foreach
+
+                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                    propertySetAccount[KeyStatus] = TagStatusReady;
+            } // end if...else
+
+            AddUpdateAccountGroup(containerKeyAccount);
+        } // end method AddUpdateCharacters
 
         /// <summary>
         /// Check the accounts.
@@ -544,7 +548,7 @@ namespace PaimonTray.Helpers
                 propertySetAccount[KeyCookies] = $"test={uidAccount}";
                 propertySetAccount[KeyNickname] = "TEST_ACCOUNT";
                 propertySetAccount[KeyServer] = server;
-                propertySetAccount[KeyStatus] = TagStatusFail; // Should show as expired after checking
+                propertySetAccount[KeyStatus] = TagStatusFail;
                 propertySetAccount[KeyUid] = uidAccount;
 
                 var characters = new List<Character>();
@@ -560,14 +564,15 @@ namespace PaimonTray.Helpers
                     });
                 } // end for
 
-                AddUpdateCharactersToApplicationData(characters.ToImmutableList(), containerKeyAccount);
+                AddUpdateCharacters(characters.ToImmutableList(), containerKeyAccount);
             } // end for
 
             if (CountAccounts() > 0)
-            {
                 foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values)
                 {
                     var propertySetAccount = applicationDataContainerAccount.Values;
+
+                    if (propertySetAccount[KeyUid] is "0" or "1" or "2") continue; // TODO: test purposes only.
 
                     if (propertySetAccount[KeyStatus] is not TagStatusAdding &&
                         propertySetAccount[KeyStatus] is not TagStatusExpired &&
@@ -606,15 +611,11 @@ namespace PaimonTray.Helpers
                             continue;
                     } // end switch-case
 
-                    AddUpdateCharactersToApplicationData(
-                        await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
-                        applicationDataContainerAccount.Name); // Add/Update the account's characters first.
-                    AddUpdateAccountGroup(applicationDataContainerAccount.Name);
+                    AddUpdateCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
+                        applicationDataContainerAccount.Name);
                 } // end foreach
 
-                CheckUidCharacterSelected();
-            } // end if
-
+            CheckSelectedCharacterUid();
             IsChecking = false;
         } // end method CheckAccountsAsync
 
@@ -622,7 +623,7 @@ namespace PaimonTray.Helpers
         /// Check if the selected character's UID can be found in the account group info lists.
         /// NOTE: Should be invoked after finishing modifying account groups.
         /// </summary>
-        private void CheckUidCharacterSelected()
+        private void CheckSelectedCharacterUid()
         {
             var propertySetAccounts = ApplicationDataContainerAccounts.Values;
 
@@ -645,7 +646,7 @@ namespace PaimonTray.Helpers
                 if (!canFindCharacterSelected) propertySetAccounts[KeyUidCharacterSelected] = null;
             }
             else propertySetAccounts[KeyUidCharacterSelected] = null;
-        } // end method CheckUidCharacterSelected
+        } // end method CheckSelectedCharacterUid
 
         /// <summary>
         /// Count the accounts added.
@@ -677,7 +678,7 @@ namespace PaimonTray.Helpers
         /// <returns>A flag indicating if getting the account's characters from the API can be safe to execute.</returns>
         private async Task<bool> GetAccountFromApiAsync(string containerKeyAccount)
         {
-            if (!ValidateContainerKeyAccount(containerKeyAccount)) return false;
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return false;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
@@ -808,7 +809,7 @@ namespace PaimonTray.Helpers
         /// <returns>The avatar URI, or <c>null</c> if no such account container key.</returns>
         public Uri GetAvatarUri(string containerKeyAccount)
         {
-            if (!ValidateContainerKeyAccount(containerKeyAccount)) return null;
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
             var urlBaseAvatar = propertySetAccount[KeyServer] is TagServerCn
@@ -825,7 +826,7 @@ namespace PaimonTray.Helpers
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
         private async Task<ImmutableList<Character>> GetCharactersFromApiAsync(string containerKeyAccount)
         {
-            if (!ValidateContainerKeyAccount(containerKeyAccount)) return null;
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
@@ -936,18 +937,45 @@ namespace PaimonTray.Helpers
         } // end method NotifyPropertyChanged
 
         /// <summary>
+        /// Try selecting the specific account group's 1st enabled character.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <returns>A flag indicating if the specific account group's 1st enabled character exists.</returns>
+        public bool TrySelectAccountGroupFirstEnabledCharacter(string containerKeyAccount)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return false;
+
+            if (AccountGroupInfoLists.Count <= 0) return false;
+
+            var accountGroup =
+                AccountGroupInfoLists.FirstOrDefault(
+                    accountGroupInfoList => accountGroupInfoList.Key == containerKeyAccount, null);
+
+            if (accountGroup is null || accountGroup.Count <= 0) return false;
+
+            var accountCharacterSelected = accountGroup.Cast<AccountCharacter>()
+                .FirstOrDefault(
+                    accountCharacter => accountCharacter.IsEnabled && accountCharacter.UidCharacter is not null, null);
+
+            if (accountCharacterSelected is null) return false;
+
+            ApplicationDataContainerAccounts.Values[KeyUidCharacterSelected] = accountCharacterSelected.UidCharacter;
+            return true;
+        } // end method TrySelectAccountGroupFirstEnabledCharacter
+
+        /// <summary>
         /// Validate the account container key.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <returns>A flag indicating if the account container key is valid.</returns>
-        private bool ValidateContainerKeyAccount(string containerKeyAccount)
+        private bool ValidateAccountContainerKey(string containerKeyAccount)
         {
             if (containerKeyAccount is not null &&
                 ApplicationDataContainerAccounts.Containers.ContainsKey(containerKeyAccount)) return true;
 
             Log.Warning($"No such account container key ({containerKeyAccount}).");
             return false;
-        } // end method ValidateContainerKeyAccount
+        } // end method ValidateAccountContainerKey
 
         #endregion Methods
     } // end class AccountsHelper
