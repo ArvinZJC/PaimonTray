@@ -70,6 +70,7 @@
                                     <ListView
                                         x:Name="ListViewAccountGroups"
                                         HorizontalAlignment="Stretch"
+                                        IsSynchronizedWithCurrentItem="False"
                                         ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View, Mode=OneWay}"
                                         Margin="-12"
                                         SelectionChanged="ListViewAccountGroups_OnSelectionChanged">
