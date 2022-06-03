@@ -16,6 +16,16 @@ namespace PaimonTray.Converters
         #endregion Constants
 
         /// <summary>
+        /// The parameter for checking and refreshing an account group.
+        /// </summary>
+        private const string ParameterAccountGroupCheckRefresh = "accountGroupCheckRefresh";
+
+        /// <summary>
+        /// The parameter for removing an account group.
+        /// </summary>
+        private const string ParameterAccountGroupRemove = "accountGroupRemove";
+
+        /// <summary>
         /// The avatar parameter.
         /// </summary>
         private const string ParameterAvatar = "avatar";
@@ -94,6 +104,8 @@ namespace PaimonTray.Converters
 
             return parameter switch
             {
+                ParameterAccountGroupCheckRefresh => resourceLoader?.GetString("AccountGroupCheckRefresh"),
+                ParameterAccountGroupRemove => resourceLoader?.GetString("AccountGroupRemove"),
                 ParameterAvatar => app?.AccountsH.GetAvatarUri(accountCharacter.Key),
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
                 ParameterOtherInfoAccount => $"{accountCharacter.Server} | {accountCharacter.UidAccount}",

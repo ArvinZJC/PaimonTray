@@ -10,7 +10,7 @@ namespace PaimonTray.Models
         #region Properties
 
         /// <summary>
-        /// The key.
+        /// The group info list key.
         /// </summary>
         public string Key { get; set; }
 

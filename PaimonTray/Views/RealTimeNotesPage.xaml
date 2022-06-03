@@ -65,20 +65,23 @@
                             Grid.Column="1"
                             Padding="4">
                             <Button.Flyout>
-                                <!-- The account groups flyout. -->
                                 <Flyout>
+                                    <!-- The account groups list view. -->
                                     <ListView
                                         x:Name="ListViewAccountGroups"
                                         HorizontalAlignment="Stretch"
                                         IsSynchronizedWithCurrentItem="False"
-                                        ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View}"
-                                        Margin="-12"
+                                        ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View, Mode=OneWay}"
+                                        Margin="-16"
+                                        Padding="8"
                                         SelectionChanged="ListViewAccountGroups_OnSelectionChanged">
                                         <ListView.GroupStyle>
                                             <GroupStyle>
                                                 <GroupStyle.HeaderContainerStyle>
                                                     <Style TargetType="ListViewHeaderItem">
-                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                        <Setter
+                                                            Property="HorizontalContentAlignment"
+                                                            Value="Stretch" />
                                                     </Style>
                                                 </GroupStyle.HeaderContainerStyle>
                                                 <GroupStyle.HeaderTemplate>

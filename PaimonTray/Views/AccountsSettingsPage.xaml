@@ -19,6 +19,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <!-- The content dialogue for removing the account group(s). -->
+        <ContentDialog
+            x:Name="ContentDialogueAccountGroupsRemove"
+            DefaultButton="Close"
+            Grid.Row="0" />
         <!-- The info bar for informing of applying always using the alternative login method later. -->
         <InfoBar
             x:Name="InfoBarLoginAlternativeAlwaysAppliedLater"
@@ -38,156 +43,240 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!-- TODO: The accounts management expander. -->
+            <!-- TODO: The account groups expander. -->
             <Expander
                 Grid.Row="0"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 IsExpanded="True">
                 <Expander.Content>
-                    <ListView
-                        x:Name="ListViewAccountGroups"
-                        ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View}"
-                        Margin="-4"
-                        MaxHeight="300"
-                        SelectionMode="Multiple">
-                        <ListView.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderContainerStyle>
-                                    <Style TargetType="ListViewHeaderItem">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    </Style>
-                                </GroupStyle.HeaderContainerStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate x:DataType="models:GroupInfoList">
-                                        <Grid Margin="0, 4, 0, 0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <PersonPicture
-                                                x:Phase="3"
-                                                Grid.Column="0"
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Height="32"
-                                                Margin="0, 0, 12, 0"
-                                                Tag="{x:Bind Key}"
-                                                Width="32">
-                                                <PersonPicture.ProfilePicture>
-                                                    <BitmapImage
-                                                        DecodePixelHeight="32"
-                                                        UriSource="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=avatar}" />
-                                                </PersonPicture.ProfilePicture>
-                                            </PersonPicture>
+                    <Grid Padding="-16">
+                        <!-- The account groups list view. -->
+                        <ListView
+                            x:Name="ListViewAccountGroups"
+                            ItemsSource="{x:Bind CollectionViewSourceAccountGroups.View, Mode=OneWay}"
+                            MaxHeight="300"
+                            Padding="12, 12, 12, 24"
+                            SelectionChanged="ListViewAccountGroups_OnSelectionChanged"
+                            SelectionMode="Multiple">
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderContainerStyle>
+                                        <Style TargetType="ListViewHeaderItem">
+                                            <Setter
+                                                Property="HorizontalContentAlignment"
+                                                Value="Stretch" />
+                                        </Style>
+                                    </GroupStyle.HeaderContainerStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate x:DataType="models:GroupInfoList">
+                                            <Grid Margin="0, 4, 0, 0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <PersonPicture
+                                                    x:Phase="3"
+                                                    Grid.Column="0"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Height="32"
+                                                    Margin="0, 0, 12, 0"
+                                                    Tag="{x:Bind Key}"
+                                                    Width="32">
+                                                    <PersonPicture.ProfilePicture>
+                                                        <BitmapImage
+                                                            DecodePixelHeight="32"
+                                                            UriSource="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=avatar}" />
+                                                    </PersonPicture.ProfilePicture>
+                                                </PersonPicture>
+                                                <TextBlock
+                                                    x:Phase="1"
+                                                    Grid.Column="1"
+                                                    Grid.Row="0"
+                                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
+                                                <TextBlock
+                                                    x:Phase="1"
+                                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                    Grid.Column="1"
+                                                    Grid.Row="1"
+                                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
+                                                <Grid
+                                                    x:Phase="2"
+                                                    Grid.Column="2"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Margin="12, 0, 0, 0"
+                                                    Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdating}">
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
+                                                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarInformationalSeverityIconForeground}"
+                                                        Glyph="{ThemeResource InfoBarInformationalIconGlyph}"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdatingExplanation}" />
+                                                </Grid>
+                                                <Grid
+                                                    x:Phase="2"
+                                                    Grid.Column="2"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Margin="12, 0, 0, 0"
+                                                    Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpired}">
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                                                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
+                                                        Glyph="{ThemeResource InfoBarWarningIconGlyph}"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpiredExplanation}" />
+                                                </Grid>
+                                                <Grid
+                                                    x:Phase="2"
+                                                    Grid.Column="2"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Margin="12, 0, 0, 0"
+                                                    Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFail}">
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
+                                                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarErrorSeverityIconForeground}"
+                                                        Glyph="{ThemeResource InfoBarErrorIconGlyph}"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFailExplanation}" />
+                                                </Grid>
+                                                <Grid
+                                                    x:Phase="2"
+                                                    Grid.Column="2"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Margin="12, 0, 0, 0"
+                                                    Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReady}">
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
+                                                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                                    <FontIcon
+                                                        Foreground="{ThemeResource InfoBarSuccessSeverityIconForeground}"
+                                                        Glyph="{ThemeResource InfoBarSuccessIconGlyph}"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReadyExplanation}" />
+                                                </Grid>
+                                                <CommandBar
+                                                    DefaultLabelPosition="Collapsed"
+                                                    Grid.Column="3"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Margin="12, 0, 0, 0">
+                                                    <AppBarButton
+                                                        Click="AppBarButtonAccountGroupsCheckRefresh_OnClick"
+                                                        Icon="Refresh"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=accountGroupCheckRefresh}"
+                                                        Width="40" />
+                                                    <AppBarButton
+                                                        Click="AppBarButtonAccountGroupsRemove_OnClick"
+                                                        Icon="Delete"
+                                                        Tag="{x:Bind Key}"
+                                                        ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=accountGroupRemove}"
+                                                        Width="40" />
+                                                </CommandBar>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:AccountCharacter">
+                                    <ListViewItem
+                                        IsEnabled="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=hasCharacter}"
+                                        IsSelected="{x:Bind IsEnabled}">
+                                        <StackPanel Padding="0, 8">
                                             <TextBlock
-                                                x:Phase="1"
-                                                Grid.Column="1"
-                                                Grid.Row="0"
                                                 Style="{ThemeResource BaseTextBlockStyle}"
-                                                Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
+                                                Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                             <TextBlock
-                                                x:Phase="1"
                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                Grid.Column="1"
-                                                Grid.Row="1"
                                                 Style="{ThemeResource BodyTextBlockStyle}"
-                                                Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
-                                            <Grid
-                                                x:Phase="2"
-                                                Grid.Column="2"
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Margin="12, 0, 0, 0"
-                                                Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdating}">
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
-                                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconForeground}"
-                                                    Glyph="{ThemeResource InfoBarInformationalIconGlyph}"
-                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdatingExplanation}" />
-                                            </Grid>
-                                            <Grid
-                                                x:Phase="2"
-                                                Grid.Column="2"
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Margin="12, 0, 0, 0"
-                                                Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpired}">
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
-                                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
-                                                    Glyph="{ThemeResource InfoBarWarningIconGlyph}"
-                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpiredExplanation}" />
-                                            </Grid>
-                                            <Grid
-                                                x:Phase="2"
-                                                Grid.Column="2"
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Margin="12, 0, 0, 0"
-                                                Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFail}">
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
-                                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarErrorSeverityIconForeground}"
-                                                    Glyph="{ThemeResource InfoBarErrorIconGlyph}"
-                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFailExplanation}" />
-                                            </Grid>
-                                            <Grid
-                                                x:Phase="2"
-                                                Grid.Column="2"
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Margin="12, 0, 0, 0"
-                                                Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReady}">
-                                                <FontIcon
-                                                    Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
-                                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
-                                                <FontIcon
-                                                    x:Name="FontIconSuccess"
-                                                    Foreground="{ThemeResource InfoBarSuccessSeverityIconForeground}"
-                                                    Glyph="{ThemeResource InfoBarSuccessIconGlyph}"
-                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReadyExplanation}" />
-                                            </Grid>
-                                        </Grid>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListView.GroupStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="models:AccountCharacter">
-                                <ListViewItem
-                                    IsEnabled="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=hasCharacter}"
-                                    IsSelected="{x:Bind IsEnabled}">
-                                    <StackPanel Padding="0, 8">
-                                        <TextBlock
-                                            Style="{ThemeResource BaseTextBlockStyle}"
-                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
-                                        <TextBlock
-                                            Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                            Style="{ThemeResource BodyTextBlockStyle}"
-                                            Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
-                                            Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoVisibilityCharacter}" />
-                                    </StackPanel>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Resources>
-                            <CollectionViewSource
-                                x:Name="CollectionViewSourceAccountGroups"
-                                IsSourceGrouped="True" />
-                        </ListView.Resources>
-                    </ListView>
+                                                Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
+                                                Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoVisibilityCharacter}" />
+                                        </StackPanel>
+                                    </ListViewItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Resources>
+                                <CollectionViewSource
+                                    x:Name="CollectionViewSourceAccountGroups"
+                                    IsSourceGrouped="True" />
+                            </ListView.Resources>
+                        </ListView>
+                        <!-- The account groups command bar flyout command bar. -->
+                        <CommandBarFlyoutCommandBar
+                            x:Name="CommandBarFlyoutCommandBarAccountGroups"
+                            HorizontalAlignment="Right"
+                            Margin="0, 0, 16, 16"
+                            VerticalAlignment="Bottom">
+                            <CommandBarFlyoutCommandBar.Shadow>
+                                <ThemeShadow />
+                            </CommandBarFlyoutCommandBar.Shadow>
+                            <CommandBarFlyoutCommandBar.Style>
+                                <Style TargetType="CommandBarFlyoutCommandBar">
+                                    <Setter
+                                        Property="Padding"
+                                        Value="0" />
+                                </Style>
+                            </CommandBarFlyoutCommandBar.Style>
+                            <AppBarButton
+                                x:Name="AppBarButtonAccountGroupsCheckRefresh"
+                                Click="AppBarButtonAccountGroupsCheckRefresh_OnClick"
+                                Icon="Refresh" />
+                            <AppBarButton
+                                x:Name="AppBarButtonAccountGroupsRemove"
+                                Click="AppBarButtonAccountGroupsRemove_OnClick"
+                                Icon="Delete" />
+                        </CommandBarFlyoutCommandBar>
+                        <!-- The status grid. -->
+                        <Grid
+                            x:Name="GridStatus"
+                            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                            CornerRadius="0, 0, 4, 4"
+                            Padding="12">
+                            <Grid
+                                ColumnSpacing="12"
+                                HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid
+                                    x:Name="GridStatusWarning"
+                                    Grid.Column="0"
+                                    Visibility="Collapsed">
+                                    <FontIcon
+                                        Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                                        Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                    <FontIcon
+                                        Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
+                                        Glyph="{ThemeResource InfoBarWarningIconGlyph}" />
+                                </Grid>
+                                <ProgressRing
+                                    x:Name="ProgressRingStatusLoading"
+                                    Grid.Column="0"
+                                    IsActive="True" />
+                                <TextBlock
+                                    x:Name="TextBlockStatus"
+                                    Grid.Column="1"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Expander.Content>
                 <Expander.Header>
                     <Grid Padding="0, 12">

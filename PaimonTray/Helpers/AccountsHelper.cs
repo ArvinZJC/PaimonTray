@@ -62,7 +62,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version RPC header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.28.1";
+        private const string HeaderValueAppVersionServerCn = "2.29.1";
 
         /// <summary>
         /// The app version RPC header value for the global server.
@@ -190,9 +190,9 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
-        /// The property name for the flag indicating if the program is checking the accounts.
+        /// The property name for the flag indicating if the program is managing the accounts.
         /// </summary>
-        public const string PropertyNameIsChecking = nameof(IsChecking);
+        public const string PropertyNameIsManaging = nameof(IsManaging);
 
         /// <summary>
         /// The login fail return code.
@@ -302,9 +302,9 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
-        /// A flag indicating if the program is checking the accounts.
+        /// A flag indicating if the program is managing the accounts.
         /// </summary>
-        private bool _isChecking;
+        private bool _isManaging;
 
         /// <summary>
         /// The HTTP client's lazy initialisation.
@@ -337,19 +337,19 @@ namespace PaimonTray.Helpers
         public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
 
         /// <summary>
-        /// A flag indicating if the program is checking the accounts.
+        /// A flag indicating if the program is managing the accounts.
         /// </summary>
-        public bool IsChecking
+        public bool IsManaging
         {
-            get => _isChecking;
+            get => _isManaging;
             set
             {
-                if (_isChecking == value) return;
+                if (_isManaging == value) return;
 
-                _isChecking = value;
+                _isManaging = value;
                 NotifyPropertyChanged();
             } // end set
-        } // end property IsChecking
+        } // end property IsManaging
 
         #endregion Properties
 
@@ -362,7 +362,7 @@ namespace PaimonTray.Helpers
         {
             var app = Application.Current as App;
 
-            _isChecking = false;
+            _isManaging = false;
             _lazyHttpClient =
                 new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
             _resourceLoader = app?.SettingsH.ResLoader;
@@ -533,7 +533,7 @@ namespace PaimonTray.Helpers
         /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
         private async void CheckAccountsAsync(bool shouldForceCheck = false)
         {
-            IsChecking = true;
+            IsManaging = true;
 
             // TODO: test purposes only.
             for (var i = 0; i < 3; i++)
@@ -616,7 +616,7 @@ namespace PaimonTray.Helpers
                 } // end foreach
 
             CheckSelectedCharacterUid();
-            IsChecking = false;
+            IsManaging = false;
         } // end method CheckAccountsAsync
 
         /// <summary>
@@ -689,33 +689,23 @@ namespace PaimonTray.Helpers
                 return false;
             } // end if
 
-            string headerValueUserAgent;
-            string urlAccount;
-
-            if (propertySetAccount[KeyServer] is TagServerCn)
-            {
-                headerValueUserAgent = HeaderValueUserAgentServerCn;
-                urlAccount = UrlAccountServerCn;
-            }
-            else
-            {
-                headerValueUserAgent = HeaderValueUserAgentServerGlobal;
-                urlAccount = UrlAccountServerGlobal;
-            } // end if...else
-
             var httpClient = _lazyHttpClient.Value;
             var httpClientHeaders = httpClient.DefaultRequestHeaders;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
 
             httpClientHeaders.Clear(); // Clear first.
             httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
             httpClientHeaders.Accept.TryParseAdd(HeaderValueAccept);
-            httpClientHeaders.UserAgent.TryParseAdd(headerValueUserAgent);
+            httpClientHeaders.UserAgent.TryParseAdd(isServerCn
+                ? HeaderValueUserAgentServerCn
+                : HeaderValueUserAgentServerGlobal);
 
             HttpResponseMessage httpResponseMessage;
 
             try
             {
-                httpResponseMessage = await httpClient.GetAsync(new Uri(urlAccount));
+                httpResponseMessage =
+                    await httpClient.GetAsync(new Uri(isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal));
                 httpResponseMessage.EnsureSuccessStatusCode();
             }
             catch (Exception exception)
@@ -837,33 +827,23 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            string headerValueUserAgent;
-            string urlCharacters;
-
-            if (propertySetAccount[KeyServer] is TagServerCn)
-            {
-                headerValueUserAgent = HeaderValueUserAgentServerCn;
-                urlCharacters = UrlCharactersServerCn;
-            }
-            else
-            {
-                headerValueUserAgent = HeaderValueUserAgentServerGlobal;
-                urlCharacters = UrlCharactersServerGlobal;
-            } // end if...else
-
             var httpClient = _lazyHttpClient.Value;
             var httpClientHeaders = httpClient.DefaultRequestHeaders;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
 
             httpClientHeaders.Clear(); // Clear first.
             httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
             httpClientHeaders.Accept.TryParseAdd(HeaderValueAccept);
-            httpClientHeaders.UserAgent.TryParseAdd(headerValueUserAgent);
+            httpClientHeaders.UserAgent.TryParseAdd(isServerCn
+                ? HeaderValueUserAgentServerCn
+                : HeaderValueUserAgentServerGlobal);
 
             HttpResponseMessage httpResponseMessage;
 
             try
             {
-                httpResponseMessage = await httpClient.GetAsync(new Uri(urlCharacters));
+                httpResponseMessage =
+                    await httpClient.GetAsync(new Uri(isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal));
                 httpResponseMessage.EnsureSuccessStatusCode();
             }
             catch (Exception exception)
@@ -935,6 +915,38 @@ namespace PaimonTray.Helpers
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         } // end method NotifyPropertyChanged
+
+        /// <summary>
+        /// Remove an account and the relevant account group.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        public void RemoveAccount(string containerKeyAccount)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return;
+
+            IsManaging = true;
+            ApplicationDataContainerAccounts
+                .DeleteContainer(containerKeyAccount); // Delete the account container first.
+            AccountGroupInfoLists.Remove(AccountGroupInfoLists.ToImmutableList()
+                .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key == containerKeyAccount, null));
+            CheckSelectedCharacterUid();
+            IsManaging = false;
+        } // end method RemoveAccount
+
+        /// <summary>
+        /// Remove the accounts and the account groups.
+        /// </summary>
+        public void RemoveAccounts()
+        {
+            IsManaging = true;
+
+            foreach (var containerKeyAccount in ApplicationDataContainerAccounts.Containers.Keys.ToImmutableList())
+                ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
+
+            AccountGroupInfoLists.Clear();
+            CheckSelectedCharacterUid();
+            IsManaging = false;
+        } // end method RemoveAccounts
 
         /// <summary>
         /// Try selecting the specific account group's 1st enabled character.

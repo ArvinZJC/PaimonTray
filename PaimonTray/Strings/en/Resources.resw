@@ -124,7 +124,7 @@
     <value>Add your account?</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
-  <data name="AccountAddNoCharacter" xml:space="preserve">
+  <data name="AccountAddNoCharacterExplanation" xml:space="preserve">
     <value>No character is linked with your account. Do you still want to add the account?</value>
   </data>
   <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
@@ -139,11 +139,32 @@
   <data name="AccountAddUpdate" xml:space="preserve">
     <value>Add/Update an account</value>
   </data>
+  <data name="AccountGroupCheckRefresh" xml:space="preserve">
+    <value>Check and refresh the account and its linked character(s)</value>
+  </data>
   <data name="AccountGroupNoCharacter" xml:space="preserve">
     <value>Oops, no character! You can add/update an account, or go to the settings to manage your account(s) added.</value>
   </data>
+  <data name="AccountGroupRemove" xml:space="preserve">
+    <value>Remove the account and its linked character(s)</value>
+  </data>
+  <data name="AccountGroupRemoveExplanation" xml:space="preserve">
+    <value>Once the account and its linked character(s) are removed, you can only add them back by logging into the account again.</value>
+  </data>
+  <data name="AccountGroupsCheckRefresh" xml:space="preserve">
+    <value>Check and refresh all accounts and characters</value>
+  </data>
+  <data name="AccountGroupsRemove" xml:space="preserve">
+    <value>Remove all accounts and characters</value>
+  </data>
+  <data name="AccountGroupsRemoveExplanation" xml:space="preserve">
+    <value>Once all accounts and characters are removed, you can only add them back by logging into the account(s) again.</value>
+  </data>
   <data name="AccountNoCharacter" xml:space="preserve">
     <value>No character is linked with the account.</value>
+  </data>
+  <data name="AccountRemoveConfirmation" xml:space="preserve">
+    <value>Remove the account?</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
@@ -152,7 +173,10 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and the characters linked with each account.</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes.</value>
+  </data>
+  <data name="AccountsRemoveConfirmation" xml:space="preserve">
+    <value>Remove all accounts?</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>Your account has just been updated.</value>

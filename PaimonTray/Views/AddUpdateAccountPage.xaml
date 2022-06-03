@@ -6,10 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    ActualThemeChanged="AddUpdateAccountPage_OnActualThemeChanged">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- The root grid. -->
     <Grid Loaded="GridRoot_OnLoaded">
+        <!-- The content dialogue for adding an account linked with no character. -->
+        <ContentDialog
+            x:Name="ContentDialogueAccountAddNoCharacter"
+            DefaultButton="Close" />
         <!-- The body scroll viewer. -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <!-- The body grid. -->

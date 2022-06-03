@@ -104,7 +104,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
-            if (_app.AccountsH.IsChecking)
+            if (_app.AccountsH.IsManaging)
             {
                 GridStatusWarning.Visibility = Visibility.Collapsed;
                 ProgressRingStatusLoading.Visibility = Visibility.Visible;
@@ -168,7 +168,7 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the body grid's size changed event.

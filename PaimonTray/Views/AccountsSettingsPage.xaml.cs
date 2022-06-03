@@ -2,10 +2,13 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PaimonTray.Helpers;
+using System;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
@@ -32,6 +35,8 @@ namespace PaimonTray.Views
         /// </summary>
         private readonly IPropertySet _propertySetSettings;
 
+        private readonly ResourceLoader _resourceLoader;
+
         #endregion Fields
 
         #region Constructors
@@ -44,8 +49,11 @@ namespace PaimonTray.Views
             _app = Application.Current as App;
             _mainWindow = _app?.WindowsH.GetMainWindow();
             _propertySetSettings = _app?.SettingsH.PropertySetSettings;
+            _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             UpdateUiText();
+
+            CommandBarFlyoutCommandBarAccountGroups.Translation += new Vector3(0, 0, 32);
         } // end constructor AccountsSettingsPage
 
         #endregion Constructors
@@ -71,30 +79,63 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
-                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            ToggleStatusVisibility();
             base.OnNavigatedTo(e);
         } // end method OnNavigatedTo
+
+        /// <summary>
+        /// Show/Hide the status.
+        /// </summary>
+        private void ToggleStatusVisibility()
+        {
+            if (_app.AccountsH.IsManaging)
+            {
+                GridStatusWarning.Visibility = Visibility.Collapsed;
+                ProgressRingStatusLoading.Visibility = Visibility.Visible;
+                TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+            }
+            else
+            {
+                var accountGroupInfoLists = _app.AccountsH.AccountGroupInfoLists
+                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+
+                CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+
+                if (accountGroupInfoLists.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
+                else
+                {
+                    GridStatusWarning.Visibility = Visibility.Visible;
+                    ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
+                    TextBlockStatus.Text = _resourceLoader.GetString("AccountGroupNoCharacter");
+                    GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+                } // end if...else
+            } // end if...else
+        } // end method ToggleStatusVisibility
 
         /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = _app.SettingsH.ResLoader;
-
-            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
-            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
+            ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
+            ContentDialogueAccountGroupsRemove.CloseButtonText = _resourceLoader.GetString("No");
+            ContentDialogueAccountGroupsRemove.PrimaryButtonText = _resourceLoader.GetString("Yes");
             InfoBarLoginAlternativeAlwaysAppliedLater.Title =
-                resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
-            InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
-            TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
-            TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
-            TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
+                _resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
+            InfoBarServerDefaultAppliedLater.Title = _resourceLoader.GetString("ServerDefaultAppliedLater");
+            TextBlockAccountsManagement.Text = _resourceLoader.GetString("AccountsManagement");
+            TextBlockAccountsManagementExplanation.Text = _resourceLoader.GetString("AccountsManagementExplanation");
+            TextBlockLoginAlternativeAlways.Text = _resourceLoader.GetString("LoginAlternativeAlways");
             TextBlockLoginAlternativeAlwaysExplanation.Text =
-                resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
-            TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
-            TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");
+                _resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
+            TextBlockServerDefault.Text = _resourceLoader.GetString("ServerDefault");
+            TextBlockServerDefaultExplanation.Text = _resourceLoader.GetString("ServerDefaultExplanation");
+            ToolTipService.SetToolTip(AppBarButtonAccountGroupsCheckRefresh,
+                _resourceLoader.GetString("AccountGroupsCheckRefresh"));
+            ToolTipService.SetToolTip(AppBarButtonAccountGroupsRemove,
+                _resourceLoader.GetString("AccountGroupsRemove"));
         } // end method UpdateUiText
 
         #endregion Methods
@@ -104,17 +145,39 @@ namespace PaimonTray.Views
         // Handle the account group info lists' collection changed event.
         private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
-                .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            ToggleStatusVisibility();
         } // end method AccountGroupInfoLists_CollectionChanged
 
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking)
-                CollectionViewSourceAccountGroups.Source = _app.AccountsH.AccountGroupInfoLists
-                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
+
+        // Handle the click event of the app bar button for checking and refreshing the account group(s).
+        private void AppBarButtonAccountGroupsCheckRefresh_OnClick(object sender, RoutedEventArgs e)
+        {
+            Serilog.Log.Debug((sender as AppBarButton == AppBarButtonAccountGroupsCheckRefresh).ToString());
+        } // end method AppBarButtonAccountGroupsCheckRefresh_OnClick
+
+        // Handle the click event of the app bar button for removing the account group(s).
+        private async void AppBarButtonAccountGroupsRemove_OnClick(object sender, RoutedEventArgs e)
+        {
+            var appBarButton = sender as AppBarButton;
+            var shouldRemoveAccountGroups = appBarButton == AppBarButtonAccountGroupsRemove;
+
+            ContentDialogueAccountGroupsRemove.Content = _resourceLoader.GetString(shouldRemoveAccountGroups
+                ? "AccountGroupsRemoveExplanation"
+                : "AccountGroupRemoveExplanation");
+            ContentDialogueAccountGroupsRemove.Title = _resourceLoader.GetString(shouldRemoveAccountGroups
+                ? "AccountsRemoveConfirmation"
+                : "AccountRemoveConfirmation");
+
+            if (await ContentDialogueAccountGroupsRemove.ShowAsync() is not ContentDialogResult.Primary) return;
+
+            if (shouldRemoveAccountGroups) _app.AccountsH.RemoveAccounts();
+            else _app.AccountsH.RemoveAccount(appBarButton?.Tag as string);
+        } // end method AppBarButtonAccountGroupsRemove_OnClick
 
         // Handle the server combo box item's loaded event.
         private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
@@ -162,6 +225,11 @@ namespace PaimonTray.Views
         {
             sender.Margin = new Thickness(0);
         } // end method InfoBar_OnClosing
+
+        // Handle the account groups list view's selection changed event.
+        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        } // end method ListViewAccountGroups_OnSelectionChanged
 
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)

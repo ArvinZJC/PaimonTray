@@ -124,7 +124,7 @@
     <value>添加您的账号？</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
-  <data name="AccountAddNoCharacter" xml:space="preserve">
+  <data name="AccountAddNoCharacterExplanation" xml:space="preserve">
     <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
   </data>
   <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
@@ -139,11 +139,32 @@
   <data name="AccountAddUpdate" xml:space="preserve">
     <value>添加/更新账号</value>
   </data>
+  <data name="AccountGroupCheckRefresh" xml:space="preserve">
+    <value>检查并刷新此账号和其绑定的角色</value>
+  </data>
   <data name="AccountGroupNoCharacter" xml:space="preserve">
     <value>哎呀，没有角色呀！您可添加/更新账号，或前往设置来管理您添加的账号。</value>
   </data>
+  <data name="AccountGroupRemove" xml:space="preserve">
+    <value>移除此账号和其绑定的角色</value>
+  </data>
+  <data name="AccountGroupRemoveExplanation" xml:space="preserve">
+    <value>此账号和其绑定的角色一旦移除，您只有重新登录此账号来添加回来。</value>
+  </data>
+  <data name="AccountGroupsCheckRefresh" xml:space="preserve">
+    <value>检查并刷新所有账号和角色</value>
+  </data>
+  <data name="AccountGroupsRemove" xml:space="preserve">
+    <value>移除所有账号和角色</value>
+  </data>
+  <data name="AccountGroupsRemoveExplanation" xml:space="preserve">
+    <value>所有账号和角色一旦移除，您只有重新登录这些账号来添加回来。</value>
+  </data>
   <data name="AccountNoCharacter" xml:space="preserve">
     <value>此账号未绑定角色。</value>
+  </data>
+  <data name="AccountRemoveConfirmation" xml:space="preserve">
+    <value>移除此账号？</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>账号</value>
@@ -152,7 +173,10 @@
     <value>您的账号</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>管理您添加的账号和账号绑定的角色。</value>
+    <value>管理您添加的账号，选择允许查询实时便笺的角色。</value>
+  </data>
+  <data name="AccountsRemoveConfirmation" xml:space="preserve">
+    <value>移除所有账号？</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>您的账号刚进行了更新。</value>

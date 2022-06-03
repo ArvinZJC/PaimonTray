@@ -29,11 +29,6 @@ namespace PaimonTray.Views
         private readonly App _app;
 
         /// <summary>
-        /// The content dialogue.
-        /// </summary>
-        private ContentDialog _contentDialogue;
-
-        /// <summary>
         /// A flag indicating if the WebView2 is available.
         /// </summary>
         private bool _isWebView2Available;
@@ -138,22 +133,7 @@ namespace PaimonTray.Views
 
             if (characters.Count == 0)
             {
-                _contentDialogue = new ContentDialog
-                {
-                    Content = _resourceLoader.GetString("AccountAddNoCharacter"),
-                    CloseButtonText = _resourceLoader.GetString("No"),
-                    DefaultButton = ContentDialogButton.Close,
-                    PrimaryButtonText = _resourceLoader.GetString("Yes"),
-                    RequestedTheme = _app.SettingsH.GetTheme(),
-                    Title = _resourceLoader.GetString("AccountAddConfirmation"),
-                    XamlRoot = XamlRoot // It is essential to set the XAML root here to avoid any possible exception.
-                };
-
-                var contentDialogResult = await _contentDialogue.ShowAsync();
-
-                _contentDialogue = null;
-
-                if (contentDialogResult != ContentDialogResult.Primary)
+                if (await ContentDialogueAccountAddNoCharacter.ShowAsync() is not ContentDialogResult.Primary)
                 {
                     applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
                     return;
@@ -435,7 +415,7 @@ namespace PaimonTray.Views
         {
             TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
 
-            if (_app.AccountsH.IsChecking) GridStatus.Visibility = Visibility.Visible;
+            if (_app.AccountsH.IsManaging) GridStatus.Visibility = Visibility.Visible;
             else
             {
                 if (isAddingUpdating)
@@ -458,6 +438,11 @@ namespace PaimonTray.Views
         {
             ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
             ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
+            ContentDialogueAccountAddNoCharacter.CloseButtonText = _resourceLoader.GetString("No");
+            ContentDialogueAccountAddNoCharacter.Content =
+                _resourceLoader.GetString("AccountAddNoCharacterExplanation");
+            ContentDialogueAccountAddNoCharacter.PrimaryButtonText = _resourceLoader.GetString("Yes");
+            ContentDialogueAccountAddNoCharacter.Title = _resourceLoader.GetString("AccountAddConfirmation");
             TextBlockServer.Text = _resourceLoader.GetString("Server");
             TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
             TextBlockTitle.Text = _resourceLoader.GetString("AccountAddUpdate");
@@ -500,14 +485,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsChecking) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
-
-        // Handle the actual theme changed event of the page for adding/updating an account.
-        private void AddUpdateAccountPage_OnActualThemeChanged(FrameworkElement sender, object args)
-        {
-            if (_contentDialogue != null) _contentDialogue.RequestedTheme = _app.SettingsH.GetTheme();
-        } // end method AddUpdateAccountPage_OnActualThemeChanged
 
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
