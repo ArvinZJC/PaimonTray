@@ -100,6 +100,18 @@ namespace PaimonTray.Views
         } // end method SetPageSize
 
         /// <summary>
+        /// Show the status indicating no character (enabled) in the account groups.
+        /// </summary>
+        /// <param name="statusText">The status text.</param>
+        private void ShowAccountGroupNoCharacterStatus(string statusText)
+        {
+            GridStatusWarning.Visibility = Visibility.Visible;
+            ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
+            TextBlockStatus.Text = statusText;
+            GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+        } // end method ShowAccountGroupNoCharacterStatus
+
+        /// <summary>
         /// Show/Hide the status.
         /// </summary>
         private void ToggleStatusVisibility()
@@ -120,29 +132,38 @@ namespace PaimonTray.Views
 
                 if (accountGroupInfoLists.Count > 0)
                 {
-                    var uidCharacterSelected = _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+                    var hasCharacterEnabled = false;
 
-                    foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
-                                 accountGroupInfoList.Cast<AccountCharacter>()))
+                    foreach (var accountGroupInfoList in accountGroupInfoLists)
                     {
-                        ListViewAccountGroups.SelectedItem = uidCharacterSelected is null
-                            ? accountCharacters.FirstOrDefault(
-                                accountCharacter => accountCharacter.UidCharacter is not null, null)
-                            : accountCharacters.FirstOrDefault(
-                                accountCharacter => accountCharacter.UidCharacter == uidCharacterSelected, null);
+                        hasCharacterEnabled = accountGroupInfoList.Cast<AccountCharacter>()
+                            .Any(accountCharacter => accountCharacter.UidCharacter is not null);
 
-                        if (ListViewAccountGroups.SelectedItem is not null) break;
+                        if (hasCharacterEnabled) break;
                     } // end foreach
 
-                    GridStatus.Visibility = Visibility.Collapsed; // Hide the status grid when ready.
+                    if (hasCharacterEnabled)
+                    {
+                        var uidCharacterSelected =
+                            _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+
+                        foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
+                                     accountGroupInfoList.Cast<AccountCharacter>()))
+                        {
+                            ListViewAccountGroups.SelectedItem = uidCharacterSelected is null
+                                ? accountCharacters.FirstOrDefault(
+                                    accountCharacter => accountCharacter.UidCharacter is not null, null)
+                                : accountCharacters.FirstOrDefault(
+                                    accountCharacter => accountCharacter.UidCharacter == uidCharacterSelected, null);
+
+                            if (ListViewAccountGroups.SelectedItem is not null) break;
+                        } // end foreach
+
+                        GridStatus.Visibility = Visibility.Collapsed; // Hide the status grid when ready.
+                    }
+                    else ShowAccountGroupNoCharacterStatus(_resourceLoader.GetString("AccountGroupNoCharacterEnabled"));
                 }
-                else
-                {
-                    GridStatusWarning.Visibility = Visibility.Visible;
-                    ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
-                    TextBlockStatus.Text = _resourceLoader.GetString("AccountGroupNoCharacter");
-                    GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
-                } // end if...else
+                else ShowAccountGroupNoCharacterStatus(_resourceLoader.GetString("AccountGroupNoCharacter"));
             } // end if...else
         } // end method ToggleStatusVisibility
 

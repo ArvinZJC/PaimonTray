@@ -143,7 +143,10 @@
     <value>Check and refresh the account and its linked character(s)</value>
   </data>
   <data name="AccountGroupNoCharacter" xml:space="preserve">
-    <value>Oops, no character! You can add/update an account, or go to the settings to manage your account(s) added.</value>
+    <value>Oops, no character! You can add/update an account.</value>
+  </data>
+  <data name="AccountGroupNoCharacterEnabled" xml:space="preserve">
+    <value>Oops, no character is allowed retrieving real-time notes. You can add an account, or go to the settings to manage your account(s) added.</value>
   </data>
   <data name="AccountGroupRemove" xml:space="preserve">
     <value>Remove the account and its linked character(s)</value>
