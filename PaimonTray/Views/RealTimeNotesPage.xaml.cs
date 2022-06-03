@@ -136,8 +136,8 @@ namespace PaimonTray.Views
 
                     foreach (var accountGroupInfoList in accountGroupInfoLists)
                     {
-                        hasCharacterEnabled = accountGroupInfoList.Cast<AccountCharacter>()
-                            .Any(accountCharacter => accountCharacter.UidCharacter is not null);
+                        hasCharacterEnabled = accountGroupInfoList.Cast<AccountCharacter>().Any(accountCharacter =>
+                            accountCharacter.IsEnabled && accountCharacter.UidCharacter is not null);
 
                         if (hasCharacterEnabled) break;
                     } // end foreach
