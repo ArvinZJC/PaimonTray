@@ -178,6 +178,7 @@
                                                     <AppBarButton
                                                         Click="AppBarButtonAccountGroupsCheckRefresh_OnClick"
                                                         Icon="Refresh"
+                                                        Tag="{x:Bind Key}"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=accountGroupCheckRefresh}"
                                                         Width="40" />
                                                     <AppBarButton

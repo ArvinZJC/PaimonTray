@@ -155,9 +155,13 @@ namespace PaimonTray.Views
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the click event of the app bar button for checking and refreshing the account group(s).
-        private void AppBarButtonAccountGroupsCheckRefresh_OnClick(object sender, RoutedEventArgs e)
+        private async void AppBarButtonAccountGroupsCheckRefresh_OnClick(object sender, RoutedEventArgs e)
         {
-            Serilog.Log.Debug((sender as AppBarButton == AppBarButtonAccountGroupsCheckRefresh).ToString());
+            var appBarButton = sender as AppBarButton;
+            var shouldCheckRefreshAccountGroups = appBarButton == AppBarButtonAccountGroupsCheckRefresh;
+
+            if (shouldCheckRefreshAccountGroups) _app.AccountsH.CheckAccountsAsync(true);
+            else await _app.AccountsH.CheckAccountAsync(appBarButton?.Tag as string, true, true);
         } // end method AppBarButtonAccountGroupsCheckRefresh_OnClick
 
         // Handle the click event of the app bar button for removing the account group(s).

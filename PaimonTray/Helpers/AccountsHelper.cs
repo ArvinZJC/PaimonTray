@@ -450,7 +450,6 @@ namespace PaimonTray.Helpers
                 .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key.Contains(containerKeyAccount), null);
 
             if (accountGroupInfoListTarget is null)
-                // TODO: account ordered by datetime?
                 (from accountCharacter in accountCharacters
                         group accountCharacter by accountCharacter.Key
                         into accountGroup
@@ -528,10 +527,85 @@ namespace PaimonTray.Helpers
         } // end method AddUpdateCharacters
 
         /// <summary>
+        /// Check the account.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
+        /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false,
+            bool shouldForceCheck = false)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return;
+
+            if (isStandalone) IsManaging = true;
+
+            var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+
+            // TODO: test purposes only.
+            if (propertySetAccount[KeyUid] is "0" or "1" or "2")
+            {
+                if (!isStandalone) return;
+
+                CheckSelectedCharacterUid();
+                IsManaging = false;
+                return;
+            } // end if
+
+            if (propertySetAccount[KeyStatus] is not TagStatusAdding &&
+                propertySetAccount[KeyStatus] is not TagStatusExpired &&
+                propertySetAccount[KeyStatus] is not TagStatusFail &&
+                propertySetAccount[KeyStatus] is not TagStatusReady &&
+                propertySetAccount[KeyStatus] is not TagStatusUpdating)
+                propertySetAccount[KeyStatus] = TagStatusAdding;
+
+            var shouldAddUpdateCharacters = true;
+
+            switch (propertySetAccount[KeyStatus])
+            {
+                case TagStatusAdding:
+                    if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
+                        propertySetAccount[KeyUid] is null)
+                    {
+                        ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
+                        shouldAddUpdateCharacters = false;
+                    } // end if
+
+                    break;
+
+                case TagStatusExpired:
+                    shouldAddUpdateCharacters = false;
+                    break;
+
+                case TagStatusFail:
+                    propertySetAccount[KeyStatus] = TagStatusUpdating;
+                    break;
+
+                case TagStatusReady:
+                    if (shouldForceCheck) propertySetAccount[KeyStatus] = TagStatusUpdating;
+                    else
+                    {
+                        AddUpdateAccountGroup(containerKeyAccount);
+                        shouldAddUpdateCharacters = false;
+                    } // end if...else
+
+                    break;
+            } // end switch-case
+
+            if (shouldAddUpdateCharacters)
+                AddUpdateCharacters(await GetAccountCharactersFromApiAsync(containerKeyAccount), containerKeyAccount);
+
+            if (!isStandalone) return;
+
+            CheckSelectedCharacterUid();
+            IsManaging = false;
+        } // end method CheckAccountAsync
+
+        /// <summary>
         /// Check the accounts.
         /// </summary>
         /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
-        private async void CheckAccountsAsync(bool shouldForceCheck = false)
+        public async void CheckAccountsAsync(bool shouldForceCheck = false)
         {
             IsManaging = true;
 
@@ -568,52 +642,8 @@ namespace PaimonTray.Helpers
             } // end for
 
             if (CountAccounts() > 0)
-                foreach (var applicationDataContainerAccount in ApplicationDataContainerAccounts.Containers.Values)
-                {
-                    var propertySetAccount = applicationDataContainerAccount.Values;
-
-                    if (propertySetAccount[KeyUid] is "0" or "1" or "2") continue; // TODO: test purposes only.
-
-                    if (propertySetAccount[KeyStatus] is not TagStatusAdding &&
-                        propertySetAccount[KeyStatus] is not TagStatusExpired &&
-                        propertySetAccount[KeyStatus] is not TagStatusFail &&
-                        propertySetAccount[KeyStatus] is not TagStatusReady &&
-                        propertySetAccount[KeyStatus] is not TagStatusUpdating)
-                        propertySetAccount[KeyStatus] = TagStatusAdding;
-
-                    switch (propertySetAccount[KeyStatus])
-                    {
-                        case TagStatusAdding:
-                            if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
-                                propertySetAccount[KeyUid] is null)
-                            {
-                                ApplicationDataContainerAccounts.DeleteContainer(applicationDataContainerAccount.Name);
-                                continue;
-                            } // end if
-
-                            break;
-
-                        case TagStatusExpired:
-                            continue;
-
-                        case TagStatusFail:
-                            propertySetAccount[KeyStatus] = TagStatusUpdating;
-                            break;
-
-                        case TagStatusReady:
-                            if (shouldForceCheck)
-                            {
-                                propertySetAccount[KeyStatus] = TagStatusUpdating;
-                                break;
-                            } // end if
-
-                            AddUpdateAccountGroup(applicationDataContainerAccount.Name);
-                            continue;
-                    } // end switch-case
-
-                    AddUpdateCharacters(await GetAccountCharactersFromApiAsync(applicationDataContainerAccount.Name),
-                        applicationDataContainerAccount.Name);
-                } // end foreach
+                foreach (var containerKeyAccount in ApplicationDataContainerAccounts.Containers.Keys)
+                    await CheckAccountAsync(containerKeyAccount, shouldForceCheck: shouldForceCheck);
 
             CheckSelectedCharacterUid();
             IsManaging = false;
