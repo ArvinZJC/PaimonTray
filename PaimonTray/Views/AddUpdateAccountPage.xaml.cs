@@ -259,7 +259,7 @@ namespace PaimonTray.Views
         /// </summary>
         private async void LogInAsync()
         {
-            ToggleStatusVisibility(true);
+            _app.AccountsH.IsAddingUpdating = true;
 
             string aUid;
             string cookies;
@@ -295,7 +295,7 @@ namespace PaimonTray.Views
                     _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
             } // end if...else
 
-            ToggleStatusVisibility();
+            _app.AccountsH.IsAddingUpdating = false;
         } // end method LogInAsync
 
         /// <summary>
@@ -410,25 +410,12 @@ namespace PaimonTray.Views
         /// <summary>
         /// Show/Hide the status.
         /// </summary>
-        /// <param name="isAddingUpdating">A flag indicating if the program is adding or updating an account.</param>
-        private void ToggleStatusVisibility(bool isAddingUpdating = false)
+        private void ToggleStatusVisibility()
         {
             TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
-
-            if (_app.AccountsH.IsManaging) GridStatus.Visibility = Visibility.Visible;
-            else
-            {
-                if (isAddingUpdating)
-                {
-                    _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = false;
-                    GridStatus.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    _mainWindow.NavigationViewItemBodyRealTimeNotes.IsEnabled = true;
-                    GridStatus.Visibility = Visibility.Collapsed;
-                } // end if...else
-            } // end if...else
+            GridStatus.Visibility = _app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging
+                ? Visibility.Visible
+                : Visibility.Collapsed; // Show the status grid when ready.
         } // end method ToggleStatusVisibility
 
         /// <summary>
@@ -485,7 +472,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+                ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the alternative login button's click event.
@@ -548,7 +536,7 @@ namespace PaimonTray.Views
             var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
 
             if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
-                ToggleStatusVisibility(true);
+                _app.AccountsH.IsAddingUpdating = true;
 
             ButtonLoginAssist.IsEnabled =
                 !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||

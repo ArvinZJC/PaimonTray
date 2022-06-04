@@ -8,6 +8,7 @@ using PaimonTray.Helpers;
 using PaimonTray.ViewModels;
 using Serilog;
 using System;
+using System.ComponentModel;
 using Windows.ApplicationModel;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
@@ -155,6 +156,13 @@ namespace PaimonTray.Views
 
         #region Event Handlers
 
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating)
+                NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
+        } // end method AccountsHelper_OnPropertyChanged
+
         // Handle the body frame's size changed event.
         private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -192,6 +200,18 @@ namespace PaimonTray.Views
             if (!(bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts])
                 _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+        } // end method GridRoot_OnLoaded
+
+        // Handle the main window's closed event.
+        private void MainWindow_OnClosed(object sender, WindowEventArgs args)
+        {
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+        } // end method MainWindow_OnClosed
 
         // Handle the body navigation view's selection changed event.
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,

@@ -88,7 +88,9 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
-            if (_app.AccountsH.IsManaging)
+            ContentDialogueAccountGroupsRemove.Hide();
+
+            if (_app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging)
             {
                 GridStatusWarning.Visibility = Visibility.Collapsed;
                 ProgressRingStatusLoading.Visibility = Visibility.Visible;
@@ -151,7 +153,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+                ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the click event of the app bar button for checking and refreshing the account group(s).

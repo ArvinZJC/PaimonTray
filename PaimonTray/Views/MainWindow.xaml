@@ -6,9 +6,12 @@
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:notifyIcon="using:H.NotifyIcon"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Closed="MainWindow_OnClosed">
     <!-- The root grid. -->
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        Loaded="GridRoot_OnLoaded">
         <!-- The app's task bar icon. -->
         <!-- TODO: ContextMenuMode="SecondWindow" if qualified. -->
         <notifyIcon:TaskbarIcon

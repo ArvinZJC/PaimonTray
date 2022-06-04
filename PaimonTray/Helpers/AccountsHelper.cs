@@ -190,6 +190,11 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
+        /// The property name for the flag indicating if the program is adding/updating an account.
+        /// </summary>
+        public const string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
+
+        /// <summary>
         /// The property name for the flag indicating if the program is managing the accounts.
         /// </summary>
         public const string PropertyNameIsManaging = nameof(IsManaging);
@@ -302,6 +307,11 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
+        /// A flag indicating if the program is adding/updating an account.
+        /// </summary>
+        private bool _isAddingUpdating;
+
+        /// <summary>
         /// A flag indicating if the program is managing the accounts.
         /// </summary>
         private bool _isManaging;
@@ -337,6 +347,21 @@ namespace PaimonTray.Helpers
         public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
 
         /// <summary>
+        /// A flag indicating if the program is adding/updating an account.
+        /// </summary>
+        public bool IsAddingUpdating
+        {
+            get => _isAddingUpdating;
+            set
+            {
+                if (_isAddingUpdating == value) return;
+
+                _isAddingUpdating = value;
+                NotifyPropertyChanged();
+            } // end set
+        } // end property IsAddingUpdating
+
+        /// <summary>
         /// A flag indicating if the program is managing the accounts.
         /// </summary>
         public bool IsManaging
@@ -362,6 +387,7 @@ namespace PaimonTray.Helpers
         {
             var app = Application.Current as App;
 
+            _isAddingUpdating = false;
             _isManaging = false;
             _lazyHttpClient =
                 new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
