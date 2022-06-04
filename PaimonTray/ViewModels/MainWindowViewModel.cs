@@ -41,7 +41,7 @@ namespace PaimonTray.ViewModels
                 if (_navigationViewPaneDisplayMode == value) return;
 
                 _navigationViewPaneDisplayMode = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged();
             } // end set
         } // end property NavViewPaneDisplayMode
 
@@ -72,13 +72,13 @@ namespace PaimonTray.ViewModels
         #region Methods
 
         /// <summary>
-        /// Notify the property changed event.
+        /// Occur when the specific property is changed.
         /// </summary>
         /// <param name="propertyName">The name of the property for the event.</param>
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        } // end method NotifyPropertyChanged
+        } // end method OnPropertyChanged
 
         #endregion Methods
     } // end class MainWindowViewModel
