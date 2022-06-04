@@ -158,7 +158,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         public void ApplyThemeSelection()
         {
-            foreach (var existingWindow in _app.WindowsH.ExistingWindowList)
+            foreach (var existingWindow in _app.WindowsH.ExistingWindows)
                 ((FrameworkElement)existingWindow.Content).RequestedTheme = GetTheme();
         } // end method ApplyThemeSelection
 

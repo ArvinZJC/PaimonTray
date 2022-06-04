@@ -47,7 +47,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// A list of existing windows.
         /// </summary>
-        public List<Window> ExistingWindowList { get; }
+        public List<Window> ExistingWindows { get; }
 
         #endregion Properties
 
@@ -59,7 +59,7 @@ namespace PaimonTray.Helpers
         public WindowsHelper()
         {
             _app = Application.Current as App;
-            ExistingWindowList = new List<Window>();
+            ExistingWindows = new List<Window>();
         } // end constructor WindowsHelper
 
         #endregion Constructors
@@ -139,7 +139,7 @@ namespace PaimonTray.Helpers
         /// <returns>The window.</returns>
         private Window ShowWindow([DisallowNull] Type windowType, bool activateIfExists = true)
         {
-            foreach (var existingWindow in ExistingWindowList.Where(existingWindow =>
+            foreach (var existingWindow in ExistingWindows.Where(existingWindow =>
                          existingWindow.GetType() == windowType))
             {
                 if (activateIfExists) existingWindow.Activate();
@@ -153,9 +153,9 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            ExistingWindowList.Add(window); // Must add the window first.
+            ExistingWindows.Add(window); // Must add the window first.
             _app.SettingsH.ApplyThemeSelection();
-            window.Closed += (_, _) => ExistingWindowList.Remove(window);
+            window.Closed += (_, _) => ExistingWindows.Remove(window);
             return window;
         } // end method ShowWindow
 
