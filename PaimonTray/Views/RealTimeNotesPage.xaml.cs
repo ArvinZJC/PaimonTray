@@ -146,19 +146,21 @@ namespace PaimonTray.Views
                     {
                         var uidCharacterSelected =
                             _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+                        AccountCharacter accountCharacterSelected = null;
 
                         foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
                                      accountGroupInfoList.Cast<AccountCharacter>()))
                         {
-                            ListViewAccountGroups.SelectedItem = uidCharacterSelected is null
+                            accountCharacterSelected = uidCharacterSelected is null
                                 ? accountCharacters.FirstOrDefault(
                                     accountCharacter => accountCharacter.UidCharacter is not null, null)
                                 : accountCharacters.FirstOrDefault(
                                     accountCharacter => accountCharacter.UidCharacter == uidCharacterSelected, null);
 
-                            if (ListViewAccountGroups.SelectedItem is not null) break;
+                            if (accountCharacterSelected is not null) break;
                         } // end foreach
 
+                        ListViewAccountGroups.SelectedItem = accountCharacterSelected;
                         GridStatus.Visibility = Visibility.Collapsed; // Hide the status grid when ready.
                     }
                     else ShowAccountGroupNoCharacterStatus(_resourceLoader.GetString("AccountGroupNoCharacterEnabled"));
@@ -189,7 +191,11 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+            if ((e.PropertyName is AccountsHelper.PropertyNameHasUpdatedAccountCharacter &&
+                 _app.AccountsH.HasUpdatedAccountCharacter) ||
+                (e.PropertyName is AccountsHelper.PropertyNameHasUpdatedAccountGroup &&
+                 _app.AccountsH.HasUpdatedAccountGroup) ||
+                e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the body grid's size changed event.

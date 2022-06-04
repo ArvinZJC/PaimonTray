@@ -190,6 +190,16 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
+        /// The property name for the flag indicating if the program has updated an account's character.
+        /// </summary>
+        public const string PropertyNameHasUpdatedAccountCharacter = nameof(HasUpdatedAccountCharacter);
+
+        /// <summary>
+        /// The property name for the flag indicating if the program has updated an account group.
+        /// </summary>
+        public const string PropertyNameHasUpdatedAccountGroup = nameof(HasUpdatedAccountGroup);
+
+        /// <summary>
         /// The property name for the flag indicating if the program is adding/updating an account.
         /// </summary>
         public const string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
@@ -307,6 +317,16 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
+        /// A flag indicating if the program has updated an account's character.
+        /// </summary>
+        private bool _hasUpdatedAccountCharacter;
+
+        /// <summary>
+        /// A flag indicating if the program has updated an account group.
+        /// </summary>
+        private bool _hasUpdatedAccountGroup;
+
+        /// <summary>
         /// A flag indicating if the program is adding/updating an account.
         /// </summary>
         private bool _isAddingUpdating;
@@ -347,6 +367,36 @@ namespace PaimonTray.Helpers
         public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
 
         /// <summary>
+        /// A flag indicating if the program has updated an account's character.
+        /// </summary>
+        public bool HasUpdatedAccountCharacter
+        {
+            get => _hasUpdatedAccountCharacter;
+            set
+            {
+                if (_hasUpdatedAccountCharacter == value) return;
+
+                _hasUpdatedAccountCharacter = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property HasUpdatedAccountCharacter
+
+        /// <summary>
+        /// A flag indicating if the program has updated an account group.
+        /// </summary>
+        public bool HasUpdatedAccountGroup
+        {
+            get => _hasUpdatedAccountGroup;
+            set
+            {
+                if (_hasUpdatedAccountGroup == value) return;
+
+                _hasUpdatedAccountGroup = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property HasUpdatedAccountGroup
+
+        /// <summary>
         /// A flag indicating if the program is adding/updating an account.
         /// </summary>
         public bool IsAddingUpdating
@@ -357,7 +407,7 @@ namespace PaimonTray.Helpers
                 if (_isAddingUpdating == value) return;
 
                 _isAddingUpdating = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged();
             } // end set
         } // end property IsAddingUpdating
 
@@ -372,7 +422,7 @@ namespace PaimonTray.Helpers
                 if (_isManaging == value) return;
 
                 _isManaging = value;
-                NotifyPropertyChanged();
+                OnPropertyChanged();
             } // end set
         } // end property IsManaging
 
@@ -387,6 +437,8 @@ namespace PaimonTray.Helpers
         {
             var app = Application.Current as App;
 
+            _hasUpdatedAccountCharacter = false;
+            _hasUpdatedAccountGroup = false;
             _isAddingUpdating = false;
             _isManaging = false;
             _lazyHttpClient =
@@ -473,7 +525,7 @@ namespace PaimonTray.Helpers
                 });
 
             var accountGroupInfoListTarget = AccountGroupInfoLists.ToImmutableList()
-                .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key.Contains(containerKeyAccount), null);
+                .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key == containerKeyAccount, null);
 
             if (accountGroupInfoListTarget is null)
                 (from accountCharacter in accountCharacters
@@ -484,10 +536,10 @@ namespace PaimonTray.Helpers
                     .ForEach(AccountGroupInfoLists.Add);
             else
             {
-                accountGroupInfoListTarget.Key =
-                    accountCharacters[0].Key; // The previous logic ensures at least 1 account's character.
+                HasUpdatedAccountGroup = false;
                 accountGroupInfoListTarget.Clear();
                 accountGroupInfoListTarget.AddRange(accountCharacters);
+                HasUpdatedAccountGroup = true;
             } // end if...else
         } // end method AddUpdateAccountGroup
 
@@ -551,6 +603,36 @@ namespace PaimonTray.Helpers
 
             AddUpdateAccountGroup(containerKeyAccount);
         } // end method AddUpdateCharacters
+
+        /// <summary>
+        /// Apply the specific account's character's status.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="containerKeyCharacter">The character container key.</param>
+        /// <param name="shouldEnableCharacter">A flag indicating if the specific account's character should be enabled.</param>
+        public void ApplyCharacterStatus(string containerKeyAccount, string containerKeyCharacter,
+            bool shouldEnableCharacter)
+        {
+            if (!TryChangeCharacterStatus(containerKeyAccount, containerKeyCharacter, shouldEnableCharacter)) return;
+
+            var accountGroupInfoListTarget = AccountGroupInfoLists.ToImmutableList()
+                .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key == containerKeyAccount, null);
+
+            var accountCharacterTarget = accountGroupInfoListTarget?.Cast<AccountCharacter>()
+                .FirstOrDefault(accountCharacter => accountCharacter.UidCharacter == containerKeyCharacter, null);
+
+            if (accountCharacterTarget is null) return;
+
+            var accountCharacterTargetIndex = accountGroupInfoListTarget.IndexOf(accountCharacterTarget);
+
+            HasUpdatedAccountCharacter = false;
+            accountCharacterTarget.IsEnabled = shouldEnableCharacter;
+            accountGroupInfoListTarget.Insert(accountCharacterTargetIndex, accountCharacterTarget);
+            accountGroupInfoListTarget.RemoveAt(accountCharacterTargetIndex + 1);
+            HasUpdatedAccountCharacter = true;
+
+            CheckSelectedCharacterUid();
+        } // end method ApplyCharacterStatus
 
         /// <summary>
         /// Check the account.
@@ -641,9 +723,9 @@ namespace PaimonTray.Helpers
                 var server = i % 2 == 0 ? TagServerCn : TagServerGlobal;
                 var uidAccount = i.ToString();
                 var containerKeyAccount = $"{server}{uidAccount}";
-                var propertySetAccount = ApplicationDataContainerAccounts
-                    .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always).Values;
-
+                var applicationDataContainerAccount = ApplicationDataContainerAccounts
+                    .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always);
+                var propertySetAccount = applicationDataContainerAccount.Values;
 
                 propertySetAccount[KeyCookies] = $"test={uidAccount}";
                 propertySetAccount[KeyNickname] = "TEST_ACCOUNT";
@@ -664,6 +746,7 @@ namespace PaimonTray.Helpers
                     });
                 } // end for
 
+                applicationDataContainerAccount.DeleteContainer(ContainerKeyCharacters);
                 AddUpdateCharacters(characters.ToImmutableList(), containerKeyAccount);
             } // end for
 
@@ -964,13 +1047,13 @@ namespace PaimonTray.Helpers
         } // end method GetRegion
 
         /// <summary>
-        /// Notify the property changed event.
+        /// Occur when the specific property is changed.
         /// </summary>
         /// <param name="propertyName">The name of the property for the event.</param>
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        } // end method NotifyPropertyChanged
+        } // end method OnPropertyChanged
 
         /// <summary>
         /// Remove an account and the relevant account group.
@@ -1003,6 +1086,42 @@ namespace PaimonTray.Helpers
             CheckSelectedCharacterUid();
             IsManaging = false;
         } // end method RemoveAccounts
+
+        /// <summary>
+        /// Try changing the specific account's character's status.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="containerKeyCharacter">The character container key.</param>
+        /// <param name="shouldEnableCharacter">A flag indicating if the specific account's character should be enabled.</param>
+        /// <returns>A flag indicating if the specific account's character's status is changed.</returns>
+        private bool TryChangeCharacterStatus(string containerKeyAccount, string containerKeyCharacter,
+            bool shouldEnableCharacter)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return false;
+
+            if (containerKeyCharacter is null) return false;
+
+            var characters = ApplicationDataContainerAccounts.Containers[containerKeyAccount]
+                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
+
+            var (_, applicationDataContainerCharacter) = characters.FirstOrDefault(
+                keyValuePairCharacter => keyValuePairCharacter.Key == containerKeyCharacter,
+                new KeyValuePair<string, ApplicationDataContainer>(containerKeyCharacter, null));
+
+            if (applicationDataContainerCharacter is null)
+            {
+                Log.Warning(
+                    $"No such character container key (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                return false;
+            } // end if
+
+            var propertySetCharacter = applicationDataContainerCharacter.Values;
+
+            if ((bool)propertySetCharacter[KeyIsEnabled] == shouldEnableCharacter) return false;
+
+            propertySetCharacter[KeyIsEnabled] = shouldEnableCharacter;
+            return true;
+        } // end method TryChangeCharacterStatus
 
         /// <summary>
         /// Try selecting the specific account group's 1st enabled character.

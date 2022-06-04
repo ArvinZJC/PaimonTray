@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PaimonTray.Helpers;
+using PaimonTray.Models;
 using System;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
@@ -26,6 +27,11 @@ namespace PaimonTray.Views
         private readonly App _app;
 
         /// <summary>
+        /// A flag indicating if the program is updating the account groups source.
+        /// </summary>
+        private bool _isUpdatingAccountGroupsSource;
+
+        /// <summary>
         /// The main window.
         /// </summary>
         private readonly MainWindow _mainWindow;
@@ -47,6 +53,7 @@ namespace PaimonTray.Views
         public AccountsSettingsPage()
         {
             _app = Application.Current as App;
+            _isUpdatingAccountGroupsSource = false;
             _mainWindow = _app?.WindowsH.GetMainWindow();
             _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             _resourceLoader = _app?.SettingsH.ResLoader;
@@ -102,7 +109,9 @@ namespace PaimonTray.Views
                 var accountGroupInfoLists = _app.AccountsH.AccountGroupInfoLists
                     .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
 
+                _isUpdatingAccountGroupsSource = true;
                 CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+                _isUpdatingAccountGroupsSource = false;
 
                 if (accountGroupInfoLists.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
                 else
@@ -153,7 +162,9 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+            if ((e.PropertyName is AccountsHelper.PropertyNameHasUpdatedAccountGroup &&
+                 _app.AccountsH.HasUpdatedAccountGroup) || e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating
+                    or AccountsHelper.PropertyNameIsManaging)
                 ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
@@ -236,6 +247,13 @@ namespace PaimonTray.Views
         // Handle the account groups list view's selection changed event.
         private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging || _isUpdatingAccountGroupsSource) return;
+
+            var haveAddedItems = e.AddedItems.Count > 0;
+            var characterSelectionChanged = (haveAddedItems ? e.AddedItems[0] : e.RemovedItems[0]) as AccountCharacter;
+
+            _app.AccountsH.ApplyCharacterStatus(characterSelectionChanged?.Key, characterSelectionChanged?.UidCharacter,
+                haveAddedItems);
         } // end method ListViewAccountGroups_OnSelectionChanged
 
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
