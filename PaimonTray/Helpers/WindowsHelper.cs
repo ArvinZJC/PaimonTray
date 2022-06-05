@@ -155,10 +155,22 @@ namespace PaimonTray.Helpers
 
             ExistingWindows.Add(window); // Must add the window first.
             _app.SettingsH.ApplyThemeSelection();
-            window.Closed += (_, _) => ExistingWindows.Remove(window);
+            window.Closed += Window_OnClosed;
             return window;
         } // end method ShowWindow
 
         #endregion Methods
+
+        #region Event Handlers
+
+        // Handle the window's closed event.
+        private void Window_OnClosed(object sender, WindowEventArgs args)
+        {
+            if (!ExistingWindows.Remove(sender as Window))
+                Log.Warning(
+                    $"Failed to remove the window from the existing windows (sender type: {sender?.GetType()}).");
+        } // end method Window_OnClosed
+
+        #endregion Event Handlers
     } // end class WindowsHelper
 } // end namespace PaimonTray.Helpers
