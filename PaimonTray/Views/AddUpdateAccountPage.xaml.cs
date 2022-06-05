@@ -58,7 +58,7 @@ namespace PaimonTray.Views
         public AddUpdateAccountPage()
         {
             _app = Application.Current as App;
-            _mainWindow = _app?.WindowsH.GetMainWindow();
+            _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
             _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             ChooseLoginMethodAsync();

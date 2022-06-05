@@ -55,6 +55,8 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
+                    if (_mainWindow is null) return;
+
                     _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAddUpdateAccount;
 
                     if (!_mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
@@ -122,7 +124,7 @@ namespace PaimonTray.ViewModels
                     Label = _resourceLoader.GetString("Settings")
                 };
 
-                xamlUiCommand.ExecuteRequested += (_, _) => _app.WindowsH.ShowSettingsWindow();
+                xamlUiCommand.ExecuteRequested += (_, _) => _app.WindowsH.GetExistingSettingsWindow();
                 return xamlUiCommand;
             } // end get
         } // end property ShowSettingsWindowCommand
@@ -138,6 +140,8 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
                 {
+                    if (_mainWindow is null) return;
+
                     // Set the text of the main window's menu flyout item for the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
                     if (_mainWindow.Visible)
                     {

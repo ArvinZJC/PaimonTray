@@ -54,7 +54,7 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             _isUpdatingAccountGroupsSource = false;
-            _mainWindow = _app?.WindowsH.GetMainWindow();
+            _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
             _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();

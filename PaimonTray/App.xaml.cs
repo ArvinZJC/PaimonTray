@@ -5,6 +5,7 @@ using Serilog;
 using System.IO;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using PaimonTray.Views;
 
 namespace PaimonTray
 {
@@ -108,7 +109,7 @@ namespace PaimonTray
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            CommandsVm = new CommandsViewModel(WindowsH.GetMainWindow());
+            CommandsVm = new CommandsViewModel(WindowsH.GetExistingMainWindow()?.Win as MainWindow);
             base.OnLaunched(e);
         } // end method OnLaunched
 

@@ -3,8 +3,10 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using PaimonTray.Helpers;
+using PaimonTray.Models;
 using PaimonTray.ViewModels;
 using Serilog;
 using System;
@@ -36,6 +38,11 @@ namespace PaimonTray.Views
         /// A flag indicating if it is the 1st time the window is loaded.
         /// </summary>
         private bool _isFirstLoad;
+
+        /// <summary>
+        /// The existing window.
+        /// </summary>
+        private ExistingWindow _existingWindow;
 
         /// <summary>
         /// The settings property set.
@@ -80,6 +87,8 @@ namespace PaimonTray.Views
 
             MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
             TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
+            GridRoot.Background =
+                new SolidColorBrush(((SolidColorBrush)GridRoot.Resources["RootGridAcrylicBackground"]).Color);
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -115,6 +124,24 @@ namespace PaimonTray.Views
             appWindowOverlappedPresenter.IsResizable = false;
             appWindowOverlappedPresenter.SetBorderAndTitleBar(true, false);
         } // end method CustomiseWindow
+
+        /// <summary>
+        /// Set the root grid's background.
+        /// </summary>
+        private void SetRootGridBackground()
+        {
+            if (_existingWindow?.MicaC is null)
+            {
+                GridRoot.Background = new SolidColorBrush(((SolidColorBrush)GridRoot.Resources[
+                        _existingWindow?.DesktopAcrylicC is not null
+                            ? "RootGridAcrylicBackground"
+                            : "RootGridFallbackBackground"])
+                    .Color); // Use this format for the resources to make the brush transition work properly.
+                return;
+            } // end if
+
+            GridRoot.Background = null;
+        } // end method SetRootGridBackground
 
         /// <summary>
         /// Update the UI text during the initialisation process.
@@ -200,10 +227,18 @@ namespace PaimonTray.Views
                 _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 
+        // Handle the root grid's actual theme changed event.
+        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            SetRootGridBackground();
+        } // end method GridRoot_OnActualThemeChanged
+
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _existingWindow = _app.WindowsH.GetExistingMainWindow();
+            SetRootGridBackground();
         } // end method GridRoot_OnLoaded
 
         // Handle the main window's closed event.

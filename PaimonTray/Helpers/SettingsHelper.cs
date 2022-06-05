@@ -1,11 +1,13 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics.CodeAnalysis;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
 using Windows.Storage;
+using Microsoft.UI.Composition.SystemBackdrops;
 
 namespace PaimonTray.Helpers
 {
@@ -149,8 +151,9 @@ namespace PaimonTray.Helpers
         /// </summary>
         public void ApplyMainWindowTopNavigationPaneSelection()
         {
-            _app.WindowsH.GetMainWindow().MainWinViewModel.NavViewPaneDisplayMode =
-                DecideMainWindowNavigationViewPaneDisplayMode();
+            if (_app.WindowsH.GetExistingMainWindow()?.Win is not MainWindow mainWindow) return;
+
+            mainWindow.MainWinViewModel.NavViewPaneDisplayMode = DecideMainWindowNavigationViewPaneDisplayMode();
         } // end method ApplyMainWindowTopNavigationPaneSelection
 
         /// <summary>
@@ -159,7 +162,20 @@ namespace PaimonTray.Helpers
         public void ApplyThemeSelection()
         {
             foreach (var existingWindow in _app.WindowsH.ExistingWindows)
-                ((FrameworkElement)existingWindow.Content).RequestedTheme = GetTheme();
+            {
+                var theme = GetTheme();
+
+                if (existingWindow.SystemBackdropConfig is not null)
+                    existingWindow.SystemBackdropConfig.Theme = theme switch
+                    {
+                        ElementTheme.Dark => SystemBackdropTheme.Dark,
+                        ElementTheme.Default => SystemBackdropTheme.Default,
+                        ElementTheme.Light => SystemBackdropTheme.Light,
+                        _ => SystemBackdropTheme.Default
+                    };
+
+                ((FrameworkElement)existingWindow.Win.Content).RequestedTheme = theme;
+            } // end foreach
         } // end method ApplyThemeSelection
 
         /// <summary>
@@ -177,7 +193,7 @@ namespace PaimonTray.Helpers
         /// Get the theme.
         /// </summary>
         /// <returns>The theme.</returns>
-        public ElementTheme GetTheme()
+        private ElementTheme GetTheme()
         {
             var themeSelection = PropertySetSettings[KeyTheme] as string;
 

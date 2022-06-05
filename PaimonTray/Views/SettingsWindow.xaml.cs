@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using PaimonTray.Helpers;
+using PaimonTray.Models;
 using Serilog;
 using System;
 using Windows.ApplicationModel;
@@ -21,9 +22,19 @@ namespace PaimonTray.Views
         #region Fields
 
         /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
         /// The app window.
         /// </summary>
         private AppWindow _appWindow;
+
+        /// <summary>
+        /// The existing window.
+        /// </summary>
+        private ExistingWindow _existingWindow;
 
         #endregion Fields
 
@@ -34,6 +45,7 @@ namespace PaimonTray.Views
         /// </summary>
         public SettingsWindow()
         {
+            _app = Application.Current as App;
             InitializeComponent();
             CustomiseWindowAsync();
             UpdateUiText();
@@ -48,6 +60,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void CustomiseTitleBar()
         {
+            // TODO: seems having bugs when hovering and leaving (alternative version) and colours
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
                 var titleBar = _appWindow.TitleBar;
@@ -116,11 +129,29 @@ namespace PaimonTray.Views
         } // end method CustomiseWindowAsync
 
         /// <summary>
+        /// Set the root grid's background.
+        /// </summary>
+        private void SetRootGridBackground()
+        {
+            if (_existingWindow?.MicaC is null)
+            {
+                GridRoot.Background = new SolidColorBrush(((SolidColorBrush)GridRoot.Resources[
+                        _existingWindow?.DesktopAcrylicC is not null
+                            ? "RootGridAcrylicBackground"
+                            : "RootGridFallbackBackground"])
+                    .Color); // Use this format for the resources to make the brush transition work properly.
+                return;
+            } // end if
+
+            GridRoot.Background = null;
+        } // end method SetRootGridBackground
+
+        /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
         {
-            var resourceLoader = (Application.Current as App)?.SettingsH.ResLoader;
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             NavigationViewItemBodyAbout.Content = resourceLoader?.GetString("About");
             NavigationViewItemBodyAccounts.Content = resourceLoader?.GetString("Accounts");
@@ -133,17 +164,20 @@ namespace PaimonTray.Views
 
         #region Events
 
+        // Handle the root grid's actual theme changed event.
+        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            CustomiseTitleBar();
+            SetRootGridBackground();
+        } // end method GridRoot_OnActualThemeChanged
+
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
-            Activate();
+            _existingWindow = _app.WindowsH.GetExistingSettingsWindow();
+            SetRootGridBackground();
+            Activate(); // Activate when ready.
         } // end method GridRoot_OnLoaded
-
-        // Handle the title bar grid's actual theme changed event.
-        private void GridTitleBar_OnActualThemeChanged(FrameworkElement sender, object args)
-        {
-            CustomiseTitleBar();
-        } // end method GridTitleBar_OnActualThemeChanged
 
         // Handle the body navigation view's display mode changed event.
         private void NavigationViewBody_OnDisplayModeChanged(NavigationView sender,

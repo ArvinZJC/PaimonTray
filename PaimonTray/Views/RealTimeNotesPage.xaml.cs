@@ -51,7 +51,7 @@ namespace PaimonTray.Views
         public RealTimeNotesPage()
         {
             _app = Application.Current as App;
-            _mainWindow = _app?.WindowsH.GetMainWindow();
+            _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
             _propertySetAccounts = _app?.AccountsH.ApplicationDataContainerAccounts.Values;
             _resourceLoader = _app?.SettingsH.ResLoader;
 

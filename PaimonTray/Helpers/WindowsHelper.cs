@@ -1,7 +1,10 @@
 ﻿using Microsoft.UI;
+using Microsoft.UI.Composition;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Models;
 using PaimonTray.ViewModels;
 using PaimonTray.Views;
 using Serilog;
@@ -10,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Graphics;
+using WinRT;
 using WinRT.Interop;
 
 namespace PaimonTray.Helpers
@@ -47,7 +51,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// A list of existing windows.
         /// </summary>
-        public List<Window> ExistingWindows { get; }
+        public List<ExistingWindow> ExistingWindows { get; }
 
         #endregion Properties
 
@@ -59,7 +63,7 @@ namespace PaimonTray.Helpers
         public WindowsHelper()
         {
             _app = Application.Current as App;
-            ExistingWindows = new List<Window>();
+            ExistingWindows = new List<ExistingWindow>();
         } // end constructor WindowsHelper
 
         #endregion Constructors
@@ -77,14 +81,24 @@ namespace PaimonTray.Helpers
         } // end method GetAppWindow
 
         /// <summary>
-        /// Get the main window.
+        /// Get the existing main window.
         /// NOTE: The main window will be opened if not exists. Use the specific command in <see cref="CommandsViewModel"/> to show/hide the window.
         /// </summary>
-        /// <returns>The main window.</returns>
-        public MainWindow GetMainWindow()
+        /// <returns>The existing main window, or <c>null</c> if the operation fails.</returns>
+        public ExistingWindow GetExistingMainWindow()
         {
-            return ShowWindow(typeof(MainWindow), false) as MainWindow;
-        } // end method GetMainWindow
+            return ShowWindow(typeof(MainWindow), false);
+        } // end method GetExistingMainWindow
+
+        /// <summary>
+        /// Get the existing settings window.
+        /// NOTE: The settings window will be opened if not exists. Otherwise, it will be activated.
+        /// </summary>
+        /// <returns>The existing settings window, or <c>null</c> if the operation fails.</returns>
+        public ExistingWindow GetExistingSettingsWindow()
+        {
+            return ShowWindow(typeof(SettingsWindow));
+        } // end method GetExistingSettingsWindow
 
         /// <summary>
         /// Get the main window's page's max size.
@@ -94,7 +108,9 @@ namespace PaimonTray.Helpers
         {
             var isMainWindowTopNavigationPane = _app.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() ==
                                                 NavigationViewPaneDisplayMode.Top;
-            var workArea = GetWorkArea(GetWindowId(GetMainWindow()));
+            var mainExistingWindow = GetExistingMainWindow();
+            var workArea =
+                GetWorkArea(mainExistingWindow is null ? new WindowId() : GetWindowId(mainExistingWindow.Win));
             const int workAreaOffset = 2 * MainWindowPositionOffset;
             const int workAreaAdditionalOffset = 4 * MainWindowPositionOffset; // Reserved for the navigation pane.
 
@@ -124,51 +140,127 @@ namespace PaimonTray.Helpers
         } // end method GetWorkArea
 
         /// <summary>
-        /// Open/Activate the settings window.
-        /// </summary>
-        public void ShowSettingsWindow()
-        {
-            ShowWindow(typeof(SettingsWindow));
-        } // end method ShowSettingsWindow
-
-        /// <summary>
         /// Open/Activate the specific window.
         /// </summary>
         /// <param name="windowType">The window type.</param>
         /// <param name="activateIfExists">A flag indicating if the window should be activated if exists.</param>
-        /// <returns>The window.</returns>
-        private Window ShowWindow([DisallowNull] Type windowType, bool activateIfExists = true)
+        /// <returns>The existing window, or <c>null</c> if the operation fails.</returns>
+        private ExistingWindow ShowWindow([DisallowNull] Type windowType, bool activateIfExists = true)
         {
-            foreach (var existingWindow in ExistingWindows.Where(existingWindow =>
-                         existingWindow.GetType() == windowType))
-            {
-                if (activateIfExists) existingWindow.Activate();
+            var existingWindowTarget =
+                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win.GetType() == windowType, null);
 
+            if (existingWindowTarget is null)
+            {
+                if (Activator.CreateInstance(windowType) is not Window window)
+                {
+                    Log.Warning(
+                        $"Failed to open the specific window based on the provided window type ({windowType}).");
+                    return null;
+                } // end if
+
+                var existingWindow = new ExistingWindow { Win = window };
+
+                ExistingWindows.Add(existingWindow); // Should add the existing window to the list as soon as possible.
+
+                if (new DispatcherQueueControllerHelper().EnsureDispatcherQueueController())
+                {
+                    if (MicaController.IsSupported())
+                    {
+                        existingWindow.SystemBackdropConfig = new SystemBackdropConfiguration { IsInputActive = true };
+                        window.Activated += Window_OnActivated;
+                        existingWindow.MicaC = new MicaController();
+                        existingWindow.MicaC.AddSystemBackdropTarget(window.As<ICompositionSupportsSystemBackdrop>());
+                        existingWindow.MicaC.SetSystemBackdropConfiguration(existingWindow.SystemBackdropConfig);
+                    }
+                    else
+                    {
+                        Log.Information("Mica is unsupported.");
+
+                        if (DesktopAcrylicController.IsSupported())
+                        {
+                            existingWindow.SystemBackdropConfig = new SystemBackdropConfiguration
+                                { IsInputActive = true };
+                            window.Activated += Window_OnActivated;
+                            existingWindow.DesktopAcrylicC = new DesktopAcrylicController();
+                            existingWindow.DesktopAcrylicC.AddSystemBackdropTarget(
+                                window.As<ICompositionSupportsSystemBackdrop>());
+                            existingWindow.DesktopAcrylicC.SetSystemBackdropConfiguration(existingWindow
+                                .SystemBackdropConfig);
+                        }
+                        else Log.Information("Background Acrylic is unsupported.");
+                    } // end if...else
+                } // end if
+
+                _app.SettingsH.ApplyThemeSelection();
+                window.Closed += Window_OnClosed;
                 return existingWindow;
-            } // end foreach
-
-            if (Activator.CreateInstance(windowType) is not Window window)
-            {
-                Log.Warning($"Failed to open the specific window based on the provided window type ({windowType}).");
-                return null;
             } // end if
 
-            ExistingWindows.Add(window); // Must add the window first.
-            _app.SettingsH.ApplyThemeSelection();
-            window.Closed += Window_OnClosed;
-            return window;
+            if (activateIfExists) existingWindowTarget.Win.Activate();
+
+            return existingWindowTarget;
         } // end method ShowWindow
 
         #endregion Methods
 
         #region Event Handlers
 
+        // Handle the window's activated event.
+        private void Window_OnActivated(object sender, WindowActivatedEventArgs args)
+        {
+            var existingWindowTarget =
+                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
+
+            if (existingWindowTarget is null)
+            {
+                Log.Warning($"Failed to find the existing window (sender type: {sender?.GetType()}).");
+                return;
+            } // end if
+
+            var systemBackdropConfiguration = existingWindowTarget.SystemBackdropConfig;
+
+            if (systemBackdropConfiguration is null)
+            {
+                Log.Warning($"No system backdrop configuration (window type: {existingWindowTarget.Win.GetType()}).");
+                return;
+            } // end if
+
+            systemBackdropConfiguration.IsInputActive =
+                args.WindowActivationState is not WindowActivationState.Deactivated;
+        } // end method Window_OnActivated
+
         // Handle the window's closed event.
         private void Window_OnClosed(object sender, WindowEventArgs args)
         {
-            if (!ExistingWindows.Remove(sender as Window))
-                Log.Warning(
-                    $"Failed to remove the window from the existing windows (sender type: {sender?.GetType()}).");
+            var existingWindowTarget =
+                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
+
+            if (existingWindowTarget is null || !ExistingWindows.Remove(existingWindowTarget))
+            {
+                Log.Warning($"Failed to remove the existing window (sender type: {sender?.GetType()}).");
+                return;
+            } // end if
+
+            if (existingWindowTarget.DesktopAcrylicC is not null)
+            {
+                existingWindowTarget.DesktopAcrylicC.Dispose();
+                existingWindowTarget.DesktopAcrylicC = null;
+            } // end if
+
+            if (existingWindowTarget.MicaC is not null)
+            {
+                existingWindowTarget.MicaC.Dispose();
+                existingWindowTarget.MicaC = null;
+            } // end if
+
+            if (existingWindowTarget.SystemBackdropConfig is not null)
+            {
+                existingWindowTarget.Win.Activated -= Window_OnActivated;
+                existingWindowTarget.SystemBackdropConfig = null;
+            } // end if
+
+            existingWindowTarget.Win = null;
         } // end method Window_OnClosed
 
         #endregion Event Handlers

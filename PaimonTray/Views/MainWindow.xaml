@@ -10,10 +10,23 @@
     Closed="MainWindow_OnClosed">
     <!-- The root grid. -->
     <Grid
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        x:Name="GridRoot"
+        ActualThemeChanged="GridRoot_OnActualThemeChanged"
         Loaded="GridRoot_OnLoaded">
+        <Grid.BackgroundTransition>
+            <BrushTransition />
+        </Grid.BackgroundTransition>
+        <Grid.Resources>
+            <!-- ReSharper disable Xaml.RedundantResource -->
+            <SolidColorBrush
+                x:Key="RootGridAcrylicBackground"
+                Color="{ThemeResource SystemAltMediumColor}" />
+            <SolidColorBrush
+                x:Key="RootGridFallbackBackground"
+                Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <!-- ReSharper restore Xaml.RedundantResource -->
+        </Grid.Resources>
         <!-- The app's task bar icon. -->
-        <!-- TODO: ContextMenuMode="SecondWindow" if qualified. -->
         <notifyIcon:TaskbarIcon
             x:Name="TaskbarIconApp"
             LeftClickCommand="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}"
@@ -42,6 +55,7 @@
             x:FieldModifier="public"
             x:Name="NavigationViewBody"
             IsBackButtonVisible="Collapsed"
+            IsBackEnabled="False"
             IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTabStop="False"
