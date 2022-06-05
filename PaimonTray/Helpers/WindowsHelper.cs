@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using PaimonTray.ViewModels;
 using PaimonTray.Views;
 using Serilog;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Graphics;
-using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
 
 namespace PaimonTray.Helpers
@@ -154,6 +154,7 @@ namespace PaimonTray.Helpers
             } // end if
 
             ExistingWindows.Add(window); // Must add the window first.
+
             _app.SettingsH.ApplyThemeSelection();
             window.Closed += (_, _) => ExistingWindows.Remove(window);
             return window;
