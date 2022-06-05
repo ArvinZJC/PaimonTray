@@ -154,7 +154,6 @@ namespace PaimonTray.Helpers
             } // end if
 
             ExistingWindows.Add(window); // Must add the window first.
-
             _app.SettingsH.ApplyThemeSelection();
             window.Closed += (_, _) => ExistingWindows.Remove(window);
             return window;
