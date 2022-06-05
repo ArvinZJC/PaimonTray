@@ -29,7 +29,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The main window.
         /// </summary>
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
 
         /// <summary>
         /// The accounts property set.
@@ -51,6 +51,7 @@ namespace PaimonTray.Views
         public RealTimeNotesPage()
         {
             _app = Application.Current as App;
+            _mainWindow = _app?.WindowsH.GetMainWindow();
             _propertySetAccounts = _app?.AccountsH.ApplicationDataContainerAccounts.Values;
             _resourceLoader = _app?.SettingsH.ResLoader;
 
@@ -82,6 +83,7 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
             ToggleStatusVisibility();
             base.OnNavigatedTo(e);
         } // end method OnNavigatedTo
@@ -207,10 +209,6 @@ namespace PaimonTray.Views
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _mainWindow =
-                _app.WindowsH
-                    .GetMainWindow(); // Need to get the main window here to avoid any possible exception, as the page is navigated first when the app starts.
-            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
         } // end method GridRoot_OnLoaded
 
         // Handle the account groups list view's selection changed event.

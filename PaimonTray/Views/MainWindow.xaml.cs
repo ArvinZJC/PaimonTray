@@ -79,7 +79,6 @@ namespace PaimonTray.Views
             UpdateUiText();
 
             MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
-            NavigationViewBody.SelectedItem = NavigationViewItemBodyRealTimeNotes;
             TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
         } // end constructor MainWindow
 

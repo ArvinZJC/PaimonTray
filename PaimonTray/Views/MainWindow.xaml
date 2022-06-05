@@ -51,7 +51,8 @@
                 <NavigationViewItem
                     x:FieldModifier="public"
                     x:Name="NavigationViewItemBodyRealTimeNotes"
-                    Icon="Contact" />
+                    Icon="Contact"
+                    IsSelected="True" />
                 <NavigationViewItem
                     x:FieldModifier="public"
                     x:Name="NavigationViewItemBodyAddUpdateAccount"
