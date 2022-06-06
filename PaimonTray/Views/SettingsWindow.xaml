@@ -46,16 +46,16 @@
             <Grid.Resources>
                 <!-- ReSharper disable Xaml.RedundantResource -->
                 <SolidColorBrush
-                    x:Key="TitleBarButtonHoverBackground"
+                    x:Key="TitleBarButtonBackgroundHover"
                     Color="{ThemeResource SystemBaseLowColor}" />
                 <SolidColorBrush
-                    x:Key="TitleBarButtonPressedBackground"
+                    x:Key="TitleBarButtonBackgroundPressed"
                     Color="{ThemeResource SystemBaseMediumLowColor}" />
                 <SolidColorBrush
                     x:Key="TitleBarCaptionForeground"
                     Color="{ThemeResource SystemBaseHighColor}" />
                 <SolidColorBrush
-                    x:Key="TitleBarCaptionInactiveForeground"
+                    x:Key="TitleBarCaptionForegroundDisabled"
                     Color="{ThemeResource SystemBaseMediumLowColor}" />
                 <!-- ReSharper restore Xaml.RedundantResource -->
             </Grid.Resources>

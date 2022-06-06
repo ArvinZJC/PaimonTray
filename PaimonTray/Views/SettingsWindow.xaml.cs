@@ -60,7 +60,6 @@ namespace PaimonTray.Views
         /// </summary>
         private void CustomiseTitleBar()
         {
-            // TODO: seems having bugs when hovering and leaving (alternative version) and colours
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
                 var titleBar = _appWindow.TitleBar;
@@ -69,7 +68,9 @@ namespace PaimonTray.Views
                 titleBar.ButtonForegroundColor =
                     (GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush)?.Color;
                 titleBar.ButtonHoverBackgroundColor =
-                    (GridTitleBar.Resources["TitleBarButtonHoverBackground"] as SolidColorBrush)?.Color;
+                    (GridTitleBar.Resources["TitleBarButtonBackgroundHover"] as SolidColorBrush)?.Color;
+                titleBar.ButtonHoverForegroundColor =
+                    (GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush)?.Color;
                 titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
                 titleBar.ButtonInactiveForegroundColor = GridTitleBar.ActualTheme switch
                 {
@@ -77,9 +78,11 @@ namespace PaimonTray.Views
                     ElementTheme.Default => null,
                     ElementTheme.Light => Colors.Silver,
                     _ => null
-                };
+                }; // Must set the color explicitly rather than using the resource for the title bar caption's disabled foreground to make it take effect.
                 titleBar.ButtonPressedBackgroundColor =
-                    (GridTitleBar.Resources["TitleBarButtonPressedBackground"] as SolidColorBrush)?.Color;
+                    (GridTitleBar.Resources["TitleBarButtonBackgroundPressed"] as SolidColorBrush)?.Color;
+                titleBar.ButtonPressedForegroundColor =
+                    (GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush)?.Color;
                 titleBar.ExtendsContentIntoTitleBar = true;
 
                 GridColumnTitleBarLeftPadding.Width = new GridLength(titleBar.LeftInset);
@@ -92,11 +95,13 @@ namespace PaimonTray.Views
 
                 // It is necessary to set the colour rather than the solid colour brush to avoid strange performance.
                 ((SolidColorBrush)application.Resources["WindowCaptionButtonBackgroundPointerOver"]).Color =
-                    ((SolidColorBrush)GridTitleBar.Resources["TitleBarButtonHoverBackground"]).Color;
+                    ((SolidColorBrush)GridTitleBar.Resources["TitleBarButtonBackgroundHover"]).Color;
+                ((SolidColorBrush)application.Resources["WindowCaptionButtonBackgroundPressed"]).Color =
+                    ((SolidColorBrush)GridTitleBar.Resources["TitleBarButtonBackgroundPressed"]).Color;
                 ((SolidColorBrush)application.Resources["WindowCaptionForeground"]).Color =
                     ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionForeground"]).Color;
                 ((SolidColorBrush)application.Resources["WindowCaptionForegroundDisabled"]).Color =
-                    ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionInactiveForeground"]).Color;
+                    ((SolidColorBrush)GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"]).Color;
 
                 ExtendsContentIntoTitleBar = true;
                 SetTitleBar(GridTitleBar);
@@ -211,7 +216,7 @@ namespace PaimonTray.Views
         {
             if (args.WindowActivationState == WindowActivationState.Deactivated)
                 TextBlockWindowTitle.Foreground =
-                    GridTitleBar.Resources["TitleBarCaptionInactiveForeground"] as SolidColorBrush;
+                    GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush;
             else
                 TextBlockWindowTitle.Foreground =
                     GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush;
