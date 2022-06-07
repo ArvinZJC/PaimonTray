@@ -31,6 +31,21 @@ namespace PaimonTray.Converters
         private const string ParameterAvatar = "avatar";
 
         /// <summary>
+        /// The cookies parameter.
+        /// </summary>
+        private const string ParameterCookies = "cookies";
+
+        /// <summary>
+        /// The parameter for copying cookies.
+        /// </summary>
+        private const string ParameterCookiesCopy = "cookiesCopy";
+
+        /// <summary>
+        /// The parameter for viewing cookies.
+        /// </summary>
+        private const string ParameterCookiesView = "cookiesView";
+
+        /// <summary>
         /// The account's nickname parameter.
         /// </summary>
         private const string ParameterNicknameAccount = "nicknameAccount";
@@ -107,6 +122,9 @@ namespace PaimonTray.Converters
                 ParameterAccountGroupCheckRefresh => resourceLoader?.GetString("AccountGroupCheckRefresh"),
                 ParameterAccountGroupRemove => resourceLoader?.GetString("AccountGroupRemove"),
                 ParameterAvatar => app?.AccountsH.GetAvatarUri(accountCharacter.Key),
+                ParameterCookies => accountCharacter.Cookies,
+                ParameterCookiesCopy => resourceLoader?.GetString("CookiesCopy"),
+                ParameterCookiesView => resourceLoader?.GetString("CookiesView"),
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
                 ParameterOtherInfoAccount => $"{accountCharacter.Server} | {accountCharacter.UidAccount}",
                 ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding

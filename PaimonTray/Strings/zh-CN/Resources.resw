@@ -176,7 +176,7 @@
     <value>您的账号</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>管理您添加的账号，选择允许查询实时便笺的角色。</value>
+    <value>管理您添加的账号，选择允许查询实时便笺的角色。若任何账号的状态异常，您可重新添加/更新此账号。</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>移除所有账号？</value>
@@ -213,8 +213,14 @@
     <value>cookie</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
   </data>
+  <data name="CookiesCopy" xml:space="preserve">
+    <value>复制 cookie</value>
+  </data>
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>如何获取您的 cookie？（临时）</value>
+  </data>
+  <data name="CookiesView" xml:space="preserve">
+    <value>查看 cookie</value>
   </data>
   <data name="Enter" xml:space="preserve">
     <value>输入</value>
@@ -421,16 +427,16 @@
     <value>添加您的账号中</value>
   </data>
   <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
-    <value>正在添加/更新此账号。若您确定此状态是错误的，您可重新添加/更新此账号，或前往设置来检查此账号。</value>
+    <value>正在添加/更新此账号</value>
   </data>
   <data name="StatusAccountExpiredExplanation" xml:space="preserve">
-    <value>此账号的 cookie 过期了。您需要更新此账号。</value>
+    <value>此账号的 cookie 过期了</value>
   </data>
   <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>检索此账号的信息失败。您可更新此账号，或前往设置来检查此账号。</value>
+    <value>检索此账号的信息失败</value>
   </data>
   <data name="StatusAccountReadyExplanation" xml:space="preserve">
-    <value>已成功检索此账号的信息。</value>
+    <value>已成功检索此账号的信息</value>
   </data>
   <data name="StatusAccountUpdating" xml:space="preserve">
     <value>更新您的账号中</value>

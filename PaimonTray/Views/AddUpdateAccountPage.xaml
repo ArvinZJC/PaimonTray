@@ -156,7 +156,6 @@
                                     Height="22"
                                     HorizontalAlignment="Right"
                                     IsEnabled="False"
-                                    Margin="8, 0, 0, 0"
                                     Padding="0"
                                     Style="{ThemeResource AccentButtonStyle}"
                                     Visibility="Collapsed"

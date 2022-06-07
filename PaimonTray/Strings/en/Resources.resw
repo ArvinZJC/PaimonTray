@@ -176,7 +176,7 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes.</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes. If any account's status is abnormal, you can add/update the account again.</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>Remove all accounts?</value>
@@ -213,8 +213,14 @@
     <value>cookies</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
   </data>
+  <data name="CookiesCopy" xml:space="preserve">
+    <value>Copy the cookies</value>
+  </data>
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>How to get your cookies? (Temp)</value>
+  </data>
+  <data name="CookiesView" xml:space="preserve">
+    <value>View the cookies</value>
   </data>
   <data name="Enter" xml:space="preserve">
     <value>Enter</value>
@@ -421,16 +427,16 @@
     <value>Adding your account</value>
   </data>
   <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
-    <value>The account is being added/updated. If you confirm this status is improper, you can add/update the account again, or go to the settings to check the account.</value>
+    <value>The account is being added/updated</value>
   </data>
   <data name="StatusAccountExpiredExplanation" xml:space="preserve">
-    <value>The account's cookies are expired. You need to update the account.</value>
+    <value>The account's cookies are expired</value>
   </data>
   <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>Failed to retrieve the account's information. You can update the account, or go to the settings to check the account.</value>
+    <value>Failed to retrieve the account's information</value>
   </data>
   <data name="StatusAccountReadyExplanation" xml:space="preserve">
-    <value>The account's information has been retrieved successfully.</value>
+    <value>The account's information has been retrieved successfully</value>
   </data>
   <data name="StatusAccountUpdating" xml:space="preserve">
     <value>Updating your account</value>
