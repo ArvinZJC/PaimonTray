@@ -433,7 +433,7 @@
     <value>此账号的 cookie 过期了</value>
   </data>
   <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>检索此账号的信息失败</value>
+    <value>在检索此账号的信息时出错</value>
   </data>
   <data name="StatusAccountReadyExplanation" xml:space="preserve">
     <value>已成功检索此账号的信息</value>

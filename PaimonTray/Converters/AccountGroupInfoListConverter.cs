@@ -108,7 +108,7 @@ namespace PaimonTray.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter == null) return null;
+            if (parameter is null) return null;
 
             if (value is not GroupInfoList { Count: > 0 } groupInfoList) return null;
 

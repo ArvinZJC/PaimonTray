@@ -26,7 +26,7 @@ namespace PaimonTray.Models
         /// The response return code.
         /// </summary>
         [JsonPropertyName(AccountsHelper.KeyReturnCode)]
-        public int ReturnCode { get; set; }
+        public int? ReturnCode { get; set; }
 
         #endregion Properties
     } // end class CharactersResponse

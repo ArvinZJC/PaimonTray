@@ -433,7 +433,7 @@
     <value>The account's cookies are expired</value>
   </data>
   <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>Failed to retrieve the account's information</value>
+    <value>Error occurs when retrieving the account's information</value>
   </data>
   <data name="StatusAccountReadyExplanation" xml:space="preserve">
     <value>The account's information has been retrieved successfully</value>

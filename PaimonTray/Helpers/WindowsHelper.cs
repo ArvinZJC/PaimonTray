@@ -106,8 +106,8 @@ namespace PaimonTray.Helpers
         /// <returns>The max size.</returns>
         public SizeInt32 GetMainWindowPageMaxSize()
         {
-            var isMainWindowTopNavigationPane = _app.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() ==
-                                                NavigationViewPaneDisplayMode.Top;
+            var isMainWindowTopNavigationPane =
+                _app.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() is NavigationViewPaneDisplayMode.Top;
             var mainExistingWindow = GetExistingMainWindow();
             var workArea =
                 GetWorkArea(mainExistingWindow is null ? new WindowId() : GetWindowId(mainExistingWindow.Win));

@@ -189,8 +189,8 @@ namespace PaimonTray.Views
             NavigationViewDisplayModeChangedEventArgs args)
         {
             NavigationViewBody.IsPaneToggleButtonVisible =
-                NavigationViewBody.DisplayMode != NavigationViewDisplayMode.Expanded;
-            ScrollViewerBody.Padding = NavigationViewBody.DisplayMode == NavigationViewDisplayMode.Minimal
+                NavigationViewBody.DisplayMode is not NavigationViewDisplayMode.Expanded;
+            ScrollViewerBody.Padding = NavigationViewBody.DisplayMode is NavigationViewDisplayMode.Minimal
                 ? new Thickness(18, 18, 18, 0)
                 : new Thickness(56, 18, 56, 0);
         } // end method NavigationViewBody_OnDisplayModeChanged
@@ -214,7 +214,7 @@ namespace PaimonTray.Views
         // Handle the settings window's activated event.
         private void SettingsWindow_OnActivated(object sender, WindowActivatedEventArgs args)
         {
-            if (args.WindowActivationState == WindowActivationState.Deactivated)
+            if (args.WindowActivationState is WindowActivationState.Deactivated)
                 TextBlockWindowTitle.Foreground =
                     GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush;
             else

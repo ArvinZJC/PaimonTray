@@ -198,7 +198,7 @@ namespace PaimonTray.Views
             var workArea = WindowsHelper.GetWorkArea(WinId);
 
             // Avoid using "e.NewSize" to prevent window resizing delay.
-            if (NavigationViewBody.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
+            if (NavigationViewBody.PaneDisplayMode is NavigationViewPaneDisplayMode.Top)
             {
                 winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
                             WindowsHelper.MainWindowSideLengthOffset;

@@ -7,9 +7,9 @@ using PaimonTray.Helpers;
 using PaimonTray.ViewModels;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -131,7 +131,7 @@ namespace PaimonTray.Views
                 return;
             } // end if
 
-            if (characters.Count == 0)
+            if (characters.Count is 0)
             {
                 if (await ContentDialogueAccountAddNoCharacter.ShowAsync() is not ContentDialogResult.Primary)
                 {
@@ -159,10 +159,10 @@ namespace PaimonTray.Views
             var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
             var uriLoginMiHoYo = GetLoginWebPageUri();
 
-            if (_app.AccountsH.CountAccounts() >= AccountsHelper.CountAccountsMax)
+            if (_app.AccountsH.CountAccounts() < AccountsHelper.CountAccountsMax) InfoBarLogin.IsOpen = false;
+            else
                 ShowLoginInfoBar(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
                     _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
-            else InfoBarLogin.IsOpen = false;
 
             if (_isWebView2Available)
             {
@@ -284,7 +284,7 @@ namespace PaimonTray.Views
             } // end if...else
 
             // Execute if the account's UID and cookies are valid.
-            if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUserId) &&
+            if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUid) &&
                 cookies.Contains(AccountsHelper.CookieKeyToken)) await AddUpdateAccountAsync(aUid, cookies);
             else
             {
@@ -343,9 +343,8 @@ namespace PaimonTray.Views
         {
             var aUid = string.Empty;
             var cookieName = string.Empty;
+            var cookies = new List<string>();
             var cookieValue = string.Empty;
-            var stringBuilderCookies = new StringBuilder(string.Empty);
-            var validCookieNameCount = 0;
 
             foreach (var cookie in rawCookies)
             {
@@ -360,24 +359,23 @@ namespace PaimonTray.Views
                         var cookieParts = stringCookie.Split('=',
                             StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                        if (cookieParts.Length != 2) continue;
+                        if (cookieParts.Length is not 2) continue; // The key and value.
 
                         cookieName = cookieParts[0];
                         cookieValue = cookieParts[1];
                         break;
                 } // end switch-case
 
-                if (cookieName is not (AccountsHelper.CookieKeyUserId or AccountsHelper.CookieKeyToken)) continue;
+                if (cookieName is not (AccountsHelper.CookieKeyUid or AccountsHelper.CookieKeyToken)) continue;
 
-                stringBuilderCookies.Append($"{cookieName}={cookieValue};");
-                validCookieNameCount++;
+                cookies.Add($"{cookieName}={cookieValue};");
 
-                if (cookieName is AccountsHelper.CookieKeyUserId) aUid = cookieValue;
+                if (cookieName is AccountsHelper.CookieKeyUid) aUid = cookieValue;
 
-                if (validCookieNameCount == 2) break;
+                if (cookies.Count is 2) break; // The UID and token cookies.
             } // end foreach
 
-            return (aUid, stringBuilderCookies.ToString());
+            return (aUid, string.Concat(cookies));
         } // end generic method ProcessCookies
 
         /// <summary>
@@ -412,6 +410,9 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
+            if (_app.AccountsH.CountAccounts() < AccountsHelper.CountAccountsMax &&
+                InfoBarLogin.Title == _resourceLoader.GetString("AccountAddReachLimit")) InfoBarLogin.IsOpen = false;
+
             TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
             GridStatus.Visibility = _app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging
                 ? Visibility.Visible
