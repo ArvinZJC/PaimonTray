@@ -58,19 +58,44 @@
         public const string Unknown = "-";
 
         /// <summary>
-        /// The app icon (.ico) URI.
+        /// The app icon file URI.
         /// </summary>
         public const string UriAppIcon = "ms-appx:///Assets/AppIcon/AppIcon.ico";
 
         /// <summary>
-        /// The app icon image (.png) URI.
+        /// The app icon image URI.
         /// </summary>
-        public const string UriAppIconImage = "ms-appx:///Assets/AppIcon/AppIcon.png";
+        public const string UriImageAppIcon = "ms-appx:///Assets/AppIcon/AppIcon.png";
 
         /// <summary>
-        /// The Paimon surprise image URI.
+        /// The daily commissions image URI.
         /// </summary>
-        public const string UriImagePaimonSurprise = "ms-appx:///Assets/PaimonSurprise.png";
+        public const string UriImageCommissionsDaily = "ms-appx:///Assets/DailyCommissions.png";
+
+        /// <summary>
+        /// The Realm Currency image URI.
+        /// </summary>
+        public const string UriImageCurrencyRealm = "ms-appx:///Assets/RealmCurrency.png";
+
+        /// <summary>
+        /// The Trounce Domains image URI.
+        /// </summary>
+        public const string UriImageDomainsTrounce = "ms-appx:///Assets/TrounceDomains.png";
+
+        /// <summary>
+        /// The expeditions image URI.
+        /// </summary>
+        public const string UriImageExpeditions = "ms-appx:///Assets/Expeditions.png";
+
+        /// <summary>
+        /// The Original Resin image URI.
+        /// </summary>
+        public const string UriImageResinOriginal = "ms-appx:///Assets/OriginalResin.png";
+
+        /// <summary>
+        /// The Parametric Transformer image URI.
+        /// </summary>
+        public const string UriImageTransformerParametric = "ms-appx:///Assets/ParametricTransformer.png";
 
         /// <summary>
         /// The URI of the system settings page configuring notifications.
