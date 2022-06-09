@@ -91,23 +91,19 @@
                                                 </GroupStyle.HeaderContainerStyle>
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate x:DataType="models:GroupInfoList">
-                                                        <Grid Margin="0, 4, 0, 0">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
+                                                        <Grid
+                                                            ColumnSpacing="12"
+                                                            Margin="0, 4, 0, 0">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
                                                                 <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
+                                                            <!-- The account's avatar. -->
                                                             <PersonPicture
                                                                 x:Phase="3"
                                                                 Grid.Column="0"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
                                                                 Height="32"
-                                                                Margin="0, 0, 12, 0"
                                                                 Tag="{x:Bind Key}"
                                                                 Width="32">
                                                                 <PersonPicture.ProfilePicture>
@@ -116,32 +112,29 @@
                                                                         UriSource="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=avatar}" />
                                                                 </PersonPicture.ProfilePicture>
                                                             </PersonPicture>
-                                                            <TextBlock
-                                                                x:Phase="1"
-                                                                Grid.Column="1"
-                                                                Grid.Row="0"
-                                                                Style="{ThemeResource BaseTextBlockStyle}"
-                                                                Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                TextWrapping="NoWrap"
-                                                                ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
-                                                            <TextBlock
-                                                                x:Phase="1"
-                                                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                                Grid.Column="1"
-                                                                Grid.Row="1"
-                                                                IsTextSelectionEnabled="True"
-                                                                Style="{ThemeResource BodyTextBlockStyle}"
-                                                                Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                TextWrapping="NoWrap"
-                                                                ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
+                                                            <!-- The account's info stack panel. -->
+                                                            <StackPanel Grid.Column="1">
+                                                                <TextBlock
+                                                                    x:Phase="1"
+                                                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
+                                                                    TextTrimming="CharacterEllipsis"
+                                                                    TextWrapping="NoWrap"
+                                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
+                                                                <TextBlock
+                                                                    x:Phase="1"
+                                                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                                    IsTextSelectionEnabled="True"
+                                                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
+                                                                    TextTrimming="CharacterEllipsis"
+                                                                    TextWrapping="NoWrap"
+                                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
+                                                            </StackPanel>
+                                                            <!-- The account's status grids. -->
                                                             <Grid
                                                                 x:Phase="2"
                                                                 Grid.Column="2"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                Margin="12, 0, 0, 0"
                                                                 Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdating}">
                                                                 <FontIcon
                                                                     Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
@@ -154,9 +147,6 @@
                                                             <Grid
                                                                 x:Phase="2"
                                                                 Grid.Column="2"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                Margin="12, 0, 0, 0"
                                                                 Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpired}">
                                                                 <FontIcon
                                                                     Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
@@ -169,9 +159,6 @@
                                                             <Grid
                                                                 x:Phase="2"
                                                                 Grid.Column="2"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                Margin="12, 0, 0, 0"
                                                                 Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFail}">
                                                                 <FontIcon
                                                                     Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
@@ -184,15 +171,11 @@
                                                             <Grid
                                                                 x:Phase="2"
                                                                 Grid.Column="2"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                Margin="12, 0, 0, 0"
                                                                 Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReady}">
                                                                 <FontIcon
                                                                     Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
                                                                     Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
                                                                 <FontIcon
-                                                                    x:Name="FontIconSuccess"
                                                                     Foreground="{ThemeResource InfoBarSuccessSeverityIconForeground}"
                                                                     Glyph="{ThemeResource InfoBarSuccessIconGlyph}"
                                                                     ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReadyExplanation}" />
@@ -205,6 +188,7 @@
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="models:AccountCharacter">
                                                 <ListViewItem Visibility="{x:Bind IsEnabled}">
+                                                    <!-- The character's info stack panel. -->
                                                     <StackPanel Padding="0, 8">
                                                         <TextBlock
                                                             Style="{ThemeResource BaseTextBlockStyle}"
@@ -254,7 +238,23 @@
                             SelectionMode="None"
                             SizeChanged="ListViewCharacterRealTimeNotes_OnSizeChanged">
                             <ListViewItem>
-
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image
+                                        Grid.Column="0"
+                                        Height="32"
+                                        Width="32">
+                                        <Image.Source>
+                                            <BitmapImage
+                                                DecodePixelHeight="32"
+                                                UriSource="{x:Bind helpers:AppConstantsHelper.UriImageResinOriginal}" />
+                                        </Image.Source>
+                                    </Image>
+                                </Grid>
                             </ListViewItem>
                             <ListViewItem Content="160/160" />
                             <ListViewItem Content="Fully replenished                 0m" />
