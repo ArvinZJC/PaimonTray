@@ -921,9 +921,8 @@ namespace PaimonTray.Helpers
             accountCharacterTarget.IsEnabled = shouldEnableCharacter;
             accountGroupInfoListTarget.Insert(accountCharacterTargetIndex, accountCharacterTarget);
             accountGroupInfoListTarget.RemoveAt(accountCharacterTargetIndex + 1);
-            IsAccountCharacterUpdated = true;
-
             CheckSelectedCharacterUid();
+            IsAccountCharacterUpdated = true;
         } // end method ApplyCharacterStatus
 
         /// <summary>
@@ -1062,19 +1061,19 @@ namespace PaimonTray.Helpers
             {
                 if (propertySetAccounts[KeyUidCharacterSelected] is null) return;
 
-                var canFindCharacterSelected = false;
+                var isSelectedCharacterValid = false;
                 var uidCharacterSelected = propertySetAccounts[KeyUidCharacterSelected] as string;
 
                 foreach (var accountCharacters in AccountGroupInfoLists.Select(accountGroupInfoList =>
                              accountGroupInfoList.Cast<AccountCharacter>()))
                 {
-                    canFindCharacterSelected = accountCharacters.Any(accountCharacter =>
-                        accountCharacter.UidCharacter == uidCharacterSelected);
+                    isSelectedCharacterValid = accountCharacters.Any(accountCharacter =>
+                        accountCharacter.UidCharacter == uidCharacterSelected && accountCharacter.IsEnabled);
 
-                    if (canFindCharacterSelected) break;
+                    if (isSelectedCharacterValid) break;
                 } // end foreach
 
-                if (!canFindCharacterSelected) propertySetAccounts[KeyUidCharacterSelected] = null;
+                if (!isSelectedCharacterValid) propertySetAccounts[KeyUidCharacterSelected] = null;
             }
             else propertySetAccounts[KeyUidCharacterSelected] = null;
         } // end method CheckSelectedCharacterUid

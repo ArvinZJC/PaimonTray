@@ -155,7 +155,8 @@ namespace PaimonTray.Views
                         {
                             accountCharacterSelected = uidCharacterSelected is null
                                 ? accountCharacters.FirstOrDefault(
-                                    accountCharacter => accountCharacter.UidCharacter is not null, null)
+                                    accountCharacter =>
+                                        accountCharacter.UidCharacter is not null && accountCharacter.IsEnabled, null)
                                 : accountCharacters.FirstOrDefault(
                                     accountCharacter => accountCharacter.UidCharacter == uidCharacterSelected, null);
 
@@ -177,7 +178,7 @@ namespace PaimonTray.Views
         private void UpdateUiText()
         {
             TextBlockTitle.Text = _resourceLoader.GetString("RealTimeNotes");
-            ToolTipService.SetToolTip(ButtonSwitchCharacter, _resourceLoader.GetString("CharacterSwitch"));
+            ToolTipService.SetToolTip(ButtonCharacterSwitch, _resourceLoader.GetString("CharacterSwitch"));
         } // end method UpdateUiText
 
         #endregion Methods
@@ -216,20 +217,26 @@ namespace PaimonTray.Views
         {
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
             {
-                TextBlockCharacterNickname.Text = string.Empty;
-                TextBlockCharacterOtherInfo.Text = string.Empty;
+                TextBlockNicknameCharacter.Text = string.Empty;
+                TextBlockOtherInfoCharacter.Text = string.Empty;
             }
             else
             {
                 var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+                var nicknameCharacter =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
+                    AppConstantsHelper.Unknown;
+                var otherInfoCharacter =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
+                    AppConstantsHelper.Unknown;
 
                 _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
-                TextBlockCharacterNickname.Text =
-                    accountCharacterConverter?.Convert(accountCharacter, null,
-                        AccountCharacterConverter.ParameterNicknameCharacter, null) as string;
-                TextBlockCharacterOtherInfo.Text =
-                    accountCharacterConverter?.Convert(accountCharacter, null,
-                        AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string;
+                TextBlockNicknameCharacter.Text = nicknameCharacter;
+                TextBlockOtherInfoCharacter.Text = otherInfoCharacter;
+                ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
+                ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
             } // end if...else
         } // end method ListViewAccountGroups_OnSelectionChanged
 
