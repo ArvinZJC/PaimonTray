@@ -193,6 +193,26 @@ namespace PaimonTray.Helpers
         private const string KeyDayRaw = "Day";
 
         /// <summary>
+        /// The max Trounce Domains discount key.
+        /// </summary>
+        private const string KeyDomainsTrounceDiscountMax = "domainsTrounceDiscountMax";
+
+        /// <summary>
+        /// The max Trounce Domains discount key for processing JSON data.
+        /// </summary>
+        private const string KeyDomainsTrounceDiscountMaxRaw = "resin_discount_num_limit";
+
+        /// <summary>
+        /// The remaining Trounce Domains discount key.
+        /// </summary>
+        private const string KeyDomainsTrounceDiscountRemaining = "domainsTrounceDiscountRemaining";
+
+        /// <summary>
+        /// The remaining Trounce Domains discount key for processing JSON data.
+        /// </summary>
+        private const string KeyDomainsTrounceDiscountRemainingRaw = "remain_resin_discount_num";
+
+        /// <summary>
         /// The remaining expedition time key.
         /// </summary>
         private const string KeyExpeditionTimeRemaining = "expeditionTimeRemaining";
@@ -347,26 +367,6 @@ namespace PaimonTray.Helpers
         /// The current Original Resin key for processing JSON data.
         /// </summary>
         private const string KeyResinOriginalCurrentRaw = "current_resin";
-
-        /// <summary>
-        /// The max Original Resin discount key.
-        /// </summary>
-        private const string KeyResinOriginalDiscountMax = "resinOriginalDiscountMax";
-
-        /// <summary>
-        /// The max Original Resin discount key for processing JSON data.
-        /// </summary>
-        private const string KeyResinOriginalDiscountMaxRaw = "resin_discount_num_limit";
-
-        /// <summary>
-        /// The remaining Original Resin discount key.
-        /// </summary>
-        private const string KeyResinOriginalDiscountRemaining = "resinOriginalDiscountRemaining";
-
-        /// <summary>
-        /// The remaining Original Resin discount key for processing JSON data.
-        /// </summary>
-        private const string KeyResinOriginalDiscountRemainingRaw = "remain_resin_discount_num";
 
         /// <summary>
         /// The max Original Resin key.
@@ -1558,6 +1558,26 @@ namespace PaimonTray.Helpers
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 } // end if...else
 
+                var domainsTrounceDiscountMax = (int?)data[KeyDomainsTrounceDiscountMaxRaw];
+
+                if (domainsTrounceDiscountMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max Trounce Domains discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountMax] = domainsTrounceDiscountMax;
+
+                var domainsTrounceDiscountRemaining = (int?)data[KeyDomainsTrounceDiscountRemainingRaw];
+
+                if (domainsTrounceDiscountRemaining is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the remaining Trounce Domains discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountRemaining] = domainsTrounceDiscountRemaining;
+
                 var expeditionsCurrent = (int?)data[KeyExpeditionsCurrentRaw];
 
                 if (expeditionsCurrent is null)
@@ -1599,26 +1619,6 @@ namespace PaimonTray.Helpers
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
                 else propertySetRealTimeNotes[KeyResinOriginalCurrent] = resinOriginalCurrent;
-
-                var resinOriginalDiscountMax = (int?)data[KeyResinOriginalDiscountMaxRaw];
-
-                if (resinOriginalDiscountMax is null)
-                {
-                    Log.Warning(
-                        $"Failed to get the max Original Resin discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                }
-                else propertySetRealTimeNotes[KeyResinOriginalDiscountMax] = resinOriginalDiscountMax;
-
-                var resinOriginalDiscountRemaining = (int?)data[KeyResinOriginalDiscountRemainingRaw];
-
-                if (resinOriginalDiscountRemaining is null)
-                {
-                    Log.Warning(
-                        $"Failed to get the remaining Original Resin discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                }
-                else propertySetRealTimeNotes[KeyResinOriginalDiscountRemaining] = resinOriginalDiscountRemaining;
 
                 var resinOriginalMax = (int?)data[KeyResinOriginalMaxRaw];
 
