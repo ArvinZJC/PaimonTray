@@ -193,10 +193,10 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if ((e.PropertyName is AccountsHelper.PropertyNameHasUpdatedAccountCharacter &&
-                 _app.AccountsH.HasUpdatedAccountCharacter) ||
-                (e.PropertyName is AccountsHelper.PropertyNameHasUpdatedAccountGroup &&
-                 _app.AccountsH.HasUpdatedAccountGroup) ||
+            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
+                 _app.AccountsH.IsAccountCharacterUpdated) ||
+                (e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
+                 _app.AccountsH.IsAccountGroupUpdated) ||
                 e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 

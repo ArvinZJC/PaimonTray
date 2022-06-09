@@ -9,8 +9,11 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -35,9 +38,14 @@ namespace PaimonTray.Helpers
         private const string ContainerKeyCharacters = "characters";
 
         /// <summary>
-        /// The user ID cookie key.
+        /// The expeditions container key.
         /// </summary>
-        public const string CookieKeyUserId = "ltuid";
+        private const string ContainerKeyExpeditions = "expeditions";
+
+        /// <summary>
+        /// The real-time notes container key.
+        /// </summary>
+        private const string ContainerKeyRealTimeNotes = "realTimeNotes";
 
         /// <summary>
         /// The token cookie key.
@@ -45,9 +53,34 @@ namespace PaimonTray.Helpers
         public const string CookieKeyToken = "ltoken";
 
         /// <summary>
+        /// The UID cookie key.
+        /// </summary>
+        public const string CookieKeyUid = "ltuid";
+
+        /// <summary>
         /// The max number of accounts.
         /// </summary>
         public const int CountAccountsMax = 5;
+
+        /// <summary>
+        /// The CN server's dynamic secret salt.
+        /// </summary>
+        private const string DynamicSecretSaltServerCn = "xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs";
+
+        /// <summary>
+        /// The global server's dynamic secret salt.
+        /// </summary>
+        private const string DynamicSecretSaltServerGlobal = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w";
+
+        /// <summary>
+        /// The app version header name.
+        /// </summary>
+        private const string HeaderNameAppVersion = "x-rpc-app_version";
+
+        /// <summary>
+        /// The client type header name.
+        /// </summary>
+        private const string HeaderNameClientType = "x-rpc-client_type";
 
         /// <summary>
         /// The cookie header name.
@@ -55,29 +88,29 @@ namespace PaimonTray.Helpers
         private const string HeaderNameCookie = "Cookie";
 
         /// <summary>
-        /// The Accept header value.
+        /// The dynamic secret header name.
         /// </summary>
-        private const string HeaderValueAccept = "application/json";
+        private const string HeaderNameDynamicSecret = "DS";
 
         /// <summary>
-        /// The app version RPC header value for the CN server.
+        /// The app version header value for the CN server.
         /// </summary>
         private const string HeaderValueAppVersionServerCn = "2.29.1";
 
         /// <summary>
-        /// The app version RPC header value for the global server.
+        /// The app version header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.10.1";
+        private const string HeaderValueAppVersionServerGlobal = "2.11.1";
 
         /// <summary>
-        /// The User-Agent header value for the CN server.
+        /// The client type header value for the CN server.
         /// </summary>
-        private const string HeaderValueUserAgentServerCn = $"miHoYoBBS/{HeaderValueAppVersionServerCn}";
+        private const string HeaderValueClientTypeServerCn = "5";
 
         /// <summary>
-        /// The User-Agent header value for the global server.
+        /// The client type header value for the global server.
         /// </summary>
-        private const string HeaderValueUserAgentServerGlobal = $"miHoYoBBSOversea/{HeaderValueAppVersionServerGlobal}";
+        private const string HeaderValueClientTypeServerGlobal = "2";
 
         /// <summary>
         /// The avatar key.
@@ -85,9 +118,69 @@ namespace PaimonTray.Helpers
         private const string KeyAvatar = "avatar";
 
         /// <summary>
+        /// The avatar side icon key.
+        /// </summary>
+        private const string KeyAvatarSideIcon = "avatarSideIcon";
+
+        /// <summary>
+        /// The avatar side icon key for processing JSON data.
+        /// </summary>
+        private const string KeyAvatarSideIconRaw = "avatar_side_icon";
+
+        /// <summary>
+        /// The finished daily commissions key.
+        /// </summary>
+        private const string KeyCommissionsDailyFinished = "commissionsDailyFinished";
+
+        /// <summary>
+        /// The finished daily commissions key for processing JSON data.
+        /// </summary>
+        private const string KeyCommissionsDailyFinishedRaw = "finished_task_num";
+
+        /// <summary>
+        /// The max daily commissions key.
+        /// </summary>
+        private const string KeyCommissionsDailyMax = "commissionsDailyMax";
+
+        /// <summary>
+        /// The max daily commissions key for processing JSON data.
+        /// </summary>
+        private const string KeyCommissionsDailyMaxRaw = "total_task_num";
+
+        /// <summary>
         /// The cookies key.
         /// </summary>
         public const string KeyCookies = "cookies";
+
+        /// <summary>
+        /// The current Realm Currency key.
+        /// </summary>
+        private const string KeyCurrencyRealmCurrent = "currencyRealmCurrent";
+
+        /// <summary>
+        /// The current Realm Currency key for processing JSON data.
+        /// </summary>
+        private const string KeyCurrencyRealmCurrentRaw = "current_home_coin";
+
+        /// <summary>
+        /// The max Realm Currency key.
+        /// </summary>
+        private const string KeyCurrencyRealmMax = "currencyRealmMax";
+
+        /// <summary>
+        /// The max Realm Currency key for processing JSON data.
+        /// </summary>
+        private const string KeyCurrencyRealmMaxRaw = "max_home_coin";
+
+        /// <summary>
+        /// The Realm Currency recovery time key.
+        /// </summary>
+        private const string KeyCurrencyRealmTimeRecovery = "currencyRealmTimeRecovery";
+
+        /// <summary>
+        /// The Realm Currency recovery time key for processing JSON data.
+        /// </summary>
+        private const string KeyCurrencyRealmTimeRecoveryRaw = "home_coin_recovery_time";
 
         /// <summary>
         /// The data key.
@@ -95,9 +188,95 @@ namespace PaimonTray.Helpers
         private const string KeyData = "data";
 
         /// <summary>
+        /// The day key for processing JSON data.
+        /// </summary>
+        private const string KeyDayRaw = "Day";
+
+        /// <summary>
+        /// The remaining expedition time key.
+        /// </summary>
+        private const string KeyExpeditionTimeRemaining = "expeditionTimeRemaining";
+
+        /// <summary>
+        /// The remaining expedition time key for processing JSON data.
+        /// </summary>
+        private const string KeyExpeditionTimeRemainingRaw = "remained_time";
+
+        /// <summary>
+        /// The current expeditions key.
+        /// </summary>
+        private const string KeyExpeditionsCurrent = "expeditionsCurrent";
+
+        /// <summary>
+        /// The current expeditions key for processing JSON data.
+        /// </summary>
+        private const string KeyExpeditionsCurrentRaw = "current_expedition_num";
+
+        /// <summary>
+        /// The max expeditions key.
+        /// </summary>
+        private const string KeyExpeditionsMax = "expeditionsMax";
+
+        /// <summary>
+        /// The max expeditions key for processing JSON data.
+        /// </summary>
+        private const string KeyExpeditionsMaxRaw = "max_expedition_num";
+
+        /// <summary>
+        /// The expeditions key for processing JSON data.
+        /// </summary>
+        private const string KeyExpeditionsRaw = "expeditions";
+
+        /// <summary>
+        /// The expedition status key.
+        /// </summary>
+        private const string KeyExpeditionStatus = "expeditionStatus";
+
+        /// <summary>
+        /// The expedition status key for processing JSON data.
+        /// </summary>
+        private const string KeyExpeditionStatusRaw = "status";
+
+        /// <summary>
+        /// The hour key for processing JSON data.
+        /// </summary>
+        private const string KeyHourRaw = "Hour";
+
+        /// <summary>
         /// The key of the flag indicating if the subject is enabled.
         /// </summary>
         private const string KeyIsEnabled = "isEnabled";
+
+        /// <summary>
+        /// The key of the flag indicating if the daily commissions' extra reward is received.
+        /// </summary>
+        private const string KeyIsDailyCommissionsExtraRewardReceived = "isDailyCommissionsExtraRewardReceived";
+
+        /// <summary>
+        /// The key of the flag indicating if the daily commissions' extra reward is received, for processing JSON data.
+        /// </summary>
+        private const string KeyIsDailyCommissionsExtraRewardReceivedRaw = "is_extra_task_reward_received";
+
+        /// <summary>
+        /// The key of the flag indicating if the Parametric Transformer is obtained.
+        /// </summary>
+        private const string KeyIsParametricTransformerObtained = "isParametricTransformerObtained";
+
+        /// <summary>
+        /// The key of the flag indicating if the Parametric Transformer is obtained, for processing JSON data.
+        /// </summary>
+        private const string KeyIsParametricTransformerObtainedRaw = "obtained";
+
+        /// <summary>
+        /// The key of the flag indicating if the Parametric Transformer recovery time is reached.
+        /// </summary>
+        private const string KeyIsParametricTransformerRecoveryTimeReached =
+            "isParametricTransformerRecoveryTimeReached";
+
+        /// <summary>
+        /// The key of the flag indicating if the Parametric Transformer recovery time is reached, for processing JSON data.
+        /// </summary>
+        private const string KeyIsParametricTransformerRecoveryTimeReachedRaw = "reached";
 
         /// <summary>
         /// The level key.
@@ -113,6 +292,11 @@ namespace PaimonTray.Helpers
         /// The message key.
         /// </summary>
         private const string KeyMessage = "message";
+
+        /// <summary>
+        /// The minute key for processing JSON data.
+        /// </summary>
+        private const string KeyMinuteRaw = "Minute";
 
         /// <summary>
         /// The nickname key.
@@ -155,9 +339,64 @@ namespace PaimonTray.Helpers
         private const string KeyRegionGlobalSars = "os_cht";
 
         /// <summary>
+        /// The current Original Resin key.
+        /// </summary>
+        private const string KeyResinOriginalCurrent = "resinOriginalCurrent";
+
+        /// <summary>
+        /// The current Original Resin key for processing JSON data.
+        /// </summary>
+        private const string KeyResinOriginalCurrentRaw = "current_resin";
+
+        /// <summary>
+        /// The max Original Resin discount key.
+        /// </summary>
+        private const string KeyResinOriginalDiscountMax = "resinOriginalDiscountMax";
+
+        /// <summary>
+        /// The max Original Resin discount key for processing JSON data.
+        /// </summary>
+        private const string KeyResinOriginalDiscountMaxRaw = "resin_discount_num_limit";
+
+        /// <summary>
+        /// The remaining Original Resin discount key.
+        /// </summary>
+        private const string KeyResinOriginalDiscountRemaining = "resinOriginalDiscountRemaining";
+
+        /// <summary>
+        /// The remaining Original Resin discount key for processing JSON data.
+        /// </summary>
+        private const string KeyResinOriginalDiscountRemainingRaw = "remain_resin_discount_num";
+
+        /// <summary>
+        /// The max Original Resin key.
+        /// </summary>
+        private const string KeyResinOriginalMax = "resinOriginalMax";
+
+        /// <summary>
+        /// The max Original Resin key for processing JSON data.
+        /// </summary>
+        private const string KeyResinOriginalMaxRaw = "max_resin";
+
+        /// <summary>
+        /// The Original Resin recovery time key.
+        /// </summary>
+        private const string KeyResinOriginalTimeRecovery = "resinOriginalTimeRecovery";
+
+        /// <summary>
+        /// The Original Resin recovery time key for processing JSON data.
+        /// </summary>
+        private const string KeyResinOriginalTimeRecoveryRaw = "resin_recovery_time";
+
+        /// <summary>
         /// The return code key.
         /// </summary>
         public const string KeyReturnCode = "retcode";
+
+        /// <summary>
+        /// The second key for processing JSON data.
+        /// </summary>
+        private const string KeySecondRaw = "Second";
 
         /// <summary>
         /// The server key.
@@ -168,6 +407,21 @@ namespace PaimonTray.Helpers
         /// The status key.
         /// </summary>
         public const string KeyStatus = "status";
+
+        /// <summary>
+        /// The Parametric Transformer key for processing JSON data.
+        /// </summary>
+        private const string KeyTransformerParametricRaw = "transformer";
+
+        /// <summary>
+        /// The Parametric Transformer recovery time key.
+        /// </summary>
+        private const string KeyTransformerParametricTimeRecovery = "transformerParametricTimeRecovery";
+
+        /// <summary>
+        /// The Parametric Transformer recovery time key for processing JSON data.
+        /// </summary>
+        private const string KeyTransformerParametricTimeRecoveryRaw = "recovery_time";
 
         /// <summary>
         /// The UID key.
@@ -190,14 +444,14 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
-        /// The property name for the flag indicating if the program has updated an account's character.
+        /// The property name for the flag indicating if an account's character is updated.
         /// </summary>
-        public const string PropertyNameHasUpdatedAccountCharacter = nameof(HasUpdatedAccountCharacter);
+        public const string PropertyNameIsAccountCharacterUpdated = nameof(IsAccountCharacterUpdated);
 
         /// <summary>
-        /// The property name for the flag indicating if the program has updated an account group.
+        /// The property name for the flag indicating if an account group is updated.
         /// </summary>
-        public const string PropertyNameHasUpdatedAccountGroup = nameof(HasUpdatedAccountGroup);
+        public const string PropertyNameIsAccountGroupUpdated = nameof(IsAccountGroupUpdated);
 
         /// <summary>
         /// The property name for the flag indicating if the program is adding/updating an account.
@@ -210,9 +464,19 @@ namespace PaimonTray.Helpers
         public const string PropertyNameIsManaging = nameof(IsManaging);
 
         /// <summary>
+        /// The disabled return code.
+        /// </summary>
+        private const int ReturnCodeDisabled = 10102;
+
+        /// <summary>
         /// The login fail return code.
         /// </summary>
         private const int ReturnCodeLoginFail = -100;
+
+        /// <summary>
+        /// The success return code.
+        /// </summary>
+        private const int ReturnCodeSuccess = 0;
 
         /// <summary>
         /// The CN server tag.
@@ -228,6 +492,11 @@ namespace PaimonTray.Helpers
         /// The adding status tag.
         /// </summary>
         public const string TagStatusAdding = "adding";
+
+        /// <summary>
+        /// The disabled status tag.
+        /// </summary>
+        private const string TagStatusDisabled = "disabled";
 
         /// <summary>
         /// The expired status tag.
@@ -275,6 +544,18 @@ namespace PaimonTray.Helpers
         public const string UrlBaseLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
 
         /// <summary>
+        /// The base URL for the CN server to get real-time notes.
+        /// </summary>
+        private const string UrlBaseRealTimeNotesServerCn =
+            "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote?";
+
+        /// <summary>
+        /// The base URL for the global server to get real-time notes.
+        /// </summary>
+        private const string UrlBaseRealTimeNotesServerGlobal =
+            "https://bbs-api-os.hoyolab.com/game_record/app/genshin/api/dailyNote?";
+
+        /// <summary>
         /// The URL for the CN server to get characters.
         /// </summary>
         private const string UrlCharactersServerCn =
@@ -317,14 +598,14 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
-        /// A flag indicating if the program has updated an account's character.
+        /// A flag indicating if an account's character is updated.
         /// </summary>
-        private bool _hasUpdatedAccountCharacter;
+        private bool _isAccountCharacterUpdated;
 
         /// <summary>
-        /// A flag indicating if the program has updated an account group.
+        /// A flag indicating if an account group is updated.
         /// </summary>
-        private bool _hasUpdatedAccountGroup;
+        private bool _isAccountGroupUpdated;
 
         /// <summary>
         /// A flag indicating if the program is adding/updating an account.
@@ -341,6 +622,11 @@ namespace PaimonTray.Helpers
         /// </summary>
         private readonly Lazy<HttpClient>
             _lazyHttpClient; // System.Net.Http is used rather than the recommended Windows.Web.Http because of disabling automatic cookies handling, which the latter seems to perform badly.
+
+        /// <summary>
+        /// The pseudo-random number generator.
+        /// </summary>
+        private readonly Random _random;
 
         /// <summary>
         /// The regions dictionary.
@@ -367,34 +653,34 @@ namespace PaimonTray.Helpers
         public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
 
         /// <summary>
-        /// A flag indicating if the program has updated an account's character.
+        /// A flag indicating if an account's character is updated.
         /// </summary>
-        public bool HasUpdatedAccountCharacter
+        public bool IsAccountCharacterUpdated
         {
-            get => _hasUpdatedAccountCharacter;
+            get => _isAccountCharacterUpdated;
             set
             {
-                if (_hasUpdatedAccountCharacter == value) return;
+                if (_isAccountCharacterUpdated == value) return;
 
-                _hasUpdatedAccountCharacter = value;
+                _isAccountCharacterUpdated = value;
                 OnPropertyChanged();
             } // end set
-        } // end property HasUpdatedAccountCharacter
+        } // end property IsAccountCharacterUpdated
 
         /// <summary>
-        /// A flag indicating if the program has updated an account group.
+        /// A flag indicating if an account group is updated.
         /// </summary>
-        public bool HasUpdatedAccountGroup
+        public bool IsAccountGroupUpdated
         {
-            get => _hasUpdatedAccountGroup;
+            get => _isAccountGroupUpdated;
             set
             {
-                if (_hasUpdatedAccountGroup == value) return;
+                if (_isAccountGroupUpdated == value) return;
 
-                _hasUpdatedAccountGroup = value;
+                _isAccountGroupUpdated = value;
                 OnPropertyChanged();
             } // end set
-        } // end property HasUpdatedAccountGroup
+        } // end property IsAccountGroupUpdated
 
         /// <summary>
         /// A flag indicating if the program is adding/updating an account.
@@ -437,13 +723,14 @@ namespace PaimonTray.Helpers
         {
             var app = Application.Current as App;
 
-            _hasUpdatedAccountCharacter = false;
-            _hasUpdatedAccountGroup = false;
+            _isAccountCharacterUpdated = false;
+            _isAccountGroupUpdated = false;
             _isAddingUpdating = false;
             _isManaging = false;
             _lazyHttpClient =
                 new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
-            _resourceLoader = app?.SettingsH.ResLoader;
+            _random = new Random();
+            _resourceLoader = app?.SettingsH.ResLoader; // Initialise the resource loader first.
             _regions = new Dictionary<string, string>
             {
                 [KeyRegionCnBilibili] = _resourceLoader?.GetString("RegionCnBilibili"),
@@ -487,6 +774,7 @@ namespace PaimonTray.Helpers
             var applicationDataContainersCharacter = applicationDataContainerAccount
                 .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
             var propertySetAccount = applicationDataContainerAccount.Values; // Get the account property set first.
+            var cookies = propertySetAccount[KeyCookies] as string;
             var nicknameAccount = propertySetAccount[KeyNickname] as string;
             var server = propertySetAccount[KeyServer] switch
             {
@@ -503,9 +791,12 @@ namespace PaimonTray.Helpers
                     let propertySetCharacter = keyValuePairCharacter.Value.Values
                     select new AccountCharacter
                     {
+                        Cookies = cookies,
                         IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
                         Key = containerKeyAccount,
-                        Level = $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                        Level = propertySetCharacter[KeyLevel] is null
+                            ? $"{PrefixLevel}{AppConstantsHelper.Unknown}"
+                            : $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
                         NicknameAccount = nicknameAccount,
                         NicknameCharacter = propertySetCharacter[KeyNickname] as string,
                         Region = GetRegion(propertySetCharacter[KeyRegion] as string),
@@ -517,12 +808,13 @@ namespace PaimonTray.Helpers
             else
                 accountCharacters.Add(new AccountCharacter
                 {
+                    Cookies = cookies,
                     Key = containerKeyAccount,
                     NicknameAccount = nicknameAccount,
                     Server = server,
                     Status = status,
                     UidAccount = uidAccount
-                });
+                }); // Add an account's character containing account info only when no character for UI rendering.
 
             var accountGroupInfoListTarget = AccountGroupInfoLists.ToImmutableList()
                 .FirstOrDefault(accountGroupInfoList => accountGroupInfoList.Key == containerKeyAccount, null);
@@ -536,10 +828,10 @@ namespace PaimonTray.Helpers
                     .ForEach(AccountGroupInfoLists.Add);
             else
             {
-                HasUpdatedAccountGroup = false;
+                IsAccountGroupUpdated = false;
                 accountGroupInfoListTarget.Clear();
                 accountGroupInfoListTarget.AddRange(accountCharacters);
-                HasUpdatedAccountGroup = true;
+                IsAccountGroupUpdated = true;
             } // end if...else
         } // end method AddUpdateAccountGroup
 
@@ -562,14 +854,14 @@ namespace PaimonTray.Helpers
 
             if (characters is null)
             {
-                Log.Warning($"Cannot store null characters (account container key: {containerKeyAccount}).");
+                Log.Warning($"Failed to store null characters (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = propertySetAccount[KeyStatus] is TagStatusExpired
                     ? TagStatusExpired
                     : TagStatusFail;
                 return;
             } // end if
 
-            if (characters.Count == 0)
+            if (characters.Count is 0)
             {
                 foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
                     applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
@@ -625,11 +917,11 @@ namespace PaimonTray.Helpers
 
             var accountCharacterTargetIndex = accountGroupInfoListTarget.IndexOf(accountCharacterTarget);
 
-            HasUpdatedAccountCharacter = false;
+            IsAccountCharacterUpdated = false;
             accountCharacterTarget.IsEnabled = shouldEnableCharacter;
             accountGroupInfoListTarget.Insert(accountCharacterTargetIndex, accountCharacterTarget);
             accountGroupInfoListTarget.RemoveAt(accountCharacterTargetIndex + 1);
-            HasUpdatedAccountCharacter = true;
+            IsAccountCharacterUpdated = true;
 
             CheckSelectedCharacterUid();
         } // end method ApplyCharacterStatus
@@ -720,7 +1012,7 @@ namespace PaimonTray.Helpers
             // TODO: test purposes only.
             for (var i = 0; i < 3; i++)
             {
-                var server = i % 2 == 0 ? TagServerCn : TagServerGlobal;
+                var server = i % 2 is 0 ? TagServerCn : TagServerGlobal;
                 var uidAccount = i.ToString();
                 var containerKeyAccount = $"{server}{uidAccount}";
                 var applicationDataContainerAccount = ApplicationDataContainerAccounts
@@ -797,6 +1089,23 @@ namespace PaimonTray.Helpers
         } // end method CountAccounts
 
         /// <summary>
+        /// Generate a dynamic secret.
+        /// </summary>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
+        /// <param name="query">The query.</param>
+        /// <returns>The dynamic secret.</returns>
+        private string GenerateDynamicSecret(bool isServerCn, string query)
+        {
+            var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
+            using var md5 = MD5.Create();
+            var randomInt = _random.Next(100000, 200000);
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            return
+                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLower()}";
+        } // end method GenerateDynamicSecret
+
+        /// <summary>
         /// Get the account and its characters from the API.
         /// NOTE: Remember to change the account status to adding/updating.
         /// </summary>
@@ -811,7 +1120,7 @@ namespace PaimonTray.Helpers
         } // end method GetAccountCharactersFromApiAsync
 
         /// <summary>
-        /// Get the account from the API. The method is usually used before getting the account's characters from the API.
+        /// Get the specific account from the API. The method is usually used before getting the account's characters from the API.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <returns>A flag indicating if getting the account's characters from the API can be safe to execute.</returns>
@@ -824,7 +1133,7 @@ namespace PaimonTray.Helpers
             if (propertySetAccount[KeyStatus] is TagStatusExpired)
             {
                 Log.Warning(
-                    $"Cannot get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
+                    $"Failed to get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
                 return false;
             } // end if
 
@@ -834,10 +1143,6 @@ namespace PaimonTray.Helpers
 
             httpClientHeaders.Clear(); // Clear first.
             httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
-            httpClientHeaders.Accept.TryParseAdd(HeaderValueAccept);
-            httpClientHeaders.UserAgent.TryParseAdd(isServerCn
-                ? HeaderValueUserAgentServerCn
-                : HeaderValueUserAgentServerGlobal);
 
             HttpResponseMessage httpResponseMessage;
 
@@ -850,7 +1155,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"The HTTP response to get an account was unsuccessful (account container key: {containerKeyAccount}).");
+                    $"The HTTP response to get the account was unsuccessful (account container key: {containerKeyAccount}).");
                 Log.Error(exception.ToString());
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return true;
@@ -864,18 +1169,19 @@ namespace PaimonTray.Helpers
 
                 if (jsonNodeResponse is null)
                 {
-                    Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                    Log.Warning(
+                        $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return true;
                 } // end if
 
-                var returnCode = (int)jsonNodeResponse[KeyReturnCode];
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
 
-                if (returnCode != 0)
+                if (returnCode is not ReturnCodeSuccess)
                 {
                     Log.Warning(
-                        $"Failed to get an account from the specific API (account container key: {containerKeyAccount}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                        $"Failed to get the account from the specific API (account container key: {containerKeyAccount}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
                     propertySetAccount[KeyStatus] =
                         returnCode is ReturnCodeLoginFail ? TagStatusExpired : TagStatusFail;
                     return true;
@@ -922,7 +1228,8 @@ namespace PaimonTray.Helpers
             }
             catch (Exception exception)
             {
-                Log.Error($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                Log.Error(
+                    $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
                 Log.Information(httpResponseBody);
                 Log.Error(exception.ToString());
                 propertySetAccount[KeyStatus] = TagStatusFail;
@@ -962,7 +1269,7 @@ namespace PaimonTray.Helpers
             if (propertySetAccount[KeyStatus] is TagStatusExpired)
             {
                 Log.Warning(
-                    $"Cannot get characters from the API due to the specific account's expired status (account container key: {containerKeyAccount}).");
+                    $"Failed to get characters from the API due to the specific account's expired status (account container key: {containerKeyAccount}).");
                 return null;
             } // end if
 
@@ -972,10 +1279,6 @@ namespace PaimonTray.Helpers
 
             httpClientHeaders.Clear(); // Clear first.
             httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
-            httpClientHeaders.Accept.TryParseAdd(HeaderValueAccept);
-            httpClientHeaders.UserAgent.TryParseAdd(isServerCn
-                ? HeaderValueUserAgentServerCn
-                : HeaderValueUserAgentServerGlobal);
 
             HttpResponseMessage httpResponseMessage;
 
@@ -1003,13 +1306,14 @@ namespace PaimonTray.Helpers
 
                 if (charactersRaw is null)
                 {
-                    Log.Warning($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                    Log.Warning(
+                        $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return null;
                 } // end if
 
-                if (charactersRaw.ReturnCode != 0)
+                if (charactersRaw.ReturnCode is not ReturnCodeSuccess)
                 {
                     Log.Warning(
                         $"Failed to get characters from the specific API (account container key: {containerKeyAccount}, message: {charactersRaw.Message}, return code: {charactersRaw.ReturnCode}).");
@@ -1026,13 +1330,407 @@ namespace PaimonTray.Helpers
             }
             catch (Exception exception)
             {
-                Log.Error($"Failed to parse the response's body (account container key: {containerKeyAccount}):");
+                Log.Error(
+                    $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
                 Log.Information(httpResponseBody);
                 Log.Error(exception.ToString());
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
             } // end try...catch
         } // end method GetCharactersFromApiAsync
+
+        // TODO
+        public async void GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return;
+
+            if (containerKeyCharacter is null) return;
+
+            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
+            var (_, applicationDataContainerCharacter) = applicationDataContainerAccount
+                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
+                .FirstOrDefault(keyValuePairCharacter => keyValuePairCharacter.Key == containerKeyCharacter,
+                    new KeyValuePair<string, ApplicationDataContainer>(containerKeyCharacter, null));
+
+            if (applicationDataContainerCharacter is null)
+            {
+                Log.Warning(
+                    $"Failed to find the specific account's character (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                return;
+            } // end if
+
+            var applicationDataContainerRealTimeNotes =
+                applicationDataContainerCharacter.CreateContainer(ContainerKeyRealTimeNotes,
+                    ApplicationDataCreateDisposition.Always);
+            var propertySetAccount = applicationDataContainerAccount.Values;
+            var propertySetRealTimeNotes = applicationDataContainerRealTimeNotes.Values;
+
+            // TODO: store last updated time
+            propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
+
+            if (propertySetAccount[KeyStatus] is not TagStatusReady)
+            {
+                Log.Warning(
+                    $"Failed to get real-time notes from the API due to the specific account's unready status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                return;
+            } // end if
+
+            var httpClient = _lazyHttpClient.Value;
+            var httpClientHeaders = httpClient.DefaultRequestHeaders;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
+            var query =
+                $"role_id={applicationDataContainerCharacter.Name}&server={applicationDataContainerCharacter.Values[KeyRegion]}";
+
+            httpClientHeaders.Clear(); // Clear first.
+            httpClientHeaders.Add(HeaderNameAppVersion,
+                isServerCn ? HeaderValueAppVersionServerCn : HeaderValueAppVersionServerGlobal);
+            httpClientHeaders.Add(HeaderNameClientType,
+                isServerCn ? HeaderValueClientTypeServerCn : HeaderValueClientTypeServerGlobal);
+            httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
+            httpClientHeaders.Add(HeaderNameDynamicSecret, GenerateDynamicSecret(isServerCn, query));
+
+            HttpResponseMessage httpResponseMessage;
+            var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
+
+            try
+            {
+                httpResponseMessage = await httpClient.GetAsync(new Uri($"{urlBaseRealTimeNotes}{query}"));
+                httpResponseMessage.EnsureSuccessStatusCode();
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"The HTTP response to get real-time notes was unsuccessful (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                Log.Error(exception.ToString());
+                propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                return;
+            } // end try...catch
+
+            var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning(
+                        $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                    Log.Information(httpResponseBody);
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                    return;
+                } // end if
+
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode is not ReturnCodeSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to get real-time notes from the specific API (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    propertySetAccount[KeyStatus] =
+                        returnCode is ReturnCodeDisabled ? TagStatusDisabled : TagStatusFail;
+                    return;
+                } // end if
+
+                var data = jsonNodeResponse[KeyData];
+
+                if (data is null)
+                {
+                    Log.Warning(
+                        $"Failed to get real-time notes data (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                    return;
+                } // end if
+
+                var expeditions = data[KeyExpeditionsRaw];
+
+                if (expeditions is null || expeditions.GetType() != typeof(JsonArray))
+                {
+                    Log.Warning(
+                        $"Failed to get the expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else
+                {
+                    applicationDataContainerRealTimeNotes.DeleteContainer(ContainerKeyExpeditions);
+
+                    var applicationDataContainerExpeditions =
+                        applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
+                            ApplicationDataCreateDisposition.Always);
+                    var expeditionIndex = 0;
+
+                    foreach (var expedition in expeditions as JsonArray)
+                    {
+                        var propertySetExpedition = applicationDataContainerExpeditions
+                            .CreateContainer(expeditionIndex.ToString(), ApplicationDataCreateDisposition.Always)
+                            .Values;
+
+                        expeditionIndex++;
+
+                        var avatarSideIconRaw = (string)expedition[KeyAvatarSideIconRaw];
+
+                        if (avatarSideIconRaw is null || avatarSideIconRaw.Length is 0)
+                        {
+                            Log.Warning(
+                                $"Failed to get the expedition's avatar side icon from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        }
+                        else
+                        {
+                            foreach (Match match in new Regex(@"(?<=(UI_AvatarIcon_Side_)).*(?=.png)").Matches(
+                                         avatarSideIconRaw))
+                            {
+                                propertySetExpedition[KeyAvatarSideIcon] = match.Value;
+                                break;
+                            } // end foreach
+                        } // end if...else
+
+                        var expeditionStatus = (string)expedition[KeyExpeditionStatusRaw];
+
+                        if (expeditionStatus is null)
+                        {
+                            Log.Warning(
+                                $"Failed to get the expedition status from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        }
+                        else propertySetExpedition[KeyExpeditionStatus] = expeditionStatus;
+
+                        if (int.TryParse((string)expedition[KeyExpeditionTimeRemainingRaw],
+                                out var expeditionTimeRemaining))
+                            propertySetExpedition[KeyExpeditionTimeRemaining] =
+                                DateTimeOffset.UtcNow.AddSeconds(expeditionTimeRemaining);
+                        else
+                        {
+                            Log.Warning(
+                                $"Failed to get the remaining expedition time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        } // end if...else
+                    } // end foreach
+                } // end if...else
+
+                var commissionsDailyFinished = (int?)data[KeyCommissionsDailyFinishedRaw];
+
+                if (commissionsDailyFinished is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the finished daily commissions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyCommissionsDailyFinished] = commissionsDailyFinished;
+
+                var commissionsDailyMax = (int?)data[KeyCommissionsDailyMaxRaw];
+
+                if (commissionsDailyMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max daily commissions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyCommissionsDailyMax] = commissionsDailyMax;
+
+                var currencyRealmCurrent = (int?)data[KeyCurrencyRealmCurrentRaw];
+
+                if (currencyRealmCurrent is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the current Realm Currency from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyCurrencyRealmCurrent] = currencyRealmCurrent;
+
+                var currencyRealmMax = (int?)data[KeyCurrencyRealmMaxRaw];
+
+                if (currencyRealmMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max Realm Currency from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyCurrencyRealmMax] = currencyRealmMax;
+
+                if (int.TryParse((string)data[KeyCurrencyRealmTimeRecoveryRaw], out var currencyRealmTimeRecovery))
+                    propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] =
+                        DateTimeOffset.UtcNow.AddSeconds(currencyRealmTimeRecovery);
+                else
+                {
+                    Log.Warning(
+                        $"Failed to get the Realm Currency recovery time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                } // end if...else
+
+                var expeditionsCurrent = (int?)data[KeyExpeditionsCurrentRaw];
+
+                if (expeditionsCurrent is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the current expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyExpeditionsCurrent] = expeditionsCurrent;
+
+                var expeditionsMax = (int?)data[KeyExpeditionsMaxRaw];
+
+                if (expeditionsMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyExpeditionsMax] = expeditionsMax;
+
+                var isDailyCommissionsExtraRewardReceived = (bool?)data[KeyIsDailyCommissionsExtraRewardReceivedRaw];
+
+                if (isDailyCommissionsExtraRewardReceived is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the flag indicating if the daily commission's extra reward is received from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else
+                    propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardReceived] =
+                        isDailyCommissionsExtraRewardReceived;
+
+                var resinOriginalCurrent = (int?)data[KeyResinOriginalCurrentRaw];
+
+                if (resinOriginalCurrent is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the current Original Resin from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyResinOriginalCurrent] = resinOriginalCurrent;
+
+                var resinOriginalDiscountMax = (int?)data[KeyResinOriginalDiscountMaxRaw];
+
+                if (resinOriginalDiscountMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max Original Resin discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyResinOriginalDiscountMax] = resinOriginalDiscountMax;
+
+                var resinOriginalDiscountRemaining = (int?)data[KeyResinOriginalDiscountRemainingRaw];
+
+                if (resinOriginalDiscountRemaining is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the remaining Original Resin discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyResinOriginalDiscountRemaining] = resinOriginalDiscountRemaining;
+
+                var resinOriginalMax = (int?)data[KeyResinOriginalMaxRaw];
+
+                if (resinOriginalMax is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the max Original Resin from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else propertySetRealTimeNotes[KeyResinOriginalMax] = resinOriginalMax;
+
+                if (int.TryParse((string)data[KeyResinOriginalTimeRecoveryRaw], out var resinOriginalTimeRecovery))
+                    propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] =
+                        DateTimeOffset.UtcNow.AddSeconds(resinOriginalTimeRecovery);
+                else
+                {
+                    Log.Warning(
+                        $"Failed to get the Original Resin recovery time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                } // end if...else
+
+                var transformerParametric = data[KeyTransformerParametricRaw];
+
+                if (transformerParametric is null)
+                {
+                    Log.Warning(
+                        $"Failed to get the Parametric Transformer data from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else
+                {
+                    var isParametricTransformerObtained =
+                        (bool?)transformerParametric[KeyIsParametricTransformerObtainedRaw];
+
+                    if (isParametricTransformerObtained is null)
+                    {
+                        Log.Warning(
+                            $"Failed to get the flag indicating if the Parametric Transformer is obtained from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                        propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                    }
+                    else
+                    {
+                        propertySetRealTimeNotes[KeyIsParametricTransformerObtained] = isParametricTransformerObtained;
+
+                        if (isParametricTransformerObtained is false) return;
+
+                        var isParametricTransformerRecoveryTimeReached =
+                            (bool?)transformerParametric[KeyIsParametricTransformerRecoveryTimeReachedRaw];
+
+                        if (isParametricTransformerRecoveryTimeReached is null)
+                        {
+                            Log.Warning(
+                                $"Failed to get the flag indicating if the Parametric Transformer recovery time is reached from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        }
+                        else
+                        {
+                            propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached] =
+                                isParametricTransformerRecoveryTimeReached;
+
+                            if (isParametricTransformerRecoveryTimeReached is true) return;
+
+                            var transformerParametricRecoveryTime =
+                                transformerParametric[KeyTransformerParametricTimeRecoveryRaw];
+
+                            if (transformerParametricRecoveryTime is null)
+                            {
+                                Log.Warning(
+                                    $"Failed to get the Parametric Transformer recovery time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                                propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                            }
+                            else
+                            {
+                                var transformerParametricRecoveryDay =
+                                    (int?)transformerParametricRecoveryTime[KeyDayRaw];
+                                var transformerParametricRecoveryHour =
+                                    (int?)transformerParametricRecoveryTime[KeyHourRaw];
+                                var transformerParametricRecoveryMinute =
+                                    (int?)transformerParametricRecoveryTime[KeyMinuteRaw];
+                                var transformerParametricRecoverySecond =
+                                    (int?)transformerParametricRecoveryTime[KeySecondRaw];
+
+                                if (transformerParametricRecoveryDay is null ||
+                                    transformerParametricRecoveryHour is null ||
+                                    transformerParametricRecoveryMinute is null ||
+                                    transformerParametricRecoverySecond is null)
+                                {
+                                    Log.Warning(
+                                        $"Failed to get the Parametric Transformer recovery time details from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                                }
+                                else
+                                    propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] =
+                                        DateTimeOffset.UtcNow.Add(new TimeSpan((int)transformerParametricRecoveryDay,
+                                            (int)transformerParametricRecoveryHour,
+                                            (int)transformerParametricRecoveryMinute,
+                                            (int)transformerParametricRecoverySecond));
+                            } // end if...else
+                        } // end if...else
+                    } // end if...else
+                } // end if...else
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                Log.Information(httpResponseBody);
+                Log.Error(exception.ToString());
+                propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+            } // end try...catch
+        } // end method GetRealTimeNotesFromApiAsync
 
         /// <summary>
         /// Get the region.
@@ -1101,12 +1799,11 @@ namespace PaimonTray.Helpers
 
             if (containerKeyCharacter is null) return false;
 
-            var characters = ApplicationDataContainerAccounts.Containers[containerKeyAccount]
-                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers;
-
-            var (_, applicationDataContainerCharacter) = characters.FirstOrDefault(
-                keyValuePairCharacter => keyValuePairCharacter.Key == containerKeyCharacter,
-                new KeyValuePair<string, ApplicationDataContainer>(containerKeyCharacter, null));
+            var (_, applicationDataContainerCharacter) = ApplicationDataContainerAccounts
+                .Containers[containerKeyAccount]
+                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
+                .FirstOrDefault(keyValuePairCharacter => keyValuePairCharacter.Key == containerKeyCharacter,
+                    new KeyValuePair<string, ApplicationDataContainer>(containerKeyCharacter, null));
 
             if (applicationDataContainerCharacter is null)
             {
