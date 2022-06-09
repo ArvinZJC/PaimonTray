@@ -59,7 +59,7 @@ namespace PaimonTray.Converters
                     : accountCharacter.NicknameCharacter,
                 ParameterOtherInfoCharacter => accountCharacter.UidCharacter is null
                     ? null
-                    : $"{accountCharacter.Region} | {accountCharacter.Level} | {accountCharacter.UidCharacter}",
+                    : $"{accountCharacter.UidCharacter} | {accountCharacter.Region} | {accountCharacter.Level}",
                 ParameterOtherInfoVisibilityCharacter => accountCharacter.UidCharacter is null
                     ? Visibility.Collapsed
                     : Visibility.Visible,

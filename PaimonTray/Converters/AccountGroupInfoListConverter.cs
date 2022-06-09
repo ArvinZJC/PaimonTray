@@ -126,7 +126,7 @@ namespace PaimonTray.Converters
                 ParameterCookiesCopy => resourceLoader?.GetString("CookiesCopy"),
                 ParameterCookiesView => resourceLoader?.GetString("CookiesView"),
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
-                ParameterOtherInfoAccount => $"{accountCharacter.Server} | {accountCharacter.UidAccount}",
+                ParameterOtherInfoAccount => $"{accountCharacter.UidAccount} | {accountCharacter.Server}",
                 ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding
                     or AccountsHelper.TagStatusUpdating
                     ? Visibility.Visible

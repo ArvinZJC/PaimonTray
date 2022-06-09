@@ -100,14 +100,21 @@
                                                     Grid.Column="1"
                                                     Grid.Row="0"
                                                     Style="{ThemeResource BaseTextBlockStyle}"
-                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
+                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="NoWrap"
+                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
                                                 <TextBlock
                                                     x:Phase="1"
                                                     Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                     Grid.Column="1"
                                                     Grid.Row="1"
+                                                    IsTextSelectionEnabled="True"
                                                     Style="{ThemeResource BodyTextBlockStyle}"
-                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
+                                                    Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    TextWrapping="NoWrap"
+                                                    ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
                                                 <Grid
                                                     x:Phase="2"
                                                     Grid.Column="2"
@@ -218,11 +225,17 @@
                                         <StackPanel Padding="0, 8">
                                             <TextBlock
                                                 Style="{ThemeResource BaseTextBlockStyle}"
-                                                Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
+                                                Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="NoWrap"
+                                                ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                             <TextBlock
                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                 Style="{ThemeResource BodyTextBlockStyle}"
                                                 Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="NoWrap"
+                                                ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
                                                 Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoVisibilityCharacter}" />
                                         </StackPanel>
                                     </ListViewItem>
