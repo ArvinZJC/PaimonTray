@@ -34,7 +34,8 @@
                 <TextBlock
                     x:Name="TextBlockTitle"
                     Grid.Row="0"
-                    Style="{ThemeResource SubtitleTextBlockStyle}" />
+                    Style="{ThemeResource SubtitleTextBlockStyle}"
+                    TextWrapping="NoWrap" />
                 <!-- The content stack panel. -->
                 <StackPanel Grid.Row="1">
                     <!-- The server grid. -->

@@ -245,6 +245,7 @@ namespace PaimonTray.Views
         {
             GridCharacter.Width = ListViewCharacterRealTimeNotes.ActualWidth;
             GridCharacterRealTimeNotes.Width = GridCharacter.Width;
+            TextBlockTitle.MaxWidth = GridCharacter.Width;
         } // end method ListViewCharacterRealTimeNotes_OnSizeChanged
 
         // Handle the main window view model's property changed event.

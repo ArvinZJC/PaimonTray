@@ -171,16 +171,17 @@ namespace PaimonTray.Views
                 ButtonLoginCompleteConfirm.IsEnabled = false;
                 ButtonLoginCompleteConfirm.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
                 GridServer.Width = isServerCn ? 632 : 740;
-                StackPanelLogin.Width = GridServer.Width;
             }
             else
             {
                 GridServer.Width = 400;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
-                StackPanelLogin.Width = GridServer.Width;
                 TextBoxLoginAlternative.Width = GridServer.Width;
             } // end if...else
+
+            StackPanelLogin.Width = GridServer.Width;
+            TextBlockTitle.MaxWidth = GridServer.Width + 12 * 2; // Need consider the server grid's padding.
         } // end method ApplyServerSelection
 
         /// <summary>

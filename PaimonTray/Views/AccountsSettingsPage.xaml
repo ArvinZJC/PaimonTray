@@ -84,6 +84,7 @@
                                                     Grid.Column="0"
                                                     Height="32"
                                                     Tag="{x:Bind Key}"
+                                                    VerticalAlignment="Center"
                                                     Width="32">
                                                     <PersonPicture.ProfilePicture>
                                                         <BitmapImage
@@ -92,12 +93,13 @@
                                                     </PersonPicture.ProfilePicture>
                                                 </PersonPicture>
                                                 <!-- The account's info stack panel. -->
-                                                <StackPanel Grid.Column="1">
+                                                <StackPanel
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center">
                                                     <TextBlock
                                                         x:Phase="1"
                                                         Style="{ThemeResource BaseTextBlockStyle}"
                                                         Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
-                                                        TextTrimming="CharacterEllipsis"
                                                         TextWrapping="NoWrap"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
                                                     <TextBlock
@@ -106,7 +108,6 @@
                                                         IsTextSelectionEnabled="True"
                                                         Style="{ThemeResource BodyTextBlockStyle}"
                                                         Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
-                                                        TextTrimming="CharacterEllipsis"
                                                         TextWrapping="NoWrap"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
                                                 </StackPanel>
@@ -114,6 +115,7 @@
                                                 <Grid
                                                     x:Phase="2"
                                                     Grid.Column="2"
+                                                    VerticalAlignment="Center"
                                                     Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusAddingUpdating}">
                                                     <FontIcon
                                                         Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
@@ -126,6 +128,7 @@
                                                 <Grid
                                                     x:Phase="2"
                                                     Grid.Column="2"
+                                                    VerticalAlignment="Center"
                                                     Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusExpired}">
                                                     <FontIcon
                                                         Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
@@ -138,6 +141,7 @@
                                                 <Grid
                                                     x:Phase="2"
                                                     Grid.Column="2"
+                                                    VerticalAlignment="Center"
                                                     Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusFail}">
                                                     <FontIcon
                                                         Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
@@ -150,6 +154,7 @@
                                                 <Grid
                                                     x:Phase="2"
                                                     Grid.Column="2"
+                                                    VerticalAlignment="Center"
                                                     Visibility="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=statusReady}">
                                                     <FontIcon
                                                         Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
@@ -161,7 +166,9 @@
                                                 </Grid>
                                                 <CommandBar
                                                     DefaultLabelPosition="Collapsed"
-                                                    Grid.Column="3">
+                                                    Grid.Column="3"
+                                                    Margin="-8, 0"
+                                                    VerticalAlignment="Center">
                                                     <AppBarButton
                                                         x:Phase="2"
                                                         AllowFocusOnInteraction="True"
@@ -208,14 +215,12 @@
                                             <TextBlock
                                                 Style="{ThemeResource BaseTextBlockStyle}"
                                                 Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}"
-                                                TextTrimming="CharacterEllipsis"
                                                 TextWrapping="NoWrap"
                                                 ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                             <TextBlock
                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                                 Style="{ThemeResource BodyTextBlockStyle}"
                                                 Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
-                                                TextTrimming="CharacterEllipsis"
                                                 TextWrapping="NoWrap"
                                                 ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
                                                 Visibility="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoVisibilityCharacter}" />
