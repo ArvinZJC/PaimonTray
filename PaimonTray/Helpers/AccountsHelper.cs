@@ -1603,7 +1603,7 @@ namespace PaimonTray.Helpers
                 if (isDailyCommissionsExtraRewardReceived is null)
                 {
                     Log.Warning(
-                        $"Failed to get the flag indicating if the daily commission's extra reward is received from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                        $"Failed to get the flag indicating if the daily commissions' extra reward is received from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
                 else

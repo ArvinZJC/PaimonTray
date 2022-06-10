@@ -237,40 +237,201 @@
                             Margin="-4, 0, 0, 0"
                             SelectionMode="None"
                             SizeChanged="ListViewCharacterRealTimeNotes_OnSizeChanged">
-                            <ListViewItem>
-                                <Grid ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image
-                                        Grid.Column="0"
-                                        Height="32"
-                                        Width="32">
-                                        <Image.Source>
-                                            <BitmapImage
-                                                DecodePixelHeight="32"
-                                                UriSource="{x:Bind helpers:AppConstantsHelper.UriImageResinOriginal}" />
-                                        </Image.Source>
-                                    </Image>
-                                </Grid>
-                            </ListViewItem>
-                            <ListViewItem Content="160/160" />
-                            <ListViewItem Content="Fully replenished                 0m" />
-                            <ListViewItem Content="ETA Today                      10.51" />
-                            <MenuFlyoutSeparator />
-                            <ListViewHeaderItem Content="Expeditions 5/5" />
-                            <ListViewItem Content="Complete                          0m" />
-                            <ListViewItem Content="Complete                          0m" />
-                            <ListViewItem Content="Complete                          0m" />
-                            <ListViewItem Content="Complete                          0m" />
-                            <ListViewItem Content="Complete                          0m" />
-                            <MenuFlyoutSeparator />
-                            <ListViewItem Content="Daily commissions                0/4" />
-                            <ListViewItem Content="Realm currency             2400/2400" />
-                            <ListViewItem Content="Weekly bosses                    3/3" />
-                            <ListViewItem Content="Parametric Transformer             √" />
+                            <!-- The Original Resin grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Height="32"
+                                    Width="32">
+                                    <Image.Source>
+                                        <BitmapImage
+                                            DecodePixelHeight="32"
+                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageResinOriginal}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    MaxWidth="200">
+                                    <TextBlock
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="Original Resin"
+                                        TextWrapping="WrapWholeWords" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                        Text="TODO"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="160/160"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                            <!-- The Realm Currency grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Height="32"
+                                    Width="32">
+                                    <Image.Source>
+                                        <BitmapImage
+                                            DecodePixelHeight="32"
+                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageCurrencyRealm}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    MaxWidth="200">
+                                    <TextBlock
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="Realm Currency"
+                                        TextWrapping="WrapWholeWords" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                        Text="TODO"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="2400/2400"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                            <!-- The daily commissions grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Height="32"
+                                    Width="32">
+                                    <Image.Source>
+                                        <BitmapImage
+                                            DecodePixelHeight="32"
+                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageCommissionsDaily}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    MaxWidth="200">
+                                    <TextBlock
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="Daily commissions"
+                                        TextWrapping="WrapWholeWords" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                        Text="TODO"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="4/4"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                            <!-- The Trounce Domains discount grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Height="32"
+                                    Width="32">
+                                    <Image.Source>
+                                        <BitmapImage
+                                            DecodePixelHeight="32"
+                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageDomainsTrounce}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    MaxWidth="200">
+                                    <TextBlock
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="Enemies of Note"
+                                        TextWrapping="WrapWholeWords" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                        Text="Remaining Original Resin cost-halving opportunities this week"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="3/3"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                            <!-- The Parametric Transformer grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Height="32"
+                                    Width="32">
+                                    <Image.Source>
+                                        <BitmapImage
+                                            DecodePixelHeight="32"
+                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageTransformerParametric}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    MaxWidth="200">
+                                    <TextBlock
+                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                        Text="Parametric Transformer"
+                                        TextWrapping="WrapWholeWords" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                        Text="TODO"
+                                        TextWrapping="WrapWholeWords" />
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="Ready"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
                         </ListView>
                     </Grid>
                 </StackPanel>
