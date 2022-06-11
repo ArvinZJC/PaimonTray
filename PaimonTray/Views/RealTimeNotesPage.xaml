@@ -55,13 +55,15 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock
                                 x:Name="TextBlockNicknameCharacter"
-                                Style="{ThemeResource BaseTextBlockStyle}"
+                                HorizontalAlignment="Left"
+                                Style="{ThemeResource BodyTextBlockStyle}"
                                 TextWrapping="NoWrap" />
                             <TextBlock
                                 x:Name="TextBlockOtherInfoCharacter"
                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                HorizontalAlignment="Left"
                                 IsTextSelectionEnabled="True"
-                                Style="{ThemeResource BodyTextBlockStyle}"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
                                 TextWrapping="NoWrap" />
                         </StackPanel>
                         <Button
@@ -90,9 +92,7 @@
                                                 </GroupStyle.HeaderContainerStyle>
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate x:DataType="models:GroupInfoList">
-                                                        <Grid
-                                                            ColumnSpacing="12"
-                                                            Margin="0, 4, 0, 0">
+                                                        <Grid ColumnSpacing="12">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
                                                                 <ColumnDefinition Width="*" />
@@ -118,15 +118,17 @@
                                                                 VerticalAlignment="Center">
                                                                 <TextBlock
                                                                     x:Phase="1"
-                                                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                                                    HorizontalAlignment="Left"
+                                                                    Style="{ThemeResource BodyTextBlockStyle}"
                                                                     Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
                                                                     TextWrapping="NoWrap"
                                                                     ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
                                                                 <TextBlock
                                                                     x:Phase="1"
                                                                     Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                                    HorizontalAlignment="Left"
                                                                     IsTextSelectionEnabled="True"
-                                                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                                                    Style="{ThemeResource CaptionTextBlockStyle}"
                                                                     Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
                                                                     TextWrapping="NoWrap"
                                                                     ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
@@ -195,13 +197,15 @@
                                                     <!-- The character's info stack panel. -->
                                                     <StackPanel Padding="0, 8">
                                                         <TextBlock
-                                                            Style="{ThemeResource BaseTextBlockStyle}"
+                                                            HorizontalAlignment="Left"
+                                                            Style="{ThemeResource BodyTextBlockStyle}"
                                                             Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}"
                                                             TextWrapping="NoWrap"
                                                             ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                                         <TextBlock
                                                             Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                            Style="{ThemeResource BodyTextBlockStyle}"
+                                                            HorizontalAlignment="Left"
+                                                            Style="{ThemeResource CaptionTextBlockStyle}"
                                                             Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
                                                             TextWrapping="NoWrap"
                                                             ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
@@ -236,15 +240,92 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <ListView
-                            x:Name="ListViewCharacterRealTimeNotes"
+                        <Grid
+                            x:Name="GridTimeUpdateLast"
+                            ColumnSpacing="12"
                             Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            Padding="12, 8, 12, 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                Grid.Column="0"
+                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                Text="Last updated: XXX"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Center" />
+                            <!-- The real-time notes' status grids. -->
+                            <Grid
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Visibility="Visible">
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
+                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconForeground}"
+                                    Glyph="{ThemeResource InfoBarInformationalIconGlyph}"
+                                    ToolTipService.ToolTip="TODO" />
+                            </Grid>
+                            <Grid
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed">
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
+                                    Glyph="{ThemeResource InfoBarWarningIconGlyph}"
+                                    ToolTipService.ToolTip="TODO" />
+                            </Grid>
+                            <Grid
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed">
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
+                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarErrorSeverityIconForeground}"
+                                    Glyph="{ThemeResource InfoBarErrorIconGlyph}"
+                                    ToolTipService.ToolTip="TODO" />
+                            </Grid>
+                            <Grid
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed">
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
+                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarSuccessSeverityIconForeground}"
+                                    Glyph="{ThemeResource InfoBarSuccessIconGlyph}"
+                                    ToolTipService.ToolTip="TODO" />
+                            </Grid>
+                        </Grid>
+                        <!-- The character's real-time notes' general section list view. -->
+                        <ListView
+                            x:Name="ListViewCharacterRealTimeNotesGeneral"
+                            Grid.Row="1"
                             HorizontalAlignment="Left"
                             Margin="-4, 0, 0, 0"
-                            MaxWidth="300"
+                            MaxWidth="340"
                             SelectionMode="None"
-                            SizeChanged="ListViewCharacterRealTimeNotes_OnSizeChanged">
+                            SizeChanged="ListViewCharacterRealTimeNotesGeneral_OnSizeChanged">
                             <!-- The Original Resin grid. -->
                             <Grid
                                 ColumnSpacing="12"
@@ -269,7 +350,6 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center">
                                     <TextBlock
-                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Original Resin"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
@@ -280,7 +360,8 @@
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    MaxWidth="100"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
                                     Text="160/160"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />
@@ -309,7 +390,6 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center">
                                     <TextBlock
-                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Realm Currency"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
@@ -320,7 +400,8 @@
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    MaxWidth="100"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
                                     Text="2400/2400"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />
@@ -349,7 +430,6 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center">
                                     <TextBlock
-                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Daily commissions"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
@@ -360,12 +440,13 @@
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    MaxWidth="100"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
                                     Text="4/4"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />
                             </Grid>
-                            <!-- The Trounce Domains discount grid. -->
+                            <!-- The Trounce Domains discounts grid. -->
                             <Grid
                                 ColumnSpacing="12"
                                 Padding="0, 8">
@@ -389,7 +470,6 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center">
                                     <TextBlock
-                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Enemies of Note"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
@@ -400,7 +480,8 @@
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    MaxWidth="100"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
                                     Text="3/3"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />
@@ -429,7 +510,6 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center">
                                     <TextBlock
-                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Parametric Transformer"
                                         TextWrapping="WrapWholeWords" />
                                     <TextBlock
@@ -440,18 +520,22 @@
                                 </StackPanel>
                                 <TextBlock
                                     Grid.Column="2"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
-                                    Text="Ready"
+                                    MaxWidth="100"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="Cooldown in progress"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />
                             </Grid>
                         </ListView>
+                        <!-- The character's real-time notes' expeditions section list view. -->
                         <ListView
-                            Grid.Row="1"
+                            x:Name="ListViewCharacterRealTimeNotesExpeditions"
+                            Grid.Row="2"
                             Margin="-4, 0, 0, 0"
-                            MaxWidth="300"
                             SelectionMode="None">
-                            <ListViewHeaderItem HorizontalContentAlignment="Stretch" Margin="-12, 0">
+                            <ListViewHeaderItem
+                                HorizontalContentAlignment="Stretch"
+                                Margin="-12, 0">
                                 <!-- The expeditions grid. -->
                                 <Grid
                                     ColumnSpacing="12">
@@ -461,11 +545,13 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock
                                         Grid.Column="0"
+                                        Style="{ThemeResource BodyTextBlockStyle}"
                                         Text="Expeditions"
                                         TextWrapping="WrapWholeWords"
                                         VerticalAlignment="Center" />
                                     <TextBlock
                                         Grid.Column="1"
+                                        Style="{ThemeResource BaseTextBlockStyle}"
                                         Text="5/5"
                                         TextWrapping="WrapWholeWords"
                                         VerticalAlignment="Center" />
@@ -482,6 +568,7 @@
                                 <PersonPicture
                                     Grid.Column="0"
                                     Height="32"
+                                    VerticalAlignment="Center"
                                     Width="32">
                                     <PersonPicture.ProfilePicture>
                                         <BitmapImage DecodePixelHeight="32" />
@@ -489,8 +576,31 @@
                                 </PersonPicture>
                                 <TextBlock
                                     Grid.Column="1"
-                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                    Style="{ThemeResource BodyTextBlockStyle}"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    Text="TODO"
+                                    TextWrapping="WrapWholeWords"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                            <!-- The expedition grid. -->
+                            <Grid
+                                ColumnSpacing="12"
+                                Padding="0, 8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <PersonPicture
+                                    Grid.Column="0"
+                                    Height="32"
+                                    VerticalAlignment="Center"
+                                    Width="32">
+                                    <PersonPicture.ProfilePicture>
+                                        <BitmapImage DecodePixelHeight="32" />
+                                    </PersonPicture.ProfilePicture>
+                                </PersonPicture>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
                                     Text="TODO"
                                     TextWrapping="WrapWholeWords"
                                     VerticalAlignment="Center" />

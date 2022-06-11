@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using PaimonTray.Models;
+using PaimonTray.Models.RealTimeNotes;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -195,22 +196,22 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The max Trounce Domains discount key.
         /// </summary>
-        private const string KeyDomainsTrounceDiscountMax = "domainsTrounceDiscountMax";
+        private const string KeyDomainsTrounceDiscountsMax = "domainsTrounceDiscountsMax";
 
         /// <summary>
         /// The max Trounce Domains discount key for processing JSON data.
         /// </summary>
-        private const string KeyDomainsTrounceDiscountMaxRaw = "resin_discount_num_limit";
+        private const string KeyDomainsTrounceDiscountsMaxRaw = "resin_discount_num_limit";
 
         /// <summary>
         /// The remaining Trounce Domains discount key.
         /// </summary>
-        private const string KeyDomainsTrounceDiscountRemaining = "domainsTrounceDiscountRemaining";
+        private const string KeyDomainsTrounceDiscountsRemaining = "domainsTrounceDiscountsRemaining";
 
         /// <summary>
         /// The remaining Trounce Domains discount key for processing JSON data.
         /// </summary>
-        private const string KeyDomainsTrounceDiscountRemainingRaw = "remain_resin_discount_num";
+        private const string KeyDomainsTrounceDiscountsRemainingRaw = "remain_resin_discount_num";
 
         /// <summary>
         /// The remaining expedition time key.
@@ -268,14 +269,14 @@ namespace PaimonTray.Helpers
         private const string KeyIsEnabled = "isEnabled";
 
         /// <summary>
-        /// The key of the flag indicating if the daily commissions' extra reward is received.
+        /// The key of the flag indicating if the daily commissions' extra reward is claimed.
         /// </summary>
-        private const string KeyIsDailyCommissionsExtraRewardReceived = "isDailyCommissionsExtraRewardReceived";
+        private const string KeyIsDailyCommissionsExtraRewardClaimed = "isDailyCommissionsExtraRewardClaimed";
 
         /// <summary>
-        /// The key of the flag indicating if the daily commissions' extra reward is received, for processing JSON data.
+        /// The key of the flag indicating if the daily commissions' extra reward is claimed, for processing JSON data.
         /// </summary>
-        private const string KeyIsDailyCommissionsExtraRewardReceivedRaw = "is_extra_task_reward_received";
+        private const string KeyIsDailyCommissionsExtraRewardClaimedRaw = "is_extra_task_reward_received";
 
         /// <summary>
         /// The key of the flag indicating if the Parametric Transformer is obtained.
@@ -407,6 +408,8 @@ namespace PaimonTray.Helpers
         /// The status key.
         /// </summary>
         public const string KeyStatus = "status";
+
+        private const string KeyTimeUpdateLast = "timeUpdateLast";
 
         /// <summary>
         /// The Parametric Transformer key for processing JSON data.
@@ -789,14 +792,13 @@ namespace PaimonTray.Helpers
                 accountCharacters.AddRange(from keyValuePairCharacter in applicationDataContainersCharacter
                     orderby keyValuePairCharacter.Key // Order by the character's UID.
                     let propertySetCharacter = keyValuePairCharacter.Value.Values
+                    let level = propertySetCharacter[KeyLevel]
                     select new AccountCharacter
                     {
                         Cookies = cookies,
-                        IsEnabled = (bool)propertySetCharacter[KeyIsEnabled],
+                        IsEnabled = propertySetCharacter[KeyIsEnabled] as bool? ?? true,
                         Key = containerKeyAccount,
-                        Level = propertySetCharacter[KeyLevel] is null
-                            ? $"{PrefixLevel}{AppConstantsHelper.Unknown}"
-                            : $"{PrefixLevel}{propertySetCharacter[KeyLevel]}",
+                        Level = level is null ? $"{PrefixLevel}{AppConstantsHelper.Unknown}" : $"{PrefixLevel}{level}",
                         NicknameAccount = nicknameAccount,
                         NicknameCharacter = propertySetCharacter[KeyNickname] as string,
                         Region = GetRegion(propertySetCharacter[KeyRegion] as string),
@@ -1339,7 +1341,164 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         // TODO
-        public async void GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter)
+        private (string, string, ImmutableList<GeneralNote>) GetRealTimeNotes(string containerKeyAccount,
+            string containerKeyCharacter)
+        {
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return (null, null, null);
+
+            if (containerKeyCharacter is null) return (null, null, null);
+
+            var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
+            var (_, applicationDataContainerCharacter) = applicationDataContainerAccount
+                .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
+                .FirstOrDefault(keyValuePairCharacter => keyValuePairCharacter.Key == containerKeyCharacter,
+                    new KeyValuePair<string, ApplicationDataContainer>(containerKeyCharacter, null));
+
+            if (applicationDataContainerCharacter is null)
+            {
+                Log.Warning(
+                    $"Failed to find the specific account's character (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                return (null, null, null);
+            } // end if
+
+            var applicationDataContainerRealTimeNotes =
+                applicationDataContainerCharacter.CreateContainer(ContainerKeyRealTimeNotes,
+                    ApplicationDataCreateDisposition
+                        .Always); // Ensure the real-time notes application data container first.
+            var applicationDataContainerExpeditions =
+                applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
+                    ApplicationDataCreateDisposition.Always);
+            var colonAndEstimated =
+                $"{_resourceLoader.GetString("Colon")}{_resourceLoader.GetString("Estimated")} "; // The resource string for ": est. ".
+            string commissionsDailyExplanation;
+            var currencyRealmExplanation = _resourceLoader.GetString("CurrencyRealmLimitReached");
+            var generalNotes = new List<GeneralNote>();
+            var propertySetRealTimeNotes =
+                applicationDataContainerRealTimeNotes.Values; // Get the real-time notes property set first.
+            var commissionsDailyFinished = propertySetRealTimeNotes[KeyCommissionsDailyFinished];
+            var commissionsDailyMax = propertySetRealTimeNotes[KeyCommissionsDailyMax];
+            var currencyRealmCurrent = propertySetRealTimeNotes[KeyCurrencyRealmCurrent];
+            var currencyRealmMax = propertySetRealTimeNotes[KeyCurrencyRealmMax];
+            var domainsTrounceDiscountsMax = propertySetRealTimeNotes[KeyDomainsTrounceDiscountsMax];
+            var domainsTrounceDiscountsRemaining = propertySetRealTimeNotes[KeyDomainsTrounceDiscountsRemaining];
+            var isDailyCommissionsExtraRewardClaimed =
+                propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardClaimed];
+            var isParametricTransformerObtained = propertySetRealTimeNotes[KeyIsParametricTransformerObtained];
+            var isParametricTransformerRecoveryTimeReached =
+                propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached];
+            var resinOriginalCurrent = propertySetRealTimeNotes[KeyResinOriginalCurrent];
+            var resinOriginalExplanation = _resourceLoader.GetString("ResinOriginalReplenishedFully");
+            var resinOriginalMax = propertySetRealTimeNotes[KeyResinOriginalMax];
+            string transformerParametricExplanation;
+            string transformerParametricStatus;
+            
+            if (commissionsDailyFinished is null || commissionsDailyMax is null)
+                commissionsDailyExplanation = AppConstantsHelper.Unknown;
+            else if (commissionsDailyFinished == commissionsDailyMax)
+                commissionsDailyExplanation = commissionsDailyMax is 0
+                    ? _resourceLoader.GetString("CommissionsDailyLocked")
+                    : _resourceLoader.GetString(isDailyCommissionsExtraRewardClaimed switch
+                    {
+                        null => "CommissionsDailyRewardExtraUnknown",
+                        true => "CommissionsDailyRewardExtraClaimed",
+                        _ => "CommissionsDailyRewardExtraUnclaimed"
+                    });
+            else commissionsDailyExplanation = _resourceLoader.GetString("CommissionsDailyUncompleted");
+
+            if (currencyRealmCurrent is not null && currencyRealmMax is not null &&
+                currencyRealmCurrent == currencyRealmMax)
+            {
+                if (currencyRealmMax is 0) currencyRealmExplanation = _resourceLoader.GetString("CurrencyRealmLocked");
+            }
+            else currencyRealmExplanation += colonAndEstimated; // TODO
+
+            if (!(resinOriginalCurrent is not null && resinOriginalMax is not null &&
+                  resinOriginalCurrent == resinOriginalMax))
+                resinOriginalExplanation += colonAndEstimated; // TODO
+
+            switch (isParametricTransformerObtained)
+            {
+                case null:
+                    transformerParametricExplanation = AppConstantsHelper.Unknown;
+                    transformerParametricStatus = AppConstantsHelper.Unknown;
+                    break;
+
+                case true:
+                    transformerParametricExplanation = _resourceLoader.GetString("TransformerParametricUsedAgain");
+
+                    switch (isParametricTransformerRecoveryTimeReached)
+                    {
+                        case null:
+                            transformerParametricExplanation += $"{colonAndEstimated}{AppConstantsHelper.Unknown}";
+                            transformerParametricStatus = AppConstantsHelper.Unknown;
+                            break;
+
+                        case true:
+                            transformerParametricStatus = _resourceLoader.GetString("TransformerParametricReady");
+                            break;
+
+                        default:
+                            transformerParametricExplanation += colonAndEstimated; // TODO
+                            transformerParametricStatus = _resourceLoader.GetString("TransformerParametricCooldown");
+                            break;
+                    } // end switch-case
+
+                    break;
+
+                default:
+                    transformerParametricExplanation = _resourceLoader.GetString("TransformerParametricLocked");
+                    transformerParametricStatus = _resourceLoader.GetString("StatusLocked");
+                    break;
+            } // end switch-case
+
+            generalNotes.Add(new GeneralNote
+            {
+                Explanation = resinOriginalExplanation,
+                Status = GetRealTimeNoteStatus(resinOriginalCurrent, resinOriginalMax),
+                Title = _resourceLoader.GetString("ResinOriginal"),
+                UrlImage = AppConstantsHelper.UriImageResinOriginal
+            }); // 1.1. Original Resin.
+            generalNotes.Add(new GeneralNote
+            {
+                Explanation = currencyRealmExplanation,
+                Status = GetRealTimeNoteStatus(currencyRealmCurrent, currencyRealmMax),
+                Title = _resourceLoader.GetString("CurrencyRealm"),
+                UrlImage = AppConstantsHelper.UriImageCurrencyRealm
+            }); // 1.2. Realm Currency.
+            generalNotes.Add(new GeneralNote
+            {
+                Explanation = commissionsDailyExplanation,
+                Status = GetRealTimeNoteStatus(commissionsDailyFinished, commissionsDailyMax),
+                Title = _resourceLoader.GetString("CommissionsDaily"),
+                UrlImage = AppConstantsHelper.UriImageCommissionsDaily
+            }); // 1.3. Daily commissions.
+            generalNotes.Add(new GeneralNote
+            {
+                Explanation = _resourceLoader.GetString("DomainsTrounceDiscountsExplanation"),
+                Status = GetRealTimeNoteStatus(domainsTrounceDiscountsRemaining, domainsTrounceDiscountsMax),
+                Title = _resourceLoader.GetString("DomainsTrounceDiscounts"),
+                UrlImage = AppConstantsHelper.UriImageDomainsTrounce
+            }); // 1.4. Trounce Domains discounts.
+            generalNotes.Add(new GeneralNote
+            {
+                Explanation = transformerParametricExplanation,
+                Status = transformerParametricStatus,
+                Title = _resourceLoader.GetString("TransformerParametric"),
+                UrlImage = AppConstantsHelper.UriImageTransformerParametric
+            }); // 1.5. Parametric Transformer.
+
+            // TODO: expeditions
+
+            return (null, propertySetRealTimeNotes[KeyStatus] as string, generalNotes.ToImmutableList()); // TODO
+        } // end method GetRealTimeNotes
+
+        /// <summary>
+        /// Get the real-time notes from the API.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="containerKeyCharacter">The character container key.</param>
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -1364,8 +1523,8 @@ namespace PaimonTray.Helpers
             var propertySetAccount = applicationDataContainerAccount.Values;
             var propertySetRealTimeNotes = applicationDataContainerRealTimeNotes.Values;
 
-            // TODO: store last updated time
             propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
+            propertySetRealTimeNotes[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
             if (propertySetAccount[KeyStatus] is not TagStatusReady)
             {
@@ -1444,7 +1603,7 @@ namespace PaimonTray.Helpers
 
                 var expeditions = data[KeyExpeditionsRaw];
 
-                if (expeditions is null || expeditions.GetType() != typeof(JsonArray))
+                if (expeditions is null or not JsonArray)
                 {
                     Log.Warning(
                         $"Failed to get the expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
@@ -1558,25 +1717,25 @@ namespace PaimonTray.Helpers
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 } // end if...else
 
-                var domainsTrounceDiscountMax = (int?)data[KeyDomainsTrounceDiscountMaxRaw];
+                var domainsTrounceDiscountsMax = (int?)data[KeyDomainsTrounceDiscountsMaxRaw];
 
-                if (domainsTrounceDiscountMax is null)
+                if (domainsTrounceDiscountsMax is null)
                 {
                     Log.Warning(
-                        $"Failed to get the max Trounce Domains discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                        $"Failed to get the max Trounce Domains discounts from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
-                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountMax] = domainsTrounceDiscountMax;
+                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountsMax] = domainsTrounceDiscountsMax;
 
-                var domainsTrounceDiscountRemaining = (int?)data[KeyDomainsTrounceDiscountRemainingRaw];
+                var domainsTrounceDiscountsRemaining = (int?)data[KeyDomainsTrounceDiscountsRemainingRaw];
 
-                if (domainsTrounceDiscountRemaining is null)
+                if (domainsTrounceDiscountsRemaining is null)
                 {
                     Log.Warning(
-                        $"Failed to get the remaining Trounce Domains discount from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                        $"Failed to get the remaining Trounce Domains discounts from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
-                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountRemaining] = domainsTrounceDiscountRemaining;
+                else propertySetRealTimeNotes[KeyDomainsTrounceDiscountsRemaining] = domainsTrounceDiscountsRemaining;
 
                 var expeditionsCurrent = (int?)data[KeyExpeditionsCurrentRaw];
 
@@ -1598,17 +1757,17 @@ namespace PaimonTray.Helpers
                 }
                 else propertySetRealTimeNotes[KeyExpeditionsMax] = expeditionsMax;
 
-                var isDailyCommissionsExtraRewardReceived = (bool?)data[KeyIsDailyCommissionsExtraRewardReceivedRaw];
+                var isDailyCommissionsExtraRewardClaimed = (bool?)data[KeyIsDailyCommissionsExtraRewardClaimedRaw];
 
-                if (isDailyCommissionsExtraRewardReceived is null)
+                if (isDailyCommissionsExtraRewardClaimed is null)
                 {
                     Log.Warning(
-                        $"Failed to get the flag indicating if the daily commissions' extra reward is received from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                        $"Failed to get the flag indicating if the daily commissions' extra reward is claimed from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
                 else
-                    propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardReceived] =
-                        isDailyCommissionsExtraRewardReceived;
+                    propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardClaimed] =
+                        isDailyCommissionsExtraRewardClaimed;
 
                 var resinOriginalCurrent = (int?)data[KeyResinOriginalCurrentRaw];
 
@@ -1720,6 +1879,9 @@ namespace PaimonTray.Helpers
                         } // end if...else
                     } // end if...else
                 } // end if...else
+
+                if (propertySetRealTimeNotes[KeyStatus] is TagStatusUpdating)
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusReady;
             }
             catch (Exception exception)
             {
@@ -1730,6 +1892,20 @@ namespace PaimonTray.Helpers
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
             } // end try...catch
         } // end method GetRealTimeNotesFromApiAsync
+
+        /// <summary>
+        /// Get the real-time note's status in the format of "current/max" or indicating not yet unlocked.
+        /// </summary>
+        /// <param name="valueCurrent">The current value.</param>
+        /// <param name="valueMax">The max value.</param>
+        /// <returns>The real-time note's status.</returns>
+        private string GetRealTimeNoteStatus(object valueCurrent, object valueMax)
+        {
+            var current = valueCurrent is null or not int ? AppConstantsHelper.Unknown : valueCurrent;
+            var max = valueMax is null or not int ? AppConstantsHelper.Unknown : valueMax;
+
+            return current is 0 && max is 0 ? _resourceLoader.GetString("StatusLocked") : $"{current}/{max}";
+        } // end method GetRealTimeNoteStatus
 
         /// <summary>
         /// Get the region.
@@ -1813,7 +1989,7 @@ namespace PaimonTray.Helpers
 
             var propertySetCharacter = applicationDataContainerCharacter.Values;
 
-            if ((bool)propertySetCharacter[KeyIsEnabled] == shouldEnableCharacter) return false;
+            if (propertySetCharacter[KeyIsEnabled] as bool? == shouldEnableCharacter) return false;
 
             propertySetCharacter[KeyIsEnabled] = shouldEnableCharacter;
             return true;

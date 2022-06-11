@@ -24,6 +24,31 @@ namespace PaimonTray.Helpers
         public const string ContainerKeySettings = "settings";
 
         /// <summary>
+        /// The default of the setting for always using the alternative login method.
+        /// </summary>
+        public const bool DefaultLoginAlternativeAlways = false;
+
+        /// <summary>
+        /// The default of the setting for showing the main window when the app starts.
+        /// </summary>
+        public const bool DefaultMainWindowShowWhenAppStarts = false;
+
+        /// <summary>
+        /// The default of the setting for the main window's top navigation pane.
+        /// </summary>
+        public const bool DefaultMainWindowTopNavigationPane = false;
+
+        /// <summary>
+        /// The default of the setting for clearing notifications when exiting the app.
+        /// </summary>
+        public const bool DefaultNotificationClear = true;
+
+        /// <summary>
+        /// The default of the greeting notification setting.
+        /// </summary>
+        public const bool DefaultNotificationGreeting = true;
+
+        /// <summary>
         /// The language key.
         /// </summary>
         public const string KeyLanguage = "language";
@@ -71,7 +96,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The simplified Chinese language tag.
         /// </summary>
-        public const string TagLanguageZhCn = "zh-CN";
+        public const string TagLanguageZhHans = "zh-Hans";
 
         /// <summary>
         /// The system default tag.
@@ -184,7 +209,7 @@ namespace PaimonTray.Helpers
         /// <returns>The main window's navigation view's pane display mode.</returns>
         public NavigationViewPaneDisplayMode DecideMainWindowNavigationViewPaneDisplayMode()
         {
-            return (bool)PropertySetSettings[KeyMainWindowTopNavigationPane]
+            return PropertySetSettings[KeyMainWindowTopNavigationPane] is true
                 ? NavigationViewPaneDisplayMode.Top
                 : NavigationViewPaneDisplayMode.LeftCompact;
         } // end method DecideMainWindowNavigationViewPaneDisplayMode
@@ -234,33 +259,34 @@ namespace PaimonTray.Helpers
         {
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
                 (PropertySetSettings[KeyLanguage] is not TagLanguageEn &&
-                 PropertySetSettings[KeyLanguage] is not TagLanguageZhCn &&
+                 PropertySetSettings[KeyLanguage] is not TagLanguageZhHans &&
                  PropertySetSettings[KeyLanguage] is not TagSystem))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 
             if (!PropertySetSettings.ContainsKey(KeyLoginAlternativeAlways) ||
                 PropertySetSettings[KeyLoginAlternativeAlways] is not bool)
                 InitialiseSetting(KeyLoginAlternativeAlways,
-                    "The setting for always using the alternative login method", false);
+                    "The setting for always using the alternative login method", DefaultLoginAlternativeAlways);
 
             if (!PropertySetSettings.ContainsKey(KeyMainWindowShowWhenAppStarts) ||
                 PropertySetSettings[KeyMainWindowShowWhenAppStarts] is not bool)
                 InitialiseSetting(KeyMainWindowShowWhenAppStarts,
-                    "The setting for showing the main window when the app starts", false);
+                    "The setting for showing the main window when the app starts", DefaultMainWindowShowWhenAppStarts);
 
             if (!PropertySetSettings.ContainsKey(KeyMainWindowTopNavigationPane) ||
                 PropertySetSettings[KeyMainWindowTopNavigationPane] is not bool)
                 InitialiseSetting(KeyMainWindowTopNavigationPane,
-                    "The setting for the main window's top navigation pane", false);
+                    "The setting for the main window's top navigation pane", DefaultMainWindowTopNavigationPane);
 
             if (!PropertySetSettings.ContainsKey(KeyNotificationClear) ||
                 PropertySetSettings[KeyNotificationClear] is not bool)
                 InitialiseSetting(KeyNotificationClear, "The setting for clearing notifications when exiting the app",
-                    true);
+                    DefaultNotificationClear);
 
             if (!PropertySetSettings.ContainsKey(KeyNotificationGreeting) ||
                 PropertySetSettings[KeyNotificationGreeting] is not bool)
-                InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting", true);
+                InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting",
+                    DefaultNotificationGreeting);
 
             if (!PropertySetSettings.ContainsKey(KeyServerDefault) ||
                 (PropertySetSettings[KeyServerDefault] is not AccountsHelper.TagServerCn &&

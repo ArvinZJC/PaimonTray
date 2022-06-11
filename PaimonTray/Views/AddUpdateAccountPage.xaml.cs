@@ -191,7 +191,7 @@ namespace PaimonTray.Views
         {
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
-            if ((bool)propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways]) UseAlternativeLoginMethod(true);
+            if (propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] is true) UseAlternativeLoginMethod(true);
             else
                 try
                 {

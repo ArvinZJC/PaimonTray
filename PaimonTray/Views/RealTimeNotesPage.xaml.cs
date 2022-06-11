@@ -240,13 +240,15 @@ namespace PaimonTray.Views
             } // end if...else
         } // end method ListViewAccountGroups_OnSelectionChanged
 
-        // Handle the character's real-time notes list view's size changed event.
-        private void ListViewCharacterRealTimeNotes_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        // Handle the character's real-time notes' general section list view's size changed event.
+        private void ListViewCharacterRealTimeNotesGeneral_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            GridCharacter.Width = ListViewCharacterRealTimeNotes.ActualWidth;
+            GridCharacter.Width = ListViewCharacterRealTimeNotesGeneral.ActualWidth;
             GridCharacterRealTimeNotes.Width = GridCharacter.Width;
+            GridTimeUpdateLast.MaxWidth = GridCharacter.Width;
+            ListViewCharacterRealTimeNotesExpeditions.MaxWidth = GridCharacter.Width;
             TextBlockTitle.MaxWidth = GridCharacter.Width;
-        } // end method ListViewCharacterRealTimeNotes_OnSizeChanged
+        } // end method ListViewCharacterRealTimeNotesGeneral_OnSizeChanged
 
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)

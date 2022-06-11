@@ -57,7 +57,7 @@ namespace PaimonTray.ViewModels
                 {
                     if (_mainWindow is null) return;
 
-                    _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAddUpdateAccount;
+                    _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyAccountAddUpdate;
 
                     if (!_mainWindow.Visible) ToggleMainWindowVisibilityCommand.Execute(null);
                 };
@@ -81,8 +81,8 @@ namespace PaimonTray.ViewModels
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
-                    if ((bool)ApplicationData.Current.LocalSettings.Containers[SettingsHelper.ContainerKeySettings]
-                            .Values[SettingsHelper.KeyNotificationClear]) ToastNotificationManager.History.Clear();
+                    if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationClear] is true)
+                        ToastNotificationManager.History.Clear();
 
                     Log.CloseAndFlush();
                     Application.Current.Exit();

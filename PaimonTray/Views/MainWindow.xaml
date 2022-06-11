@@ -69,7 +69,7 @@
                     IsSelected="True" />
                 <NavigationViewItem
                     x:FieldModifier="public"
-                    x:Name="NavigationViewItemBodyAddUpdateAccount"
+                    x:Name="NavigationViewItemBodyAccountAddUpdate"
                     Icon="Add" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>

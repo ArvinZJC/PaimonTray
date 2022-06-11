@@ -163,11 +163,11 @@ namespace PaimonTray.Views
             TaskbarIconApp.ToolTipText =
                 $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
-            ToolTipService.SetToolTip(NavigationViewItemBodyAddUpdateAccount,
+            ToolTipService.SetToolTip(NavigationViewItemBodyAccountAddUpdate,
                 resourceLoader.GetString("AccountAddUpdate"));
             ToolTipService.SetToolTip(NavigationViewItemBodyRealTimeNotes, resourceLoader.GetString("RealTimeNotes"));
 
-            if ((bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting])
+            if (_propertySetSettings[SettingsHelper.KeyNotificationGreeting] is true)
                 new ToastContentBuilder()
                     .AddText(resourceLoader.GetString("NotificationGreetingTitle"))
                     .AddText(resourceLoader.GetString("NotificationGreetingContent"))
@@ -223,7 +223,7 @@ namespace PaimonTray.Views
             Activate(); // Activate the window here to prevent being flicked when moving and resizing.
             _isFirstLoad = false;
 
-            if (!(bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts])
+            if (_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] is false)
                 _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 
@@ -256,7 +256,7 @@ namespace PaimonTray.Views
 
             if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
 
-            if (navigationViewBodySelectedItem == NavigationViewItemBodyAddUpdateAccount)
+            if (navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate)
                 pageType = typeof(AddUpdateAccountPage);
             else
             {

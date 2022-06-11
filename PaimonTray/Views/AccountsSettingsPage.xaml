@@ -69,9 +69,7 @@
                                     </GroupStyle.HeaderContainerStyle>
                                     <GroupStyle.HeaderTemplate>
                                         <DataTemplate x:DataType="models:GroupInfoList">
-                                            <Grid
-                                                ColumnSpacing="12"
-                                                Margin="0, 4, 0, 0">
+                                            <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
@@ -98,15 +96,17 @@
                                                     VerticalAlignment="Center">
                                                     <TextBlock
                                                         x:Phase="1"
-                                                        Style="{ThemeResource BaseTextBlockStyle}"
+                                                        HorizontalAlignment="Left"
+                                                        Style="{ThemeResource BodyTextBlockStyle}"
                                                         Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}"
                                                         TextWrapping="NoWrap"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=nicknameAccount}" />
                                                     <TextBlock
                                                         x:Phase="1"
                                                         Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                        HorizontalAlignment="Left"
                                                         IsTextSelectionEnabled="True"
-                                                        Style="{ThemeResource BodyTextBlockStyle}"
+                                                        Style="{ThemeResource CaptionTextBlockStyle}"
                                                         Text="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}"
                                                         TextWrapping="NoWrap"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=otherInfoAccount}" />
@@ -213,13 +213,15 @@
                                         <!-- The character's info stack panel. -->
                                         <StackPanel Padding="0, 8">
                                             <TextBlock
-                                                Style="{ThemeResource BaseTextBlockStyle}"
+                                                HorizontalAlignment="Left"
+                                                Style="{ThemeResource BodyTextBlockStyle}"
                                                 Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}"
                                                 TextWrapping="NoWrap"
                                                 ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=nicknameCharacter}" />
                                             <TextBlock
                                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                                Style="{ThemeResource BodyTextBlockStyle}"
+                                                HorizontalAlignment="Left"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
                                                 Text="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"
                                                 TextWrapping="NoWrap"
                                                 ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountCharacterConverter}, ConverterParameter=otherInfoCharacter}"

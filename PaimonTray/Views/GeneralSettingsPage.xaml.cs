@@ -53,7 +53,7 @@ namespace PaimonTray.Views
             CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
             ComboBoxItemLanguageEn.Content = resourceLoader.GetString("LanguageEn");
             ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
-            ComboBoxItemLanguageZhCn.Content = resourceLoader.GetString("LanguageZhCn");
+            ComboBoxItemLanguageZhHans.Content = resourceLoader.GetString("LanguageZhHans");
             ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
             ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
             ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
@@ -151,12 +151,15 @@ namespace PaimonTray.Views
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             // Show the settings' selection.
-            CheckBoxNotificationClear.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationClear];
-            CheckBoxNotificationGreeting.IsChecked = (bool)_propertySetSettings[SettingsHelper.KeyNotificationGreeting];
+            CheckBoxNotificationClear.IsChecked = _propertySetSettings[SettingsHelper.KeyNotificationClear] as bool? ??
+                                                  SettingsHelper.DefaultNotificationClear;
+            CheckBoxNotificationGreeting.IsChecked =
+                _propertySetSettings[SettingsHelper.KeyNotificationGreeting] as bool? ??
+                SettingsHelper.DefaultNotificationGreeting;
             ComboBoxLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
             {
                 SettingsHelper.TagLanguageEn => ComboBoxItemLanguageEn,
-                SettingsHelper.TagLanguageZhCn => ComboBoxItemLanguageZhCn,
+                SettingsHelper.TagLanguageZhHans => ComboBoxItemLanguageZhHans,
                 SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
                 _ => null
             };
@@ -168,9 +171,11 @@ namespace PaimonTray.Views
                 _ => null
             };
             ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts];
+                _propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
+                SettingsHelper.DefaultMainWindowShowWhenAppStarts;
             ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane];
+                _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] as bool? ??
+                SettingsHelper.DefaultMainWindowTopNavigationPane;
         } // end method GridRoot_OnLoaded
 
         // Handle the click event of the link of the setting for configuring launch on Windows startup.

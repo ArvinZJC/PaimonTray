@@ -176,7 +176,7 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes. If any account's status is abnormal, you can add/update the account again.</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's status is abnormal, you can add/update the account again)</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>Remove all accounts?</value>
@@ -209,6 +209,28 @@
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="Colon" xml:space="preserve">
+    <value>: </value>
+    <comment>Include a space if necessary.</comment>
+  </data>
+  <data name="CommissionsDaily" xml:space="preserve">
+    <value>Daily commissions</value>
+  </data>
+  <data name="CommissionsDailyLocked" xml:space="preserve">
+    <value>You may need to complete the World Quest "Every Day a New Adventure"</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
+    <value>Commissions completed and extra reward claimed today</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
+    <value>Commissions completed but extra reward unclaimed today</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
+    <value>Commissions completed today (failed to determine the claim to the extra reward)</value>
+  </data>
+  <data name="CommissionsDailyUncompleted" xml:space="preserve">
+    <value>Insufficient number of commissions completed today</value>
+  </data>
   <data name="Cookies" xml:space="preserve">
     <value>cookies</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
@@ -217,16 +239,37 @@
     <value>Copy the cookies</value>
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
-    <value>How to get your cookies? (Temp)</value>
+    <value>View the [temp] guide on how to get your cookies</value>
   </data>
   <data name="CookiesView" xml:space="preserve">
     <value>View the cookies</value>
   </data>
+  <data name="CurrencyRealm" xml:space="preserve">
+    <value>Realm Currency</value>
+  </data>
+  <data name="CurrencyRealmLimitReached" xml:space="preserve">
+    <value>Limit reached</value>
+  </data>
+  <data name="CurrencyRealmLocked" xml:space="preserve">
+    <value>You may need to obtain and explore the Serenitea Pot</value>
+  </data>
+  <data name="DomainsTrounceDiscounts" xml:space="preserve">
+    <value>Enemies of Note</value>
+  </data>
+  <data name="DomainsTrounceDiscountsExplanation" xml:space="preserve">
+    <value>Remaining Original Resin cost-halving opportunities this week</value>
+  </data>
   <data name="Enter" xml:space="preserve">
     <value>Enter</value>
   </data>
+  <data name="Estimated" xml:space="preserve">
+    <value>est.</value>
+  </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
+  </data>
+  <data name="Expeditions" xml:space="preserve">
+    <value>Expeditions</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
@@ -259,7 +302,7 @@
   <data name="LanguageExplanation" xml:space="preserve">
     <value>Change the app language.</value>
   </data>
-  <data name="LanguageZhCn" xml:space="preserve">
+  <data name="LanguageZhHans" xml:space="preserve">
     <value>简体中文</value>
     <comment>Use the language to display the language name.</comment>
   </data>
@@ -267,7 +310,7 @@
     <value>Launch on Windows startup</value>
   </data>
   <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
-    <value>Modify your startup settings to configure whether to start the app when you log in to Windows.</value>
+    <value>Modify your startup settings to configure whether to start the app when you log in to Windows</value>
   </data>
   <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
     <value>Change startup settings</value>
@@ -285,7 +328,7 @@
     <value>The change to always using the alternative login method will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
-    <value>When enabled, the app will always ask you to enter cookies manually to add your account, even if the web page login method is available.</value>
+    <value>When enabled, the app will always ask you to enter cookies manually to add your account, even if the web page login method is available</value>
   </data>
   <data name="LoginAlternativeAutomatically" xml:space="preserve">
     <value>The alternative login method is used automatically.</value>
@@ -327,7 +370,7 @@
     <value>Use the top navigation pane on the main window</value>
   </data>
   <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
-    <value>When enabled, the navigation pane on the main window will be shown at the top rather than on the left side.</value>
+    <value>When enabled, the navigation pane on the main window will be shown at the top rather than on the left side</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>miHoYo</value>
@@ -363,7 +406,7 @@
     <value>Notifications</value>
   </data>
   <data name="NotificationsExplanation" xml:space="preserve">
-    <value>Modify your notifications settings.</value>
+    <value>Modify your notifications settings</value>
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
     <value>Change notifications settings</value>
@@ -395,6 +438,12 @@
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
   </data>
+  <data name="ResinOriginal" xml:space="preserve">
+    <value>Original Resin</value>
+  </data>
+  <data name="ResinOriginalReplenishedFully" xml:space="preserve">
+    <value>Fully replenished</value>
+  </data>
   <data name="Server" xml:space="preserve">
     <value>Server</value>
   </data>
@@ -408,10 +457,10 @@
     <value>The change to the default server will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>Select the default server to log in. You can still change the server when adding your account. The app will automatically recognise the game region.</value>
+    <value>Select the default server to log in (you can still change the server when adding your account, and the app will automatically recognise the game region)</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
-    <value>Select the server to log in. The app will automatically recognise the game region.</value>
+    <value>Select the server to log in (the app will automatically recognise the game region)</value>
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>Global</value>
@@ -447,6 +496,9 @@
   <data name="StatusLoading" xml:space="preserve">
     <value>Loading</value>
   </data>
+  <data name="StatusLocked" xml:space="preserve">
+    <value>Not yet unlocked</value>
+  </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>Use system default</value>
   </data>
@@ -460,10 +512,25 @@
     <value>Dark</value>
   </data>
   <data name="ThemeExplanation" xml:space="preserve">
-    <value>Select which app theme to display.</value>
+    <value>Select which app theme to display</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
+  </data>
+  <data name="TransformerParametric" xml:space="preserve">
+    <value>Parametric Transformer</value>
+  </data>
+  <data name="TransformerParametricCooldown" xml:space="preserve">
+    <value>Cooldown in progress</value>
+  </data>
+  <data name="TransformerParametricLocked" xml:space="preserve">
+    <value>You may need to complete the World Quest "Tianqiu Treasure Trail"</value>
+  </data>
+  <data name="TransformerParametricReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="TransformerParametricUsedAgain" xml:space="preserve">
+    <value>Can be used again</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>

@@ -216,7 +216,7 @@ namespace PaimonTray.Views
             _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
-                _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
+                _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;
 
             InfoBarServerDefaultAppliedLater.IsOpen = true;
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
@@ -233,7 +233,8 @@ namespace PaimonTray.Views
                 _ => null
             };
             ToggleSwitchLoginAlternativeAlways.IsOn =
-                (bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways];
+                _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
+                SettingsHelper.DefaultLoginAlternativeAlways;
         } // end method GridRoot_OnLoaded
 
 #pragma warning disable CA1822 // Mark members as static
@@ -259,13 +260,13 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
-            if ((bool)_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] ==
+            if (_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ==
                 ToggleSwitchLoginAlternativeAlways.IsOn) return;
 
             _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
-                _mainWindow.NavigationViewItemBodyAddUpdateAccount) return;
+                _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;
 
             InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
             InfoBarLoginAlternativeAlwaysAppliedLater.Margin =

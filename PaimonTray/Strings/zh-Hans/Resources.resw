@@ -176,7 +176,7 @@
     <value>您的账号</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>管理您添加的账号，选择允许查询实时便笺的角色。若任何账号的状态异常，您可重新添加/更新此账号。</value>
+    <value>管理您添加的账号，选择允许查询实时便笺的角色（若任何账号的状态异常，您可重新添加/更新此账号）</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>移除所有账号？</value>
@@ -209,6 +209,28 @@
   <data name="Clear" xml:space="preserve">
     <value>清除</value>
   </data>
+  <data name="Colon" xml:space="preserve">
+    <value>：</value>
+    <comment>Include a space if necessary.</comment>
+  </data>
+  <data name="CommissionsDaily" xml:space="preserve">
+    <value>每日委托任务</value>
+  </data>
+  <data name="CommissionsDailyLocked" xml:space="preserve">
+    <value>您可能需要完成世界任务”每天都是新的冒险“</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
+    <value>今日委托已完成，并且额外奖励已领取</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
+    <value>今日委托已完成，但是额外奖励未领取</value>
+  </data>
+  <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
+    <value>今日委托已完成（未能确定额外奖励领取状态）</value>
+  </data>
+  <data name="CommissionsDailyUncompleted" xml:space="preserve">
+    <value>今日完成委托数量不足</value>
+  </data>
   <data name="Cookies" xml:space="preserve">
     <value>cookie</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
@@ -217,16 +239,34 @@
     <value>复制 cookie</value>
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
-    <value>如何获取您的 cookie？（临时）</value>
+    <value>查看关于如何获取 cookie 的 [临时] 指南</value>
   </data>
   <data name="CookiesView" xml:space="preserve">
     <value>查看 cookie</value>
   </data>
+  <data name="CurrencyRealm" xml:space="preserve">
+    <value>洞天宝钱</value>
+  </data>
+  <data name="CurrencyRealmLocked" xml:space="preserve">
+    <value>您可能需要解锁并探索尘歌壶</value>
+  </data>
+  <data name="DomainsTrounceDiscounts" xml:space="preserve">
+    <value>值得铭记的强敌</value>
+  </data>
+  <data name="DomainsTrounceDiscountsExplanation" xml:space="preserve">
+    <value>本周剩余消耗原粹树脂减半次数</value>
+  </data>
   <data name="Enter" xml:space="preserve">
     <value>输入</value>
   </data>
+  <data name="Estimated" xml:space="preserve">
+    <value>预计</value>
+  </data>
   <data name="Exit" xml:space="preserve">
     <value>退出</value>
+  </data>
+  <data name="Expeditions" xml:space="preserve">
+    <value>探索派遣</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>通用</value>
@@ -259,7 +299,7 @@
   <data name="LanguageExplanation" xml:space="preserve">
     <value>改变应用语言。</value>
   </data>
-  <data name="LanguageZhCn" xml:space="preserve">
+  <data name="LanguageZhHans" xml:space="preserve">
     <value>简体中文</value>
     <comment>Use the language to display the language name.</comment>
   </data>
@@ -267,10 +307,10 @@
     <value>在 Windows 启动时启动</value>
   </data>
   <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
-    <value>更改启动设置来配置是否让应用在登录到 Windows 时启动。</value>
+    <value>更改您的启动设置来配置是否让应用在登录到 Windows 时启动</value>
   </data>
   <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
-    <value>更改您的启动设置</value>
+    <value>更改启动设置</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>证书</value>
@@ -285,7 +325,7 @@
     <value>对总是使用替代的登录方案的更改将在下次进入添加账号的页面时生效。</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
-    <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号。</value>
+    <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号</value>
   </data>
   <data name="LoginAlternativeAutomatically" xml:space="preserve">
     <value>应用自动使用替代的登录方案。</value>
@@ -327,7 +367,7 @@
     <value>在主界面上启用顶部导航窗格</value>
   </data>
   <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
-    <value>启用后，主界面上的导航窗格将显示于顶部，而不是左侧。</value>
+    <value>启用后，主界面上的导航窗格将显示于顶部，而不是左侧</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>
@@ -363,10 +403,10 @@
     <value>通知</value>
   </data>
   <data name="NotificationsExplanation" xml:space="preserve">
-    <value>更改通知设置。</value>
+    <value>更改您的通知设置</value>
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
-    <value>更改您的通知设置</value>
+    <value>更改通知设置</value>
   </data>
   <data name="NotificationsNotice" xml:space="preserve">
     <value>请注意：当您在通知设置中允许来自此应用的通知后，下列关于发送通知的设置才会生效。</value>
@@ -395,6 +435,12 @@
   <data name="ReleaseNotes" xml:space="preserve">
     <value>发布说明</value>
   </data>
+  <data name="ResinOriginal" xml:space="preserve">
+    <value>原粹树脂</value>
+  </data>
+  <data name="ResinOriginalReplenishedFully" xml:space="preserve">
+    <value>全部恢复</value>
+  </data>
   <data name="Server" xml:space="preserve">
     <value>服务器</value>
   </data>
@@ -408,10 +454,10 @@
     <value>对默认服务器的更改将在下次进入添加账号的页面时生效。</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>选择默认要登录的服务器。您仍可在添加您的账号时更改服务器。应用会自动识别游戏区域。</value>
+    <value>选择默认要登录的服务器（您仍可在添加您的账号时更改服务器，应用会自动识别游戏区域）</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
-    <value>选择要登录的服务器。应用会自动识别游戏区域。</value>
+    <value>选择要登录的服务器（应用会自动识别游戏区域）</value>
   </data>
   <data name="ServerGlobal" xml:space="preserve">
     <value>国际服</value>
@@ -447,6 +493,9 @@
   <data name="StatusLoading" xml:space="preserve">
     <value>加载中</value>
   </data>
+  <data name="StatusLocked" xml:space="preserve">
+    <value>未解锁</value>
+  </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>
   </data>
@@ -460,10 +509,22 @@
     <value>深色</value>
   </data>
   <data name="ThemeExplanation" xml:space="preserve">
-    <value>选择要显示的应用主题。</value>
+    <value>选择要显示的应用主题</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
     <value>浅色</value>
+  </data>
+  <data name="TransformerParametric" xml:space="preserve">
+    <value>参量质变仪</value>
+  </data>
+  <data name="TransformerParametricCooldown" xml:space="preserve">
+    <value>冷却中</value>
+  </data>
+  <data name="TransformerParametricLocked" xml:space="preserve">
+    <value>您可能需要完成世界任务”天遒宝迹“</value>
+  </data>
+  <data name="TransformerParametricReady" xml:space="preserve">
+    <value>可使用</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>

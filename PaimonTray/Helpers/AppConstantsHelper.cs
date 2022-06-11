@@ -83,11 +83,6 @@
         public const string UriImageDomainsTrounce = "ms-appx:///Assets/TrounceDomains.png";
 
         /// <summary>
-        /// The expeditions image URI.
-        /// </summary>
-        public const string UriImageExpeditions = "ms-appx:///Assets/Expeditions.png";
-
-        /// <summary>
         /// The Original Resin image URI.
         /// </summary>
         public const string UriImageResinOriginal = "ms-appx:///Assets/OriginalResin.png";
