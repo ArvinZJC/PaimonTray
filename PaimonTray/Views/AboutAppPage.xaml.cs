@@ -38,7 +38,7 @@ namespace PaimonTray.Views
             HyperlinkButtonGitHubRepo.Content = resourceLoader?.GetString("GitHubRepo");
             HyperlinkButtonHome.Content = $"{Package.Current.DisplayName} {resourceLoader?.GetString("Site")}";
             HyperlinkButtonIssuesView.Content = resourceLoader?.GetString("IssuesView");
-            HyperlinkButtonLicense.Content = resourceLoader?.GetString("License");
+            HyperlinkButtonLicence.Content = resourceLoader?.GetString("Licence");
             HyperlinkButtonReleaseNotes.Content = resourceLoader?.GetString("ReleaseNotes");
             HyperlinkButtonUserManual.Content = resourceLoader?.GetString("UserManual");
             RunAcknowledgementApiUses.Text = resourceLoader?.GetString("AcknowledgementApiUses");

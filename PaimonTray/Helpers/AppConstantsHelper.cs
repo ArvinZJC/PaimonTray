@@ -138,9 +138,9 @@
         public const string UrlGitHubRepoIssues = "https://github.com/ArvinZJC/PaimonTray/issues";
 
         /// <summary>
-        /// The URL of the app license on GitHub.
+        /// The URL of the app licence on GitHub.
         /// </summary>
-        public const string UrlGitHubRepoLicense = "https://github.com/ArvinZJC/PaimonTray/blob/main/LICENSE";
+        public const string UrlGitHubRepoLicence = "https://github.com/ArvinZJC/PaimonTray/blob/main/LICENSE";
 
         /// <summary>
         /// The app's GitHub repository's releases URL.

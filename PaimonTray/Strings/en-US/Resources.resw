@@ -118,179 +118,182 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>关于</value>
+    <value>About</value>
   </data>
   <data name="AccountAddConfirmation" xml:space="preserve">
-    <value>添加您的账号？</value>
+    <value>Add your account?</value>
     <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
   </data>
   <data name="AccountAddNoCharacterExplanation" xml:space="preserve">
-    <value>您的账号未绑定角色。您仍然要添加此账号吗？</value>
+    <value>No character is linked with your account. Do you still want to add the account?</value>
   </data>
   <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
-    <value>此未绑定角色的账号已成功添加。</value>
+    <value>The account linked with no character has been added successfully.</value>
   </data>
   <data name="AccountAddReachLimit" xml:space="preserve">
-    <value>您添加了的账号的数量已达上限。</value>
+    <value>The number of your accounts added has already reached the limit.</value>
   </data>
   <data name="AccountAddReachLimitExtraInfo" xml:space="preserve">
-    <value>您仍可登录已添加的账号来对其更新。</value>
+    <value>You can still log into your added account to update it.</value>
   </data>
   <data name="AccountAddUpdate" xml:space="preserve">
-    <value>添加/更新账号</value>
+    <value>Add/Update an account</value>
   </data>
   <data name="AccountGroupCheckRefresh" xml:space="preserve">
-    <value>检查并刷新此账号和其绑定的角色</value>
+    <value>Check and refresh the account and its linked character(s)</value>
   </data>
   <data name="AccountGroupNoCharacter" xml:space="preserve">
-    <value>哎呀，没有角色呀！您可添加/更新账号。</value>
+    <value>Oops, no character! You can add/update an account.</value>
   </data>
   <data name="AccountGroupNoCharacterEnabled" xml:space="preserve">
-    <value>哎呀，没有允许查询实时便笺的角色！您可添加账号，或前往设置来管理您添加的账号。</value>
+    <value>Oops, no character is allowed to retrieve real-time notes. You can add an account, or go to the settings to manage your account(s) added.</value>
   </data>
   <data name="AccountGroupRemove" xml:space="preserve">
-    <value>移除此账号和其绑定的角色</value>
+    <value>Remove the account and its linked character(s)</value>
   </data>
   <data name="AccountGroupRemoveExplanation" xml:space="preserve">
-    <value>此账号和其绑定的角色一旦移除，您只有重新登录此账号来添加回来。</value>
+    <value>Once the account and its linked character(s) are removed, you can only add them back by logging into the account again.</value>
   </data>
   <data name="AccountGroupsCheckRefresh" xml:space="preserve">
-    <value>检查并刷新所有账号和角色</value>
+    <value>Check and refresh all accounts and characters</value>
   </data>
   <data name="AccountGroupsRemove" xml:space="preserve">
-    <value>移除所有账号和角色</value>
+    <value>Remove all accounts and characters</value>
   </data>
   <data name="AccountGroupsRemoveExplanation" xml:space="preserve">
-    <value>所有账号和角色一旦移除，您只有重新登录这些账号来添加回来。</value>
+    <value>Once all accounts and characters are removed, you can only add them back by logging into the account(s) again.</value>
   </data>
   <data name="AccountNoCharacter" xml:space="preserve">
-    <value>此账号未绑定角色。</value>
+    <value>No character is linked with the account.</value>
   </data>
   <data name="AccountRemoveConfirmation" xml:space="preserve">
-    <value>移除此账号？</value>
+    <value>Remove the account?</value>
   </data>
   <data name="Accounts" xml:space="preserve">
-    <value>账号</value>
+    <value>Accounts</value>
   </data>
   <data name="AccountsManagement" xml:space="preserve">
-    <value>您的账号</value>
+    <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>管理您添加的账号，选择允许查询实时便笺的角色（若任何账号的状态异常，您可重新添加/更新此账号）</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's status is abnormal, you can add/update the account again)</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
-    <value>移除所有账号？</value>
+    <value>Remove all accounts?</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
-    <value>您的账号刚进行了更新。</value>
+    <value>Your account has just been updated.</value>
   </data>
   <data name="AccountUpdatedExtraInfo" xml:space="preserve">
-    <value>此账号已在之前添加过了。</value>
+    <value>It has already been added before.</value>
   </data>
   <data name="AcknowledgementApiUses" xml:space="preserve">
-    <value>接口用法参考于</value>
+    <value>API uses credited to</value>
   </data>
   <data name="AcknowledgementAppIcon" xml:space="preserve">
-    <value>应用图标来源于</value>
+    <value>App icon credited to</value>
   </data>
   <data name="AcknowledgementInspiration" xml:space="preserve">
-    <value>受启发于</value>
+    <value>Inspired by</value>
   </data>
   <data name="And" xml:space="preserve">
-    <value>和</value>
+    <value>and</value>
   </data>
   <data name="AppIconAuthor" xml:space="preserve">
     <value>Chawong</value>
     <comment>No need to translate.</comment>
   </data>
   <data name="CharacterSwitch" xml:space="preserve">
-    <value>切换角色</value>
+    <value>Switch the character</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>清除</value>
+    <value>Clear</value>
   </data>
   <data name="Colon" xml:space="preserve">
-    <value>：</value>
+    <value>: </value>
     <comment>Include a space if necessary.</comment>
   </data>
   <data name="CommissionsDaily" xml:space="preserve">
-    <value>每日委托任务</value>
+    <value>Daily commissions</value>
   </data>
   <data name="CommissionsDailyLocked" xml:space="preserve">
-    <value>您可能需要完成世界任务”每天都是新的冒险“</value>
+    <value>You may need to complete the World Quest "Every Day a New Adventure"</value>
   </data>
   <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
-    <value>今日委托已完成，并且额外奖励已领取</value>
+    <value>Commissions completed and extra reward claimed today</value>
   </data>
   <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
-    <value>今日委托已完成，但是额外奖励未领取</value>
+    <value>Commissions completed but extra reward unclaimed today</value>
   </data>
   <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
-    <value>今日委托已完成（未能确定额外奖励领取状态）</value>
+    <value>Commissions completed today (failed to determine the claim to the extra reward)</value>
   </data>
   <data name="CommissionsDailyUncompleted" xml:space="preserve">
-    <value>今日完成委托数量不足</value>
+    <value>Insufficient number of commissions completed today</value>
   </data>
   <data name="Cookies" xml:space="preserve">
-    <value>cookie</value>
+    <value>cookies</value>
     <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
   </data>
   <data name="CookiesCopy" xml:space="preserve">
-    <value>复制 cookie</value>
+    <value>Copy the cookies</value>
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
-    <value>查看关于如何获取 cookie 的 [临时] 指南</value>
+    <value>View the [temp] guide on how to get your cookies</value>
   </data>
   <data name="CookiesView" xml:space="preserve">
-    <value>查看 cookie</value>
+    <value>View the cookies</value>
   </data>
   <data name="CurrencyRealm" xml:space="preserve">
-    <value>洞天宝钱</value>
+    <value>Realm Currency</value>
+  </data>
+  <data name="CurrencyRealmLimitReached" xml:space="preserve">
+    <value>Limit reached</value>
   </data>
   <data name="CurrencyRealmLocked" xml:space="preserve">
-    <value>您可能需要解锁并探索尘歌壶</value>
+    <value>You may need to obtain and explore the Serenitea Pot</value>
   </data>
   <data name="DomainsTrounceDiscounts" xml:space="preserve">
-    <value>值得铭记的强敌</value>
+    <value>Enemies of Note</value>
   </data>
   <data name="DomainsTrounceDiscountsExplanation" xml:space="preserve">
-    <value>本周剩余消耗原粹树脂减半次数</value>
+    <value>Remaining Original Resin cost-halving opportunities this week</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>输入</value>
+    <value>Enter</value>
   </data>
   <data name="Estimated" xml:space="preserve">
-    <value>预计</value>
+    <value>est.</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>退出</value>
+    <value>Exit</value>
   </data>
   <data name="Expeditions" xml:space="preserve">
-    <value>探索派遣</value>
+    <value>Expeditions</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>通用</value>
+    <value>General</value>
   </data>
   <data name="GiteeRepo" xml:space="preserve">
-    <value>Gitee 仓库（备用）</value>
+    <value>Gitee repository (backup)</value>
   </data>
   <data name="GitHubRepo" xml:space="preserve">
-    <value>GitHub 仓库</value>
+    <value>GitHub repository</value>
   </data>
   <data name="Help" xml:space="preserve">
-    <value>帮助</value>
+    <value>Help</value>
   </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
   </data>
   <data name="IssuesView" xml:space="preserve">
-    <value>查看 issues</value>
+    <value>View issues</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>语言</value>
+    <value>Language</value>
   </data>
   <data name="LanguageAppliedLater" xml:space="preserve">
-    <value>对语言的更改将在下次启动应用时生效。</value>
+    <value>The change to the language will be applied the next time the app is started.</value>
   </data>
   <data name="LanguageEnGb" xml:space="preserve">
     <value>English (United Kingdom)</value>
@@ -301,80 +304,80 @@
     <comment>No need to translate.</comment>
   </data>
   <data name="LanguageExplanation" xml:space="preserve">
-    <value>改变应用语言。</value>
+    <value>Change the app language.</value>
   </data>
   <data name="LanguageZhHans" xml:space="preserve">
     <value>中文（中华人民共和国）</value>
     <comment>No need to translate.</comment>
   </data>
   <data name="LaunchOnWindowsStartup" xml:space="preserve">
-    <value>在 Windows 启动时启动</value>
+    <value>Launch on Windows startup</value>
   </data>
   <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
-    <value>更改您的启动设置来配置是否让应用在登录到 Windows 时启动</value>
+    <value>Modify your startup settings to configure whether to start the app when you log into Windows</value>
   </data>
   <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
-    <value>更改启动设置</value>
+    <value>Change startup settings</value>
   </data>
   <data name="Licence" xml:space="preserve">
-    <value>证书</value>
+    <value>License</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>登录</value>
+    <value>Log in</value>
   </data>
   <data name="LoginAlternativeAlways" xml:space="preserve">
-    <value>总是使用替代的登录方案</value>
+    <value>Always use the alternative login method</value>
   </data>
   <data name="LoginAlternativeAlwaysAppliedLater" xml:space="preserve">
-    <value>对总是使用替代的登录方案的更改将在下次进入添加账号的页面时生效。</value>
+    <value>The change to always using the alternative login method will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
-    <value>启用后，即使网页登录方案可用，应用也将总是需要您手动输入 cookie 来添加您的账号</value>
+    <value>When enabled, the app will always ask you to enter cookies manually to add your account, even if the web page login method is available</value>
   </data>
   <data name="LoginAlternativeAutomatically" xml:space="preserve">
-    <value>应用自动使用替代的登录方案。</value>
+    <value>The alternative login method is used automatically.</value>
   </data>
   <data name="LoginAlternativeAutomaticallyExtraInfo" xml:space="preserve">
-    <value>未能检测到 Microsoft Edge WebView2 运行环境。您可下载并安装运行环境或更改设置来总是使用此方案，从而在下次加载页面时不再显示此消息。</value>
+    <value>Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or change the setting to always use this method to never show this message again the next time the page is loaded.</value>
   </data>
   <data name="LoginCompleteConfirm" xml:space="preserve">
-    <value>在网页上登录您的账号后确认完成登录</value>
+    <value>Confirm completing login after you log into your account on the web page</value>
   </data>
   <data name="LoginFail" xml:space="preserve">
-    <value>登录您的账号失败。</value>
+    <value>Failed to log into your account.</value>
   </data>
   <data name="LoginFailExtraInfo" xml:space="preserve">
-    <value>您可再重新登录试试。</value>
+    <value>You may try again.</value>
   </data>
   <data name="LoginHeaderWebPage" xml:space="preserve">
-    <value>在网页上登录您的账号</value>
+    <value>Log into your account on the web page</value>
   </data>
   <data name="LoginWebPageReturn" xml:space="preserve">
-    <value>回到登录页</value>
+    <value>Return to the login web page</value>
   </data>
   <data name="LogsShow" xml:space="preserve">
-    <value>在文件资源管理器中显示日志文件</value>
+    <value>Show logs in File Explorer</value>
   </data>
   <data name="MainMenuButtonTooltip" xml:space="preserve">
-    <value>设置及其他</value>
+    <value>Settings and more</value>
   </data>
   <data name="MainWindowHide" xml:space="preserve">
-    <value>隐藏主界面</value>
+    <value>Hide the main window</value>
   </data>
   <data name="MainWindowShow" xml:space="preserve">
-    <value>显示主界面</value>
+    <value>Show the main window</value>
   </data>
   <data name="MainWindowShowWhenAppStarts" xml:space="preserve">
-    <value>在应用启动时显示主界面</value>
+    <value>Show the main window when the app starts</value>
   </data>
   <data name="MainWindowTopNavigationPane" xml:space="preserve">
-    <value>在主界面上启用顶部导航窗格</value>
+    <value>Use the top navigation pane on the main window</value>
   </data>
   <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
-    <value>启用后，主界面上的导航窗格将显示于顶部，而不是左侧</value>
+    <value>When enabled, the navigation pane on the main window will be shown at the top rather than on the left side</value>
   </data>
   <data name="MiHoYo" xml:space="preserve">
-    <value>米哈游</value>
+    <value>miHoYo</value>
   </data>
   <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
     <value>genshin.py</value>
@@ -389,157 +392,160 @@
     <comment>No need to translate.</comment>
   </data>
   <data name="No" xml:space="preserve">
-    <value>不了</value>
+    <value>No</value>
   </data>
   <data name="NotificationClear" xml:space="preserve">
-    <value>在应用退出时清除通知</value>
+    <value>Clear notifications when the app exits</value>
   </data>
   <data name="NotificationGreeting" xml:space="preserve">
-    <value>在应用启动时发送一个问候通知</value>
+    <value>Send a greeting notification when the app starts</value>
   </data>
   <data name="NotificationGreetingContent" xml:space="preserve">
-    <value>若应用图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
+    <value>If the icon disappears from the taskbar corner, you can drag it back from the taskbar corner overflow menu.</value>
   </data>
   <data name="NotificationGreetingTitle" xml:space="preserve">
-    <value>派蒙进到您的“系统托盘”里啦！</value>
+    <value>Paimon's now in your "system tray"!</value>
   </data>
   <data name="Notifications" xml:space="preserve">
-    <value>通知</value>
+    <value>Notifications</value>
   </data>
   <data name="NotificationsExplanation" xml:space="preserve">
-    <value>更改您的通知设置</value>
+    <value>Modify your notifications settings</value>
   </data>
   <data name="NotificationsLinkText" xml:space="preserve">
-    <value>更改通知设置</value>
+    <value>Change notifications settings</value>
   </data>
   <data name="NotificationsNotice" xml:space="preserve">
-    <value>请注意：当您在通知设置中允许来自此应用的通知后，下列关于发送通知的设置才会生效。</value>
+    <value>Please note that the following settings regarding sending notifications take effect after you allow notifications from the app in the notifications settings.</value>
   </data>
   <data name="RealTimeNotes" xml:space="preserve">
-    <value>实时便笺</value>
+    <value>Real-time notes</value>
   </data>
   <data name="RegionCnBilibili" xml:space="preserve">
-    <value>世界树</value>
+    <value>Irminsul</value>
   </data>
   <data name="RegionCnOfficial" xml:space="preserve">
-    <value>天空岛</value>
+    <value>Celestia</value>
   </data>
   <data name="RegionGlobalAmerica" xml:space="preserve">
-    <value>美区</value>
+    <value>America</value>
   </data>
   <data name="RegionGlobalAsia" xml:space="preserve">
-    <value>亚区</value>
+    <value>Asia</value>
   </data>
   <data name="RegionGlobalEurope" xml:space="preserve">
-    <value>欧区</value>
+    <value>Europe</value>
   </data>
   <data name="RegionGlobalSars" xml:space="preserve">
-    <value>台港澳区</value>
+    <value>TW, HK, MO</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
-    <value>发布说明</value>
+    <value>Release notes</value>
   </data>
   <data name="ResinOriginal" xml:space="preserve">
-    <value>原粹树脂</value>
+    <value>Original Resin</value>
   </data>
   <data name="ResinOriginalReplenishedFully" xml:space="preserve">
-    <value>全部恢复</value>
+    <value>Fully replenished</value>
   </data>
   <data name="Server" xml:space="preserve">
-    <value>服务器</value>
+    <value>Server</value>
   </data>
   <data name="ServerCn" xml:space="preserve">
-    <value>国服</value>
+    <value>CN</value>
   </data>
   <data name="ServerDefault" xml:space="preserve">
-    <value>默认服务器</value>
+    <value>Default server</value>
   </data>
   <data name="ServerDefaultAppliedLater" xml:space="preserve">
-    <value>对默认服务器的更改将在下次进入添加账号的页面时生效。</value>
+    <value>The change to the default server will be applied the next time the page for adding an account is entered.</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>选择默认要登录的服务器（您仍可在添加您的账号时更改服务器，应用会自动识别游戏区域）</value>
+    <value>Select the default server to log in (you can still change the server when adding your account, and the app will automatically recognize the game region)</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
-    <value>选择要登录的服务器（应用会自动识别游戏区域）</value>
+    <value>Select the server to log in (the app will automatically recognize the game region)</value>
   </data>
   <data name="ServerGlobal" xml:space="preserve">
-    <value>国际服</value>
+    <value>Global</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>设置</value>
+    <value>Settings</value>
   </data>
   <data name="Site" xml:space="preserve">
-    <value>网站</value>
+    <value>site</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
   <data name="StatusAccountAdding" xml:space="preserve">
-    <value>添加您的账号中</value>
+    <value>Adding your account</value>
   </data>
   <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
-    <value>正在添加/更新此账号</value>
+    <value>The account is being added/updated</value>
   </data>
   <data name="StatusAccountExpiredExplanation" xml:space="preserve">
-    <value>此账号的 cookie 过期了</value>
+    <value>The account's cookies are expired</value>
   </data>
   <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>在检索此账号的信息时出错</value>
+    <value>Error occurs when retrieving the account's information</value>
   </data>
   <data name="StatusAccountReadyExplanation" xml:space="preserve">
-    <value>已成功检索此账号的信息</value>
+    <value>The account's information has been retrieved successfully</value>
   </data>
   <data name="StatusAccountUpdating" xml:space="preserve">
-    <value>更新您的账号中</value>
+    <value>Updating your account</value>
   </data>
   <data name="StatusCookiesProcessing" xml:space="preserve">
-    <value>处理 cookie 中</value>
+    <value>Processing cookies</value>
   </data>
   <data name="StatusLoading" xml:space="preserve">
-    <value>加载中</value>
+    <value>Loading</value>
   </data>
   <data name="StatusLocked" xml:space="preserve">
-    <value>未解锁</value>
+    <value>Not yet unlocked</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
-    <value>使用系统默认值</value>
+    <value>Use system default</value>
   </data>
   <data name="TaskbarIconAppTooltip" xml:space="preserve">
-    <value>左击来显示/隐藏主界面，右击来显示快捷菜单</value>
+    <value>Left click to show/hide the main window, and right click to show the context menu</value>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>主题</value>
+    <value>Theme</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>深色</value>
+    <value>Dark</value>
   </data>
   <data name="ThemeExplanation" xml:space="preserve">
-    <value>选择要显示的应用主题</value>
+    <value>Select which app theme to display</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>浅色</value>
+    <value>Light</value>
   </data>
   <data name="TransformerParametric" xml:space="preserve">
-    <value>参量质变仪</value>
+    <value>Parametric Transformer</value>
   </data>
   <data name="TransformerParametricCooldown" xml:space="preserve">
-    <value>冷却中</value>
+    <value>Cooldown in progress</value>
   </data>
   <data name="TransformerParametricLocked" xml:space="preserve">
-    <value>您可能需要完成世界任务”天遒宝迹“</value>
+    <value>You may need to complete the World Quest "Tianqiu Treasure Trail"</value>
   </data>
   <data name="TransformerParametricReady" xml:space="preserve">
-    <value>可使用</value>
+    <value>Ready</value>
+  </data>
+  <data name="TransformerParametricUsedAgain" xml:space="preserve">
+    <value>Can be used again</value>
   </data>
   <data name="UserManual" xml:space="preserve">
-    <value>使用手册</value>
+    <value>User manual</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>版本</value>
+    <value>Version</value>
   </data>
   <data name="WebView2RuntimeDownload" xml:space="preserve">
-    <value>下载 WebView2 运行环境</value>
+    <value>Download WebView2 Runtime</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>是的</value>
+    <value>Yes</value>
   </data>
 </root>

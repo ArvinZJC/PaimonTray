@@ -11,7 +11,7 @@
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefaultLanguage>en</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <RepositoryUrl>https://github.com/ArvinZJC/PaimonTray</RepositoryUrl>
     <NeutralLanguage>en-GB</NeutralLanguage>
     <PackageLicenseExpression> GPL-3.0-or-later</PackageLicenseExpression>

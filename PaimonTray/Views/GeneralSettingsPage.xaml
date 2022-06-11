@@ -111,9 +111,13 @@
                         Loaded="ComboBoxItemLanguage_OnLoaded"
                         Tag="{x:Bind helpers:SettingsHelper.TagSystem}" />
                     <ComboBoxItem
-                        x:Name="ComboBoxItemLanguageEn"
+                        x:Name="ComboBoxItemLanguageEnGb"
                         Loaded="ComboBoxItemLanguage_OnLoaded"
-                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageEn}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageEnGb}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemLanguageEnUs"
+                        Loaded="ComboBoxItemLanguage_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageEnUs}" />
                     <ComboBoxItem
                         x:Name="ComboBoxItemLanguageZhHans"
                         Loaded="ComboBoxItemLanguage_OnLoaded"

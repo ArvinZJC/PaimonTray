@@ -76,9 +76,9 @@
             </TextBlock>
         </Grid>
         <HyperlinkButton
-            x:Name="HyperlinkButtonLicense"
+            x:Name="HyperlinkButtonLicence"
             Grid.Row="4"
-            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoLicense}" />
+            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoLicence}" />
         <StackPanel Grid.Row="5">
             <HyperlinkButton
                 x:Name="HyperlinkButtonHome"

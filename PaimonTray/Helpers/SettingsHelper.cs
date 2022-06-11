@@ -89,12 +89,17 @@ namespace PaimonTray.Helpers
         public const string KeyTheme = "theme";
 
         /// <summary>
-        /// The English language tag.
+        /// The English (United Kingdom) language tag.
         /// </summary>
-        public const string TagLanguageEn = "en";
+        public const string TagLanguageEnGb = "en-GB";
 
         /// <summary>
-        /// The simplified Chinese language tag.
+        /// The English (United States) language tag.
+        /// </summary>
+        public const string TagLanguageEnUs = "en-US";
+
+        /// <summary>
+        /// The Chinese (simplified, China) language tag.
         /// </summary>
         public const string TagLanguageZhHans = "zh-Hans";
 
@@ -258,7 +263,8 @@ namespace PaimonTray.Helpers
         private void InitialiseSettings()
         {
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
-                (PropertySetSettings[KeyLanguage] is not TagLanguageEn &&
+                (PropertySetSettings[KeyLanguage] is not TagLanguageEnGb &&
+                 PropertySetSettings[KeyLanguage] is not TagLanguageEnUs &&
                  PropertySetSettings[KeyLanguage] is not TagLanguageZhHans &&
                  PropertySetSettings[KeyLanguage] is not TagSystem))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
