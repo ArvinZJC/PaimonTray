@@ -181,6 +181,24 @@
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>Remove all accounts?</value>
   </data>
+  <data name="AccountStatusAdding" xml:space="preserve">
+    <value>Adding your account</value>
+  </data>
+  <data name="AccountStatusAddingUpdatingExplanation" xml:space="preserve">
+    <value>The account is being added/updated</value>
+  </data>
+  <data name="AccountStatusExpiredExplanation" xml:space="preserve">
+    <value>The account's cookies are expired</value>
+  </data>
+  <data name="AccountStatusFailExplanation" xml:space="preserve">
+    <value>Error occurs when retrieving the account's information</value>
+  </data>
+  <data name="AccountStatusReadyExplanation" xml:space="preserve">
+    <value>The account's information has been retrieved successfully</value>
+  </data>
+  <data name="AccountStatusUpdating" xml:space="preserve">
+    <value>Updating your account</value>
+  </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>Your account has just been updated.</value>
   </data>
@@ -241,6 +259,9 @@
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>View the [temp] guide on how to get your cookies</value>
   </data>
+  <data name="CookiesStatusProcessing" xml:space="preserve">
+    <value>Processing cookies</value>
+  </data>
   <data name="CookiesView" xml:space="preserve">
     <value>View the cookies</value>
   </data>
@@ -292,23 +313,14 @@
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="LanguageApplied" xml:space="preserve">
+    <value>en-US</value>
+  </data>
   <data name="LanguageAppliedLater" xml:space="preserve">
     <value>The change to the language will be applied the next time the app is started.</value>
   </data>
-  <data name="LanguageEnGb" xml:space="preserve">
-    <value>English (United Kingdom)</value>
-    <comment>No need to translate.</comment>
-  </data>
-  <data name="LanguageEnUs" xml:space="preserve">
-    <value>English (United States)</value>
-    <comment>No need to translate.</comment>
-  </data>
   <data name="LanguageExplanation" xml:space="preserve">
     <value>Change the app language.</value>
-  </data>
-  <data name="LanguageZhHans" xml:space="preserve">
-    <value>中文（中华人民共和国）</value>
-    <comment>No need to translate.</comment>
   </data>
   <data name="LaunchOnWindowsStartup" xml:space="preserve">
     <value>Launch on Windows startup</value>
@@ -421,6 +433,24 @@
   <data name="RealTimeNotes" xml:space="preserve">
     <value>Real-time notes</value>
   </data>
+  <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
+    <value>You have not yet enabled the character's real-time notes</value>
+  </data>
+  <data name="RealTimeNotesStatusFailExplanation" xml:space="preserve">
+    <value>Error occurs when retrieving the character's real-time notes</value>
+  </data>
+  <data name="RealTimeNotesStatusLocked" xml:space="preserve">
+    <value>Not yet unlocked</value>
+  </data>
+  <data name="RealTimeNotesStatusReadyExplanation" xml:space="preserve">
+    <value>The character's real-time notes have been retrieved successfully</value>
+  </data>
+  <data name="RealTimeNotesStatusUpdatingExplanation" xml:space="preserve">
+    <value>The character's real-time notes are being updated</value>
+  </data>
+  <data name="RealTimeNotesUpdatedLast" xml:space="preserve">
+    <value>Last updated</value>
+  </data>
   <data name="RegionCnBilibili" xml:space="preserve">
     <value>Irminsul</value>
   </data>
@@ -476,32 +506,8 @@
     <value>site</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
-  <data name="StatusAccountAdding" xml:space="preserve">
-    <value>Adding your account</value>
-  </data>
-  <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
-    <value>The account is being added/updated</value>
-  </data>
-  <data name="StatusAccountExpiredExplanation" xml:space="preserve">
-    <value>The account's cookies are expired</value>
-  </data>
-  <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>Error occurs when retrieving the account's information</value>
-  </data>
-  <data name="StatusAccountReadyExplanation" xml:space="preserve">
-    <value>The account's information has been retrieved successfully</value>
-  </data>
-  <data name="StatusAccountUpdating" xml:space="preserve">
-    <value>Updating your account</value>
-  </data>
-  <data name="StatusCookiesProcessing" xml:space="preserve">
-    <value>Processing cookies</value>
-  </data>
   <data name="StatusLoading" xml:space="preserve">
     <value>Loading</value>
-  </data>
-  <data name="StatusLocked" xml:space="preserve">
-    <value>Not yet unlocked</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>Use system default</value>
@@ -521,6 +527,12 @@
   <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="Today" xml:space="preserve">
+    <value>today</value>
+  </data>
+  <data name="Tomorrow" xml:space="preserve">
+    <value>tomorrow</value>
+  </data>
   <data name="TransformerParametric" xml:space="preserve">
     <value>Parametric Transformer</value>
   </data>
@@ -533,8 +545,8 @@
   <data name="TransformerParametricReady" xml:space="preserve">
     <value>Ready</value>
   </data>
-  <data name="TransformerParametricUsedAgain" xml:space="preserve">
-    <value>Can be used again</value>
+  <data name="TransformerParametricUsable" xml:space="preserve">
+    <value>Can be used</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>
@@ -547,5 +559,8 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>yesterday</value>
   </data>
 </root>

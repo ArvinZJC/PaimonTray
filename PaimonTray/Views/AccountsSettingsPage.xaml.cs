@@ -9,8 +9,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
-using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
 {
@@ -36,13 +34,6 @@ namespace PaimonTray.Views
         /// </summary>
         private readonly MainWindow _mainWindow;
 
-        /// <summary>
-        /// The settings property set.
-        /// </summary>
-        private readonly IPropertySet _propertySetSettings;
-
-        private readonly ResourceLoader _resourceLoader;
-
         #endregion Fields
 
         #region Constructors
@@ -55,8 +46,6 @@ namespace PaimonTray.Views
             _app = Application.Current as App;
             _isUpdatingAccountGroupsSource = false;
             _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
-            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
-            _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             UpdateUiText();
 
@@ -97,11 +86,13 @@ namespace PaimonTray.Views
         {
             ContentDialogueAccountGroupsRemove.Hide();
 
+            var resourceLoader = _app.SettingsH.ResLoader;
+
             if (_app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging)
             {
                 GridStatusWarning.Visibility = Visibility.Collapsed;
                 ProgressRingStatusLoading.Visibility = Visibility.Visible;
-                TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+                TextBlockStatus.Text = resourceLoader.GetString("StatusLoading");
                 GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
             }
             else
@@ -118,7 +109,7 @@ namespace PaimonTray.Views
                 {
                     GridStatusWarning.Visibility = Visibility.Visible;
                     ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
-                    TextBlockStatus.Text = _resourceLoader.GetString("AccountGroupNoCharacter");
+                    TextBlockStatus.Text = resourceLoader.GetString("AccountGroupNoCharacter");
                     GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
                 } // end if...else
             } // end if...else
@@ -129,24 +120,25 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
-            ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
-            ContentDialogueAccountGroupsRemove.CloseButtonText = _resourceLoader.GetString("No");
-            ContentDialogueAccountGroupsRemove.PrimaryButtonText = _resourceLoader.GetString("Yes");
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
+            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            ContentDialogueAccountGroupsRemove.CloseButtonText = resourceLoader.GetString("No");
+            ContentDialogueAccountGroupsRemove.PrimaryButtonText = resourceLoader.GetString("Yes");
             InfoBarLoginAlternativeAlwaysAppliedLater.Title =
-                _resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
-            InfoBarServerDefaultAppliedLater.Title = _resourceLoader.GetString("ServerDefaultAppliedLater");
-            TextBlockAccountsManagement.Text = _resourceLoader.GetString("AccountsManagement");
-            TextBlockAccountsManagementExplanation.Text = _resourceLoader.GetString("AccountsManagementExplanation");
-            TextBlockLoginAlternativeAlways.Text = _resourceLoader.GetString("LoginAlternativeAlways");
+                resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
+            InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
+            TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
+            TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
+            TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
             TextBlockLoginAlternativeAlwaysExplanation.Text =
-                _resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
-            TextBlockServerDefault.Text = _resourceLoader.GetString("ServerDefault");
-            TextBlockServerDefaultExplanation.Text = _resourceLoader.GetString("ServerDefaultExplanation");
+                resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
+            TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
+            TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");
             ToolTipService.SetToolTip(AppBarButtonAccountGroupsCheckRefresh,
-                _resourceLoader.GetString("AccountGroupsCheckRefresh"));
-            ToolTipService.SetToolTip(AppBarButtonAccountGroupsRemove,
-                _resourceLoader.GetString("AccountGroupsRemove"));
+                resourceLoader.GetString("AccountGroupsCheckRefresh"));
+            ToolTipService.SetToolTip(AppBarButtonAccountGroupsRemove, resourceLoader.GetString("AccountGroupsRemove"));
         } // end method UpdateUiText
 
         #endregion Methods
@@ -182,12 +174,13 @@ namespace PaimonTray.Views
         private async void AppBarButtonAccountGroupsRemove_OnClick(object sender, RoutedEventArgs e)
         {
             var appBarButton = sender as AppBarButton;
+            var resourceLoader = _app.SettingsH.ResLoader;
             var shouldRemoveAccountGroups = appBarButton == AppBarButtonAccountGroupsRemove;
 
-            ContentDialogueAccountGroupsRemove.Content = _resourceLoader.GetString(shouldRemoveAccountGroups
+            ContentDialogueAccountGroupsRemove.Content = resourceLoader.GetString(shouldRemoveAccountGroups
                 ? "AccountGroupsRemoveExplanation"
                 : "AccountGroupRemoveExplanation");
-            ContentDialogueAccountGroupsRemove.Title = _resourceLoader.GetString(shouldRemoveAccountGroups
+            ContentDialogueAccountGroupsRemove.Title = resourceLoader.GetString(shouldRemoveAccountGroups
                 ? "AccountsRemoveConfirmation"
                 : "AccountRemoveConfirmation");
 
@@ -209,11 +202,13 @@ namespace PaimonTray.Views
         // Handle the default server combo box's selection changed event.
         private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
             if (ComboBoxServerDefault.SelectedItem is not ComboBoxItem comboBoxServerDefaultSelectedItem ||
-                _propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
+                propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
                 comboBoxServerDefaultSelectedItem.Tag as string) return;
 
-            _propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
+            propertySetSettings[SettingsHelper.KeyServerDefault] = comboBoxServerDefaultSelectedItem.Tag as string;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
                 _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;
@@ -225,15 +220,17 @@ namespace PaimonTray.Views
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
             // Show the settings' selection.
-            ComboBoxServerDefault.SelectedItem = _propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            ComboBoxServerDefault.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
             {
                 AccountsHelper.TagServerCn => ComboBoxItemServerCn,
                 AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
                 _ => null
             };
             ToggleSwitchLoginAlternativeAlways.IsOn =
-                _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
+                propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
                 SettingsHelper.DefaultLoginAlternativeAlways;
         } // end method GridRoot_OnLoaded
 
@@ -260,10 +257,12 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
-            if (_propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ==
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
+            if (propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ==
                 ToggleSwitchLoginAlternativeAlways.IsOn) return;
 
-            _propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
+            propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
                 _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;

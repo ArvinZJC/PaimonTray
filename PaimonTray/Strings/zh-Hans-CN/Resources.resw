@@ -181,6 +181,24 @@
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>移除所有账号？</value>
   </data>
+  <data name="AccountStatusAdding" xml:space="preserve">
+    <value>添加您的账号中</value>
+  </data>
+  <data name="AccountStatusAddingUpdatingExplanation" xml:space="preserve">
+    <value>正在添加/更新此账号</value>
+  </data>
+  <data name="AccountStatusExpiredExplanation" xml:space="preserve">
+    <value>此账号的 cookie 过期了</value>
+  </data>
+  <data name="AccountStatusFailExplanation" xml:space="preserve">
+    <value>在检索此账号的信息时出错</value>
+  </data>
+  <data name="AccountStatusReadyExplanation" xml:space="preserve">
+    <value>已成功检索此账号的信息</value>
+  </data>
+  <data name="AccountStatusUpdating" xml:space="preserve">
+    <value>更新您的账号中</value>
+  </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>您的账号刚进行了更新。</value>
   </data>
@@ -220,13 +238,13 @@
     <value>您可能需要完成世界任务”每天都是新的冒险“</value>
   </data>
   <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
-    <value>今日委托已完成，并且额外奖励已领取</value>
+    <value>已完成今日委托，并已领取额外奖励</value>
   </data>
   <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
-    <value>今日委托已完成，但是额外奖励未领取</value>
+    <value>已完成今日委托，但未领取额外奖励</value>
   </data>
   <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
-    <value>今日委托已完成（未能确定额外奖励领取状态）</value>
+    <value>已完成今日委托（未能确定额外奖励领取状态）</value>
   </data>
   <data name="CommissionsDailyUncompleted" xml:space="preserve">
     <value>今日完成委托数量不足</value>
@@ -241,11 +259,17 @@
   <data name="CookiesHowToGet" xml:space="preserve">
     <value>查看关于如何获取 cookie 的 [临时] 指南</value>
   </data>
+  <data name="CookiesStatusProcessing" xml:space="preserve">
+    <value>处理 cookie 中</value>
+  </data>
   <data name="CookiesView" xml:space="preserve">
     <value>查看 cookie</value>
   </data>
   <data name="CurrencyRealm" xml:space="preserve">
     <value>洞天宝钱</value>
+  </data>
+  <data name="CurrencyRealmLimitReached" xml:space="preserve">
+    <value>达到上限</value>
   </data>
   <data name="CurrencyRealmLocked" xml:space="preserve">
     <value>您可能需要解锁并探索尘歌壶</value>
@@ -289,23 +313,14 @@
   <data name="Language" xml:space="preserve">
     <value>语言</value>
   </data>
+  <data name="LanguageApplied" xml:space="preserve">
+    <value>zh-Hans-CN</value>
+  </data>
   <data name="LanguageAppliedLater" xml:space="preserve">
     <value>对语言的更改将在下次启动应用时生效。</value>
   </data>
-  <data name="LanguageEnGb" xml:space="preserve">
-    <value>English (United Kingdom)</value>
-    <comment>No need to translate.</comment>
-  </data>
-  <data name="LanguageEnUs" xml:space="preserve">
-    <value>English (United States)</value>
-    <comment>No need to translate.</comment>
-  </data>
   <data name="LanguageExplanation" xml:space="preserve">
     <value>改变应用语言。</value>
-  </data>
-  <data name="LanguageZhHans" xml:space="preserve">
-    <value>中文（中华人民共和国）</value>
-    <comment>No need to translate.</comment>
   </data>
   <data name="LaunchOnWindowsStartup" xml:space="preserve">
     <value>在 Windows 启动时启动</value>
@@ -418,6 +433,24 @@
   <data name="RealTimeNotes" xml:space="preserve">
     <value>实时便笺</value>
   </data>
+  <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
+    <value>您未启用此角色的实时便笺</value>
+  </data>
+  <data name="RealTimeNotesStatusFailExplanation" xml:space="preserve">
+    <value>在检索此角色的实时便笺时出错</value>
+  </data>
+  <data name="RealTimeNotesStatusLocked" xml:space="preserve">
+    <value>未解锁</value>
+  </data>
+  <data name="RealTimeNotesStatusReadyExplanation" xml:space="preserve">
+    <value>已成功检索此角色的实时便笺</value>
+  </data>
+  <data name="RealTimeNotesStatusUpdatingExplanation" xml:space="preserve">
+    <value>正在更新此角色的实时便笺</value>
+  </data>
+  <data name="RealTimeNotesUpdatedLast" xml:space="preserve">
+    <value>最近更新</value>
+  </data>
   <data name="RegionCnBilibili" xml:space="preserve">
     <value>世界树</value>
   </data>
@@ -473,32 +506,8 @@
     <value>网站</value>
     <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
   </data>
-  <data name="StatusAccountAdding" xml:space="preserve">
-    <value>添加您的账号中</value>
-  </data>
-  <data name="StatusAccountAddingUpdatingExplanation" xml:space="preserve">
-    <value>正在添加/更新此账号</value>
-  </data>
-  <data name="StatusAccountExpiredExplanation" xml:space="preserve">
-    <value>此账号的 cookie 过期了</value>
-  </data>
-  <data name="StatusAccountFailExplanation" xml:space="preserve">
-    <value>在检索此账号的信息时出错</value>
-  </data>
-  <data name="StatusAccountReadyExplanation" xml:space="preserve">
-    <value>已成功检索此账号的信息</value>
-  </data>
-  <data name="StatusAccountUpdating" xml:space="preserve">
-    <value>更新您的账号中</value>
-  </data>
-  <data name="StatusCookiesProcessing" xml:space="preserve">
-    <value>处理 cookie 中</value>
-  </data>
   <data name="StatusLoading" xml:space="preserve">
     <value>加载中</value>
-  </data>
-  <data name="StatusLocked" xml:space="preserve">
-    <value>未解锁</value>
   </data>
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>
@@ -518,6 +527,12 @@
   <data name="ThemeLight" xml:space="preserve">
     <value>浅色</value>
   </data>
+  <data name="Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="Tomorrow" xml:space="preserve">
+    <value>明天</value>
+  </data>
   <data name="TransformerParametric" xml:space="preserve">
     <value>参量质变仪</value>
   </data>
@@ -528,6 +543,9 @@
     <value>您可能需要完成世界任务”天遒宝迹“</value>
   </data>
   <data name="TransformerParametricReady" xml:space="preserve">
+    <value>已准备好</value>
+  </data>
+  <data name="TransformerParametricUsable" xml:space="preserve">
     <value>可使用</value>
   </data>
   <data name="UserManual" xml:space="preserve">
@@ -541,5 +559,8 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是的</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>昨天</value>
   </data>
 </root>

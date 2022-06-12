@@ -132,19 +132,19 @@ namespace PaimonTray.Converters
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusAddingUpdatingExplanation => resourceLoader?.GetString(
-                    "StatusAccountAddingUpdatingExplanation"),
+                    "AccountStatusAddingUpdatingExplanation"),
                 ParameterStatusExpired => accountCharacter.Status is AccountsHelper.TagStatusExpired
                     ? Visibility.Visible
                     : Visibility.Collapsed,
-                ParameterStatusExpiredExplanation => resourceLoader?.GetString("StatusAccountExpiredExplanation"),
+                ParameterStatusExpiredExplanation => resourceLoader?.GetString("AccountStatusExpiredExplanation"),
                 ParameterStatusFail => accountCharacter.Status is AccountsHelper.TagStatusFail
                     ? Visibility.Visible
                     : Visibility.Collapsed,
-                ParameterStatusFailExplanation => resourceLoader?.GetString("StatusAccountFailExplanation"),
+                ParameterStatusFailExplanation => resourceLoader?.GetString("AccountStatusFailExplanation"),
                 ParameterStatusReady => accountCharacter.Status is AccountsHelper.TagStatusReady
                     ? Visibility.Visible
                     : Visibility.Collapsed,
-                ParameterStatusReadyExplanation => resourceLoader?.GetString("StatusAccountReadyExplanation"),
+                ParameterStatusReadyExplanation => resourceLoader?.GetString("AccountStatusReadyExplanation"),
                 _ => null
             };
         } // end method Convert

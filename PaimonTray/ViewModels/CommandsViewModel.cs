@@ -7,8 +7,6 @@ using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics;
 using System.Windows.Input;
-using Windows.ApplicationModel.Resources;
-using Windows.Storage;
 using Windows.UI.Notifications;
 
 namespace PaimonTray.ViewModels
@@ -30,11 +28,6 @@ namespace PaimonTray.ViewModels
         /// </summary>
         private readonly MainWindow _mainWindow;
 
-        /// <summary>
-        /// The resource loader.
-        /// </summary>
-        private readonly ResourceLoader _resourceLoader;
-
         #endregion Fields
 
         #region Properties
@@ -50,7 +43,7 @@ namespace PaimonTray.ViewModels
                 XamlUICommand xamlUiCommand = new()
                 {
                     IconSource = new SymbolIconSource { Symbol = Symbol.AddFriend },
-                    Label = _resourceLoader.GetString("AccountAddUpdate")
+                    Label = _app.SettingsH.ResLoader.GetString("AccountAddUpdate")
                 };
 
                 xamlUiCommand.ExecuteRequested += (_, _) =>
@@ -72,7 +65,7 @@ namespace PaimonTray.ViewModels
         {
             get
             {
-                XamlUICommand xamlUiCommand = new() { Label = _resourceLoader.GetString("Exit") };
+                XamlUICommand xamlUiCommand = new() { Label = _app.SettingsH.ResLoader.GetString("Exit") };
 
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
@@ -121,7 +114,7 @@ namespace PaimonTray.ViewModels
                 XamlUICommand xamlUiCommand = new()
                 {
                     IconSource = new SymbolIconSource { Symbol = Symbol.Setting },
-                    Label = _resourceLoader.GetString("Settings")
+                    Label = _app.SettingsH.ResLoader.GetString("Settings")
                 };
 
                 xamlUiCommand.ExecuteRequested += (_, _) => _app.WindowsH.GetExistingSettingsWindow();
@@ -142,12 +135,14 @@ namespace PaimonTray.ViewModels
                 {
                     if (_mainWindow is null) return;
 
+                    var resourceLoader = _app.SettingsH.ResLoader;
+
                     // Set the text of the main window's menu flyout item for the main window's visibility here to avoid any possible exception when setting in the main window's visibility changed event.
                     if (_mainWindow.Visible)
                     {
                         _mainWindow.Hide();
                         _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
-                            _resourceLoader.GetString("MainWindowShow");
+                            resourceLoader.GetString("MainWindowShow");
 
                         var navigationViewItemBodyRealTimeNotes = _mainWindow.NavigationViewItemBodyRealTimeNotes;
 
@@ -158,7 +153,7 @@ namespace PaimonTray.ViewModels
                     {
                         _mainWindow.Show();
                         _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
-                            _resourceLoader.GetString("MainWindowHide");
+                            resourceLoader.GetString("MainWindowHide");
                     } // end if...else
                 };
                 return xamlUiCommand;
@@ -176,7 +171,6 @@ namespace PaimonTray.ViewModels
         {
             _app = Application.Current as App;
             _mainWindow = mainWindow;
-            _resourceLoader = ResourceLoader.GetForViewIndependentUse();
         } // end constructor CommandsViewModel
 
         #endregion Constructors

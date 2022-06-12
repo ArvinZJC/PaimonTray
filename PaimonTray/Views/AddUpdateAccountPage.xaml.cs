@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
 namespace PaimonTray.Views
@@ -39,11 +38,6 @@ namespace PaimonTray.Views
         private readonly MainWindow _mainWindow;
 
         /// <summary>
-        /// The resource loader.
-        /// </summary>
-        private readonly ResourceLoader _resourceLoader;
-
-        /// <summary>
         /// The login web page WebView2.
         /// </summary>
         private WebView2 _webView2LoginWebPage;
@@ -59,7 +53,6 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
-            _resourceLoader = _app?.SettingsH.ResLoader;
             InitializeComponent();
             ChooseLoginMethodAsync();
             ToggleStatusVisibility();
@@ -90,9 +83,10 @@ namespace PaimonTray.Views
             var propertySetAccount = applicationDataContainerAccounts
                 .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
                 .Values; // Need to declare after the flag indicating whether the account should be updated or added.
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             TextBlockStatus.Text =
-                _resourceLoader.GetString(shouldUpdateAccount ? "StatusAccountUpdating" : "StatusAccountAdding");
+                resourceLoader.GetString(shouldUpdateAccount ? "AccountStatusUpdating" : "AccountStatusAdding");
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
             propertySetAccount[AccountsHelper.KeyServer] = server;
             propertySetAccount[AccountsHelper.KeyStatus] = shouldUpdateAccount
@@ -109,8 +103,8 @@ namespace PaimonTray.Views
 
                 Log.Warning(
                     $"Failed to {action} the account due to null characters (account container key: {containerKeyAccount}).");
-                ShowLoginInfoBar(_resourceLoader.GetString("LoginFailExtraInfo"),
-                    _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+                ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
+                    InfoBarSeverity.Error);
 
                 if (shouldUpdateAccount) _app.AccountsH.AddUpdateCharacters(null, containerKeyAccount);
                 else applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
@@ -125,8 +119,8 @@ namespace PaimonTray.Views
                 if (_app.AccountsH.TrySelectAccountGroupFirstEnabledCharacter(containerKeyAccount))
                     _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyRealTimeNotes;
                 else
-                    ShowLoginInfoBar(_resourceLoader.GetString("AccountUpdatedExtraInfo"),
-                        _resourceLoader.GetString("AccountUpdated"));
+                    ShowLoginInfoBar(resourceLoader.GetString("AccountUpdatedExtraInfo"),
+                        resourceLoader.GetString("AccountUpdated"));
 
                 return;
             } // end if
@@ -139,7 +133,7 @@ namespace PaimonTray.Views
                     return;
                 } // end if
 
-                ShowLoginInfoBar(null, _resourceLoader.GetString("AccountAddNoCharacterSuccess"),
+                ShowLoginInfoBar(null, resourceLoader.GetString("AccountAddNoCharacterSuccess"),
                     InfoBarSeverity.Success);
             } // end if
 
@@ -157,12 +151,13 @@ namespace PaimonTray.Views
             if (ComboBoxServer.SelectedItem is not ComboBoxItem comboBoxServerSelectedItem) return;
 
             var isServerCn = comboBoxServerSelectedItem == ComboBoxItemServerCn;
+            var resourceLoader = _app.SettingsH.ResLoader;
             var uriLoginMiHoYo = GetLoginWebPageUri();
 
             if (_app.AccountsH.CountAccounts() < AccountsHelper.CountAccountsMax) InfoBarLogin.IsOpen = false;
             else
-                ShowLoginInfoBar(_resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
-                    _resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
+                ShowLoginInfoBar(resourceLoader.GetString("AccountAddReachLimitExtraInfo"),
+                    resourceLoader.GetString("AccountAddReachLimit"), InfoBarSeverity.Error);
 
             if (_isWebView2Available)
             {
@@ -176,7 +171,7 @@ namespace PaimonTray.Views
             {
                 GridServer.Width = 400;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
-                RunLoginHeaderPlace.Text = _resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
+                RunLoginHeaderPlace.Text = resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
                 TextBoxLoginAlternative.Width = GridServer.Width;
             } // end if...else
 
@@ -204,14 +199,16 @@ namespace PaimonTray.Views
                     _webView2LoginWebPage.CoreWebView2.SourceChanged += CoreWebView2LoginWebPage_OnSourceChanged;
                     _webView2LoginWebPage.NavigationCompleted += WebView2LoginWebPage_OnNavigationCompleted;
 
+                    var resourceLoader = _app.SettingsH.ResLoader;
+
                     ButtonLoginAssist.IsEnabled = false;
                     FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphUpdateRestore;
                     GridLogin.Children.Add(_webView2LoginWebPage);
                     Grid.SetRow(_webView2LoginWebPage, 1);
-                    TextBlockLoginHeaderWebPage.Text = _resourceLoader.GetString("LoginHeaderWebPage");
-                    ToolTipService.SetToolTip(ButtonLoginAssist, _resourceLoader.GetString("LoginWebPageReturn"));
+                    TextBlockLoginHeaderWebPage.Text = resourceLoader.GetString("LoginHeaderWebPage");
+                    ToolTipService.SetToolTip(ButtonLoginAssist, resourceLoader.GetString("LoginWebPageReturn"));
                     ToolTipService.SetToolTip(ButtonLoginCompleteConfirm,
-                        _resourceLoader.GetString("LoginCompleteConfirm"));
+                        resourceLoader.GetString("LoginCompleteConfirm"));
                 }
                 catch (Exception exception)
                 {
@@ -264,8 +261,9 @@ namespace PaimonTray.Views
 
             string aUid;
             string cookies;
+            var resourceLoader = _app.SettingsH.ResLoader;
 
-            TextBlockStatus.Text = _resourceLoader.GetString("StatusCookiesProcessing");
+            TextBlockStatus.Text = resourceLoader.GetString("CookiesStatusProcessing");
 
             if (_isWebView2Available)
             {
@@ -292,8 +290,8 @@ namespace PaimonTray.Views
                 Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
                             $" login failed due to invalid cookies ({cookies}).");
                 InitialiseLogin();
-                ShowLoginInfoBar(_resourceLoader.GetString("LoginFailExtraInfo"),
-                    _resourceLoader.GetString("LoginFail"), InfoBarSeverity.Error);
+                ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
+                    InfoBarSeverity.Error);
             } // end if...else
 
             _app.AccountsH.IsAddingUpdating = false;
@@ -411,10 +409,11 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
+            var resourceLoader = _app.SettingsH.ResLoader;
             if (_app.AccountsH.CountAccounts() < AccountsHelper.CountAccountsMax &&
-                InfoBarLogin.Title == _resourceLoader.GetString("AccountAddReachLimit")) InfoBarLogin.IsOpen = false;
+                InfoBarLogin.Title == resourceLoader.GetString("AccountAddReachLimit")) InfoBarLogin.IsOpen = false;
 
-            TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+            TextBlockStatus.Text = resourceLoader.GetString("StatusLoading");
             GridStatus.Visibility = _app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging
                 ? Visibility.Visible
                 : Visibility.Collapsed; // Show the status grid when ready.
@@ -425,16 +424,17 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            ComboBoxItemServerCn.Content = _resourceLoader.GetString("ServerCn");
-            ComboBoxItemServerGlobal.Content = _resourceLoader.GetString("ServerGlobal");
-            ContentDialogueAccountAddNoCharacter.CloseButtonText = _resourceLoader.GetString("No");
-            ContentDialogueAccountAddNoCharacter.Content =
-                _resourceLoader.GetString("AccountAddNoCharacterExplanation");
-            ContentDialogueAccountAddNoCharacter.PrimaryButtonText = _resourceLoader.GetString("Yes");
-            ContentDialogueAccountAddNoCharacter.Title = _resourceLoader.GetString("AccountAddConfirmation");
-            TextBlockServer.Text = _resourceLoader.GetString("Server");
-            TextBlockServerExplanation.Text = _resourceLoader.GetString("ServerExplanation");
-            TextBlockTitle.Text = _resourceLoader.GetString("AccountAddUpdate");
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
+            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            ContentDialogueAccountAddNoCharacter.CloseButtonText = resourceLoader.GetString("No");
+            ContentDialogueAccountAddNoCharacter.Content = resourceLoader.GetString("AccountAddNoCharacterExplanation");
+            ContentDialogueAccountAddNoCharacter.PrimaryButtonText = resourceLoader.GetString("Yes");
+            ContentDialogueAccountAddNoCharacter.Title = resourceLoader.GetString("AccountAddConfirmation");
+            TextBlockServer.Text = resourceLoader.GetString("Server");
+            TextBlockServerExplanation.Text = resourceLoader.GetString("ServerExplanation");
+            TextBlockTitle.Text = resourceLoader.GetString("AccountAddUpdate");
         } // end method UpdateUiText
 
         /// <summary>
@@ -445,26 +445,28 @@ namespace PaimonTray.Views
         {
             _isWebView2Available = false;
 
+            var resourceLoader = _app.SettingsH.ResLoader;
+
             if (!isAlways)
             {
-                HyperlinkButtonWebView2RuntimeDownload.Content = _resourceLoader.GetString("WebView2RuntimeDownload");
+                HyperlinkButtonWebView2RuntimeDownload.Content = resourceLoader.GetString("WebView2RuntimeDownload");
                 InfoBarLoginAlternativeAutomatically.Margin =
                     new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
                 InfoBarLoginAlternativeAutomatically.Message =
-                    _resourceLoader.GetString("LoginAlternativeAutomaticallyExtraInfo");
-                InfoBarLoginAlternativeAutomatically.Title = _resourceLoader.GetString("LoginAlternativeAutomatically");
+                    resourceLoader.GetString("LoginAlternativeAutomaticallyExtraInfo");
+                InfoBarLoginAlternativeAutomatically.Title = resourceLoader.GetString("LoginAlternativeAutomatically");
                 InfoBarLoginAlternativeAutomatically.IsOpen = true; // Show the info bar when ready.
             } // end if
 
-            ButtonLoginAlternative.Content = _resourceLoader.GetString("Login");
-            ButtonLoginAlternativeClear.Content = _resourceLoader.GetString("Clear");
+            ButtonLoginAlternative.Content = resourceLoader.GetString("Login");
+            ButtonLoginAlternativeClear.Content = resourceLoader.GetString("Clear");
             FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphHelp;
             GridLoginAlternative.Visibility = Visibility.Visible;
-            RunLoginHeaderCookies.Text = _resourceLoader.GetString("Cookies");
-            RunLoginHeaderEnter.Text = _resourceLoader.GetString("Enter");
+            RunLoginHeaderCookies.Text = resourceLoader.GetString("Cookies");
+            RunLoginHeaderEnter.Text = resourceLoader.GetString("Enter");
             TextBlockLoginHeaderAlternative.Visibility = Visibility.Visible;
             TextBlockLoginHeaderWebPage.Visibility = Visibility.Collapsed;
-            ToolTipService.SetToolTip(ButtonLoginAssist, _resourceLoader.GetString("CookiesHowToGet"));
+            ToolTipService.SetToolTip(ButtonLoginAssist, resourceLoader.GetString("CookiesHowToGet"));
         } // end method UseAlternativeLoginMethod
 
         #endregion Methods

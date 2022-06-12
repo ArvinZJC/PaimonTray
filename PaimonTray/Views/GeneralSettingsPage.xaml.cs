@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
-using Windows.Foundation.Collections;
+using System.Globalization;
 
 namespace PaimonTray.Views
 {
@@ -18,11 +18,6 @@ namespace PaimonTray.Views
         /// </summary>
         private readonly App _app;
 
-        /// <summary>
-        /// The settings property set.
-        /// </summary>
-        private readonly IPropertySet _propertySetSettings;
-
         #endregion Fields
 
         #region Constructors
@@ -33,7 +28,6 @@ namespace PaimonTray.Views
         public GeneralSettingsPage()
         {
             _app = Application.Current as App;
-            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             InitializeComponent();
             UpdateUiText();
         } // end constructor GeneralSettingsPage
@@ -51,10 +45,10 @@ namespace PaimonTray.Views
 
             CheckBoxNotificationClear.Content = resourceLoader.GetString("NotificationClear");
             CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
-            ComboBoxItemLanguageEnGb.Content = resourceLoader.GetString("LanguageEnGb");
-            ComboBoxItemLanguageEnUs.Content = resourceLoader.GetString("LanguageEnUs");
+            ComboBoxItemLanguageEnGb.Content = new CultureInfo(SettingsHelper.TagLanguageEnGb).NativeName;
+            ComboBoxItemLanguageEnUs.Content = new CultureInfo(SettingsHelper.TagLanguageEnUs).NativeName;
             ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
-            ComboBoxItemLanguageZhHans.Content = resourceLoader.GetString("LanguageZhHans");
+            ComboBoxItemLanguageZhHansCn.Content = new CultureInfo(SettingsHelper.TagLanguageZhHansCn).NativeName;
             ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
             ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
             ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
@@ -84,25 +78,29 @@ namespace PaimonTray.Views
         // Handle the checked event of the check box for clearing notifications when the app exits.
         private void CheckBoxNotificationClear_OnChecked(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyNotificationClear] = CheckBoxNotificationClear.IsChecked;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationClear] =
+                CheckBoxNotificationClear.IsChecked;
         } // end method CheckBoxNotificationClear_OnChecked
 
         // Handle the unchecked event of the check box for clearing notifications when the app exits.
         private void CheckBoxNotificationClear_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyNotificationClear] = CheckBoxNotificationClear.IsChecked;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationClear] =
+                CheckBoxNotificationClear.IsChecked;
         } // end method CheckBoxNotificationClear_OnUnchecked
 
         // Handle the checked event of the greeting notification check box.
         private void CheckBoxNotificationGreeting_OnChecked(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = CheckBoxNotificationGreeting.IsChecked;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationGreeting] =
+                CheckBoxNotificationGreeting.IsChecked;
         } // end method CheckBoxNotificationGreeting_OnChecked
 
         // Handle the unchecked event of the greeting notification check box.
         private void CheckBoxNotificationGreeting_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyNotificationGreeting] = CheckBoxNotificationGreeting.IsChecked;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationGreeting] =
+                CheckBoxNotificationGreeting.IsChecked;
         } // end method CheckBoxNotificationGreeting_OnUnchecked
 
         // Handle the language combo box item's loaded event.
@@ -130,7 +128,7 @@ namespace PaimonTray.Views
 
             var comboBoxLanguageSelectedItemTag = comboBoxLanguageSelectedItem.Tag as string;
 
-            _propertySetSettings[SettingsHelper.KeyLanguage] = comboBoxLanguageSelectedItemTag;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyLanguage] = comboBoxLanguageSelectedItemTag;
 
             InfoBarLanguageAppliedLater.IsOpen =
                 comboBoxLanguageSelectedItemTag != _app.SettingsH.LanguageSelectionApplied;
@@ -144,28 +142,30 @@ namespace PaimonTray.Views
         {
             if (ComboBoxTheme.SelectedItem is not ComboBoxItem comboBoxThemeSelectedItem) return;
 
-            _propertySetSettings[SettingsHelper.KeyTheme] = comboBoxThemeSelectedItem.Tag as string;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyTheme] = comboBoxThemeSelectedItem.Tag as string;
             _app.SettingsH.ApplyThemeSelection();
         } // end method ComboBoxTheme_OnSelectionChanged
 
         // Handle the root grid's loaded event.
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
             // Show the settings' selection.
-            CheckBoxNotificationClear.IsChecked = _propertySetSettings[SettingsHelper.KeyNotificationClear] as bool? ??
+            CheckBoxNotificationClear.IsChecked = propertySetSettings[SettingsHelper.KeyNotificationClear] as bool? ??
                                                   SettingsHelper.DefaultNotificationClear;
             CheckBoxNotificationGreeting.IsChecked =
-                _propertySetSettings[SettingsHelper.KeyNotificationGreeting] as bool? ??
+                propertySetSettings[SettingsHelper.KeyNotificationGreeting] as bool? ??
                 SettingsHelper.DefaultNotificationGreeting;
-            ComboBoxLanguage.SelectedItem = _propertySetSettings[SettingsHelper.KeyLanguage] switch
+            ComboBoxLanguage.SelectedItem = propertySetSettings[SettingsHelper.KeyLanguage] switch
             {
                 SettingsHelper.TagLanguageEnGb => ComboBoxItemLanguageEnGb,
                 SettingsHelper.TagLanguageEnUs => ComboBoxItemLanguageEnUs,
-                SettingsHelper.TagLanguageZhHans => ComboBoxItemLanguageZhHans,
+                SettingsHelper.TagLanguageZhHansCn => ComboBoxItemLanguageZhHansCn,
                 SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
                 _ => null
             };
-            ComboBoxTheme.SelectedItem = _propertySetSettings[SettingsHelper.KeyTheme] switch
+            ComboBoxTheme.SelectedItem = propertySetSettings[SettingsHelper.KeyTheme] switch
             {
                 SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
                 SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
@@ -173,10 +173,10 @@ namespace PaimonTray.Views
                 _ => null
             };
             ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
-                _propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
+                propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultMainWindowShowWhenAppStarts;
             ToggleSwitchMainWindowTopNavigationPane.IsOn =
-                _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] as bool? ??
+                propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] as bool? ??
                 SettingsHelper.DefaultMainWindowTopNavigationPane;
         } // end method GridRoot_OnLoaded
 
@@ -203,14 +203,14 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for showing the main window when the app starts.
         private void ToggleSwitchMainWindowShowWhenAppStarts_OnToggled(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] =
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] =
                 ToggleSwitchMainWindowShowWhenAppStarts.IsOn;
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
 
         // Handle the toggled event of the toggle switch of the setting for the main window's top navigation pane.
         private void ToggleSwitchMainWindowTopNavigationPane_OnToggled(object sender, RoutedEventArgs e)
         {
-            _propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] =
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] =
                 ToggleSwitchMainWindowTopNavigationPane.IsOn;
             _app.SettingsH.ApplyMainWindowTopNavigationPaneSelection(); // Apply after changing.
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled

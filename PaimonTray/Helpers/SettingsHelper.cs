@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Views;
 using Serilog;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
@@ -99,9 +100,9 @@ namespace PaimonTray.Helpers
         public const string TagLanguageEnUs = "en-US";
 
         /// <summary>
-        /// The Chinese (simplified, China) language tag.
+        /// The Chinese (Simplified, China) language tag.
         /// </summary>
-        public const string TagLanguageZhHans = "zh-Hans";
+        public const string TagLanguageZhHansCn = "zh-Hans-CN";
 
         /// <summary>
         /// The system default tag.
@@ -130,6 +131,11 @@ namespace PaimonTray.Helpers
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// The culture applied in this app lifecycle due to the language selection applied.
+        /// </summary>
+        public CultureInfo CultureApplied { get; private set; }
 
         /// <summary>
         /// The language selection applied in this app lifecycle (the changes will be applied after app restart).
@@ -171,9 +177,20 @@ namespace PaimonTray.Helpers
         private void ApplyLanguageSelection()
         {
             LanguageSelectionApplied = PropertySetSettings[KeyLanguage] as string;
-            ApplicationLanguages.PrimaryLanguageOverride =
-                LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
+
+            var languagePrimary = LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
+
+            ApplicationLanguages.PrimaryLanguageOverride = languagePrimary;
             ResLoader = ResourceLoader.GetForViewIndependentUse();
+
+            var languageApplied = ResLoader.GetString("LanguageApplied");
+
+            CultureApplied =
+                new CultureInfo(languageApplied is TagLanguageEnGb or TagLanguageEnUs or TagLanguageZhHansCn
+                    ? languageApplied
+                    : languagePrimary == string.Empty
+                        ? TagLanguageEnUs
+                        : languagePrimary ?? TagLanguageEnUs);
         } // end method ApplyLanguageSelection
 
         /// <summary>
@@ -265,7 +282,7 @@ namespace PaimonTray.Helpers
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
                 (PropertySetSettings[KeyLanguage] is not TagLanguageEnGb &&
                  PropertySetSettings[KeyLanguage] is not TagLanguageEnUs &&
-                 PropertySetSettings[KeyLanguage] is not TagLanguageZhHans &&
+                 PropertySetSettings[KeyLanguage] is not TagLanguageZhHansCn &&
                  PropertySetSettings[KeyLanguage] is not TagSystem))
                 InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
 

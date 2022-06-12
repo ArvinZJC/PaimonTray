@@ -119,9 +119,9 @@
                         Loaded="ComboBoxItemLanguage_OnLoaded"
                         Tag="{x:Bind helpers:SettingsHelper.TagLanguageEnUs}" />
                     <ComboBoxItem
-                        x:Name="ComboBoxItemLanguageZhHans"
+                        x:Name="ComboBoxItemLanguageZhHansCn"
                         Loaded="ComboBoxItemLanguage_OnLoaded"
-                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageZhHans}" />
+                        Tag="{x:Bind helpers:SettingsHelper.TagLanguageZhHansCn}" />
                 </ComboBox>
             </Grid>
             <!-- The theme grid. -->

@@ -3,7 +3,7 @@
     /// <summary>
     /// The real-time notes' expedition note model.
     /// </summary>
-    internal class ExpeditionNote
+    public class ExpeditionNote
     {
         #region Properties
 

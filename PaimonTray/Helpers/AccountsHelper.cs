@@ -16,7 +16,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
 namespace PaimonTray.Helpers
@@ -499,7 +498,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The disabled status tag.
         /// </summary>
-        private const string TagStatusDisabled = "disabled";
+        public const string TagStatusDisabled = "disabled";
 
         /// <summary>
         /// The expired status tag.
@@ -601,6 +600,11 @@ namespace PaimonTray.Helpers
         #region Fields
 
         /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        /// <summary>
         /// A flag indicating if an account's character is updated.
         /// </summary>
         private bool _isAccountCharacterUpdated;
@@ -635,11 +639,6 @@ namespace PaimonTray.Helpers
         /// The regions dictionary.
         /// </summary>
         private readonly Dictionary<string, string> _regions;
-
-        /// <summary>
-        /// The resource loader.
-        /// </summary>
-        private readonly ResourceLoader _resourceLoader;
 
         #endregion Fields
 
@@ -724,24 +723,24 @@ namespace PaimonTray.Helpers
         /// </summary>
         public AccountsHelper()
         {
-            var app = Application.Current as App;
-
+            _app = Application.Current as App;
             _isAccountCharacterUpdated = false;
             _isAccountGroupUpdated = false;
             _isAddingUpdating = false;
             _isManaging = false;
-            _lazyHttpClient =
-                new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
+            _lazyHttpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
             _random = new Random();
-            _resourceLoader = app?.SettingsH.ResLoader; // Initialise the resource loader first.
+
+            var resourceLoader = _app?.SettingsH.ResLoader;
+
             _regions = new Dictionary<string, string>
             {
-                [KeyRegionCnBilibili] = _resourceLoader?.GetString("RegionCnBilibili"),
-                [KeyRegionCnOfficial] = _resourceLoader?.GetString("RegionCnOfficial"),
-                [KeyRegionGlobalAmerica] = _resourceLoader?.GetString("RegionGlobalAmerica"),
-                [KeyRegionGlobalAsia] = _resourceLoader?.GetString("RegionGlobalAsia"),
-                [KeyRegionGlobalEurope] = _resourceLoader?.GetString("RegionGlobalEurope"),
-                [KeyRegionGlobalSars] = _resourceLoader?.GetString("RegionGlobalSars"),
+                [KeyRegionCnBilibili] = resourceLoader?.GetString("RegionCnBilibili"),
+                [KeyRegionCnOfficial] = resourceLoader?.GetString("RegionCnOfficial"),
+                [KeyRegionGlobalAmerica] = resourceLoader?.GetString("RegionGlobalAmerica"),
+                [KeyRegionGlobalAsia] = resourceLoader?.GetString("RegionGlobalAsia"),
+                [KeyRegionGlobalEurope] = resourceLoader?.GetString("RegionGlobalEurope"),
+                [KeyRegionGlobalSars] = resourceLoader?.GetString("RegionGlobalSars"),
             };
             AccountGroupInfoLists = new ObservableCollection<GroupInfoList>();
             ApplicationDataContainerAccounts =
@@ -779,10 +778,11 @@ namespace PaimonTray.Helpers
             var propertySetAccount = applicationDataContainerAccount.Values; // Get the account property set first.
             var cookies = propertySetAccount[KeyCookies] as string;
             var nicknameAccount = propertySetAccount[KeyNickname] as string;
+            var resourceLoader = _app.SettingsH.ResLoader;
             var server = propertySetAccount[KeyServer] switch
             {
-                TagServerCn => _resourceLoader.GetString("ServerCn"),
-                TagServerGlobal => _resourceLoader.GetString("ServerGlobal"),
+                TagServerCn => resourceLoader.GetString("ServerCn"),
+                TagServerGlobal => resourceLoader.GetString("ServerGlobal"),
                 _ => AppConstantsHelper.Unknown
             };
             var status = propertySetAccount[KeyStatus] as string;
@@ -1340,13 +1340,20 @@ namespace PaimonTray.Helpers
             } // end try...catch
         } // end method GetCharactersFromApiAsync
 
+        public async Task<(string, string, ImmutableList<GeneralNote>)> Temp(string containerKeyAccount,
+            string containerKeyCharacter)
+        {
+            await GetRealTimeNotesFromApiAsync(containerKeyAccount, containerKeyCharacter);
+            return GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
+        }
+
         // TODO
         private (string, string, ImmutableList<GeneralNote>) GetRealTimeNotes(string containerKeyAccount,
             string containerKeyCharacter)
         {
-            if (!ValidateAccountContainerKey(containerKeyAccount)) return (null, null, null);
+            if (!ValidateAccountContainerKey(containerKeyAccount)) return (AppConstantsHelper.Unknown, null, null);
 
-            if (containerKeyCharacter is null) return (null, null, null);
+            if (containerKeyCharacter is null) return (AppConstantsHelper.Unknown, null, null);
 
             var applicationDataContainerAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount];
             var (_, applicationDataContainerCharacter) = applicationDataContainerAccount
@@ -1358,138 +1365,166 @@ namespace PaimonTray.Helpers
             {
                 Log.Warning(
                     $"Failed to find the specific account's character (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                return (null, null, null);
+                return (AppConstantsHelper.Unknown, null, null);
             } // end if
 
+            // TODO: propertySetRealTimeNotes[KeyStatus] as string, disabled
             var applicationDataContainerRealTimeNotes =
                 applicationDataContainerCharacter.CreateContainer(ContainerKeyRealTimeNotes,
                     ApplicationDataCreateDisposition
-                        .Always); // Ensure the real-time notes application data container first.
-            var applicationDataContainerExpeditions =
-                applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
-                    ApplicationDataCreateDisposition.Always);
+                        .Always);
+            var resourceLoader = _app.SettingsH.ResLoader; // Get the resource loader first.
             var colonAndEstimated =
-                $"{_resourceLoader.GetString("Colon")}{_resourceLoader.GetString("Estimated")} "; // The resource string for ": est. ".
-            string commissionsDailyExplanation;
-            var currencyRealmExplanation = _resourceLoader.GetString("CurrencyRealmLimitReached");
+                $"{resourceLoader.GetString("Colon")}{resourceLoader.GetString("Estimated")} "; // The resource string for ": est. ".
+            var commissionsDailyExplanation = AppConstantsHelper.Unknown;
+            int? commissionsDailyFinished = null;
+            int? commissionsDailyMax = null;
+            int? currencyRealmCurrent = null;
+            var currencyRealmExplanation = AppConstantsHelper.Unknown;
+            int? currencyRealmMax = null;
+            int? domainsTrounceDiscountsMax = null;
+            int? domainsTrounceDiscountsRemaining = null;
             var generalNotes = new List<GeneralNote>();
-            var propertySetRealTimeNotes =
-                applicationDataContainerRealTimeNotes.Values; // Get the real-time notes property set first.
-            var commissionsDailyFinished = propertySetRealTimeNotes[KeyCommissionsDailyFinished];
-            var commissionsDailyMax = propertySetRealTimeNotes[KeyCommissionsDailyMax];
-            var currencyRealmCurrent = propertySetRealTimeNotes[KeyCurrencyRealmCurrent];
-            var currencyRealmMax = propertySetRealTimeNotes[KeyCurrencyRealmMax];
-            var domainsTrounceDiscountsMax = propertySetRealTimeNotes[KeyDomainsTrounceDiscountsMax];
-            var domainsTrounceDiscountsRemaining = propertySetRealTimeNotes[KeyDomainsTrounceDiscountsRemaining];
-            var isDailyCommissionsExtraRewardClaimed =
-                propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardClaimed];
-            var isParametricTransformerObtained = propertySetRealTimeNotes[KeyIsParametricTransformerObtained];
-            var isParametricTransformerRecoveryTimeReached =
-                propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached];
-            var resinOriginalCurrent = propertySetRealTimeNotes[KeyResinOriginalCurrent];
-            var resinOriginalExplanation = _resourceLoader.GetString("ResinOriginalReplenishedFully");
-            var resinOriginalMax = propertySetRealTimeNotes[KeyResinOriginalMax];
-            string transformerParametricExplanation;
-            string transformerParametricStatus;
-            
-            if (commissionsDailyFinished is null || commissionsDailyMax is null)
-                commissionsDailyExplanation = AppConstantsHelper.Unknown;
-            else if (commissionsDailyFinished == commissionsDailyMax)
-                commissionsDailyExplanation = commissionsDailyMax is 0
-                    ? _resourceLoader.GetString("CommissionsDailyLocked")
-                    : _resourceLoader.GetString(isDailyCommissionsExtraRewardClaimed switch
-                    {
-                        null => "CommissionsDailyRewardExtraUnknown",
-                        true => "CommissionsDailyRewardExtraClaimed",
-                        _ => "CommissionsDailyRewardExtraUnclaimed"
-                    });
-            else commissionsDailyExplanation = _resourceLoader.GetString("CommissionsDailyUncompleted");
+            var propertySetRealTimeNotes = applicationDataContainerRealTimeNotes.Values;
+            var realTimeNotesStatus = propertySetRealTimeNotes[KeyStatus] as string;
+            int? resinOriginalCurrent = null;
+            var resinOriginalExplanation = AppConstantsHelper.Unknown;
+            int? resinOriginalMax = null;
+            var transformerParametricExplanation = AppConstantsHelper.Unknown;
+            var transformerParametricStatus = AppConstantsHelper.Unknown;
 
-            if (currencyRealmCurrent is not null && currencyRealmMax is not null &&
-                currencyRealmCurrent == currencyRealmMax)
+            if (realTimeNotesStatus is null or TagStatusDisabled)
             {
-                if (currencyRealmMax is 0) currencyRealmExplanation = _resourceLoader.GetString("CurrencyRealmLocked");
+                realTimeNotesStatus ??= TagStatusFail; // Ensure the local variable first.
+                propertySetRealTimeNotes[KeyStatus] = realTimeNotesStatus;
             }
-            else currencyRealmExplanation += colonAndEstimated; // TODO
-
-            if (!(resinOriginalCurrent is not null && resinOriginalMax is not null &&
-                  resinOriginalCurrent == resinOriginalMax))
-                resinOriginalExplanation += colonAndEstimated; // TODO
-
-            switch (isParametricTransformerObtained)
+            else
             {
-                case null:
-                    transformerParametricExplanation = AppConstantsHelper.Unknown;
-                    transformerParametricStatus = AppConstantsHelper.Unknown;
-                    break;
+                var applicationDataContainerExpeditions =
+                    applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
+                        ApplicationDataCreateDisposition.Always);
+                var isDailyCommissionsExtraRewardClaimed =
+                    propertySetRealTimeNotes[KeyIsDailyCommissionsExtraRewardClaimed] as bool?;
+                var isParametricTransformerObtained =
+                    propertySetRealTimeNotes[KeyIsParametricTransformerObtained] as bool?;
+                var isParametricTransformerRecoveryTimeReached =
+                    propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached] as bool?;
 
-                case true:
-                    transformerParametricExplanation = _resourceLoader.GetString("TransformerParametricUsedAgain");
+                commissionsDailyFinished = propertySetRealTimeNotes[KeyCommissionsDailyFinished] as int?;
+                commissionsDailyMax = propertySetRealTimeNotes[KeyCommissionsDailyMax] as int?;
+                currencyRealmCurrent = propertySetRealTimeNotes[KeyCurrencyRealmCurrent] as int?;
+                currencyRealmExplanation = resourceLoader.GetString("CurrencyRealmLimitReached");
+                currencyRealmMax = propertySetRealTimeNotes[KeyCurrencyRealmMax] as int?;
+                domainsTrounceDiscountsMax = propertySetRealTimeNotes[KeyDomainsTrounceDiscountsMax] as int?;
+                domainsTrounceDiscountsRemaining =
+                    propertySetRealTimeNotes[KeyDomainsTrounceDiscountsRemaining] as int?;
+                resinOriginalCurrent = propertySetRealTimeNotes[KeyResinOriginalCurrent] as int?;
+                resinOriginalExplanation = resourceLoader.GetString("ResinOriginalReplenishedFully");
+                resinOriginalMax = propertySetRealTimeNotes[KeyResinOriginalMax] as int?;
 
-                    switch (isParametricTransformerRecoveryTimeReached)
-                    {
-                        case null:
-                            transformerParametricExplanation += $"{colonAndEstimated}{AppConstantsHelper.Unknown}";
-                            transformerParametricStatus = AppConstantsHelper.Unknown;
-                            break;
+                if (commissionsDailyFinished is not null && commissionsDailyMax is not null)
+                {
+                    if (commissionsDailyFinished == commissionsDailyMax)
+                        commissionsDailyExplanation = commissionsDailyMax is 0
+                            ? resourceLoader.GetString("CommissionsDailyLocked")
+                            : resourceLoader.GetString(isDailyCommissionsExtraRewardClaimed switch
+                            {
+                                null => "CommissionsDailyRewardExtraUnknown",
+                                true => "CommissionsDailyRewardExtraClaimed",
+                                _ => "CommissionsDailyRewardExtraUnclaimed"
+                            });
+                    else commissionsDailyExplanation = resourceLoader.GetString("CommissionsDailyUncompleted");
+                } // end if
 
-                        case true:
-                            transformerParametricStatus = _resourceLoader.GetString("TransformerParametricReady");
-                            break;
+                if (currencyRealmCurrent is not null && currencyRealmMax is not null &&
+                    currencyRealmCurrent == currencyRealmMax)
+                {
+                    if (currencyRealmMax is 0)
+                        currencyRealmExplanation = resourceLoader.GetString("CurrencyRealmLocked");
+                }
+                else
+                    currencyRealmExplanation +=
+                        $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] as DateTimeOffset?)}";
 
-                        default:
-                            transformerParametricExplanation += colonAndEstimated; // TODO
-                            transformerParametricStatus = _resourceLoader.GetString("TransformerParametricCooldown");
-                            break;
-                    } // end switch-case
+                if (!(resinOriginalCurrent is not null && resinOriginalMax is not null &&
+                      resinOriginalCurrent == resinOriginalMax))
+                    resinOriginalExplanation +=
+                        $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
 
-                    break;
+                switch (isParametricTransformerObtained)
+                {
+                    case null:
+                        break;
 
-                default:
-                    transformerParametricExplanation = _resourceLoader.GetString("TransformerParametricLocked");
-                    transformerParametricStatus = _resourceLoader.GetString("StatusLocked");
-                    break;
-            } // end switch-case
+                    case true:
+                        transformerParametricExplanation = resourceLoader.GetString("TransformerParametricUsable");
+
+                        switch (isParametricTransformerRecoveryTimeReached)
+                        {
+                            case null:
+                                transformerParametricExplanation += $"{colonAndEstimated}{AppConstantsHelper.Unknown}";
+                                break;
+
+                            case true:
+                                transformerParametricStatus = resourceLoader.GetString("TransformerParametricReady");
+                                break;
+
+                            default:
+                                transformerParametricExplanation +=
+                                    $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] as DateTimeOffset?)}";
+                                transformerParametricStatus = resourceLoader.GetString("TransformerParametricCooldown");
+                                break;
+                        } // end switch-case
+
+                        break;
+
+                    default:
+                        transformerParametricExplanation = resourceLoader.GetString("TransformerParametricLocked");
+                        transformerParametricStatus = resourceLoader.GetString("RealTimeNotesStatusLocked");
+                        break;
+                } // end switch-case
+            } // end if...else
 
             generalNotes.Add(new GeneralNote
             {
                 Explanation = resinOriginalExplanation,
                 Status = GetRealTimeNoteStatus(resinOriginalCurrent, resinOriginalMax),
-                Title = _resourceLoader.GetString("ResinOriginal"),
+                Title = resourceLoader.GetString("ResinOriginal"),
                 UrlImage = AppConstantsHelper.UriImageResinOriginal
             }); // 1.1. Original Resin.
             generalNotes.Add(new GeneralNote
             {
                 Explanation = currencyRealmExplanation,
                 Status = GetRealTimeNoteStatus(currencyRealmCurrent, currencyRealmMax),
-                Title = _resourceLoader.GetString("CurrencyRealm"),
+                Title = resourceLoader.GetString("CurrencyRealm"),
                 UrlImage = AppConstantsHelper.UriImageCurrencyRealm
             }); // 1.2. Realm Currency.
             generalNotes.Add(new GeneralNote
             {
                 Explanation = commissionsDailyExplanation,
                 Status = GetRealTimeNoteStatus(commissionsDailyFinished, commissionsDailyMax),
-                Title = _resourceLoader.GetString("CommissionsDaily"),
+                Title = resourceLoader.GetString("CommissionsDaily"),
                 UrlImage = AppConstantsHelper.UriImageCommissionsDaily
             }); // 1.3. Daily commissions.
             generalNotes.Add(new GeneralNote
             {
-                Explanation = _resourceLoader.GetString("DomainsTrounceDiscountsExplanation"),
+                Explanation = resourceLoader.GetString("DomainsTrounceDiscountsExplanation"),
                 Status = GetRealTimeNoteStatus(domainsTrounceDiscountsRemaining, domainsTrounceDiscountsMax),
-                Title = _resourceLoader.GetString("DomainsTrounceDiscounts"),
+                Title = resourceLoader.GetString("DomainsTrounceDiscounts"),
                 UrlImage = AppConstantsHelper.UriImageDomainsTrounce
             }); // 1.4. Trounce Domains discounts.
             generalNotes.Add(new GeneralNote
             {
                 Explanation = transformerParametricExplanation,
                 Status = transformerParametricStatus,
-                Title = _resourceLoader.GetString("TransformerParametric"),
+                Title = resourceLoader.GetString("TransformerParametric"),
                 UrlImage = AppConstantsHelper.UriImageTransformerParametric
             }); // 1.5. Parametric Transformer.
 
             // TODO: expeditions
 
-            return (null, propertySetRealTimeNotes[KeyStatus] as string, generalNotes.ToImmutableList()); // TODO
+            return (GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?),
+                realTimeNotesStatus, generalNotes.ToImmutableList());
         } // end method GetRealTimeNotes
 
         /// <summary>
@@ -1601,72 +1636,6 @@ namespace PaimonTray.Helpers
                     return;
                 } // end if
 
-                var expeditions = data[KeyExpeditionsRaw];
-
-                if (expeditions is null or not JsonArray)
-                {
-                    Log.Warning(
-                        $"Failed to get the expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                }
-                else
-                {
-                    applicationDataContainerRealTimeNotes.DeleteContainer(ContainerKeyExpeditions);
-
-                    var applicationDataContainerExpeditions =
-                        applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
-                            ApplicationDataCreateDisposition.Always);
-                    var expeditionIndex = 0;
-
-                    foreach (var expedition in expeditions as JsonArray)
-                    {
-                        var propertySetExpedition = applicationDataContainerExpeditions
-                            .CreateContainer(expeditionIndex.ToString(), ApplicationDataCreateDisposition.Always)
-                            .Values;
-
-                        expeditionIndex++;
-
-                        var avatarSideIconRaw = (string)expedition[KeyAvatarSideIconRaw];
-
-                        if (avatarSideIconRaw is null || avatarSideIconRaw.Length is 0)
-                        {
-                            Log.Warning(
-                                $"Failed to get the expedition's avatar side icon from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                        }
-                        else
-                        {
-                            foreach (Match match in new Regex(@"(?<=(UI_AvatarIcon_Side_)).*(?=.png)").Matches(
-                                         avatarSideIconRaw))
-                            {
-                                propertySetExpedition[KeyAvatarSideIcon] = match.Value;
-                                break;
-                            } // end foreach
-                        } // end if...else
-
-                        var expeditionStatus = (string)expedition[KeyExpeditionStatusRaw];
-
-                        if (expeditionStatus is null)
-                        {
-                            Log.Warning(
-                                $"Failed to get the expedition status from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                        }
-                        else propertySetExpedition[KeyExpeditionStatus] = expeditionStatus;
-
-                        if (int.TryParse((string)expedition[KeyExpeditionTimeRemainingRaw],
-                                out var expeditionTimeRemaining))
-                            propertySetExpedition[KeyExpeditionTimeRemaining] =
-                                DateTimeOffset.UtcNow.AddSeconds(expeditionTimeRemaining);
-                        else
-                        {
-                            Log.Warning(
-                                $"Failed to get the remaining expedition time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                        } // end if...else
-                    } // end foreach
-                } // end if...else
-
                 var commissionsDailyFinished = (int?)data[KeyCommissionsDailyFinishedRaw];
 
                 if (commissionsDailyFinished is null)
@@ -1736,6 +1705,72 @@ namespace PaimonTray.Helpers
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 }
                 else propertySetRealTimeNotes[KeyDomainsTrounceDiscountsRemaining] = domainsTrounceDiscountsRemaining;
+
+                var expeditions = data[KeyExpeditionsRaw];
+
+                if (expeditions is null or not JsonArray)
+                {
+                    Log.Warning(
+                        $"Failed to get the expeditions from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                }
+                else
+                {
+                    applicationDataContainerRealTimeNotes.DeleteContainer(ContainerKeyExpeditions);
+
+                    var applicationDataContainerExpeditions =
+                        applicationDataContainerRealTimeNotes.CreateContainer(ContainerKeyExpeditions,
+                            ApplicationDataCreateDisposition.Always);
+                    var expeditionIndex = 0;
+
+                    foreach (var expedition in expeditions as JsonArray)
+                    {
+                        var propertySetExpedition = applicationDataContainerExpeditions
+                            .CreateContainer(expeditionIndex.ToString(), ApplicationDataCreateDisposition.Always)
+                            .Values;
+
+                        expeditionIndex++;
+
+                        var avatarSideIconRaw = (string)expedition[KeyAvatarSideIconRaw];
+
+                        if (avatarSideIconRaw is null || avatarSideIconRaw.Length is 0)
+                        {
+                            Log.Warning(
+                                $"Failed to get the expedition's avatar side icon from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        }
+                        else
+                        {
+                            foreach (Match match in new Regex(@"(?<=(UI_AvatarIcon_Side_)).*(?=.png)").Matches(
+                                         avatarSideIconRaw))
+                            {
+                                propertySetExpedition[KeyAvatarSideIcon] = match.Value;
+                                break;
+                            } // end foreach
+                        } // end if...else
+
+                        var expeditionStatus = (string)expedition[KeyExpeditionStatusRaw];
+
+                        if (expeditionStatus is null)
+                        {
+                            Log.Warning(
+                                $"Failed to get the expedition status from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        }
+                        else propertySetExpedition[KeyExpeditionStatus] = expeditionStatus;
+
+                        if (int.TryParse((string)expedition[KeyExpeditionTimeRemainingRaw],
+                                out var expeditionTimeRemaining))
+                            propertySetExpedition[KeyExpeditionTimeRemaining] =
+                                DateTimeOffset.UtcNow.AddSeconds(expeditionTimeRemaining);
+                        else
+                        {
+                            Log.Warning(
+                                $"Failed to get the remaining expedition time from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                        } // end if...else
+                    } // end foreach
+                } // end if...else
 
                 var expeditionsCurrent = (int?)data[KeyExpeditionsCurrentRaw];
 
@@ -1822,24 +1857,8 @@ namespace PaimonTray.Helpers
                     {
                         propertySetRealTimeNotes[KeyIsParametricTransformerObtained] = isParametricTransformerObtained;
 
-                        if (isParametricTransformerObtained is false) return;
-
-                        var isParametricTransformerRecoveryTimeReached =
-                            (bool?)transformerParametric[KeyIsParametricTransformerRecoveryTimeReachedRaw];
-
-                        if (isParametricTransformerRecoveryTimeReached is null)
+                        if (isParametricTransformerObtained is true)
                         {
-                            Log.Warning(
-                                $"Failed to get the flag indicating if the Parametric Transformer recovery time is reached from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
-                        }
-                        else
-                        {
-                            propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached] =
-                                isParametricTransformerRecoveryTimeReached;
-
-                            if (isParametricTransformerRecoveryTimeReached is true) return;
-
                             var transformerParametricRecoveryTime =
                                 transformerParametric[KeyTransformerParametricTimeRecoveryRaw];
 
@@ -1851,32 +1870,52 @@ namespace PaimonTray.Helpers
                             }
                             else
                             {
-                                var transformerParametricRecoveryDay =
-                                    (int?)transformerParametricRecoveryTime[KeyDayRaw];
-                                var transformerParametricRecoveryHour =
-                                    (int?)transformerParametricRecoveryTime[KeyHourRaw];
-                                var transformerParametricRecoveryMinute =
-                                    (int?)transformerParametricRecoveryTime[KeyMinuteRaw];
-                                var transformerParametricRecoverySecond =
-                                    (int?)transformerParametricRecoveryTime[KeySecondRaw];
+                                var isParametricTransformerRecoveryTimeReached =
+                                    (bool?)transformerParametricRecoveryTime[
+                                        KeyIsParametricTransformerRecoveryTimeReachedRaw];
 
-                                if (transformerParametricRecoveryDay is null ||
-                                    transformerParametricRecoveryHour is null ||
-                                    transformerParametricRecoveryMinute is null ||
-                                    transformerParametricRecoverySecond is null)
+                                if (isParametricTransformerRecoveryTimeReached is null)
                                 {
                                     Log.Warning(
-                                        $"Failed to get the Parametric Transformer recovery time details from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                                        $"Failed to get the flag indicating if the Parametric Transformer recovery time is reached from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                                 }
                                 else
-                                    propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] =
-                                        DateTimeOffset.UtcNow.Add(new TimeSpan((int)transformerParametricRecoveryDay,
-                                            (int)transformerParametricRecoveryHour,
-                                            (int)transformerParametricRecoveryMinute,
-                                            (int)transformerParametricRecoverySecond));
+                                {
+                                    propertySetRealTimeNotes[KeyIsParametricTransformerRecoveryTimeReached] =
+                                        isParametricTransformerRecoveryTimeReached;
+
+                                    if (isParametricTransformerRecoveryTimeReached is false)
+                                    {
+                                        var transformerParametricRecoveryDay =
+                                            (int?)transformerParametricRecoveryTime[KeyDayRaw];
+                                        var transformerParametricRecoveryHour =
+                                            (int?)transformerParametricRecoveryTime[KeyHourRaw];
+                                        var transformerParametricRecoveryMinute =
+                                            (int?)transformerParametricRecoveryTime[KeyMinuteRaw];
+                                        var transformerParametricRecoverySecond =
+                                            (int?)transformerParametricRecoveryTime[KeySecondRaw];
+
+                                        if (transformerParametricRecoveryDay is null ||
+                                            transformerParametricRecoveryHour is null ||
+                                            transformerParametricRecoveryMinute is null ||
+                                            transformerParametricRecoverySecond is null)
+                                        {
+                                            Log.Warning(
+                                                $"Failed to get the Parametric Transformer recovery time details from real-time notes (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                                            propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                                        }
+                                        else
+                                            propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] =
+                                                DateTimeOffset.UtcNow.Add(new TimeSpan(
+                                                    (int)transformerParametricRecoveryDay,
+                                                    (int)transformerParametricRecoveryHour,
+                                                    (int)transformerParametricRecoveryMinute,
+                                                    (int)transformerParametricRecoverySecond));
+                                    } // end if
+                                } // end if...else
                             } // end if...else
-                        } // end if...else
+                        } // end if
                     } // end if...else
                 } // end if...else
 
@@ -1894,7 +1933,32 @@ namespace PaimonTray.Helpers
         } // end method GetRealTimeNotesFromApiAsync
 
         /// <summary>
-        /// Get the real-time note's status in the format of "current/max" or indicating not yet unlocked.
+        /// Get the real-time note's date and time string.
+        /// </summary>
+        /// <param name="dateTime">The struct containing the date and time.</param>
+        /// <returns>The real-time note's date and time string.</returns>
+        private string GetRealTimeNoteDateTime(DateTimeOffset? dateTime)
+        {
+            if (dateTime is null) return AppConstantsHelper.Unknown;
+
+            var cultureApplied = _app.SettingsH.CultureApplied;
+            var dateTimeLocal = ((DateTimeOffset)dateTime).ToLocalTime();
+            var dateTimeNowDay = DateTimeOffset.Now.Day;
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            if (dateTimeLocal.Day == dateTimeNowDay - 1)
+                return $"{resourceLoader.GetString("Yesterday")} {dateTimeLocal.ToString("t", cultureApplied)}";
+
+            if (dateTimeLocal.Day == dateTimeNowDay)
+                return $"{resourceLoader.GetString("Today")} {dateTimeLocal.ToString("t", cultureApplied)}";
+
+            return dateTimeLocal.Day == dateTimeNowDay + 1
+                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeLocal.ToString("t", cultureApplied)}"
+                : dateTimeLocal.ToString("g", cultureApplied);
+        } // end method GetRealTimeNoteDateTime
+
+        /// <summary>
+        /// Get the real-time note's status with the current and max values.
         /// </summary>
         /// <param name="valueCurrent">The current value.</param>
         /// <param name="valueMax">The max value.</param>
@@ -1904,7 +1968,11 @@ namespace PaimonTray.Helpers
             var current = valueCurrent is null or not int ? AppConstantsHelper.Unknown : valueCurrent;
             var max = valueMax is null or not int ? AppConstantsHelper.Unknown : valueMax;
 
-            return current is 0 && max is 0 ? _resourceLoader.GetString("StatusLocked") : $"{current}/{max}";
+            return current is 0 && max is 0
+                ? _app.SettingsH.ResLoader.GetString("RealTimeNotesStatusLocked")
+                : current is AppConstantsHelper.Unknown && max is AppConstantsHelper.Unknown
+                    ? AppConstantsHelper.Unknown
+                    : $"{current}/{max}";
         } // end method GetRealTimeNoteStatus
 
         /// <summary>

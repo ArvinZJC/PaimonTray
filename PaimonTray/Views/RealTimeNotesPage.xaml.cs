@@ -9,8 +9,6 @@ using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Collections;
 
 namespace PaimonTray.Views
 {
@@ -31,16 +29,6 @@ namespace PaimonTray.Views
         /// </summary>
         private readonly MainWindow _mainWindow;
 
-        /// <summary>
-        /// The accounts property set.
-        /// </summary>
-        private readonly IPropertySet _propertySetAccounts;
-
-        /// <summary>
-        /// The resource loader.
-        /// </summary>
-        private readonly ResourceLoader _resourceLoader;
-
         #endregion Fields
 
         #region Constructors
@@ -52,8 +40,6 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
-            _propertySetAccounts = _app?.AccountsH.ApplicationDataContainerAccounts.Values;
-            _resourceLoader = _app?.SettingsH.ResLoader;
 
             InitializeComponent();
             UpdateUiText();
@@ -118,11 +104,13 @@ namespace PaimonTray.Views
         /// </summary>
         private void ToggleStatusVisibility()
         {
+            var resourceLoader = _app.SettingsH.ResLoader;
+
             if (_app.AccountsH.IsManaging)
             {
                 GridStatusWarning.Visibility = Visibility.Collapsed;
                 ProgressRingStatusLoading.Visibility = Visibility.Visible;
-                TextBlockStatus.Text = _resourceLoader.GetString("StatusLoading");
+                TextBlockStatus.Text = resourceLoader.GetString("StatusLoading");
                 GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
             }
             else
@@ -147,7 +135,8 @@ namespace PaimonTray.Views
                     if (hasCharacterEnabled)
                     {
                         var uidCharacterSelected =
-                            _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+                            _app.AccountsH.ApplicationDataContainerAccounts.Values[
+                                AccountsHelper.KeyUidCharacterSelected] as string;
                         AccountCharacter accountCharacterSelected = null;
 
                         foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
@@ -166,9 +155,9 @@ namespace PaimonTray.Views
                         ListViewAccountGroups.SelectedItem = accountCharacterSelected;
                         GridStatus.Visibility = Visibility.Collapsed; // Hide the status grid when ready.
                     }
-                    else ShowAccountGroupNoCharacterStatus(_resourceLoader.GetString("AccountGroupNoCharacterEnabled"));
+                    else ShowAccountGroupNoCharacterStatus(resourceLoader.GetString("AccountGroupNoCharacterEnabled"));
                 }
-                else ShowAccountGroupNoCharacterStatus(_resourceLoader.GetString("AccountGroupNoCharacter"));
+                else ShowAccountGroupNoCharacterStatus(resourceLoader.GetString("AccountGroupNoCharacter"));
             } // end if...else
         } // end method ToggleStatusVisibility
 
@@ -177,8 +166,20 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            TextBlockTitle.Text = _resourceLoader.GetString("RealTimeNotes");
-            ToolTipService.SetToolTip(ButtonCharacterSwitch, _resourceLoader.GetString("CharacterSwitch"));
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            RunCharacterRealTimeNotesUpdatedLast.Text =
+                $"{resourceLoader.GetString("RealTimeNotesUpdatedLast")}{resourceLoader.GetString("Colon")}";
+            TextBlockTitle.Text = resourceLoader.GetString("RealTimeNotes");
+            ToolTipService.SetToolTip(ButtonCharacterSwitch, resourceLoader.GetString("CharacterSwitch"));
+            ToolTipService.SetToolTip(FontIconCharacterRealTimeNotesStatusDisabled,
+                resourceLoader.GetString("RealTimeNotesStatusDisabledExplanation"));
+            ToolTipService.SetToolTip(FontIconCharacterRealTimeNotesStatusFail,
+                resourceLoader.GetString("RealTimeNotesStatusFailExplanation"));
+            ToolTipService.SetToolTip(FontIconCharacterRealTimeNotesStatusReady,
+                resourceLoader.GetString("RealTimeNotesStatusReadyExplanation"));
+            ToolTipService.SetToolTip(FontIconCharacterRealTimeNotesStatusUpdating,
+                resourceLoader.GetString("RealTimeNotesStatusUpdatingExplanation"));
         } // end method UpdateUiText
 
         #endregion Methods
@@ -207,18 +208,15 @@ namespace PaimonTray.Views
             SetPageSize();
         } // end method GridBody_OnSizeChanged
 
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-        } // end method GridRoot_OnLoaded
-
         // Handle the account groups list view's selection changed event.
-        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ButtonCharacterSwitch.Flyout.Hide();
+
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
             {
-                TextBlockNicknameCharacter.Text = string.Empty;
-                TextBlockOtherInfoCharacter.Text = string.Empty;
+                TextBlockNicknameCharacter.Text = AppConstantsHelper.Unknown;
+                TextBlockOtherInfoCharacter.Text = AppConstantsHelper.Unknown;
             }
             else
             {
@@ -232,11 +230,30 @@ namespace PaimonTray.Views
                         AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
                     AppConstantsHelper.Unknown;
 
-                _propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
+                _app.AccountsH.ApplicationDataContainerAccounts.Values[AccountsHelper.KeyUidCharacterSelected] =
+                    accountCharacter.UidCharacter;
                 TextBlockNicknameCharacter.Text = nicknameCharacter;
                 TextBlockOtherInfoCharacter.Text = otherInfoCharacter;
                 ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
                 ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
+
+                // TODO:
+                var (realTimeNotesTimeUpdateLast, realTimeNotesStatus, realTimeNotesGeneral) =
+                    await _app.AccountsH.Temp(accountCharacter.Key, accountCharacter.UidCharacter);
+
+                GridCharacterRealTimeNotesStatusDisabled.Visibility =
+                    realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
+                GridCharacterRealTimeNotesStatusFail.Visibility =
+                    realTimeNotesStatus is null or AccountsHelper.TagStatusFail
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus is AccountsHelper.TagStatusReady
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+                GridCharacterRealTimeNotesStatusUpdating.Visibility =
+                    realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
+                ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneral;
+                RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
             } // end if...else
         } // end method ListViewAccountGroups_OnSelectionChanged
 
@@ -245,7 +262,7 @@ namespace PaimonTray.Views
         {
             GridCharacter.Width = ListViewCharacterRealTimeNotesGeneral.ActualWidth;
             GridCharacterRealTimeNotes.Width = GridCharacter.Width;
-            GridTimeUpdateLast.MaxWidth = GridCharacter.Width;
+            GridCharacterRealTimeNotesTimeUpdateLast.MaxWidth = GridCharacter.Width;
             ListViewCharacterRealTimeNotesExpeditions.MaxWidth = GridCharacter.Width;
             TextBlockTitle.MaxWidth = GridCharacter.Width;
         } // end method ListViewCharacterRealTimeNotesGeneral_OnSizeChanged

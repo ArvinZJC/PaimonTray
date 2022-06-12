@@ -12,7 +12,6 @@ using Serilog;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel;
-using Windows.Foundation.Collections;
 using Windows.Graphics;
 
 namespace PaimonTray.Views
@@ -44,11 +43,6 @@ namespace PaimonTray.Views
         /// </summary>
         private ExistingWindow _existingWindow;
 
-        /// <summary>
-        /// The settings property set.
-        /// </summary>
-        private readonly IPropertySet _propertySetSettings;
-
         #endregion Fields
 
         #region Properties
@@ -79,7 +73,6 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             _isFirstLoad = true;
-            _propertySetSettings = _app?.SettingsH.PropertySetSettings;
             MainWinViewModel = new MainWindowViewModel();
             InitializeComponent();
             CustomiseWindow();
@@ -167,7 +160,7 @@ namespace PaimonTray.Views
                 resourceLoader.GetString("AccountAddUpdate"));
             ToolTipService.SetToolTip(NavigationViewItemBodyRealTimeNotes, resourceLoader.GetString("RealTimeNotes"));
 
-            if (_propertySetSettings[SettingsHelper.KeyNotificationGreeting] is true)
+            if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationGreeting] is true)
                 new ToastContentBuilder()
                     .AddText(resourceLoader.GetString("NotificationGreetingTitle"))
                     .AddText(resourceLoader.GetString("NotificationGreetingContent"))
@@ -223,7 +216,7 @@ namespace PaimonTray.Views
             Activate(); // Activate the window here to prevent being flicked when moving and resizing.
             _isFirstLoad = false;
 
-            if (_propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] is false)
+            if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] is false)
                 _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
         } // end method FrameBody_OnSizeChanged
 

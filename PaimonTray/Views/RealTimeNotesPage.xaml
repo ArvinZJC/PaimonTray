@@ -7,13 +7,14 @@
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:PaimonTray.Models"
+    xmlns:realTimeNotesModels="using:PaimonTray.Models.RealTimeNotes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Page.Resources>
         <converters:AccountCharacterConverter x:Key="AccountCharacterConverter" />
         <converters:AccountGroupInfoListConverter x:Key="AccountGroupInfoListConverter" />
     </Page.Resources>
     <!-- The root grid. -->
-    <Grid Loaded="GridRoot_OnLoaded">
+    <Grid>
         <!-- The body scroll viewer. -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <!-- The body grid. -->
@@ -243,7 +244,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid
-                            x:Name="GridTimeUpdateLast"
+                            x:Name="GridCharacterRealTimeNotesTimeUpdateLast"
                             ColumnSpacing="12"
                             Grid.Row="0"
                             HorizontalAlignment="Center"
@@ -256,25 +257,14 @@
                                 Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                                 Grid.Column="0"
                                 Style="{ThemeResource CaptionTextBlockStyle}"
-                                Text="Last updated: XXX"
                                 TextWrapping="Wrap"
-                                VerticalAlignment="Center" />
+                                VerticalAlignment="Center">
+                                <Run x:Name="RunCharacterRealTimeNotesUpdatedLast" />
+                                <Run x:Name="RunCharacterRealTimeNotesTimeUpdateLast" />
+                            </TextBlock>
                             <!-- The real-time notes' status grids. -->
                             <Grid
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Visibility="Visible">
-                                <FontIcon
-                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
-                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
-                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
-                                <FontIcon
-                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
-                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconForeground}"
-                                    Glyph="{ThemeResource InfoBarInformationalIconGlyph}"
-                                    ToolTipService.ToolTip="TODO" />
-                            </Grid>
-                            <Grid
+                                x:Name="GridCharacterRealTimeNotesStatusDisabled"
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 Visibility="Collapsed">
@@ -283,12 +273,13 @@
                                     Foreground="{ThemeResource InfoBarWarningSeverityIconBackground}"
                                     Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
                                 <FontIcon
+                                    x:Name="FontIconCharacterRealTimeNotesStatusDisabled"
                                     FontSize="{ThemeResource CaptionTextBlockFontSize}"
                                     Foreground="{ThemeResource InfoBarWarningSeverityIconForeground}"
-                                    Glyph="{ThemeResource InfoBarWarningIconGlyph}"
-                                    ToolTipService.ToolTip="TODO" />
+                                    Glyph="{ThemeResource InfoBarWarningIconGlyph}" />
                             </Grid>
                             <Grid
+                                x:Name="GridCharacterRealTimeNotesStatusFail"
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 Visibility="Collapsed">
@@ -297,12 +288,13 @@
                                     Foreground="{ThemeResource InfoBarErrorSeverityIconBackground}"
                                     Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
                                 <FontIcon
+                                    x:Name="FontIconCharacterRealTimeNotesStatusFail"
                                     FontSize="{ThemeResource CaptionTextBlockFontSize}"
                                     Foreground="{ThemeResource InfoBarErrorSeverityIconForeground}"
-                                    Glyph="{ThemeResource InfoBarErrorIconGlyph}"
-                                    ToolTipService.ToolTip="TODO" />
+                                    Glyph="{ThemeResource InfoBarErrorIconGlyph}" />
                             </Grid>
                             <Grid
+                                x:Name="GridCharacterRealTimeNotesStatusReady"
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 Visibility="Collapsed">
@@ -311,10 +303,25 @@
                                     Foreground="{ThemeResource InfoBarSuccessSeverityIconBackground}"
                                     Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
                                 <FontIcon
+                                    x:Name="FontIconCharacterRealTimeNotesStatusReady"
                                     FontSize="{ThemeResource CaptionTextBlockFontSize}"
                                     Foreground="{ThemeResource InfoBarSuccessSeverityIconForeground}"
-                                    Glyph="{ThemeResource InfoBarSuccessIconGlyph}"
-                                    ToolTipService.ToolTip="TODO" />
+                                    Glyph="{ThemeResource InfoBarSuccessIconGlyph}" />
+                            </Grid>
+                            <Grid
+                                x:Name="GridCharacterRealTimeNotesStatusUpdating"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed">
+                                <FontIcon
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconBackground}"
+                                    Glyph="{ThemeResource InfoBarIconBackgroundGlyph}" />
+                                <FontIcon
+                                    x:Name="FontIconCharacterRealTimeNotesStatusUpdating"
+                                    FontSize="{ThemeResource CaptionTextBlockFontSize}"
+                                    Foreground="{ThemeResource InfoBarInformationalSeverityIconForeground}"
+                                    Glyph="{ThemeResource InfoBarInformationalIconGlyph}" />
                             </Grid>
                         </Grid>
                         <!-- The character's real-time notes' general section list view. -->
@@ -326,206 +333,49 @@
                             MaxWidth="340"
                             SelectionMode="None"
                             SizeChanged="ListViewCharacterRealTimeNotesGeneral_OnSizeChanged">
-                            <!-- The Original Resin grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <Image.Source>
-                                        <BitmapImage
-                                            DecodePixelHeight="32"
-                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageResinOriginal}" />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        Text="Original Resin"
-                                        TextWrapping="WrapWholeWords" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                        Text="TODO"
-                                        TextWrapping="WrapWholeWords" />
-                                </StackPanel>
-                                <TextBlock
-                                    Grid.Column="2"
-                                    MaxWidth="100"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="160/160"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                            <!-- The Realm Currency grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <Image.Source>
-                                        <BitmapImage
-                                            DecodePixelHeight="32"
-                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageCurrencyRealm}" />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        Text="Realm Currency"
-                                        TextWrapping="WrapWholeWords" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                        Text="TODO"
-                                        TextWrapping="WrapWholeWords" />
-                                </StackPanel>
-                                <TextBlock
-                                    Grid.Column="2"
-                                    MaxWidth="100"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="2400/2400"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                            <!-- The daily commissions grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <Image.Source>
-                                        <BitmapImage
-                                            DecodePixelHeight="32"
-                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageCommissionsDaily}" />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        Text="Daily commissions"
-                                        TextWrapping="WrapWholeWords" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                        Text="TODO"
-                                        TextWrapping="WrapWholeWords" />
-                                </StackPanel>
-                                <TextBlock
-                                    Grid.Column="2"
-                                    MaxWidth="100"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="4/4"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                            <!-- The Trounce Domains discounts grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <Image.Source>
-                                        <BitmapImage
-                                            DecodePixelHeight="32"
-                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageDomainsTrounce}" />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        Text="Enemies of Note"
-                                        TextWrapping="WrapWholeWords" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                        Text="Remaining Original Resin cost-halving opportunities this week"
-                                        TextWrapping="WrapWholeWords" />
-                                </StackPanel>
-                                <TextBlock
-                                    Grid.Column="2"
-                                    MaxWidth="100"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="3/3"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                            <!-- The Parametric Transformer grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <Image.Source>
-                                        <BitmapImage
-                                            DecodePixelHeight="32"
-                                            UriSource="{x:Bind helpers:AppConstantsHelper.UriImageTransformerParametric}" />
-                                    </Image.Source>
-                                </Image>
-                                <StackPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center">
-                                    <TextBlock
-                                        Text="Parametric Transformer"
-                                        TextWrapping="WrapWholeWords" />
-                                    <TextBlock
-                                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
-                                        Style="{ThemeResource CaptionTextBlockStyle}"
-                                        Text="TODO"
-                                        TextWrapping="WrapWholeWords" />
-                                </StackPanel>
-                                <TextBlock
-                                    Grid.Column="2"
-                                    MaxWidth="100"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="Cooldown in progress"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="realTimeNotesModels:GeneralNote">
+                                    <Grid
+                                        ColumnSpacing="12"
+                                        Padding="0, 8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image
+                                            Grid.Column="0"
+                                            Height="32"
+                                            VerticalAlignment="Center"
+                                            Width="32">
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    DecodePixelHeight="32"
+                                                    UriSource="{x:Bind UrlImage}" />
+                                            </Image.Source>
+                                        </Image>
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center">
+                                            <TextBlock
+                                                Text="{x:Bind Title}"
+                                                TextWrapping="WrapWholeWords" />
+                                            <TextBlock
+                                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{x:Bind Explanation}"
+                                                TextWrapping="WrapWholeWords" />
+                                        </StackPanel>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            MaxWidth="100"
+                                            Style="{ThemeResource BaseTextBlockStyle}"
+                                            Text="{x:Bind Status}"
+                                            TextWrapping="WrapWholeWords"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                         <!-- The character's real-time notes' expeditions section list view. -->
                         <ListView
