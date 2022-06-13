@@ -307,8 +307,8 @@
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
   </data>
-  <data name="IssuesView" xml:space="preserve">
-    <value>View issues</value>
+  <data name="Issues" xml:space="preserve">
+    <value>Issues</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>

@@ -13,6 +13,11 @@
         public const string GlyphAccept = "\xE8FB";
 
         /// <summary>
+        /// The code of the glyph Diagnostic.
+        /// </summary>
+        public const string GlyphDiagnostic = "\xE9D9";
+
+        /// <summary>
         /// The code of the glyph Dictionary.
         /// </summary>
         public const string GlyphDictionary = "\xE82D";
@@ -23,9 +28,19 @@
         public const string GlyphHelp = "\xE897";
 
         /// <summary>
+        /// The code of the glyph Hide.
+        /// </summary>
+        public const string GlyphHide = "\xED1A";
+
+        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public const string GlyphInfo = "\xE946";
+
+        /// <summary>
+        /// The code of the glyph KnowledgeArticle.
+        /// </summary>
+        public const string GlyphKnowledgeArticle = "\xF000";
 
         /// <summary>
         /// The code of the glyph Repair.
@@ -38,9 +53,19 @@
         public const string GlyphSwitchUser = "\xE748";
 
         /// <summary>
+        /// The code of the glyph Trackers.
+        /// </summary>
+        public const string GlyphTrackers = "\xEADF";
+
+        /// <summary>
         /// The code of the glyph UpdateRestore.
         /// </summary>
         public const string GlyphUpdateRestore = "\xE777";
+
+        /// <summary>
+        /// The code of the glyph Website.
+        /// </summary>
+        public const string GlyphWebsite = "\xEB41";
 
         /// <summary>
         /// The info bar's bottom margin.
@@ -108,6 +133,11 @@
         public const string UrlAppIconSource = "https://www.pixiv.net/en/artworks/92415888";
 
         /// <summary>
+        /// The app's GitHub repository's specific release base URL.
+        /// </summary>
+        public const string UrlBaseGitHubRepoRelease = $"{UrlGitHubRepoReleases}/tag/v";
+
+        /// <summary>
         /// The URL of the user manual section instructing how to get your cookies.
         /// </summary>
         public const string UrlCookiesHowToGet = "https://paimon.swo.moe/#how-to-get-my-cookie";
@@ -140,7 +170,7 @@
         /// <summary>
         /// The URL of the app licence on GitHub.
         /// </summary>
-        public const string UrlGitHubRepoLicence = "https://github.com/ArvinZJC/PaimonTray/blob/main/LICENSE";
+        public const string UrlGitHubRepoLicence = "https://github.com/ArvinZJC/PaimonTray/blob/main/LICENCE";
 
         /// <summary>
         /// The app's GitHub repository's releases URL.

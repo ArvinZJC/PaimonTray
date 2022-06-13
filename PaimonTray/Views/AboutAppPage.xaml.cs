@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using Windows.ApplicationModel;
+using PaimonTray.Helpers;
 
 namespace PaimonTray.Views
 {
@@ -9,6 +10,15 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class AboutAppPage
     {
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private readonly App _app;
+
+        #endregion Fields
+
         #region Constructors
 
         /// <summary>
@@ -16,9 +26,12 @@ namespace PaimonTray.Views
         /// </summary>
         public AboutAppPage()
         {
+            _app = Application.Current as App;
             InitializeComponent();
             UpdateUiText();
 
+            HyperlinkButtonReleaseNotes.NavigateUri =
+                new Uri(_app?.UrlGitHubRepoRelease ?? AppConstantsHelper.UrlGitHubRepoReleases);
             TextBlockCopyright.Text = $"© {DateTime.Now.Year} {Package.Current.PublisherDisplayName}";
         } // end constructor AboutAppPage
 
@@ -32,12 +45,12 @@ namespace PaimonTray.Views
         private void UpdateUiText()
         {
             var packageVersion = Package.Current.Id.Version;
-            var resourceLoader = (Application.Current as App)?.SettingsH.ResLoader;
+            var resourceLoader = _app.SettingsH.ResLoader;
 
             HyperlinkButtonGiteeRepo.Content = resourceLoader?.GetString("GiteeRepo");
             HyperlinkButtonGitHubRepo.Content = resourceLoader?.GetString("GitHubRepo");
-            HyperlinkButtonHome.Content = $"{Package.Current.DisplayName} {resourceLoader?.GetString("Site")}";
-            HyperlinkButtonIssuesView.Content = resourceLoader?.GetString("IssuesView");
+            HyperlinkButtonAppSite.Content = $"{Package.Current.DisplayName} {resourceLoader?.GetString("Site")}";
+            HyperlinkButtonIssues.Content = resourceLoader?.GetString("Issues");
             HyperlinkButtonLicence.Content = resourceLoader?.GetString("Licence");
             HyperlinkButtonReleaseNotes.Content = resourceLoader?.GetString("ReleaseNotes");
             HyperlinkButtonUserManual.Content = resourceLoader?.GetString("UserManual");
@@ -50,7 +63,7 @@ namespace PaimonTray.Views
             RunNameGitHubRepoApiUsesSecondary.Text = resourceLoader?.GetString("NameGitHubRepoApiUsesSecondary");
             RunNameGitHubRepoInspiration.Text = resourceLoader?.GetString("NameGitHubRepoInspiration");
             TextBlockVersion.Text =
-                $"{resourceLoader?.GetString("Version")} {(Application.Current as App)?.AppVersion} ({packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}.{packageVersion.Revision})";
+                $"{resourceLoader?.GetString("Version")} {_app.AppVersion} ({packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}.{packageVersion.Revision})";
         } // end method UpdateUiText
 
         #endregion Methods

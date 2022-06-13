@@ -78,10 +78,11 @@ namespace PaimonTray.Views
             CustomiseWindow();
             UpdateUiText();
 
-            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
-            TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
             GridRoot.Background =
                 new SolidColorBrush(((SolidColorBrush)GridRoot.Resources["RootGridAcrylicBackground"]).Color);
+            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpReleaseNotes.CommandParameter = _app?.UrlGitHubRepoRelease;
+            TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
         } // end constructor MainWindow
 
         #endregion Constructors
@@ -144,14 +145,15 @@ namespace PaimonTray.Views
             var resourceLoader = _app.SettingsH.ResLoader;
 
             MenuFlyoutItemAppMenuMainWindowVisibility.Text = resourceLoader.GetString("MainWindowHide");
-            MenuFlyoutItemMainMenuGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
-            MenuFlyoutItemMainMenuGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
-            MenuFlyoutItemMainMenuHelpHome.Text = $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
+            MenuFlyoutItemMainMenuHelpAppSite.Text =
+                $"{Package.Current.DisplayName} {resourceLoader.GetString("Site")}";
+            MenuFlyoutItemMainMenuHelpGiteeRepo.Text = resourceLoader.GetString("GiteeRepo");
+            MenuFlyoutItemMainMenuHelpGitHubRepo.Text = resourceLoader.GetString("GitHubRepo");
+            MenuFlyoutItemMainMenuHelpIssues.Text = resourceLoader.GetString("Issues");
             MenuFlyoutItemMainMenuHelpLogsShow.Text = resourceLoader.GetString("LogsShow");
-            MenuFlyoutItemMainMenuIssuesView.Text = resourceLoader.GetString("IssuesView");
+            MenuFlyoutItemMainMenuHelpReleaseNotes.Text = resourceLoader.GetString("ReleaseNotes");
+            MenuFlyoutItemMainMenuHelpUserManual.Text = resourceLoader.GetString("UserManual");
             MenuFlyoutItemMainMenuMainWindowHide.Text = resourceLoader.GetString("MainWindowHide");
-            MenuFlyoutItemMainMenuReleaseNotes.Text = resourceLoader.GetString("ReleaseNotes");
-            MenuFlyoutItemMainMenuUserManual.Text = resourceLoader.GetString("UserManual");
             MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
             TaskbarIconApp.ToolTipText =
                 $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";

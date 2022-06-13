@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- The app icon and name stack panel. -->
         <StackPanel
@@ -81,7 +82,7 @@
             NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoLicence}" />
         <StackPanel Grid.Row="5">
             <HyperlinkButton
-                x:Name="HyperlinkButtonHome"
+                x:Name="HyperlinkButtonAppSite"
                 IsEnabled="False" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonUserManual"
@@ -92,14 +93,13 @@
                 x:Name="HyperlinkButtonGitHubRepo"
                 NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepo}" />
             <HyperlinkButton
-                x:Name="HyperlinkButtonGiteeRepo"
-                IsEnabled="False" />
-            <HyperlinkButton
-                x:Name="HyperlinkButtonIssuesView"
+                x:Name="HyperlinkButtonIssues"
                 NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoIssues}" />
-            <HyperlinkButton
-                x:Name="HyperlinkButtonReleaseNotes"
-                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoReleases}" />
+            <HyperlinkButton x:Name="HyperlinkButtonReleaseNotes" />
         </StackPanel>
+        <HyperlinkButton
+            x:Name="HyperlinkButtonGiteeRepo"
+            Grid.Row="7"
+            IsEnabled="False" />
     </Grid>
 </Page>

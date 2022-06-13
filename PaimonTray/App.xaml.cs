@@ -42,6 +42,11 @@ namespace PaimonTray
         public SettingsHelper SettingsH { get; }
 
         /// <summary>
+        /// The app's GitHub repository's specific release URL.
+        /// </summary>
+        public string UrlGitHubRepoRelease { get; }
+
+        /// <summary>
         /// The windows helper.
         /// </summary>
         public WindowsHelper WindowsH { get; }
@@ -60,6 +65,7 @@ namespace PaimonTray
             Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
             SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
             AccountsH = new AccountsHelper();
+            UrlGitHubRepoRelease = $"{AppConstantsHelper.UrlBaseGitHubRepoRelease}{AppVersion}";
             WindowsH = new WindowsHelper();
             InitializeComponent();
         } // end constructor App

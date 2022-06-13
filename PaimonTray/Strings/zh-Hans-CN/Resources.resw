@@ -307,8 +307,8 @@
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
   </data>
-  <data name="IssuesView" xml:space="preserve">
-    <value>查看 issues</value>
+  <data name="Issues" xml:space="preserve">
+    <value>议题</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>语言</value>
@@ -470,7 +470,7 @@
     <value>台港澳区</value>
   </data>
   <data name="ReleaseNotes" xml:space="preserve">
-    <value>发布说明</value>
+    <value>发行说明</value>
   </data>
   <data name="ResinOriginal" xml:space="preserve">
     <value>原粹树脂</value>

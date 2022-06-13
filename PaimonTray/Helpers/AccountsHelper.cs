@@ -1368,7 +1368,6 @@ namespace PaimonTray.Helpers
                 return (AppConstantsHelper.Unknown, null, null);
             } // end if
 
-            // TODO: propertySetRealTimeNotes[KeyStatus] as string, disabled
             var applicationDataContainerRealTimeNotes =
                 applicationDataContainerCharacter.CreateContainer(ContainerKeyRealTimeNotes,
                     ApplicationDataCreateDisposition
