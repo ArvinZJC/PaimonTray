@@ -234,20 +234,20 @@
   <data name="CommissionsDaily" xml:space="preserve">
     <value>每日委托任务</value>
   </data>
+  <data name="CommissionsDailyIncomplete" xml:space="preserve">
+    <value>今日完成委托数量不足</value>
+  </data>
   <data name="CommissionsDailyLocked" xml:space="preserve">
     <value>您可能需要完成世界任务”每天都是新的冒险“</value>
   </data>
-  <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
+  <data name="CommissionsDailyRewardsBonusClaimed" xml:space="preserve">
     <value>已完成今日委托，并已领取额外奖励</value>
   </data>
-  <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
+  <data name="CommissionsDailyRewardsBonusUnclaimed" xml:space="preserve">
     <value>已完成今日委托，但未领取额外奖励</value>
   </data>
-  <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
+  <data name="CommissionsDailyRewardsBonusUnknown" xml:space="preserve">
     <value>已完成今日委托（未能确定额外奖励领取状态）</value>
-  </data>
-  <data name="CommissionsDailyUncompleted" xml:space="preserve">
-    <value>今日完成委托数量不足</value>
   </data>
   <data name="Cookies" xml:space="preserve">
     <value>cookie</value>
@@ -289,8 +289,17 @@
   <data name="Exit" xml:space="preserve">
     <value>退出</value>
   </data>
+  <data name="ExpeditionComplete" xml:space="preserve">
+    <value>完成</value>
+  </data>
   <data name="Expeditions" xml:space="preserve">
     <value>探索派遣</value>
+  </data>
+  <data name="ExpeditionsExplanation" xml:space="preserve">
+    <value>进行探索派遣的游戏角色</value>
+  </data>
+  <data name="ExpeditionsNone" xml:space="preserve">
+    <value>未进行探索派遣</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>通用</value>

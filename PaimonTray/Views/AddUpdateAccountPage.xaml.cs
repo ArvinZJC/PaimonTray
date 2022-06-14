@@ -337,7 +337,7 @@ namespace PaimonTray.Views
         /// </summary>
         /// <typeparam name="T">Should be a <see cref="string"/> or <see cref="CoreWebView2Cookie"/> type.</typeparam>
         /// <param name="rawCookies">The raw cookies.</param>
-        /// <returns>1st item: the account's UID; 2nd item: the processed cookies.</returns>
+        /// <returns>A tuple. 1st item: the account's UID; 2nd item: the processed cookies.</returns>
         private static (string, string) ProcessCookies<T>(ref ImmutableList<T> rawCookies)
         {
             var aUid = string.Empty;

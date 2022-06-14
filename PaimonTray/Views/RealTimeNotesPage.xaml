@@ -7,11 +7,11 @@
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:PaimonTray.Models"
-    xmlns:realTimeNotesModels="using:PaimonTray.Models.RealTimeNotes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Page.Resources>
         <converters:AccountCharacterConverter x:Key="AccountCharacterConverter" />
         <converters:AccountGroupInfoListConverter x:Key="AccountGroupInfoListConverter" />
+        <converters:RealTimeNoteConverter x:Key="RealTimeNoteConverter" />
     </Page.Resources>
     <!-- The root grid. -->
     <Grid>
@@ -331,10 +331,12 @@
                             HorizontalAlignment="Left"
                             Margin="-4, 0, 0, 0"
                             MaxWidth="340"
+                            MinHeight="200"
+                            MinWidth="200"
                             SelectionMode="None"
                             SizeChanged="ListViewCharacterRealTimeNotesGeneral_OnSizeChanged">
                             <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="realTimeNotesModels:GeneralNote">
+                                <DataTemplate x:DataType="models:RealTimeNote">
                                     <Grid
                                         ColumnSpacing="12"
                                         Padding="0, 8">
@@ -344,14 +346,16 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Image
+                                            x:Phase="2"
                                             Grid.Column="0"
                                             Height="32"
+                                            Tag="{x:Bind Title}"
                                             VerticalAlignment="Center"
                                             Width="32">
                                             <Image.Source>
                                                 <BitmapImage
                                                     DecodePixelHeight="32"
-                                                    UriSource="{x:Bind UrlImage}" />
+                                                    UriSource="{x:Bind UriImage}" />
                                             </Image.Source>
                                         </Image>
                                         <StackPanel
@@ -367,6 +371,7 @@
                                                 TextWrapping="WrapWholeWords" />
                                         </StackPanel>
                                         <TextBlock
+                                            x:Phase="1"
                                             Grid.Column="2"
                                             MaxWidth="100"
                                             Style="{ThemeResource BaseTextBlockStyle}"
@@ -383,78 +388,110 @@
                             Grid.Row="2"
                             Margin="-4, 0, 0, 0"
                             SelectionMode="None">
-                            <ListViewHeaderItem
-                                HorizontalContentAlignment="Stretch"
-                                Margin="-12, 0">
-                                <!-- The expeditions grid. -->
-                                <Grid
-                                    ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Style="{ThemeResource BodyTextBlockStyle}"
-                                        Text="Expeditions"
-                                        TextWrapping="WrapWholeWords"
-                                        VerticalAlignment="Center" />
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Style="{ThemeResource BaseTextBlockStyle}"
-                                        Text="5/5"
-                                        TextWrapping="WrapWholeWords"
-                                        VerticalAlignment="Center" />
-                                </Grid>
-                            </ListViewHeaderItem>
-                            <!-- The expedition grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <PersonPicture
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <PersonPicture.ProfilePicture>
-                                        <BitmapImage DecodePixelHeight="32" />
-                                    </PersonPicture.ProfilePicture>
-                                </PersonPicture>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="TODO"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                            <!-- The expedition grid. -->
-                            <Grid
-                                ColumnSpacing="12"
-                                Padding="0, 8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <PersonPicture
-                                    Grid.Column="0"
-                                    Height="32"
-                                    VerticalAlignment="Center"
-                                    Width="32">
-                                    <PersonPicture.ProfilePicture>
-                                        <BitmapImage DecodePixelHeight="32" />
-                                    </PersonPicture.ProfilePicture>
-                                </PersonPicture>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Style="{ThemeResource BaseTextBlockStyle}"
-                                    Text="TODO"
-                                    TextWrapping="WrapWholeWords"
-                                    VerticalAlignment="Center" />
-                            </Grid>
+                            <ListView.Header>
+                                <ListViewHeaderItem
+                                    HorizontalContentAlignment="Stretch"
+                                    Margin="4, 0, 0, 0">
+                                    <!-- The character's real-time notes' expeditions section header grid. -->
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel
+                                            Grid.Column="0"
+                                            VerticalAlignment="Center">
+                                            <TextBlock
+                                                x:Name="TextBlockCharacterRealTimeNotesExpeditionsTitle"
+                                                Style="{ThemeResource BodyTextBlockStyle}"
+                                                TextWrapping="WrapWholeWords" />
+                                            <TextBlock
+                                                x:Name="TextBlockCharacterRealTimeNotesExpeditionsExplanation"
+                                                Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                TextWrapping="WrapWholeWords" />
+                                        </StackPanel>
+                                        <TextBlock
+                                            x:Name="TextBlockCharacterRealTimeNotesExpeditionsStatus"
+                                            Grid.Column="1"
+                                            Style="{ThemeResource BaseTextBlockStyle}"
+                                            TextWrapping="WrapWholeWords"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </ListViewHeaderItem>
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:RealTimeNote">
+                                    <Grid
+                                        ColumnSpacing="12"
+                                        Padding="0, 8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse
+                                            x:Phase="1"
+                                            Grid.Column="0"
+                                            Height="32"
+                                            Stroke="{ThemeResource InfoBarSuccessSeverityIconBackground}"
+                                            StrokeThickness="2"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusComplete}"
+                                            Width="32" />
+                                        <Ellipse
+                                            x:Phase="1"
+                                            Grid.Column="0"
+                                            Height="32"
+                                            Stroke="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                                            StrokeThickness="2"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusIncomplete}"
+                                            Width="32" />
+                                        <Image
+                                            x:Phase="2"
+                                            Grid.Column="0"
+                                            Height="30"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIcon}"
+                                            Width="30">
+                                            <Image.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform
+                                                        ScaleX="1.2"
+                                                        ScaleY="1.2" />
+                                                    <TranslateTransform
+                                                        X="-4"
+                                                        Y="-6" />
+                                                </TransformGroup>
+                                            </Image.RenderTransform>
+                                            <Image.Source>
+                                                <BitmapImage
+                                                    DecodePixelHeight="36"
+                                                    UriSource="{x:Bind UriImage}" />
+                                            </Image.Source>
+                                        </Image>
+                                        <PersonPicture
+                                            x:Phase="2"
+                                            Grid.Column="0"
+                                            Height="32"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIconUnknown}"
+                                            Width="32">
+                                            <PersonPicture.ProfilePicture>
+                                                <BitmapImage
+                                                    DecodePixelHeight="32"
+                                                    UriSource="{x:Bind helpers:AppConstantsHelper.UriImagePaimonSurprise}" />
+                                            </PersonPicture.ProfilePicture>
+                                        </PersonPicture>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{ThemeResource BaseTextBlockStyle}"
+                                            Text="{x:Bind Explanation}"
+                                            TextWrapping="WrapWholeWords"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
                 </StackPanel>

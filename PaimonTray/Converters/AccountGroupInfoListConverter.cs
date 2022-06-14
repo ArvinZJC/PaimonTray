@@ -108,11 +108,15 @@ namespace PaimonTray.Converters
         /// <returns>The value to be passed to the target dependency property.</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter is null) return null;
+            var isForVisibility = targetType == typeof(Visibility);
 
-            if (value is not GroupInfoList { Count: > 0 } groupInfoList) return null;
+            if (parameter is null) return isForVisibility ? Visibility.Collapsed : null;
 
-            if (groupInfoList[0] is not AccountCharacter accountCharacter) return null;
+            if (value is not GroupInfoList { Count: > 0 } groupInfoList)
+                return isForVisibility ? Visibility.Collapsed : null;
+
+            if (groupInfoList[0] is not AccountCharacter accountCharacter)
+                return isForVisibility ? Visibility.Collapsed : null;
 
             var app = Application.Current as App;
             var resourceLoader = app?.SettingsH.ResLoader;
@@ -145,7 +149,7 @@ namespace PaimonTray.Converters
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusReadyExplanation => resourceLoader?.GetString("AccountStatusReadyExplanation"),
-                _ => null
+                _ => isForVisibility ? Visibility.Collapsed : null
             };
         } // end method Convert
 

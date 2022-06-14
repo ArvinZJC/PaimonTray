@@ -94,7 +94,12 @@ namespace PaimonTray.Views
         private void ShowAccountGroupNoCharacterStatus(string statusText)
         {
             GridStatusWarning.Visibility = Visibility.Visible;
+            ListViewCharacterRealTimeNotesExpeditions.ItemsSource = null;
+            ListViewCharacterRealTimeNotesGeneral.ItemsSource = null;
             ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
+            TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = null;
+            TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
+            TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
             TextBlockStatus.Text = statusText;
             GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
         } // end method ShowAccountGroupNoCharacterStatus
@@ -238,7 +243,8 @@ namespace PaimonTray.Views
                 ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
 
                 // TODO:
-                var (realTimeNotesTimeUpdateLast, realTimeNotesStatus, realTimeNotesGeneral) =
+                var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,
+                        realTimeNotesStatus, realTimeNotesTimeUpdateLast) =
                     await _app.AccountsH.Temp(accountCharacter.Key, accountCharacter.UidCharacter);
 
                 GridCharacterRealTimeNotesStatusDisabled.Visibility =
@@ -252,8 +258,12 @@ namespace PaimonTray.Views
                     : Visibility.Collapsed;
                 GridCharacterRealTimeNotesStatusUpdating.Visibility =
                     realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
-                ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneral;
+                ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
+                ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
                 RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
+                TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = realTimeNotesExpeditionsHeader.Explanation;
+                TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = realTimeNotesExpeditionsHeader.Status;
+                TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = realTimeNotesExpeditionsHeader.Title;
             } // end if...else
         } // end method ListViewAccountGroups_OnSelectionChanged
 

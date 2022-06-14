@@ -1,36 +1,33 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Data;
-using PaimonTray.Models;
+﻿using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml;
+using PaimonTray.Helpers;
 using System;
 
 namespace PaimonTray.Converters
 {
-    /// <summary>
-    /// The account's character converter.
-    /// </summary>
-    internal class AccountCharacterConverter : IValueConverter
+    internal class RealTimeNoteConverter : IValueConverter
     {
         #region Constants
 
         /// <summary>
-        /// The parameter for the flag indicating if the account has any character.
+        /// The expedition's avatar side icon  parameter.
         /// </summary>
-        private const string ParameterHasCharacter = "hasCharacter";
+        private const string ParameterExpeditionAvatarSideIcon = "expeditionAvatarSideIcon";
 
         /// <summary>
-        /// The character's nickname parameter.
+        /// The expedition's unknown avatar side icon parameter.
         /// </summary>
-        public const string ParameterNicknameCharacter = "nicknameCharacter";
+        private const string ParameterExpeditionAvatarSideIconUnknown = "expeditionAvatarSideIconUnknown";
 
         /// <summary>
-        /// The character's other info parameter.
+        /// The expedition's complete status parameter.
         /// </summary>
-        public const string ParameterOtherInfoCharacter = "otherInfoCharacter";
+        private const string ParameterExpeditionStatusComplete = "expeditionStatusComplete";
 
         /// <summary>
-        /// The character's other info visibility parameter.
+        /// The expedition's incomplete status parameter.
         /// </summary>
-        private const string ParameterOtherInfoVisibilityCharacter = "otherInfoVisibilityCharacter";
+        private const string ParameterExpeditionStatusIncomplete = "expeditionStatusIncomplete";
 
         #endregion Constants
 
@@ -51,20 +48,16 @@ namespace PaimonTray.Converters
 
             if (parameter is null) return isForVisibility ? Visibility.Collapsed : null;
 
-            if (value is not AccountCharacter accountCharacter) return isForVisibility ? Visibility.Collapsed : null;
-
             return parameter switch
             {
-                ParameterHasCharacter => accountCharacter.UidCharacter is not null,
-                ParameterNicknameCharacter => accountCharacter.UidCharacter is null
-                    ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
-                    : accountCharacter.NicknameCharacter,
-                ParameterOtherInfoCharacter => accountCharacter.UidCharacter is null
-                    ? null
-                    : $"{accountCharacter.UidCharacter} | {accountCharacter.Region} | {accountCharacter.Level}",
-                ParameterOtherInfoVisibilityCharacter => accountCharacter.UidCharacter is null
-                    ? Visibility.Collapsed
-                    : Visibility.Visible,
+                ParameterExpeditionAvatarSideIcon => value is null ? Visibility.Collapsed : Visibility.Visible,
+                ParameterExpeditionAvatarSideIconUnknown => value is null ? Visibility.Visible : Visibility.Collapsed,
+                ParameterExpeditionStatusComplete => value is AccountsHelper.ExpeditionStatusFinished
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
+                ParameterExpeditionStatusIncomplete => value is AccountsHelper.ExpeditionStatusOngoing
+                    ? Visibility.Visible
+                    : Visibility.Collapsed,
                 _ => isForVisibility ? Visibility.Collapsed : null
             };
         } // end method Convert
@@ -78,12 +71,12 @@ namespace PaimonTray.Converters
         /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
         /// <param name="language">The language of the conversion.</param>
         /// <returns>The value to be passed to the source object.</returns>
-        /// <exception cref="NotImplementedException">If you don't use a converter for TwoWay bindings, it's acceptable to leave ConvertBack unimplemented.</exception>
+        /// <exception cref="NotImplementedException">If you do not use a converter for TwoWay bindings, it is acceptable to leave ConvertBack unimplemented.</exception>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
         } // end method ConvertBack
 
         #endregion Methods
-    } // end class AccountCharacterConverter
+    } // end class RealTimeNoteConverter
 } // end namespace PaimonTray.Converters

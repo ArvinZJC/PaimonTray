@@ -234,20 +234,20 @@
   <data name="CommissionsDaily" xml:space="preserve">
     <value>Daily commissions</value>
   </data>
+  <data name="CommissionsDailyIncomplete" xml:space="preserve">
+    <value>Insufficient number of commissions completed today</value>
+  </data>
   <data name="CommissionsDailyLocked" xml:space="preserve">
     <value>You may need to complete the World Quest "Every Day a New Adventure"</value>
   </data>
-  <data name="CommissionsDailyRewardExtraClaimed" xml:space="preserve">
-    <value>Commissions completed and extra reward claimed today</value>
+  <data name="CommissionsDailyRewardsBonusClaimed" xml:space="preserve">
+    <value>Commissions completed and bonus rewards claimed today</value>
   </data>
-  <data name="CommissionsDailyRewardExtraUnclaimed" xml:space="preserve">
-    <value>Commissions completed but extra reward unclaimed today</value>
+  <data name="CommissionsDailyRewardsBonusUnclaimed" xml:space="preserve">
+    <value>Commissions completed but bonus rewards unclaimed today</value>
   </data>
-  <data name="CommissionsDailyRewardExtraUnknown" xml:space="preserve">
-    <value>Commissions completed today (failed to determine the claim to the extra reward)</value>
-  </data>
-  <data name="CommissionsDailyUncompleted" xml:space="preserve">
-    <value>Insufficient number of commissions completed today</value>
+  <data name="CommissionsDailyRewardsBonusUnknown" xml:space="preserve">
+    <value>Commissions completed today (failed to determine the claim to bonus rewards)</value>
   </data>
   <data name="Cookies" xml:space="preserve">
     <value>cookies</value>
@@ -289,8 +289,17 @@
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="ExpeditionComplete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
   <data name="Expeditions" xml:space="preserve">
     <value>Expeditions</value>
+  </data>
+  <data name="ExpeditionsExplanation" xml:space="preserve">
+    <value>Game characters dispatched on expeditions</value>
+  </data>
+  <data name="ExpeditionsNone" xml:space="preserve">
+    <value>No dispatched expeditions</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>General</value>

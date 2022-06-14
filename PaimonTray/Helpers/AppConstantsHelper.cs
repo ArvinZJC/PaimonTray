@@ -118,6 +118,11 @@
         public const string UriImageTransformerParametric = "ms-appx:///Assets/ParametricTransformer.png";
 
         /// <summary>
+        /// The Paimon Surprise image URI.
+        /// </summary>
+        public const string UriImagePaimonSurprise = "ms-appx:///Assets/PaimonSurprise.png";
+
+        /// <summary>
         /// The URI of the system settings page configuring notifications.
         /// </summary>
         public const string UriSystemSettingsNotifications = "ms-settings:notifications";
