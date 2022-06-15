@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PaimonTray.Views
 {
@@ -176,6 +177,39 @@ namespace PaimonTray.Views
         } // end method ToggleStatusVisibility
 
         /// <summary>
+        /// Update the real-time notes area.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="containerKeyCharacter">The character container key.</param>
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        private async Task UpdateRealTimeNotesArea(string containerKeyAccount, string containerKeyCharacter)
+        {
+            // TODO:
+            var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,
+                    realTimeNotesStatus, realTimeNotesTimeUpdateLast) =
+                await _app.AccountsH.Temp(containerKeyAccount, containerKeyCharacter);
+
+            GridCharacterRealTimeNotesStatusDisabled.Visibility =
+                realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusFail.Visibility =
+                realTimeNotesStatus is null or AccountsHelper.TagStatusFail
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus is AccountsHelper.TagStatusReady
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusUpdating.Visibility =
+                realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
+            ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
+            ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
+            ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;
+            RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
+            TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = realTimeNotesExpeditionsHeader.Explanation;
+            TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = realTimeNotesExpeditionsHeader.Status;
+            TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = realTimeNotesExpeditionsHeader.Title;
+        } // end method UpdateRealTimeNotesArea
+
+        /// <summary>
         /// Update the UI text during the initialisation process.
         /// </summary>
         private void UpdateUiText()
@@ -253,8 +287,6 @@ namespace PaimonTray.Views
                         AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
                     AppConstantsHelper.Unknown;
 
-                if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
-
                 if (uidCharacterSelected != accountCharacter.UidCharacter)
                     propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
 
@@ -263,29 +295,9 @@ namespace PaimonTray.Views
                 ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
                 ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
 
-                // TODO:
-                var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,
-                        realTimeNotesStatus, realTimeNotesTimeUpdateLast) =
-                    await _app.AccountsH.Temp(accountCharacter.Key, accountCharacter.UidCharacter);
+                if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
 
-                GridCharacterRealTimeNotesStatusDisabled.Visibility =
-                    realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
-                GridCharacterRealTimeNotesStatusFail.Visibility =
-                    realTimeNotesStatus is null or AccountsHelper.TagStatusFail
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
-                GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus is AccountsHelper.TagStatusReady
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
-                GridCharacterRealTimeNotesStatusUpdating.Visibility =
-                    realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
-                ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
-                ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
-                ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;
-                RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
-                TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = realTimeNotesExpeditionsHeader.Explanation;
-                TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = realTimeNotesExpeditionsHeader.Status;
-                TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = realTimeNotesExpeditionsHeader.Title;
+                await UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
                 ListViewAccountGroups.Tag =
                     accountCharacter.UidCharacter; // Store the UID from the selected item when ready.
             } // end if...else
