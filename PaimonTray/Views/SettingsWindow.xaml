@@ -100,7 +100,7 @@
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:AppConstantsHelper.GlyphRepair}" />
+                            Glyph="{x:Bind helpers:AppConstantsHelper.GlyphProcessing}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem

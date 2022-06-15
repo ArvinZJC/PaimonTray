@@ -43,9 +43,9 @@
         public const string GlyphKnowledgeArticle = "\xF000";
 
         /// <summary>
-        /// The code of the glyph Repair.
+        /// The code of the glyph Processing.
         /// </summary>
-        public const string GlyphRepair = "\xE90F";
+        public const string GlyphProcessing = "\xE9F5";
 
         /// <summary>
         /// The code of the glyph SwitchUser.
