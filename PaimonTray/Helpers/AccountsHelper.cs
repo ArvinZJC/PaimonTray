@@ -1622,10 +1622,20 @@ namespace PaimonTray.Helpers
             propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
             propertySetRealTimeNotes[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
-            if (propertySetAccount[KeyStatus] is not TagStatusReady)
+            if (propertySetAccount[KeyStatus] is TagStatusExpired)
             {
                 Log.Warning(
-                    $"Failed to get real-time notes from the API due to the specific account's unready status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    $"Failed to get real-time notes from the API due to the specific account's expired status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+                return;
+            } // end if
+
+            var region = applicationDataContainerCharacter.Values[KeyRegion] as string;
+
+            if (region is null || !_regions.ContainsKey(region))
+            {
+                Log.Warning(
+                    $"Invalid region (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}, region: {region}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 return;
             } // end if
@@ -1634,7 +1644,7 @@ namespace PaimonTray.Helpers
             var httpClientHeaders = httpClient.DefaultRequestHeaders;
             var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
             var query =
-                $"role_id={applicationDataContainerCharacter.Name}&server={applicationDataContainerCharacter.Values[KeyRegion]}";
+                $"role_id={applicationDataContainerCharacter.Name}&server={region}";
 
             httpClientHeaders.Clear(); // Clear first.
             httpClientHeaders.Add(HeaderNameAppVersion,
