@@ -50,6 +50,19 @@ namespace PaimonTray.Views
         #region Methods
 
         /// <summary>
+        /// Initialise the real-time notes area.
+        /// </summary>
+        private void InitialiseRealTimeNotesArea()
+        {
+            ListViewCharacterRealTimeNotesExpeditions.ItemsSource = null;
+            ListViewCharacterRealTimeNotesGeneral.ItemsSource = null;
+            ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Collapsed;
+            TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = null;
+            TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
+            TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
+        } // end method InitialiseRealTimeNotesArea
+
+        /// <summary>
         /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
         /// </summary>
         /// <param name="e">Details about the navigation that has unloaded the current page.</param>
@@ -94,12 +107,8 @@ namespace PaimonTray.Views
         private void ShowAccountGroupNoCharacterStatus(string statusText)
         {
             GridStatusWarning.Visibility = Visibility.Visible;
-            ListViewCharacterRealTimeNotesExpeditions.ItemsSource = null;
-            ListViewCharacterRealTimeNotesGeneral.ItemsSource = null;
+            InitialiseRealTimeNotesArea();
             ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
-            TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = null;
-            TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
-            TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
             TextBlockStatus.Text = statusText;
             GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
         } // end method ShowAccountGroupNoCharacterStatus
@@ -214,12 +223,21 @@ namespace PaimonTray.Views
         } // end method GridBody_OnSizeChanged
 
         // Handle the account groups list view's selection changed event.
+        // NOTE: The list view's tag is used to store the UID from the last accepted selected item.
         private async void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ButtonCharacterSwitch.Flyout.Hide();
 
+            var propertySetAccounts = _app.AccountsH.ApplicationDataContainerAccounts.Values;
+            var uidCharacterSelected = propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
             {
+                // Ignore the case when the selected item is invalid but the selected character exists.
+                if (uidCharacterSelected is not null) return;
+
+                InitialiseRealTimeNotesArea();
+                ListViewAccountGroups.Tag = null;
                 TextBlockNicknameCharacter.Text = AppConstantsHelper.Unknown;
                 TextBlockOtherInfoCharacter.Text = AppConstantsHelper.Unknown;
             }
@@ -235,8 +253,11 @@ namespace PaimonTray.Views
                         AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
                     AppConstantsHelper.Unknown;
 
-                _app.AccountsH.ApplicationDataContainerAccounts.Values[AccountsHelper.KeyUidCharacterSelected] =
-                    accountCharacter.UidCharacter;
+                if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
+
+                if (uidCharacterSelected != accountCharacter.UidCharacter)
+                    propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
+
                 TextBlockNicknameCharacter.Text = nicknameCharacter;
                 TextBlockOtherInfoCharacter.Text = otherInfoCharacter;
                 ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
@@ -260,10 +281,13 @@ namespace PaimonTray.Views
                     realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
                 ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
                 ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
+                ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;
                 RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
                 TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = realTimeNotesExpeditionsHeader.Explanation;
                 TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = realTimeNotesExpeditionsHeader.Status;
                 TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = realTimeNotesExpeditionsHeader.Title;
+                ListViewAccountGroups.Tag =
+                    accountCharacter.UidCharacter; // Store the UID from the selected item when ready.
             } // end if...else
         } // end method ListViewAccountGroups_OnSelectionChanged
 

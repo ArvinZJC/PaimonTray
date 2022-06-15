@@ -243,6 +243,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
+                        <!-- The character's real-time notes' last update time grid. -->
                         <Grid
                             x:Name="GridCharacterRealTimeNotesTimeUpdateLast"
                             ColumnSpacing="12"
@@ -262,7 +263,7 @@
                                 <Run x:Name="RunCharacterRealTimeNotesUpdatedLast" />
                                 <Run x:Name="RunCharacterRealTimeNotesTimeUpdateLast" />
                             </TextBlock>
-                            <!-- The real-time notes' status grids. -->
+                            <!-- The character's real-time notes' status grids. -->
                             <Grid
                                 x:Name="GridCharacterRealTimeNotesStatusDisabled"
                                 Grid.Column="1"
@@ -390,8 +391,10 @@
                             SelectionMode="None">
                             <ListView.Header>
                                 <ListViewHeaderItem
+                                    x:Name="ListViewHeaderItemCharacterRealTimeNotesExpeditions"
                                     HorizontalContentAlignment="Stretch"
-                                    Margin="4, 0, 0, 0">
+                                    Margin="4, 0, 0, 0"
+                                    Visibility="Collapsed">
                                     <!-- The character's real-time notes' expeditions section header grid. -->
                                     <Grid ColumnSpacing="12">
                                         <Grid.ColumnDefinitions>
