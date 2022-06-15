@@ -47,8 +47,7 @@
             <Expander
                 Grid.Row="0"
                 HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                IsExpanded="True">
+                HorizontalContentAlignment="Stretch">
                 <Expander.Content>
                     <Grid Padding="-16">
                         <!-- The account groups list view. -->

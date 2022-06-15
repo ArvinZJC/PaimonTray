@@ -9,7 +9,6 @@ using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PaimonTray.Views
 {
@@ -182,12 +181,11 @@ namespace PaimonTray.Views
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
-        private async Task UpdateRealTimeNotesArea(string containerKeyAccount, string containerKeyCharacter)
+        private void UpdateRealTimeNotesArea(string containerKeyAccount, string containerKeyCharacter)
         {
-            // TODO:
             var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,
                     realTimeNotesStatus, realTimeNotesTimeUpdateLast) =
-                await _app.AccountsH.Temp(containerKeyAccount, containerKeyCharacter);
+                _app.AccountsH.GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
 
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
                 realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
@@ -258,7 +256,7 @@ namespace PaimonTray.Views
 
         // Handle the account groups list view's selection changed event.
         // NOTE: The list view's tag is used to store the UID from the last accepted selected item.
-        private async void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ButtonCharacterSwitch.Flyout.Hide();
 
@@ -297,7 +295,7 @@ namespace PaimonTray.Views
 
                 if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
 
-                await UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
+                UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
                 ListViewAccountGroups.Tag =
                     accountCharacter.UidCharacter; // Store the UID from the selected item when ready.
             } // end if...else

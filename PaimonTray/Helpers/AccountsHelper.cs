@@ -867,7 +867,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
-        public void AddUpdateCharacters(ImmutableList<Character> characters,
+        public async void AddUpdateCharactersAsync(ImmutableList<Character> characters,
             string containerKeyAccount)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
@@ -913,6 +913,8 @@ namespace PaimonTray.Helpers
                     propertySetCharacter[KeyLevel] = character.Level;
                     propertySetCharacter[KeyNickname] = character.Nickname;
                     propertySetCharacter[KeyRegion] = character.Region;
+
+                    await GetRealTimeNotesFromApiAsync(containerKeyAccount, character.Uid);
                 } // end foreach
 
                 if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
@@ -920,7 +922,7 @@ namespace PaimonTray.Helpers
             } // end if...else
 
             AddUpdateAccountGroup(containerKeyAccount);
-        } // end method AddUpdateCharacters
+        } // end method AddUpdateCharactersAsync
 
         /// <summary>
         /// Apply the specific account's character's status.
@@ -1008,7 +1010,8 @@ namespace PaimonTray.Helpers
             } // end switch-case
 
             if (shouldAddUpdateCharacters)
-                AddUpdateCharacters(await GetAccountCharactersFromApiAsync(containerKeyAccount), containerKeyAccount);
+                AddUpdateCharactersAsync(await GetAccountCharactersFromApiAsync(containerKeyAccount),
+                    containerKeyAccount);
 
             if (!isStandalone) return;
 
@@ -1321,22 +1324,13 @@ namespace PaimonTray.Helpers
             } // end try...catch
         } // end method GetCharactersFromApiAsync
 
-        // TODO
-        public async Task<(RealTimeNote, ImmutableList<RealTimeNote>, ImmutableList<RealTimeNote>, string, string)>
-            Temp(string containerKeyAccount,
-                string containerKeyCharacter)
-        {
-            await GetRealTimeNotesFromApiAsync(containerKeyAccount, containerKeyCharacter);
-            return GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
-        }
-
         /// <summary>
         /// Get the real-time notes.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
         /// <returns>A tuple. 1st item: the expeditions header; 2nd item: the expedition notes; 3rd item: the general notes; 4th item: the status; 5th item: the last update time.</returns>
-        private (RealTimeNote, ImmutableList<RealTimeNote>, ImmutableList<RealTimeNote>, string, string)
+        public (RealTimeNote, ImmutableList<RealTimeNote>, ImmutableList<RealTimeNote>, string, string)
             GetRealTimeNotes(string containerKeyAccount,
                 string containerKeyCharacter)
         {
