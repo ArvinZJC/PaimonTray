@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PaimonTray.Helpers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -56,7 +57,7 @@ namespace PaimonTray.ViewModels
         {
             _navigationViewPaneDisplayMode =
                 (Application.Current as App)?.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() ??
-                NavigationViewPaneDisplayMode.LeftCompact;
+                SettingsHelper.DefaultMainWindowNavigationViewPaneDisplayMode;
         } // end constructor MainWindowViewModel
 
         #endregion Constructors

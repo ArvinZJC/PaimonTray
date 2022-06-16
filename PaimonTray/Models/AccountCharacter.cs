@@ -1,4 +1,6 @@
-﻿namespace PaimonTray.Models
+﻿using System;
+
+namespace PaimonTray.Models
 {
     /// <summary>
     /// The account's character model.
@@ -51,6 +53,11 @@
         /// The account's status.
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// The account's last update time.
+        /// </summary>
+        public DateTimeOffset? TimeUpdateLast { get; set; }
 
         /// <summary>
         /// The account's UID.

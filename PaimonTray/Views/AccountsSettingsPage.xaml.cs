@@ -105,6 +105,8 @@ namespace PaimonTray.Views
             InfoBarLoginAlternativeAlwaysAppliedLater.Title =
                 resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
             InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
+            TextBlockAccountGroupsCheckRefreshWhenAppStarts.Text =
+                resourceLoader.GetString("AccountGroupsCheckRefreshWhenAppStarts");
             TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
             TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
             TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
@@ -152,6 +154,9 @@ namespace PaimonTray.Views
                 AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
                 _ => null
             };
+            ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts.IsOn =
+                propertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] as bool? ??
+                SettingsHelper.DefaultAccountGroupsCheckRefreshWhenAppStarts;
             ToggleSwitchLoginAlternativeAlways.IsOn =
                 propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
                 SettingsHelper.DefaultLoginAlternativeAlways;
@@ -172,8 +177,8 @@ namespace PaimonTray.Views
             var appBarButton = sender as AppBarButton;
             var shouldCheckRefreshAccountGroups = appBarButton == AppBarButtonAccountGroupsCheckRefresh;
 
-            if (shouldCheckRefreshAccountGroups) _app.AccountsH.CheckAccountsAsync(true);
-            else await _app.AccountsH.CheckAccountAsync(appBarButton?.Tag as string, true, true);
+            if (shouldCheckRefreshAccountGroups) _app.AccountsH.CheckAccountsAsync();
+            else await _app.AccountsH.CheckAccountAsync(appBarButton?.Tag as string, true);
         } // end method AppBarButtonAccountGroupsCheckRefresh_OnClick
 
         // Handle the click event of the app bar button for removing the account group(s).
@@ -243,15 +248,18 @@ namespace PaimonTray.Views
                 haveAddedItems);
         } // end method ListViewAccountGroups_OnSelectionChanged
 
+        // Handle the toggled event of the toggle switch of the setting for checking and refreshing all accounts when the app starts.
+        private void ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts_OnToggled(object sender, RoutedEventArgs e)
+        {
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] =
+                ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts.IsOn;
+        } // end method ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts_OnToggled
+
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
-            var propertySetSettings = _app.SettingsH.PropertySetSettings;
-
-            if (propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ==
-                ToggleSwitchLoginAlternativeAlways.IsOn) return;
-
-            propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
+            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] =
+                ToggleSwitchLoginAlternativeAlways.IsOn;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
                 _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;

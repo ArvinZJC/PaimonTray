@@ -105,7 +105,7 @@ namespace PaimonTray.Views
                 ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
                     InfoBarSeverity.Error);
 
-                if (shouldUpdateAccount) _app.AccountsH.AddUpdateCharactersAsync(null, containerKeyAccount);
+                if (shouldUpdateAccount) await _app.AccountsH.AddUpdateCharactersAsync(null, containerKeyAccount);
                 else applicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
 
                 return;
@@ -113,7 +113,7 @@ namespace PaimonTray.Views
 
             if (shouldUpdateAccount)
             {
-                _app.AccountsH.AddUpdateCharactersAsync(characters, containerKeyAccount);
+                await _app.AccountsH.AddUpdateCharactersAsync(characters, containerKeyAccount);
 
                 if (_app.AccountsH.TrySelectAccountGroupFirstEnabledCharacter(containerKeyAccount))
                     _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyRealTimeNotes;
@@ -136,7 +136,7 @@ namespace PaimonTray.Views
                     InfoBarSeverity.Success);
             } // end if
 
-            _app.AccountsH.AddUpdateCharactersAsync(characters, containerKeyAccount);
+            await _app.AccountsH.AddUpdateCharactersAsync(characters, containerKeyAccount);
 
             if (_app.AccountsH.TrySelectAccountGroupFirstEnabledCharacter(containerKeyAccount))
                 _mainWindow.NavigationViewBody.SelectedItem = _mainWindow.NavigationViewItemBodyRealTimeNotes;

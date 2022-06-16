@@ -157,6 +157,9 @@
   <data name="AccountGroupsCheckRefresh" xml:space="preserve">
     <value>Check and refresh all accounts and characters</value>
   </data>
+  <data name="AccountGroupsCheckRefreshWhenAppStarts" xml:space="preserve">
+    <value>Check and refresh all accounts and characters when the app starts</value>
+  </data>
   <data name="AccountGroupsRemove" xml:space="preserve">
     <value>Remove all accounts and characters</value>
   </data>
@@ -457,9 +460,6 @@
   <data name="RealTimeNotesStatusUpdatingExplanation" xml:space="preserve">
     <value>The character's real-time notes are being updated</value>
   </data>
-  <data name="RealTimeNotesUpdatedLast" xml:space="preserve">
-    <value>Last updated</value>
-  </data>
   <data name="RegionCnBilibili" xml:space="preserve">
     <value>Irminsul</value>
   </data>
@@ -556,6 +556,9 @@
   </data>
   <data name="TransformerParametricUsable" xml:space="preserve">
     <value>Can be used</value>
+  </data>
+  <data name="UpdatedLast" xml:space="preserve">
+    <value>Last updated</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>User manual</value>

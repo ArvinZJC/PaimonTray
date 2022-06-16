@@ -24,9 +24,20 @@ namespace PaimonTray.Helpers
         public const string ContainerKeySettings = "settings";
 
         /// <summary>
+        /// The default of the setting for checking and refreshing all accounts when the app starts.
+        /// </summary>
+        public const bool DefaultAccountGroupsCheckRefreshWhenAppStarts = true;
+
+        /// <summary>
         /// The default of the setting for always using the alternative login method.
         /// </summary>
         public const bool DefaultLoginAlternativeAlways = false;
+
+        /// <summary>
+        /// The default of the main window's navigation view's pane display mode.
+        /// </summary>
+        public const NavigationViewPaneDisplayMode DefaultMainWindowNavigationViewPaneDisplayMode =
+            NavigationViewPaneDisplayMode.LeftCompact;
 
         /// <summary>
         /// The default of the setting for showing the main window when the app starts.
@@ -39,7 +50,7 @@ namespace PaimonTray.Helpers
         public const bool DefaultMainWindowTopNavigationPane = false;
 
         /// <summary>
-        /// The default of the setting for clearing notifications when exiting the app.
+        /// The default of the setting for clearing notifications when the app exits.
         /// </summary>
         public const bool DefaultNotificationClear = true;
 
@@ -47,6 +58,11 @@ namespace PaimonTray.Helpers
         /// The default of the greeting notification setting.
         /// </summary>
         public const bool DefaultNotificationGreeting = true;
+
+        /// <summary>
+        /// The key for checking and refreshing all accounts when the app starts.
+        /// </summary>
+        public const string KeyAccountGroupsCheckRefreshWhenAppStarts = "accountGroupsCheckRefreshWhenAppStarts";
 
         /// <summary>
         /// The language key.
@@ -244,7 +260,7 @@ namespace PaimonTray.Helpers
         {
             return PropertySetSettings[KeyMainWindowTopNavigationPane] is true
                 ? NavigationViewPaneDisplayMode.Top
-                : NavigationViewPaneDisplayMode.LeftCompact;
+                : DefaultMainWindowNavigationViewPaneDisplayMode;
         } // end method DecideMainWindowNavigationViewPaneDisplayMode
 
         /// <summary>
@@ -296,6 +312,12 @@ namespace PaimonTray.Helpers
         /// </summary>
         private void InitialiseSettings()
         {
+            if (!PropertySetSettings.ContainsKey(KeyAccountGroupsCheckRefreshWhenAppStarts) ||
+                PropertySetSettings[KeyAccountGroupsCheckRefreshWhenAppStarts] is not bool)
+                InitialiseSetting(KeyAccountGroupsCheckRefreshWhenAppStarts,
+                    "The setting for checking and refreshing all accounts when the app starts",
+                    DefaultAccountGroupsCheckRefreshWhenAppStarts);
+
             if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
                 (PropertySetSettings[KeyLanguage] is not TagLanguageEnGb &&
                  PropertySetSettings[KeyLanguage] is not TagLanguageEnUs &&

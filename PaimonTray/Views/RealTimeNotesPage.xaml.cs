@@ -189,7 +189,7 @@ namespace PaimonTray.Views
             var resourceLoader = _app.SettingsH.ResLoader;
 
             RunCharacterRealTimeNotesUpdatedLast.Text =
-                $"{resourceLoader.GetString("RealTimeNotesUpdatedLast")}{resourceLoader.GetString("Colon")}";
+                $"{resourceLoader.GetString("UpdatedLast")}{resourceLoader.GetString("Colon")}";
             TextBlockTitle.Text = resourceLoader.GetString("RealTimeNotes");
             ToolTipService.SetToolTip(ButtonCharacterSwitch, resourceLoader.GetString("CharacterSwitch"));
             ToolTipService.SetToolTip(FontIconCharacterRealTimeNotesStatusDisabled,

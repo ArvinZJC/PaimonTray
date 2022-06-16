@@ -157,6 +157,9 @@
   <data name="AccountGroupsCheckRefresh" xml:space="preserve">
     <value>检查并刷新所有账号和角色</value>
   </data>
+  <data name="AccountGroupsCheckRefreshWhenAppStarts" xml:space="preserve">
+    <value>在应用启动时检查并刷新所有账号和角色</value>
+  </data>
   <data name="AccountGroupsRemove" xml:space="preserve">
     <value>移除所有账号和角色</value>
   </data>
@@ -457,9 +460,6 @@
   <data name="RealTimeNotesStatusUpdatingExplanation" xml:space="preserve">
     <value>正在更新此角色的实时便笺</value>
   </data>
-  <data name="RealTimeNotesUpdatedLast" xml:space="preserve">
-    <value>最近更新</value>
-  </data>
   <data name="RegionCnBilibili" xml:space="preserve">
     <value>世界树</value>
   </data>
@@ -556,6 +556,9 @@
   </data>
   <data name="TransformerParametricUsable" xml:space="preserve">
     <value>可使用</value>
+  </data>
+  <data name="UpdatedLast" xml:space="preserve">
+    <value>最近更新</value>
   </data>
   <data name="UserManual" xml:space="preserve">
     <value>使用手册</value>

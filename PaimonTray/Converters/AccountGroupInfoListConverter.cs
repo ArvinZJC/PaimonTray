@@ -130,7 +130,8 @@ namespace PaimonTray.Converters
                 ParameterCookiesCopy => resourceLoader?.GetString("CookiesCopy"),
                 ParameterCookiesView => resourceLoader?.GetString("CookiesView"),
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
-                ParameterOtherInfoAccount => $"{accountCharacter.UidAccount} | {accountCharacter.Server}",
+                ParameterOtherInfoAccount =>
+                    $"{accountCharacter.UidAccount} | {accountCharacter.Server} | {resourceLoader?.GetString("UpdatedLast")}{resourceLoader?.GetString("Colon")}{app?.AccountsH.GetDateTimeString(accountCharacter.TimeUpdateLast)}",
                 ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding
                     or AccountsHelper.TagStatusUpdating
                     ? Visibility.Visible

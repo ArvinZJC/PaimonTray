@@ -705,7 +705,8 @@ namespace PaimonTray.Helpers
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
-            CheckAccountsAsync();
+            CheckAccountsAsync(
+                _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
         } // end constructor AccountsHelper
 
         #endregion Constructors
@@ -756,6 +757,7 @@ namespace PaimonTray.Helpers
                 _ => AppConstantsHelper.Unknown
             };
             var status = propertySetAccount[KeyStatus] as string;
+            var timeUpdateLast = propertySetAccount[KeyTimeUpdateLast] as DateTimeOffset?;
             var uidAccount = propertySetAccount[KeyUid] as string;
 
             if (applicationDataContainersCharacter.Count > 0)
@@ -774,6 +776,7 @@ namespace PaimonTray.Helpers
                         Region = GetRegion(propertySetCharacter[KeyRegion] as string),
                         Server = server,
                         Status = status,
+                        TimeUpdateLast = timeUpdateLast,
                         UidAccount = uidAccount,
                         UidCharacter = keyValuePairCharacter.Key
                     });
@@ -785,6 +788,7 @@ namespace PaimonTray.Helpers
                     NicknameAccount = nicknameAccount,
                     Server = server,
                     Status = status,
+                    TimeUpdateLast = timeUpdateLast,
                     UidAccount = uidAccount
                 }); // Add an account's character containing account info only when no character for UI rendering.
 
@@ -813,7 +817,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
-        public async void AddUpdateCharactersAsync(ImmutableList<Character> characters,
+        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        public async Task AddUpdateCharactersAsync(ImmutableList<Character> characters,
             string containerKeyAccount)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
@@ -904,10 +909,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
-        /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false,
-            bool shouldForceCheck = false)
+        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -941,22 +944,13 @@ namespace PaimonTray.Helpers
                     break;
 
                 case TagStatusFail:
-                    propertySetAccount[KeyStatus] = TagStatusUpdating;
-                    break;
-
                 case TagStatusReady:
-                    if (shouldForceCheck) propertySetAccount[KeyStatus] = TagStatusUpdating;
-                    else
-                    {
-                        AddUpdateAccountGroup(containerKeyAccount);
-                        shouldAddUpdateCharacters = false;
-                    } // end if...else
-
+                    propertySetAccount[KeyStatus] = TagStatusUpdating;
                     break;
             } // end switch-case
 
             if (shouldAddUpdateCharacters)
-                AddUpdateCharactersAsync(await GetAccountCharactersFromApiAsync(containerKeyAccount),
+                await AddUpdateCharactersAsync(await GetAccountCharactersFromApiAsync(containerKeyAccount),
                     containerKeyAccount);
 
             if (!isStandalone) return;
@@ -968,14 +962,16 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Check the accounts.
         /// </summary>
-        /// <param name="shouldForceCheck">A flag indicating if the check should be forced for all non-expired accounts.</param>
-        public async void CheckAccountsAsync(bool shouldForceCheck = false)
+        /// <param name="shouldCheckAccount">A flag indicating if an account should be checked.</param>
+        public async void CheckAccountsAsync(bool shouldCheckAccount = true)
         {
             IsManaging = true;
 
-            if (CountAccounts() > 0)
-                foreach (var containerKeyAccount in ApplicationDataContainerAccounts.Containers.Keys)
-                    await CheckAccountAsync(containerKeyAccount, shouldForceCheck: shouldForceCheck);
+            foreach (var containerKeyAccount in ApplicationDataContainerAccounts.Containers.Keys)
+                if (shouldCheckAccount) await CheckAccountAsync(containerKeyAccount);
+                else AddUpdateAccountGroup(containerKeyAccount);
+
+            //if (!shouldCheckAccount) GetRealTimeNotesFromApiForAllEnabledAsync();
 
             CheckSelectedCharacterUid();
             IsManaging = false;
@@ -1050,6 +1046,8 @@ namespace PaimonTray.Helpers
                     $"Failed to get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
                 return false;
             } // end if
+
+            propertySetAccount[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
             var isServerCn =
                 propertySetAccount[KeyServer] is TagServerCn;
@@ -1229,6 +1227,31 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
+        /// Get a date and time string.
+        /// </summary>
+        /// <param name="dateTime">The struct containing the date and time.</param>
+        /// <returns>The date and time string.</returns>
+        public string GetDateTimeString(DateTimeOffset? dateTime)
+        {
+            if (dateTime is null) return AppConstantsHelper.Unknown;
+
+            var cultureApplied = _app.SettingsH.CultureApplied;
+            var dateTimeLocal = ((DateTimeOffset)dateTime).ToLocalTime();
+            var dateTimeNowDay = DateTimeOffset.Now.Day;
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            if (dateTimeLocal.Day == dateTimeNowDay - 1)
+                return $"{resourceLoader.GetString("Yesterday")} {dateTimeLocal.ToString("t", cultureApplied)}";
+
+            if (dateTimeLocal.Day == dateTimeNowDay)
+                return $"{resourceLoader.GetString("Today")} {dateTimeLocal.ToString("t", cultureApplied)}";
+
+            return dateTimeLocal.Day == dateTimeNowDay + 1
+                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeLocal.ToString("t", cultureApplied)}"
+                : dateTimeLocal.ToString("g", cultureApplied);
+        } // end method GetDateTimeString
+
+        /// <summary>
         /// Get the real-time notes.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
@@ -1286,7 +1309,7 @@ namespace PaimonTray.Helpers
 
                         realTimeNotesStatus = propertySetRealTimeNotes[KeyStatus] as string;
                         realTimeNotesTimeUpdateLast =
-                            GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
+                            GetDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
 
                         if (realTimeNotesStatus is null or TagStatusDisabled)
                         {
@@ -1341,7 +1364,7 @@ namespace PaimonTray.Helpers
                             }
                             else
                                 currencyRealmExplanation +=
-                                    $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] as DateTimeOffset?)}";
+                                    $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] as DateTimeOffset?)}";
 
                             if (expeditionsCurrent is null || expeditionsMax is null)
                                 realTimeNotesExpeditions.Add(new RealTimeNote
@@ -1372,7 +1395,7 @@ namespace PaimonTray.Helpers
 
                                     if (expeditionStatus is not ExpeditionStatusFinished)
                                         expeditionExplanation +=
-                                            $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
+                                            $"{colonAndEstimated}{GetDateTimeString(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
 
                                     realTimeNotesExpeditions.Add(new RealTimeNote
                                     {
@@ -1415,7 +1438,7 @@ namespace PaimonTray.Helpers
 
                                         default:
                                             transformerParametricExplanation +=
-                                                $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] as DateTimeOffset?)}";
+                                                $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] as DateTimeOffset?)}";
                                             transformerParametricStatus =
                                                 resourceLoader.GetString("TransformerParametricCooldown");
                                             break;
@@ -1433,7 +1456,7 @@ namespace PaimonTray.Helpers
                             if (!(resinOriginalCurrent is not null && resinOriginalMax is not null &&
                                   resinOriginalCurrent == resinOriginalMax))
                                 resinOriginalExplanation +=
-                                    $"{colonAndEstimated}{GetRealTimeNoteDateTime(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
+                                    $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
                         } // end if...else
                     } // end if...else
                 } // end if...else
@@ -1889,29 +1912,18 @@ namespace PaimonTray.Helpers
         } // end method GetRealTimeNotesFromApiAsync
 
         /// <summary>
-        /// Get the real-time note's date and time string.
+        /// Get the real-time notes from the API for all enabled characters.
         /// </summary>
-        /// <param name="dateTime">The struct containing the date and time.</param>
-        /// <returns>The real-time note's date and time string.</returns>
-        private string GetRealTimeNoteDateTime(DateTimeOffset? dateTime)
+        private async void GetRealTimeNotesFromApiForAllEnabledAsync()
         {
-            if (dateTime is null) return AppConstantsHelper.Unknown;
-
-            var cultureApplied = _app.SettingsH.CultureApplied;
-            var dateTimeLocal = ((DateTimeOffset)dateTime).ToLocalTime();
-            var dateTimeNowDay = DateTimeOffset.Now.Day;
-            var resourceLoader = _app.SettingsH.ResLoader;
-
-            if (dateTimeLocal.Day == dateTimeNowDay - 1)
-                return $"{resourceLoader.GetString("Yesterday")} {dateTimeLocal.ToString("t", cultureApplied)}";
-
-            if (dateTimeLocal.Day == dateTimeNowDay)
-                return $"{resourceLoader.GetString("Today")} {dateTimeLocal.ToString("t", cultureApplied)}";
-
-            return dateTimeLocal.Day == dateTimeNowDay + 1
-                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeLocal.ToString("t", cultureApplied)}"
-                : dateTimeLocal.ToString("g", cultureApplied);
-        } // end method GetRealTimeNoteDateTime
+            foreach (var keyValuePairAccount in ApplicationDataContainerAccounts.Containers)
+            foreach (var propertySetCharacter in keyValuePairAccount.Value
+                         .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
+                         .Values.ToImmutableList()
+                         .Select(applicationDataContainerCharacter => applicationDataContainerCharacter.Values)
+                         .Where(propertySetCharacter => propertySetCharacter[KeyIsEnabled] is true))
+                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, propertySetCharacter[KeyUid] as string);
+        } // end method GetRealTimeNotesFromApiForAllEnabledAsync
 
         /// <summary>
         /// Get the real-time note's status with the current and max values.

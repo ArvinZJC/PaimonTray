@@ -44,6 +44,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!-- The account groups expander. -->
             <Expander
@@ -404,6 +405,32 @@
                         Loaded="ComboBoxItemServer_OnLoaded"
                         Tag="{x:Bind helpers:AccountsHelper.TagServerGlobal}" />
                 </ComboBox>
+            </Grid>
+            <!-- The grid for checking and refreshing all accounts when the app starts. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="3"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    x:Name="TextBlockAccountGroupsCheckRefreshWhenAppStarts"
+                    Grid.Column="0"
+                    TextWrapping="WrapWholeWords"
+                    VerticalAlignment="Center" />
+                <ToggleSwitch
+                    x:Name="ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts"
+                    FlowDirection="RightToLeft"
+                    Grid.Column="1"
+                    Margin="0, -2"
+                    Toggled="ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts_OnToggled"
+                    VerticalAlignment="Center" />
             </Grid>
         </Grid>
     </Grid>

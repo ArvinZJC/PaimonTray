@@ -250,6 +250,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     x:Name="TextBlockMainWindowShowWhenAppStarts"
+                    Grid.Column="0"
                     TextWrapping="WrapWholeWords"
                     VerticalAlignment="Center" />
                 <ToggleSwitch
