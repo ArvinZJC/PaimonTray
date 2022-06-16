@@ -41,7 +41,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         #endregion Fields
 
@@ -66,6 +66,18 @@ namespace PaimonTray.Helpers
         } // end constructor WindowsHelper
 
         #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~WindowsHelper()
+        {
+            _app = null;
+        } // end destructor WindowsHelper
+
+        #endregion Destructor
 
         #region Methods
 
@@ -265,6 +277,7 @@ namespace PaimonTray.Helpers
                 existingWindowTarget.SystemBackdropConfig = null;
             } // end if
 
+            existingWindowTarget.Win.Closed -= Window_OnClosed;
             existingWindowTarget.Win = null;
         } // end method Window_OnClosed
 

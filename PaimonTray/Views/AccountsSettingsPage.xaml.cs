@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
 using System;
@@ -22,7 +21,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// A flag indicating if the program is updating the account groups source.
@@ -32,7 +31,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The main window.
         /// </summary>
-        private readonly MainWindow _mainWindow;
+        private MainWindow _mainWindow;
 
         #endregion Fields
 
@@ -55,29 +54,6 @@ namespace PaimonTray.Views
         #endregion Constructors
 
         #region Methods
-
-        /// <summary>
-        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            base.OnNavigatedFrom(e);
-        } // end method OnNavigatedFrom
-
-        /// <summary>
-        /// Invoked when the page is loaded and becomes the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the pending navigation that will load the current page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            ToggleStatusVisibility();
-            base.OnNavigatedTo(e);
-        } // end method OnNavigatedTo
 
         /// <summary>
         /// Show/Hide the status.
@@ -160,6 +136,36 @@ namespace PaimonTray.Views
                 ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
+        // Handle the accounts settings page's loaded event.
+        private void AccountsSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            ToggleStatusVisibility();
+
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
+            // Show the settings' selection.
+            ComboBoxServerDefault.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
+            ToggleSwitchLoginAlternativeAlways.IsOn =
+                propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
+                SettingsHelper.DefaultLoginAlternativeAlways;
+        } // end method AccountsSettingsPage_OnLoaded
+
+        // Handle the accounts settings page's unloaded event.
+        private void AccountsSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _app = null;
+            _mainWindow = null;
+        } // end method AccountsSettingsPage_OnUnloaded
+
         // Handle the click event of the app bar button for checking and refreshing the account group(s).
         private async void AppBarButtonAccountGroupsCheckRefresh_OnClick(object sender, RoutedEventArgs e)
         {
@@ -216,23 +222,6 @@ namespace PaimonTray.Views
             InfoBarServerDefaultAppliedLater.IsOpen = true;
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ComboBoxServerDefault_OnSelectionChanged
-
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var propertySetSettings = _app.SettingsH.PropertySetSettings;
-
-            // Show the settings' selection.
-            ComboBoxServerDefault.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
-            {
-                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
-                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
-                _ => null
-            };
-            ToggleSwitchLoginAlternativeAlways.IsOn =
-                propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
-                SettingsHelper.DefaultLoginAlternativeAlways;
-        } // end method GridRoot_OnLoaded
 
 #pragma warning disable CA1822 // Mark members as static
         // Handle the info bar's closing event.

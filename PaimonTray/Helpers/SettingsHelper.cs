@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Views;
 using Serilog;
@@ -7,7 +8,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
 using Windows.Storage;
-using Microsoft.UI.Composition.SystemBackdrops;
 
 namespace PaimonTray.Helpers
 {
@@ -125,7 +125,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         #endregion Fields
 
@@ -167,6 +167,18 @@ namespace PaimonTray.Helpers
         } // end constructor SettingsHelper
 
         #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~SettingsHelper()
+        {
+            _app = null;
+        } // end destructor SettingsHelper
+
+        #endregion Destructor
 
         #region Methods
 

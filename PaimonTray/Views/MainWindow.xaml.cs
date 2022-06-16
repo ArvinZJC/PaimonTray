@@ -26,7 +26,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// The app window.
@@ -240,6 +240,9 @@ namespace PaimonTray.Views
         private void MainWindow_OnClosed(object sender, WindowEventArgs args)
         {
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _app = null;
+            _appWindow = null;
+            _existingWindow = null;
         } // end method MainWindow_OnClosed
 
         // Handle the body navigation view's selection changed event.

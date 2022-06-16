@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using PaimonTray.Helpers;
 using PaimonTray.ViewModels;
@@ -25,7 +24,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// A flag indicating if the WebView2 is available.
@@ -35,7 +34,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The main window.
         /// </summary>
-        private readonly MainWindow _mainWindow;
+        private MainWindow _mainWindow;
 
         /// <summary>
         /// The login web page WebView2.
@@ -298,41 +297,6 @@ namespace PaimonTray.Views
         } // end method LogInAsync
 
         /// <summary>
-        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            if (_isWebView2Available)
-            {
-                _webView2LoginWebPage.CoreWebView2.SourceChanged -= CoreWebView2LoginWebPage_OnSourceChanged;
-                _webView2LoginWebPage.NavigationCompleted -= WebView2LoginWebPage_OnNavigationCompleted;
-                _webView2LoginWebPage.Close(); // Close at last to avoid the null reference exception.
-            } // end if
-
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
-                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
-            ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
-                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
-            base.OnNavigatedFrom(e);
-        } // end method OnNavigatedFrom
-
-        /// <summary>
-        /// Invoked when the page is loaded and becomes the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the pending navigation that will load the current page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
-                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
-            ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
-                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
-            base.OnNavigatedTo(e);
-        } // end method OnNavigatedTo
-
-        /// <summary>
         /// Process the raw cookies.
         /// </summary>
         /// <typeparam name="T">Should be a <see cref="string"/> or <see cref="CoreWebView2Cookie"/> type.</typeparam>
@@ -480,6 +444,38 @@ namespace PaimonTray.Views
                 ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
+        // Handle the loaded event of the page for adding/updating an account.
+        private void AddUpdateAccountPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+            ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
+            ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
+        } // end method AddUpdateAccountPage_OnLoaded
+
+        // Handle the unloaded event of the page for adding/updating an account.
+        private void AddUpdateAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (_isWebView2Available)
+            {
+                _webView2LoginWebPage.CoreWebView2.SourceChanged -= CoreWebView2LoginWebPage_OnSourceChanged;
+                _webView2LoginWebPage.Close(); // Close to ensure ending the WebView2 processes.
+                _webView2LoginWebPage = null;
+            } // end if
+
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
+
+            _app = null;
+            _mainWindow = null;
+        } // end method AddUpdateAccountPage_OnUnloaded
+
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
@@ -553,12 +549,6 @@ namespace PaimonTray.Views
         {
             SetPageSize();
         } // end method GridBody_OnSizeChanged
-
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
-        } // end method GridRoot_OnLoaded
 
 #pragma warning disable CA1822 // Mark members as static
         // Handle the info bar's closing event.

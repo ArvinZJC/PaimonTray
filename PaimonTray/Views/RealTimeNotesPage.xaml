@@ -7,7 +7,9 @@
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:PaimonTray.Models"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Loaded="RealTimeNotesPage_OnLoaded"
+    Unloaded="RealTimeNotesPage_OnUnloaded">
     <Page.Resources>
         <converters:AccountCharacterConverter x:Key="AccountCharacterConverter" />
         <converters:AccountGroupInfoListConverter x:Key="AccountGroupInfoListConverter" />

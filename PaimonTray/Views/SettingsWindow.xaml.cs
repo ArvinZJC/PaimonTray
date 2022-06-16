@@ -24,7 +24,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// The app window.
@@ -221,6 +221,14 @@ namespace PaimonTray.Views
                 TextBlockWindowTitle.Foreground =
                     GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush;
         } // end method SettingsWindow_OnActivated
+
+        // Handle the settings window's closed event.
+        private void SettingsWindow_OnClosed(object sender, WindowEventArgs args)
+        {
+            _app = null;
+            _appWindow = null;
+            _existingWindow = null;
+        } // end method SettingsWindow_OnClosed
 
         #endregion Event Handlers
     } // end class SettingsWindow

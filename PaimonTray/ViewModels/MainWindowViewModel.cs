@@ -55,7 +55,8 @@ namespace PaimonTray.ViewModels
         public MainWindowViewModel()
         {
             _navigationViewPaneDisplayMode =
-                ((App)Application.Current).SettingsH.DecideMainWindowNavigationViewPaneDisplayMode();
+                (Application.Current as App)?.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() ??
+                NavigationViewPaneDisplayMode.LeftCompact;
         } // end constructor MainWindowViewModel
 
         #endregion Constructors

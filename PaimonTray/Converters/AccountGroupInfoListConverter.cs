@@ -13,8 +13,6 @@ namespace PaimonTray.Converters
     {
         #region Constants
 
-        #endregion Constants
-
         /// <summary>
         /// The parameter for checking and refreshing an account group.
         /// </summary>
@@ -94,6 +92,8 @@ namespace PaimonTray.Converters
         /// The ready status's explanation parameter.
         /// </summary>
         private const string ParameterStatusReadyExplanation = "statusReadyExplanation";
+
+        #endregion Constants
 
         #region Methods
 

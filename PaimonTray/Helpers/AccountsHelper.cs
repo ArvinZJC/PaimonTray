@@ -573,7 +573,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// A flag indicating if an account's character is updated.
@@ -709,6 +709,18 @@ namespace PaimonTray.Helpers
         } // end constructor AccountsHelper
 
         #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~AccountsHelper()
+        {
+            _app = null;
+        } // end destructor AccountsHelper
+
+        #endregion Destructor
 
         #region Events
 

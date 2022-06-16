@@ -45,6 +45,18 @@ namespace PaimonTray.Helpers
 
         #endregion Fields
 
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~DispatcherQueueControllerHelper()
+        {
+            _dispatcherQueueController = null;
+        } // end destructor DispatcherQueueControllerHelper
+
+        #endregion Destructor
+
         #region Methods
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         #endregion Fields
 
@@ -67,5 +67,15 @@ namespace PaimonTray.Views
         } // end method UpdateUiText
 
         #endregion Methods
+
+        #region Event Handlers
+
+        // Handle the app introduction page's unloaded event.
+        private void AboutAppPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app = null;
+        } // end method AboutAppPage_OnUnloaded
+
+        #endregion Event Handlers
     } // end class AboutAppPage
 } // end namespace PaimonTray.Views

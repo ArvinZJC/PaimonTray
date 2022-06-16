@@ -6,7 +6,8 @@
     xmlns:helpers="using:PaimonTray.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Activated="SettingsWindow_OnActivated">
+    Activated="SettingsWindow_OnActivated"
+    Closed="SettingsWindow_OnClosed">
     <!-- The root grid. -->
     <Grid
         x:Name="GridRoot"

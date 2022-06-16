@@ -1,6 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using PaimonTray.Converters;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
@@ -22,12 +21,12 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// The main window.
         /// </summary>
-        private readonly MainWindow _mainWindow;
+        private MainWindow _mainWindow;
 
         #endregion Fields
 
@@ -61,31 +60,6 @@ namespace PaimonTray.Views
             TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
         } // end method InitialiseRealTimeNotesArea
-
-        /// <summary>
-        /// Invoked immediately after the page is unloaded and is no longer the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the navigation that has unloaded the current page.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
-            base.OnNavigatedFrom(e);
-        } // end method OnNavigatedFrom
-
-        /// <summary>
-        /// Invoked when the page is loaded and becomes the current source of a parent frame.
-        /// </summary>
-        /// <param name="e">Details about the pending navigation that will load the current page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
-            ToggleStatusVisibility();
-            base.OnNavigatedTo(e);
-        } // end method OnNavigatedTo
 
         /// <summary>
         /// Set the page size and other controls' sizes related to the page size.
@@ -316,6 +290,26 @@ namespace PaimonTray.Views
         {
             if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
+
+        // Handle the real-time notes page's loaded event.
+        private void RealTimeNotesPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+            ToggleStatusVisibility();
+        } // end method RealTimeNotesPage_OnLoaded
+
+        // Handle the real-time notes page's unloaded event.
+        private void RealTimeNotesPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
+
+            _app = null;
+            _mainWindow = null;
+        } // end method RealTimeNotesPage_OnUnloaded
 
         #endregion Event Handlers
     } // end class RealTimeNotesPage

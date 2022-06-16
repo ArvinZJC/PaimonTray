@@ -16,7 +16,7 @@ namespace PaimonTray.Views
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         #endregion Fields
 
@@ -146,8 +146,8 @@ namespace PaimonTray.Views
             _app.SettingsH.ApplyThemeSelection();
         } // end method ComboBoxTheme_OnSelectionChanged
 
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        // Handle the general settings page's loaded event.
+        private void GeneralSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
@@ -178,7 +178,13 @@ namespace PaimonTray.Views
             ToggleSwitchMainWindowTopNavigationPane.IsOn =
                 propertySetSettings[SettingsHelper.KeyMainWindowTopNavigationPane] as bool? ??
                 SettingsHelper.DefaultMainWindowTopNavigationPane;
-        } // end method GridRoot_OnLoaded
+        } // end method GeneralSettingsPage_OnLoaded
+
+        // Handle the general settings page's unloaded event.
+        private void GeneralSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app = null;
+        } // end method GeneralSettingsPage_OnUnloaded
 
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
         private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)

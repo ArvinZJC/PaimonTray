@@ -21,12 +21,12 @@ namespace PaimonTray.ViewModels
         /// <summary>
         /// The app.
         /// </summary>
-        private readonly App _app;
+        private App _app;
 
         /// <summary>
         /// The main window.
         /// </summary>
-        private readonly MainWindow _mainWindow;
+        private MainWindow _mainWindow;
 
         #endregion Fields
 
@@ -36,7 +36,6 @@ namespace PaimonTray.ViewModels
         /// The command to add/update an account.
         /// </summary>
         public ICommand AddUpdateAccountCommand
-
         {
             get
             {
@@ -177,5 +176,18 @@ namespace PaimonTray.ViewModels
         } // end constructor CommandsViewModel
 
         #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~CommandsViewModel()
+        {
+            _app = null;
+            _mainWindow = null;
+        } // end destructor CommandsViewModel
+
+        #endregion Destructor
     } // end class CommandsViewModel
 } // end namespace PaimonTray.ViewModels
