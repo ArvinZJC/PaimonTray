@@ -6,11 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Net.Http;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -62,16 +59,6 @@ namespace PaimonTray.Helpers
         public const int CountAccountsMax = 5;
 
         /// <summary>
-        /// The CN server's dynamic secret salt.
-        /// </summary>
-        private const string DynamicSecretSaltServerCn = "xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs";
-
-        /// <summary>
-        /// The global server's dynamic secret salt.
-        /// </summary>
-        private const string DynamicSecretSaltServerGlobal = "okr4obncj8bw5a65hbnn5oo6ixjc3l9w";
-
-        /// <summary>
         /// The finished expedition status in JSON data.
         /// </summary>
         public const string ExpeditionStatusFinished = "Finished";
@@ -85,46 +72,6 @@ namespace PaimonTray.Helpers
         /// The PNG file extension.
         /// </summary>
         private const string FileExtensionPng = ".png";
-
-        /// <summary>
-        /// The app version header name.
-        /// </summary>
-        private const string HeaderNameAppVersion = "x-rpc-app_version";
-
-        /// <summary>
-        /// The client type header name.
-        /// </summary>
-        private const string HeaderNameClientType = "x-rpc-client_type";
-
-        /// <summary>
-        /// The cookie header name.
-        /// </summary>
-        private const string HeaderNameCookie = "Cookie";
-
-        /// <summary>
-        /// The dynamic secret header name.
-        /// </summary>
-        private const string HeaderNameDynamicSecret = "DS";
-
-        /// <summary>
-        /// The app version header value for the CN server.
-        /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.30.1";
-
-        /// <summary>
-        /// The app version header value for the global server.
-        /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.11.1";
-
-        /// <summary>
-        /// The client type header value for the CN server.
-        /// </summary>
-        private const string HeaderValueClientTypeServerCn = "5";
-
-        /// <summary>
-        /// The client type header value for the global server.
-        /// </summary>
-        private const string HeaderValueClientTypeServerGlobal = "2";
 
         /// <summary>
         /// The key of the flag indicating if the daily commissions' bonus rewards are claimed.
@@ -649,17 +596,6 @@ namespace PaimonTray.Helpers
         private bool _isManaging;
 
         /// <summary>
-        /// The HTTP client's lazy initialisation.
-        /// </summary>
-        private readonly Lazy<HttpClient>
-            _lazyHttpClient; // System.Net.Http is used rather than the recommended Windows.Web.Http because of disabling automatic cookies handling, which the latter seems to perform badly.
-
-        /// <summary>
-        /// The pseudo-random number generator.
-        /// </summary>
-        private readonly Random _random;
-
-        /// <summary>
         /// The regions dictionary.
         /// </summary>
         private readonly Dictionary<string, string> _regions;
@@ -752,8 +688,6 @@ namespace PaimonTray.Helpers
             _isAccountGroupUpdated = false;
             _isAddingUpdating = false;
             _isManaging = false;
-            _lazyHttpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
-            _random = new Random();
 
             var resourceLoader = _app?.SettingsH.ResLoader;
 
@@ -1074,23 +1008,6 @@ namespace PaimonTray.Helpers
         } // end method CountAccounts
 
         /// <summary>
-        /// Generate a dynamic secret.
-        /// </summary>
-        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
-        /// <param name="query">The query.</param>
-        /// <returns>The dynamic secret.</returns>
-        private string GenerateDynamicSecret(bool isServerCn, string query)
-        {
-            var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
-            using var md5 = MD5.Create();
-            var randomInt = _random.Next(100000, 200000);
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-            return
-                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLower()}";
-        } // end method GenerateDynamicSecret
-
-        /// <summary>
         /// Get the account and its characters from the API.
         /// NOTE: Remember to change the account status to adding/updating.
         /// </summary>
@@ -1122,31 +1039,19 @@ namespace PaimonTray.Helpers
                 return false;
             } // end if
 
-            var httpClient = _lazyHttpClient.Value;
-            var httpClientHeaders = httpClient.DefaultRequestHeaders;
-            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
+            var isServerCn =
+                propertySetAccount[KeyServer] is TagServerCn;
+            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+                isServerCn,
+                isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal); // Send an HTTP GET request when ready.
 
-            httpClientHeaders.Clear(); // Clear first.
-            httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
-
-            HttpResponseMessage httpResponseMessage;
-
-            try
+            if (httpResponseBody is null)
             {
-                httpResponseMessage =
-                    await httpClient.GetAsync(new Uri(isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal));
-                httpResponseMessage.EnsureSuccessStatusCode();
-            }
-            catch (Exception exception)
-            {
-                Log.Error(
-                    $"The HTTP response to get the account was unsuccessful (account container key: {containerKeyAccount}).");
-                Log.Error(exception.ToString());
+                Log.Warning(
+                    $"Failed to get the account from the API due to null HTTP response message content (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return true;
-            } // end try...catch
-
-            var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+            } // end if
 
             try
             {
@@ -1258,31 +1163,18 @@ namespace PaimonTray.Helpers
                 return null;
             } // end if
 
-            var httpClient = _lazyHttpClient.Value;
-            var httpClientHeaders = httpClient.DefaultRequestHeaders;
             var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
+            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+                isServerCn,
+                isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal); // Send an HTTP GET request when ready.
 
-            httpClientHeaders.Clear(); // Clear first.
-            httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
-
-            HttpResponseMessage httpResponseMessage;
-
-            try
+            if (httpResponseBody is null)
             {
-                httpResponseMessage =
-                    await httpClient.GetAsync(new Uri(isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal));
-                httpResponseMessage.EnsureSuccessStatusCode();
-            }
-            catch (Exception exception)
-            {
-                Log.Error(
-                    $"The HTTP response to get characters was unsuccessful (account container key: {containerKeyAccount}).");
-                Log.Error(exception.ToString());
+                Log.Warning(
+                    $"Failed to get characters from the API due to null HTTP response message content (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
-            } // end try...catch
-
-            var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+            } // end if
 
             try
             {
@@ -1640,38 +1532,19 @@ namespace PaimonTray.Helpers
                 return;
             } // end if
 
-            var httpClient = _lazyHttpClient.Value;
-            var httpClientHeaders = httpClient.DefaultRequestHeaders;
             var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
-            var query =
-                $"role_id={applicationDataContainerCharacter.Name}&server={region}";
-
-            httpClientHeaders.Clear(); // Clear first.
-            httpClientHeaders.Add(HeaderNameAppVersion,
-                isServerCn ? HeaderValueAppVersionServerCn : HeaderValueAppVersionServerGlobal);
-            httpClientHeaders.Add(HeaderNameClientType,
-                isServerCn ? HeaderValueClientTypeServerCn : HeaderValueClientTypeServerGlobal);
-            httpClientHeaders.Add(HeaderNameCookie, propertySetAccount[KeyCookies] as string);
-            httpClientHeaders.Add(HeaderNameDynamicSecret, GenerateDynamicSecret(isServerCn, query));
-
-            HttpResponseMessage httpResponseMessage;
+            var query = $"role_id={applicationDataContainerCharacter.Name}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
+            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+                isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
 
-            try
+            if (httpResponseBody is null)
             {
-                httpResponseMessage = await httpClient.GetAsync(new Uri($"{urlBaseRealTimeNotes}{query}"));
-                httpResponseMessage.EnsureSuccessStatusCode();
-            }
-            catch (Exception exception)
-            {
-                Log.Error(
-                    $"The HTTP response to get real-time notes was unsuccessful (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
-                Log.Error(exception.ToString());
+                Log.Warning(
+                    $"Failed to get real-time notes from the API due to null HTTP response message content (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
                 return;
-            } // end try...catch
-
-            var httpResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+            } // end if
 
             try
             {

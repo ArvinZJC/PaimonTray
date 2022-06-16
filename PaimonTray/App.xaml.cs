@@ -32,6 +32,11 @@ namespace PaimonTray
         public CommandsViewModel CommandsVm { get; private set; }
 
         /// <summary>
+        /// The HTTP client helper.
+        /// </summary>
+        public HttpClientHelper HttpClientH { get; }
+
+        /// <summary>
         /// The logs directory.
         /// </summary>
         public string LogsDirectory { get; private set; }
@@ -64,6 +69,8 @@ namespace PaimonTray
             GenerateAppVersion();
             Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
             SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
+            HttpClientH =
+                new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
             AccountsH = new AccountsHelper();
             UrlGitHubRepoRelease = $"{AppConstantsHelper.UrlBaseGitHubRepoRelease}{AppVersion}";
             WindowsH = new WindowsHelper();

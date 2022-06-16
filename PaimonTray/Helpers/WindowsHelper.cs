@@ -10,7 +10,6 @@ using PaimonTray.Views;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Graphics;
 using WinRT;
@@ -145,8 +144,14 @@ namespace PaimonTray.Helpers
         /// <param name="windowType">The window type.</param>
         /// <param name="activateIfExists">A flag indicating if the window should be activated if exists.</param>
         /// <returns>The existing window, or <c>null</c> if the operation fails.</returns>
-        private ExistingWindow ShowWindow([DisallowNull] Type windowType, bool activateIfExists = true)
+        private ExistingWindow ShowWindow(Type windowType, bool activateIfExists = true)
         {
+            if (windowType is null)
+            {
+                Log.Warning("Null window type.");
+                return null;
+            } // end if
+
             var existingWindowTarget =
                 ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win.GetType() == windowType, null);
 

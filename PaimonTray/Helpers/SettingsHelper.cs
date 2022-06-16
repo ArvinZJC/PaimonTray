@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Views;
 using Serilog;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
@@ -267,8 +266,14 @@ namespace PaimonTray.Helpers
         /// <param name="key">The setting key.</param>
         /// <param name="name">The setting name with the 1st letter capitalised.</param>
         /// <param name="value">The setting value.</param>
-        private void InitialiseSetting([DisallowNull] string key, [DisallowNull] string name, object value)
+        private void InitialiseSetting(string key, string name, object value)
         {
+            if (key is null)
+            {
+                Log.Warning($"Null setting key (setting name: {name}).");
+                return;
+            } // end if
+
             PropertySetSettings[key] = value;
             Log.Information($"{name} initialised to default.");
         } // end method InitialiseSetting
