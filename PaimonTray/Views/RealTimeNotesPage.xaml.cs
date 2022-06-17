@@ -62,6 +62,16 @@ namespace PaimonTray.Views
             UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
         } // end method AccountsHelper_OnPropertyChanged
 
+        // Handle the midnight dispatcher timer's tick event.
+        private void DispatcherTimerMidnight_OnTick(object sender, object e)
+        {
+            ToggleStatusVisibility();
+
+            if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter) return;
+
+            UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
+        } // end method DispatcherTimerMidnight_OnTick
+
         // Handle the body grid's size changed event.
         private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -137,6 +147,7 @@ namespace PaimonTray.Views
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
             _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+            SetMidnightDispatcherTimerInterval();
             ToggleStatusVisibility();
         } // end method RealTimeNotesPage_OnLoaded
 
@@ -145,6 +156,8 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _dispatcherTimerMidnight.Stop();
+            _dispatcherTimerMidnight.Tick -= DispatcherTimerMidnight_OnTick;
             _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
 
             _app = null;
@@ -161,6 +174,11 @@ namespace PaimonTray.Views
         private App _app;
 
         /// <summary>
+        /// The midnight dispatcher timer.
+        /// </summary>
+        private DispatcherTimer _dispatcherTimerMidnight;
+
+        /// <summary>
         /// The main window.
         /// </summary>
         private MainWindow _mainWindow;
@@ -174,13 +192,35 @@ namespace PaimonTray.Views
         /// </summary>
         private void InitialiseRealTimeNotesArea()
         {
+            GridCharacterRealTimeNotesStatusDisabled.Visibility = Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusFail.Visibility = Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusReady.Visibility = Visibility.Collapsed;
+            GridCharacterRealTimeNotesStatusUpdating.Visibility = Visibility.Collapsed;
             ListViewCharacterRealTimeNotesExpeditions.ItemsSource = null;
             ListViewCharacterRealTimeNotesGeneral.ItemsSource = null;
             ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Collapsed;
+            RunCharacterRealTimeNotesTimeUpdateLast.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
         } // end method InitialiseRealTimeNotesArea
+
+        /// <summary>
+        /// Set the midnight dispatcher timer's interval.
+        /// </summary>
+        private void SetMidnightDispatcherTimerInterval()
+        {
+            if (_dispatcherTimerMidnight is null)
+            {
+                _dispatcherTimerMidnight = new DispatcherTimer();
+                _dispatcherTimerMidnight.Tick += DispatcherTimerMidnight_OnTick; // Add the tick event handler first.
+            } // end if
+
+            _dispatcherTimerMidnight.Interval = AccountsHelper.GetTimeSpanBetweenCurrentAndMidnight();
+
+            if (!_dispatcherTimerMidnight.IsEnabled)
+                _dispatcherTimerMidnight.Start(); // The 1st tick occurs when the timer interval has elapsed.
+        } // end method SetMidnightDispatcherTimerInterval
 
         /// <summary>
         /// Set the page size and other controls' sizes related to the page size.

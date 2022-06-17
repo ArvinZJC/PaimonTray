@@ -56,6 +56,7 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            SetMidnightDispatcherTimerInterval();
             ToggleStatusVisibility();
 
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
@@ -96,6 +97,8 @@ namespace PaimonTray.Views
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             _app = null;
+            _dispatcherTimerMidnight.Stop();
+            _dispatcherTimerMidnight.Tick -= DispatcherTimerMidnight_OnTick;
             _mainWindow = null;
         } // end method AccountsSettingsPage_OnUnloaded
 
@@ -182,6 +185,12 @@ namespace PaimonTray.Views
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ComboBoxServerDefault_OnSelectionChanged
 
+        // Handle the midnight dispatcher timer's tick event.
+        private void DispatcherTimerMidnight_OnTick(object sender, object e)
+        {
+            ToggleStatusVisibility();
+        } // end method DispatcherTimerMidnight_OnTick
+
 #pragma warning disable CA1822 // Mark members as static
         // Handle the info bar's closing event.
         private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
@@ -233,6 +242,11 @@ namespace PaimonTray.Views
         private App _app;
 
         /// <summary>
+        /// The midnight dispatcher timer.
+        /// </summary>
+        private DispatcherTimer _dispatcherTimerMidnight;
+
+        /// <summary>
         /// A flag indicating if the program is updating the account groups source.
         /// </summary>
         private bool _isUpdatingAccountGroupsSource;
@@ -263,6 +277,23 @@ namespace PaimonTray.Views
             return
                 $"{optionValueDisplay} {timeUnit} | {(double)optionValue / SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal} {resinOriginal}";
         } // end method GenerateRealTimeNotesRefreshIntervalComboBoxItemContent
+
+        /// <summary>
+        /// Set the midnight dispatcher timer's interval.
+        /// </summary>
+        private void SetMidnightDispatcherTimerInterval()
+        {
+            if (_dispatcherTimerMidnight is null)
+            {
+                _dispatcherTimerMidnight = new DispatcherTimer();
+                _dispatcherTimerMidnight.Tick += DispatcherTimerMidnight_OnTick; // Add the tick event handler first.
+            } // end if
+
+            _dispatcherTimerMidnight.Interval = AccountsHelper.GetTimeSpanBetweenCurrentAndMidnight();
+
+            if (!_dispatcherTimerMidnight.IsEnabled)
+                _dispatcherTimerMidnight.Start(); // The 1st tick occurs when the timer interval has elapsed.
+        } // end method SetMidnightDispatcherTimerInterval
 
         /// <summary>
         /// Show/Hide the status.

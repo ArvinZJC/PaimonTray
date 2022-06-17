@@ -1195,19 +1195,19 @@ namespace PaimonTray.Helpers
             if (dateTime is null) return AppConstantsHelper.Unknown;
 
             var cultureApplied = _app.SettingsH.CultureApplied;
-            var dateTimeLocal = ((DateTimeOffset)dateTime).ToLocalTime();
-            var dateTimeNowDay = DateTimeOffset.Now.Day;
+            var dateTimeOffsetLocal = ((DateTimeOffset)dateTime).ToLocalTime();
+            var dateTimeOffsetNow = DateTimeOffset.Now;
             var resourceLoader = _app.SettingsH.ResLoader;
 
-            if (dateTimeLocal.Day == dateTimeNowDay - 1)
-                return $"{resourceLoader.GetString("Yesterday")} {dateTimeLocal.ToString("t", cultureApplied)}";
+            if (dateTimeOffsetLocal.Day == dateTimeOffsetNow.AddDays(-1).Day)
+                return $"{resourceLoader.GetString("Yesterday")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}";
 
-            if (dateTimeLocal.Day == dateTimeNowDay)
-                return $"{resourceLoader.GetString("Today")} {dateTimeLocal.ToString("t", cultureApplied)}";
+            if (dateTimeOffsetLocal.Day == dateTimeOffsetNow.Day)
+                return $"{resourceLoader.GetString("Today")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}";
 
-            return dateTimeLocal.Day == dateTimeNowDay + 1
-                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeLocal.ToString("t", cultureApplied)}"
-                : dateTimeLocal.ToString("g", cultureApplied);
+            return dateTimeOffsetLocal.Day == dateTimeOffsetNow.AddDays(1).Day
+                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}"
+                : dateTimeOffsetLocal.ToString("g", cultureApplied);
         } // end method GetDateTimeString
 
         /// <summary>
@@ -1945,6 +1945,21 @@ namespace PaimonTray.Helpers
         } // end method GetRegion
 
         /// <summary>
+        /// Get the time span between the current and the midnight.
+        /// </summary>
+        /// <returns>The time span between the current and the midnight.</returns>
+        public static TimeSpan GetTimeSpanBetweenCurrentAndMidnight()
+        {
+            var dateTimeOffsetNow = DateTimeOffset.Now;
+            var dateTimeOffsetTomorrowNow = dateTimeOffsetNow.AddDays(1);
+            var dateTimeOffsetMidnight = new DateTimeOffset(dateTimeOffsetTomorrowNow.Year,
+                dateTimeOffsetTomorrowNow.Month, dateTimeOffsetTomorrowNow.Day, 0, 0, 0,
+                dateTimeOffsetTomorrowNow.Offset);
+
+            return dateTimeOffsetMidnight.Subtract(dateTimeOffsetNow);
+        } // end method GetTimeSpanBetweenCurrentAndMidnight
+
+        /// <summary>
         /// Occur when the specific property is changed.
         /// </summary>
         /// <param name="propertyName">The name of the property for the event.</param>
@@ -1996,12 +2011,14 @@ namespace PaimonTray.Helpers
                 _dispatcherTimerRealTimeNotes = new DispatcherTimer();
                 _dispatcherTimerRealTimeNotes.Tick +=
                     DispatcherTimerRealTimeNotes_OnTick; // Add the tick event handler first.
-                _dispatcherTimerRealTimeNotes.Start(); // The 1st tick occurs when the timer interval has elapsed.
             } // end if
 
             _dispatcherTimerRealTimeNotes.Interval = TimeSpan.FromMinutes(
                 _app.SettingsH.PropertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int? ??
                 SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal);
+
+            if (!_dispatcherTimerRealTimeNotes.IsEnabled)
+                _dispatcherTimerRealTimeNotes.Start(); // The 1st tick occurs when the timer interval has elapsed.
         } // end method SetRealTimeNotesDispatcherTimerInterval
 
         /// <summary>
