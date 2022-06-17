@@ -643,7 +643,6 @@ namespace PaimonTray.Helpers
         // Handle the real-time notes dispatcher timer's tick event.
         private void DispatcherTimerRealTimeNotes_OnTick(object sender, object e)
         {
-            Log.Debug(DateTimeOffset.Now.ToString("g")); // TODO
             GetRealTimeNotesFromApiForAllEnabledAsync();
         } // end method DispatcherTimerRealTimeNotes_OnTick
 
@@ -797,10 +796,8 @@ namespace PaimonTray.Helpers
                 propertySetAccount[KeyStatus] = propertySetAccount[KeyStatus] is TagStatusExpired
                     ? TagStatusExpired
                     : TagStatusFail;
-                return;
-            } // end if
-
-            if (characters.Count is 0)
+            }
+            else if (characters.Count is 0)
             {
                 foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
                     applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
@@ -1481,7 +1478,7 @@ namespace PaimonTray.Helpers
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
         private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter,
-            bool isStandalone = false)
+            bool isStandalone = true)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -1912,7 +1909,7 @@ namespace PaimonTray.Helpers
                      let propertySetCharacter = keyValuePairCharacter.Value.Values
                      where propertySetCharacter[KeyIsEnabled] is true
                      select keyValuePairCharacter)
-                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, keyValuePairCharacter.Key);
+                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, keyValuePairCharacter.Key, false);
 
             UidCharacterRealTimeNotesUpdated = TagRealTimeNotesUpdatedCharactersAllEnabled;
         } // end method GetRealTimeNotesFromApiForAllEnabledAsync
@@ -2043,6 +2040,10 @@ namespace PaimonTray.Helpers
             if (propertySetCharacter[KeyIsEnabled] as bool? == shouldEnableCharacter) return false;
 
             propertySetCharacter[KeyIsEnabled] = shouldEnableCharacter;
+
+            if (shouldEnableCharacter)
+                _ = GetRealTimeNotesFromApiAsync(containerKeyAccount, containerKeyCharacter);
+
             return true;
         } // end method TryChangeCharacterStatus
 

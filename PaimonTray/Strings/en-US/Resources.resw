@@ -179,7 +179,7 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's status is abnormal, you can add/update the account again)</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's abnormal status cannot be resolved by checking and refreshing the account, you can log into the account again)</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>Remove all accounts?</value>
@@ -356,10 +356,10 @@
     <value>Always use the alternative login method</value>
   </data>
   <data name="LoginAlternativeAlwaysAppliedLater" xml:space="preserve">
-    <value>The change to always using the alternative login method will be applied the next time the page for adding an account is entered.</value>
+    <value>The change to always using the alternative login method will be applied the next time the page for adding/updating an account is entered.</value>
   </data>
   <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
-    <value>When enabled, the app will always ask you to enter cookies manually to add your account, even if the web page login method is available</value>
+    <value>When enabled, the app will always ask you to enter cookies manually to add/update your account, even if the web page login method is available</value>
   </data>
   <data name="LoginAlternativeAutomatically" xml:space="preserve">
     <value>The alternative login method is used automatically.</value>
@@ -455,7 +455,7 @@
     <value>Real-time notes refresh interval</value>
   </data>
   <data name="RealTimeNotesIntervalRefreshExplanation" xml:space="preserve">
-    <value>Select the general interval between updates on the real-time notes for all characters selected to allow retrieving real-time notes</value>
+    <value>Select the general interval between unified updates on the real-time notes for all characters selected to allow retrieving real-time notes</value>
   </data>
   <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
     <value>You have not yet enabled the character's real-time notes</value>
@@ -509,10 +509,10 @@
     <value>Default server</value>
   </data>
   <data name="ServerDefaultAppliedLater" xml:space="preserve">
-    <value>The change to the default server will be applied the next time the page for adding an account is entered.</value>
+    <value>The change to the default server will be applied the next time the page for adding/updating an account is entered.</value>
   </data>
   <data name="ServerDefaultExplanation" xml:space="preserve">
-    <value>Select the default server to log in (you can still change the server when adding your account, and the app will automatically recognize the game region)</value>
+    <value>Select the default server to log in (you can still change the server when adding/updating your account, and the app will automatically recognize the game region)</value>
   </data>
   <data name="ServerExplanation" xml:space="preserve">
     <value>Select the server to log in (the app will automatically recognize the game region)</value>
