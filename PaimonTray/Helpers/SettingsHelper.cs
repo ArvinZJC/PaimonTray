@@ -342,7 +342,7 @@ namespace PaimonTray.Helpers
 
             if (!PropertySetSettings.ContainsKey(KeyNotificationClear) ||
                 PropertySetSettings[KeyNotificationClear] is not bool)
-                InitialiseSetting(KeyNotificationClear, "The setting for clearing notifications when exiting the app",
+                InitialiseSetting(KeyNotificationClear, "The setting for clearing notifications when the app exits",
                     DefaultNotificationClear);
 
             if (!PropertySetSettings.ContainsKey(KeyNotificationGreeting) ||

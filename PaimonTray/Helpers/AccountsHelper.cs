@@ -971,7 +971,7 @@ namespace PaimonTray.Helpers
                 if (shouldCheckAccount) await CheckAccountAsync(containerKeyAccount);
                 else AddUpdateAccountGroup(containerKeyAccount);
 
-            //if (!shouldCheckAccount) GetRealTimeNotesFromApiForAllEnabledAsync();
+            if (!shouldCheckAccount) GetRealTimeNotesFromApiForAllEnabledAsync();
 
             CheckSelectedCharacterUid();
             IsManaging = false;
@@ -1917,12 +1917,13 @@ namespace PaimonTray.Helpers
         private async void GetRealTimeNotesFromApiForAllEnabledAsync()
         {
             foreach (var keyValuePairAccount in ApplicationDataContainerAccounts.Containers)
-            foreach (var propertySetCharacter in keyValuePairAccount.Value
+            foreach (var keyValuePairCharacter in from keyValuePairCharacter in keyValuePairAccount.Value
                          .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
-                         .Values.ToImmutableList()
-                         .Select(applicationDataContainerCharacter => applicationDataContainerCharacter.Values)
-                         .Where(propertySetCharacter => propertySetCharacter[KeyIsEnabled] is true))
-                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, propertySetCharacter[KeyUid] as string);
+                         .ToImmutableList()
+                     let propertySetCharacter = keyValuePairCharacter.Value.Values
+                     where propertySetCharacter[KeyIsEnabled] is true
+                     select keyValuePairCharacter)
+                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, keyValuePairCharacter.Key);
         } // end method GetRealTimeNotesFromApiForAllEnabledAsync
 
         /// <summary>

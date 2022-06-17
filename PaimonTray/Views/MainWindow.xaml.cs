@@ -249,20 +249,12 @@ namespace PaimonTray.Views
         private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
             NavigationViewSelectionChangedEventArgs args)
         {
-            Type pageType;
-            object parameter = null;
-
             if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
 
-            if (navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate)
-                pageType = typeof(AddUpdateAccountPage);
-            else
-            {
-                pageType = typeof(RealTimeNotesPage);
-                parameter = RealTimeNotesPageParameter;
-            } // end if...else
-
-            FrameBody.Navigate(pageType, parameter, new EntranceNavigationTransitionInfo());
+            FrameBody.Navigate(
+                navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate
+                    ? typeof(AddUpdateAccountPage)
+                    : typeof(RealTimeNotesPage), null, new EntranceNavigationTransitionInfo());
         } // end method NavigationViewBody_OnSelectionChanged
 
         #endregion Event Handlers
