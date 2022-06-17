@@ -66,21 +66,6 @@ namespace PaimonTray.Helpers
 
         #endregion Constants
 
-        #region Fields
-
-        /// <summary>
-        /// The HTTP client's lazy initialisation.
-        /// NOTE: System.Net.Http is used rather than the recommended Windows.Web.Http because of disabling automatic cookies handling, which the latter seems to perform badly.
-        /// </summary>
-        private Lazy<HttpClient> _lazyHttpClient;
-
-        /// <summary>
-        /// The pseudo-random number generator.
-        /// </summary>
-        private Random _random;
-
-        #endregion Fields
-
         #region Constructors
 
         /// <summary>
@@ -108,6 +93,21 @@ namespace PaimonTray.Helpers
         } // end destructor HttpClientHelper
 
         #endregion Destructor
+
+        #region Fields
+
+        /// <summary>
+        /// The HTTP client's lazy initialisation.
+        /// NOTE: System.Net.Http is used rather than the recommended Windows.Web.Http because of disabling automatic cookies handling, which the latter seems to perform badly.
+        /// </summary>
+        private Lazy<HttpClient> _lazyHttpClient;
+
+        /// <summary>
+        /// The pseudo-random number generator.
+        /// </summary>
+        private Random _random;
+
+        #endregion Fields
 
         #region Methods
 

@@ -11,15 +11,6 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class GeneralSettingsPage
     {
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        #endregion Fields
-
         #region Constructors
 
         /// <summary>
@@ -33,45 +24,6 @@ namespace PaimonTray.Views
         } // end constructor GeneralSettingsPage
 
         #endregion Constructors
-
-        #region Methods
-
-        /// <summary>
-        /// Update the UI text during the initialisation process.
-        /// </summary>
-        private void UpdateUiText()
-        {
-            var resourceLoader = _app.SettingsH.ResLoader;
-
-            CheckBoxNotificationClear.Content = resourceLoader.GetString("NotificationClear");
-            CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
-            ComboBoxItemLanguageEnGb.Content = new CultureInfo(SettingsHelper.TagLanguageEnGb).NativeName;
-            ComboBoxItemLanguageEnUs.Content = new CultureInfo(SettingsHelper.TagLanguageEnUs).NativeName;
-            ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
-            ComboBoxItemLanguageZhHansCn.Content = new CultureInfo(SettingsHelper.TagLanguageZhHansCn).NativeName;
-            ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
-            ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
-            ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
-            InfoBarLanguageAppliedLater.Title = resourceLoader.GetString("LanguageAppliedLater");
-            RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
-            RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
-            TextBlockLanguage.Text = resourceLoader.GetString("Language");
-            TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
-            TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
-            TextBlockLaunchOnWindowsStartupExplanation.Text =
-                resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
-            TextBlockMainWindowShowWhenAppStarts.Text = resourceLoader.GetString("MainWindowShowWhenAppStarts");
-            TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
-            TextBlockMainWindowTopNavigationPaneExplanation.Text =
-                resourceLoader.GetString("MainWindowTopNavigationPaneExplanation");
-            TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
-            TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
-            TextBlockNotificationsNotice.Text = resourceLoader.GetString("NotificationsNotice");
-            TextBlockTheme.Text = resourceLoader.GetString("Theme");
-            TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
-        } // end method UpdateUiText
-
-        #endregion Methods
 
         #region Event Handlers
 
@@ -106,7 +58,7 @@ namespace PaimonTray.Views
         // Handle the language combo box item's loaded event.
         private void ComboBoxItemLanguage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var comboBoxItemLanguageActualWidth = ((ComboBoxItem)sender).ActualWidth;
+            var comboBoxItemLanguageActualWidth = (sender as ComboBoxItem)?.ActualWidth ?? 0;
 
             if (ComboBoxLanguage.MinWidth < comboBoxItemLanguageActualWidth)
                 ComboBoxLanguage.MinWidth = comboBoxItemLanguageActualWidth;
@@ -115,7 +67,7 @@ namespace PaimonTray.Views
         // Handle the theme combo box item's loaded event.
         private void ComboBoxItemTheme_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var comboBoxItemThemeActualWidth = ((ComboBoxItem)sender).ActualWidth;
+            var comboBoxItemThemeActualWidth = (sender as ComboBoxItem)?.ActualWidth ?? 0;
 
             if (ComboBoxTheme.MinWidth < comboBoxItemThemeActualWidth)
                 ComboBoxTheme.MinWidth = comboBoxItemThemeActualWidth;
@@ -222,5 +174,53 @@ namespace PaimonTray.Views
         } // end method ToggleSwitchMainWindowTopNavigationPane_OnToggled
 
         #endregion Event Handlers
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        #endregion Fields
+
+        #region Methods
+
+        /// <summary>
+        /// Update the UI text during the initialisation process.
+        /// </summary>
+        private void UpdateUiText()
+        {
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            CheckBoxNotificationClear.Content = resourceLoader.GetString("NotificationClear");
+            CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
+            ComboBoxItemLanguageEnGb.Content = new CultureInfo(SettingsHelper.TagLanguageEnGb).NativeName;
+            ComboBoxItemLanguageEnUs.Content = new CultureInfo(SettingsHelper.TagLanguageEnUs).NativeName;
+            ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
+            ComboBoxItemLanguageZhHansCn.Content = new CultureInfo(SettingsHelper.TagLanguageZhHansCn).NativeName;
+            ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");
+            ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
+            ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
+            InfoBarLanguageAppliedLater.Title = resourceLoader.GetString("LanguageAppliedLater");
+            RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
+            RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
+            TextBlockLanguage.Text = resourceLoader.GetString("Language");
+            TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
+            TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
+            TextBlockLaunchOnWindowsStartupExplanation.Text =
+                resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
+            TextBlockMainWindowShowWhenAppStarts.Text = resourceLoader.GetString("MainWindowShowWhenAppStarts");
+            TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
+            TextBlockMainWindowTopNavigationPaneExplanation.Text =
+                resourceLoader.GetString("MainWindowTopNavigationPaneExplanation");
+            TextBlockNotifications.Text = resourceLoader.GetString("Notifications");
+            TextBlockNotificationsExplanation.Text = resourceLoader.GetString("NotificationsExplanation");
+            TextBlockNotificationsNotice.Text = resourceLoader.GetString("NotificationsNotice");
+            TextBlockTheme.Text = resourceLoader.GetString("Theme");
+            TextBlockThemeExplanation.Text = resourceLoader.GetString("ThemeExplanation");
+        } // end method UpdateUiText
+
+        #endregion Methods
     } // end class GeneralSettingsPage
 } // end namespace PaimonTray.Views

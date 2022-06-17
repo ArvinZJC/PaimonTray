@@ -9,42 +9,6 @@ namespace PaimonTray.Helpers
     /// </summary>
     internal class DispatcherQueueControllerHelper
     {
-        #region Structures
-
-        /// <summary>
-        /// The dispatcher queue options structure.
-        /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/dispatcherqueue/ns-dispatcherqueue-dispatcherqueueoptions
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        private struct DispatcherQueueOptions
-        {
-            /// <summary>
-            /// The size of this dispatcher queue options structure.
-            /// </summary>
-            internal int dwSize;
-
-            /// <summary>
-            /// The thread affinity for the created dispatcher queue controller.
-            /// </summary>
-            internal int threadType;
-
-            /// <summary>
-            /// Specify whether to initialise COM apartment on the new thread as an application single-threaded apartment (ASTA) or single-threaded apartment (STA).
-            /// </summary>
-            internal int apartmentType;
-        } // end struct DispatcherQueueOptions
-
-        #endregion Structures
-
-        #region Fields
-
-        /// <summary>
-        /// The dispatcher queue controller.
-        /// </summary>
-        private object _dispatcherQueueController;
-
-        #endregion Fields
-
         #region Destructor
 
         /// <summary>
@@ -56,6 +20,15 @@ namespace PaimonTray.Helpers
         } // end destructor DispatcherQueueControllerHelper
 
         #endregion Destructor
+
+        #region Fields
+
+        /// <summary>
+        /// The dispatcher queue controller.
+        /// </summary>
+        private object _dispatcherQueueController;
+
+        #endregion Fields
 
         #region Methods
 
@@ -99,5 +72,32 @@ namespace PaimonTray.Helpers
         } // end method EnsureDispatcherQueueController
 
         #endregion Methods
+
+        #region Structures
+
+        /// <summary>
+        /// The dispatcher queue options structure.
+        /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/dispatcherqueue/ns-dispatcherqueue-dispatcherqueueoptions
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        private struct DispatcherQueueOptions
+        {
+            /// <summary>
+            /// The size of this dispatcher queue options structure.
+            /// </summary>
+            internal int dwSize;
+
+            /// <summary>
+            /// The thread affinity for the created dispatcher queue controller.
+            /// </summary>
+            internal int threadType;
+
+            /// <summary>
+            /// Specify whether to initialise COM apartment on the new thread as an application single-threaded apartment (ASTA) or single-threaded apartment (STA).
+            /// </summary>
+            internal int apartmentType;
+        } // end struct DispatcherQueueOptions
+
+        #endregion Structures
     } // end class DispatcherQueueControllerHelper
 } // end namespace PaimonTray.Helpers

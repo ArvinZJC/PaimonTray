@@ -7,15 +7,6 @@ namespace PaimonTray.Models
     /// </summary>
     public class GroupInfoList : List<object>
     {
-        #region Properties
-
-        /// <summary>
-        /// The group info list key.
-        /// </summary>
-        public string Key { get; set; }
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -27,5 +18,14 @@ namespace PaimonTray.Models
         } // end constructor GroupInfoList
 
         #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// The group info list key.
+        /// </summary>
+        public string Key { get; set; }
+
+        #endregion Properties
     } // end class GroupInfoList
 } // end namespace PaimonTray.Models

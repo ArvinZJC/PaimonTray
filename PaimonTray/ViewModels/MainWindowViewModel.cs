@@ -20,34 +20,6 @@ namespace PaimonTray.ViewModels
 
         #endregion Constants
 
-        #region Fields
-
-        /// <summary>
-        /// The navigation view's pane display mode.
-        /// </summary>
-        private NavigationViewPaneDisplayMode _navigationViewPaneDisplayMode;
-
-        #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// The navigation view's pane display mode.
-        /// </summary>
-        public NavigationViewPaneDisplayMode NavViewPaneDisplayMode
-        {
-            get => _navigationViewPaneDisplayMode;
-            set
-            {
-                if (_navigationViewPaneDisplayMode == value) return;
-
-                _navigationViewPaneDisplayMode = value;
-                OnPropertyChanged();
-            } // end set
-        } // end property NavViewPaneDisplayMode
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -71,6 +43,15 @@ namespace PaimonTray.ViewModels
 
         #endregion Events
 
+        #region Fields
+
+        /// <summary>
+        /// The navigation view's pane display mode.
+        /// </summary>
+        private NavigationViewPaneDisplayMode _navigationViewPaneDisplayMode;
+
+        #endregion Fields
+
         #region Methods
 
         /// <summary>
@@ -83,5 +64,24 @@ namespace PaimonTray.ViewModels
         } // end method OnPropertyChanged
 
         #endregion Methods
+
+        #region Properties
+
+        /// <summary>
+        /// The navigation view's pane display mode.
+        /// </summary>
+        public NavigationViewPaneDisplayMode NavViewPaneDisplayMode
+        {
+            get => _navigationViewPaneDisplayMode;
+            set
+            {
+                if (_navigationViewPaneDisplayMode == value) return;
+
+                _navigationViewPaneDisplayMode = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property NavViewPaneDisplayMode
+
+        #endregion Properties
     } // end class MainWindowViewModel
 } // end namespace PaimonTray.ViewModels

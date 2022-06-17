@@ -21,6 +21,113 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class MainWindow
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the main window. No need to activate it manually for the 1st time.
+        /// </summary>
+        public MainWindow()
+        {
+            _app = Application.Current as App;
+            _isFirstLoad = true;
+            MainWinViewModel = new MainWindowViewModel();
+            InitializeComponent();
+            CustomiseWindow();
+            UpdateUiText();
+
+            GridRoot.Background =
+                new SolidColorBrush(((SolidColorBrush)GridRoot.Resources["RootGridAcrylicBackground"]).Color);
+            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
+            MenuFlyoutItemMainMenuHelpReleaseNotes.CommandParameter = _app?.UrlGitHubRepoRelease;
+            TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
+        } // end constructor MainWindow
+
+        #endregion Constructors
+
+        #region Event Handlers
+
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating)
+                NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
+        } // end method AccountsHelper_OnPropertyChanged
+
+        // Handle the body frame's size changed event.
+        private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var frameBodyContent = (FrameworkElement)FrameBody.Content;
+            int winHeight;
+            int winWidth;
+            var workArea = WindowsHelper.GetWorkArea(WinId);
+
+            // Avoid using "e.NewSize" to prevent window resizing delay.
+            if (NavigationViewBody.PaneDisplayMode is NavigationViewPaneDisplayMode.Top)
+            {
+                winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
+                            WindowsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) + WindowsHelper.MainWindowSideLengthOffset;
+            }
+            else
+            {
+                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) + WindowsHelper.MainWindowSideLengthOffset;
+                winWidth = (int)(Math.Ceiling(frameBodyContent.ActualWidth) + NavigationViewBody.CompactPaneLength) +
+                           WindowsHelper.MainWindowSideLengthOffset;
+            } // end if...else
+
+            _appWindow.MoveAndResize(new RectInt32
+            {
+                Height = winHeight, Width = winWidth,
+                X = workArea.Width - winWidth - WindowsHelper.MainWindowPositionOffset,
+                Y = workArea.Height - winHeight - WindowsHelper.MainWindowPositionOffset
+            });
+
+            if (!_isFirstLoad) return;
+
+            Activate(); // Activate the window here to prevent being flicked when moving and resizing.
+            _isFirstLoad = false;
+
+            if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] is false)
+                _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
+        } // end method FrameBody_OnSizeChanged
+
+        // Handle the root grid's actual theme changed event.
+        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            SetRootGridBackground();
+        } // end method GridRoot_OnActualThemeChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _existingWindow = _app.WindowsH.GetExistingMainWindow();
+            SetRootGridBackground();
+        } // end method GridRoot_OnLoaded
+
+        // Handle the main window's closed event.
+        private void MainWindow_OnClosed(object sender, WindowEventArgs args)
+        {
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _app = null;
+            _appWindow = null;
+            _existingWindow = null;
+        } // end method MainWindow_OnClosed
+
+        // Handle the body navigation view's selection changed event.
+        private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
+
+            FrameBody.Navigate(
+                navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate
+                    ? typeof(AddUpdateAccountPage)
+                    : typeof(RealTimeNotesPage), null, new EntranceNavigationTransitionInfo());
+        } // end method NavigationViewBody_OnSelectionChanged
+
+        #endregion Event Handlers
+
         #region Fields
 
         /// <summary>
@@ -44,48 +151,6 @@ namespace PaimonTray.Views
         private ExistingWindow _existingWindow;
 
         #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// The main window view model.
-        /// </summary>
-        public MainWindowViewModel MainWinViewModel { get; }
-
-        /// <summary>
-        /// The parameter for navigating to the real-time notes page.
-        /// </summary>
-        public object RealTimeNotesPageParameter { get; set; }
-
-        /// <summary>
-        /// The main window's window ID.
-        /// </summary>
-        public WindowId WinId { get; private set; }
-
-        #endregion Properties
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise the main window. No need to activate it manually for the 1st time.
-        /// </summary>
-        public MainWindow()
-        {
-            _app = Application.Current as App;
-            _isFirstLoad = true;
-            MainWinViewModel = new MainWindowViewModel();
-            InitializeComponent();
-            CustomiseWindow();
-            UpdateUiText();
-
-            GridRoot.Background =
-                new SolidColorBrush(((SolidColorBrush)GridRoot.Resources["RootGridAcrylicBackground"]).Color);
-            MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
-            MenuFlyoutItemMainMenuHelpReleaseNotes.CommandParameter = _app?.UrlGitHubRepoRelease;
-            TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
-        } // end constructor MainWindow
-
-        #endregion Constructors
 
         #region Methods
 
@@ -175,88 +240,23 @@ namespace PaimonTray.Views
 
         #endregion Methods
 
-        #region Event Handlers
+        #region Properties
 
-        // Handle the accounts helper's property changed event.
-        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating)
-                NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
-        } // end method AccountsHelper_OnPropertyChanged
+        /// <summary>
+        /// The main window view model.
+        /// </summary>
+        public MainWindowViewModel MainWinViewModel { get; }
 
-        // Handle the body frame's size changed event.
-        private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var frameBodyContent = (FrameworkElement)FrameBody.Content;
-            int winHeight;
-            int winWidth;
-            var workArea = WindowsHelper.GetWorkArea(WinId);
+        /// <summary>
+        /// The parameter for navigating to the real-time notes page.
+        /// </summary>
+        public object RealTimeNotesPageParameter { get; set; }
 
-            // Avoid using "e.NewSize" to prevent window resizing delay.
-            if (NavigationViewBody.PaneDisplayMode is NavigationViewPaneDisplayMode.Top)
-            {
-                winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
-                            WindowsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) + WindowsHelper.MainWindowSideLengthOffset;
-            }
-            else
-            {
-                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) + WindowsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)(Math.Ceiling(frameBodyContent.ActualWidth) + NavigationViewBody.CompactPaneLength) +
-                           WindowsHelper.MainWindowSideLengthOffset;
-            } // end if...else
+        /// <summary>
+        /// The main window's window ID.
+        /// </summary>
+        public WindowId WinId { get; private set; }
 
-            _appWindow.MoveAndResize(new RectInt32
-            {
-                Height = winHeight, Width = winWidth,
-                X = workArea.Width - winWidth - WindowsHelper.MainWindowPositionOffset,
-                Y = workArea.Height - winHeight - WindowsHelper.MainWindowPositionOffset
-            });
-
-            if (!_isFirstLoad) return;
-
-            Activate(); // Activate the window here to prevent being flicked when moving and resizing.
-            _isFirstLoad = false;
-
-            if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] is false)
-                _app.CommandsVm.ToggleMainWindowVisibilityCommand.Execute(null);
-        } // end method FrameBody_OnSizeChanged
-
-        // Handle the root grid's actual theme changed event.
-        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
-        {
-            SetRootGridBackground();
-        } // end method GridRoot_OnActualThemeChanged
-
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            _existingWindow = _app.WindowsH.GetExistingMainWindow();
-            SetRootGridBackground();
-        } // end method GridRoot_OnLoaded
-
-        // Handle the main window's closed event.
-        private void MainWindow_OnClosed(object sender, WindowEventArgs args)
-        {
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            _app = null;
-            _appWindow = null;
-            _existingWindow = null;
-        } // end method MainWindow_OnClosed
-
-        // Handle the body navigation view's selection changed event.
-        private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
-            NavigationViewSelectionChangedEventArgs args)
-        {
-            if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
-
-            FrameBody.Navigate(
-                navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate
-                    ? typeof(AddUpdateAccountPage)
-                    : typeof(RealTimeNotesPage), null, new EntranceNavigationTransitionInfo());
-        } // end method NavigationViewBody_OnSelectionChanged
-
-        #endregion Event Handlers
+        #endregion Properties
     } // end class MainWindow
 } // end namespace PaimonTray.Views

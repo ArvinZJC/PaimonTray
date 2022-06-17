@@ -16,20 +16,6 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class RealTimeNotesPage
     {
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        /// <summary>
-        /// The main window.
-        /// </summary>
-        private MainWindow _mainWindow;
-
-        #endregion Fields
-
         #region Constructors
 
         /// <summary>
@@ -45,6 +31,141 @@ namespace PaimonTray.Views
         } // end constructor RealTimeNotesPage
 
         #endregion Constructors
+
+        #region Event Handlers
+
+        // Handle the account group info lists' collection changed event.
+        private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ToggleStatusVisibility();
+        } // end method AccountGroupInfoLists_CollectionChanged
+
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
+                 _app.AccountsH.IsAccountCharacterUpdated) ||
+                (e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
+                 _app.AccountsH.IsAccountGroupUpdated) ||
+                e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+
+            var uidCharacterRealTimeNotesUpdated = _app.AccountsH.UidCharacterRealTimeNotesUpdated;
+
+            if (e.PropertyName is not AccountsHelper.PropertyNameUidCharacterRealTimeNotesUpdated ||
+                string.IsNullOrWhiteSpace(uidCharacterRealTimeNotesUpdated)) return;
+
+            if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter) return;
+
+            if (uidCharacterRealTimeNotesUpdated is not AccountsHelper.TagRealTimeNotesUpdatedCharactersAllEnabled &&
+                uidCharacterRealTimeNotesUpdated != accountCharacter.UidCharacter) return;
+
+            UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
+        } // end method AccountsHelper_OnPropertyChanged
+
+        // Handle the body grid's size changed event.
+        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetPageSize();
+        } // end method GridBody_OnSizeChanged
+
+        // Handle the account groups list view's selection changed event.
+        // NOTE: The list view's tag is used to store the UID from the last accepted selected item.
+        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ButtonCharacterSwitch.Flyout.Hide();
+
+            var propertySetAccounts = _app.AccountsH.ApplicationDataContainerAccounts.Values;
+            var uidCharacterSelected = propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
+
+            if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
+            {
+                // Ignore the case when the selected item is invalid but the selected character exists.
+                if (uidCharacterSelected is not null) return;
+
+                InitialiseRealTimeNotesArea();
+                ListViewAccountGroups.Tag = null;
+                TextBlockNicknameCharacter.Text = AppConstantsHelper.Unknown;
+                TextBlockOtherInfoCharacter.Text = AppConstantsHelper.Unknown;
+            }
+            else
+            {
+                var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+                var nicknameCharacter =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
+                    AppConstantsHelper.Unknown;
+                var otherInfoCharacter =
+                    accountCharacterConverter?.Convert(accountCharacter, null,
+                        AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
+                    AppConstantsHelper.Unknown;
+
+                if (uidCharacterSelected != accountCharacter.UidCharacter)
+                    propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
+
+                TextBlockNicknameCharacter.Text = nicknameCharacter;
+                TextBlockOtherInfoCharacter.Text = otherInfoCharacter;
+                ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
+                ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
+
+                if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
+
+                UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
+                ListViewAccountGroups.Tag =
+                    accountCharacter.UidCharacter; // Store the UID from the selected item when ready.
+            } // end if...else
+        } // end method ListViewAccountGroups_OnSelectionChanged
+
+        // Handle the character's real-time notes' general section list view's size changed event.
+        private void ListViewCharacterRealTimeNotesGeneral_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            GridCharacter.Width = ListViewCharacterRealTimeNotesGeneral.ActualWidth;
+            GridCharacterRealTimeNotes.Width = GridCharacter.Width;
+            GridCharacterRealTimeNotesTimeUpdateLast.MaxWidth = GridCharacter.Width;
+            ListViewCharacterRealTimeNotesExpeditions.MaxWidth = GridCharacter.Width;
+            TextBlockTitle.MaxWidth = GridCharacter.Width;
+        } // end method ListViewCharacterRealTimeNotesGeneral_OnSizeChanged
+
+        // Handle the main window view model's property changed event.
+        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+        } // end method MainWindowViewModel_OnPropertyChanged
+
+        // Handle the real-time notes page's loaded event.
+        private void RealTimeNotesPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+            ToggleStatusVisibility();
+        } // end method RealTimeNotesPage_OnLoaded
+
+        // Handle the real-time notes page's unloaded event.
+        private void RealTimeNotesPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
+
+            _app = null;
+            _mainWindow = null;
+        } // end method RealTimeNotesPage_OnUnloaded
+
+        #endregion Event Handlers
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        private MainWindow _mainWindow;
+
+        #endregion Fields
 
         #region Methods
 
@@ -203,114 +324,5 @@ namespace PaimonTray.Views
         } // end method UpdateUiText
 
         #endregion Methods
-
-        #region Event Handlers
-
-        // Handle the account group info lists' collection changed event.
-        private void AccountGroupInfoLists_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            ToggleStatusVisibility();
-        } // end method AccountGroupInfoLists_CollectionChanged
-
-        // Handle the accounts helper's property changed event.
-        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
-                 _app.AccountsH.IsAccountCharacterUpdated) ||
-                (e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
-                 _app.AccountsH.IsAccountGroupUpdated) ||
-                e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
-        } // end method AccountsHelper_OnPropertyChanged
-
-        // Handle the body grid's size changed event.
-        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SetPageSize();
-        } // end method GridBody_OnSizeChanged
-
-        // Handle the account groups list view's selection changed event.
-        // NOTE: The list view's tag is used to store the UID from the last accepted selected item.
-        private void ListViewAccountGroups_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ButtonCharacterSwitch.Flyout.Hide();
-
-            var propertySetAccounts = _app.AccountsH.ApplicationDataContainerAccounts.Values;
-            var uidCharacterSelected = propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] as string;
-
-            if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter)
-            {
-                // Ignore the case when the selected item is invalid but the selected character exists.
-                if (uidCharacterSelected is not null) return;
-
-                InitialiseRealTimeNotesArea();
-                ListViewAccountGroups.Tag = null;
-                TextBlockNicknameCharacter.Text = AppConstantsHelper.Unknown;
-                TextBlockOtherInfoCharacter.Text = AppConstantsHelper.Unknown;
-            }
-            else
-            {
-                var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
-                var nicknameCharacter =
-                    accountCharacterConverter?.Convert(accountCharacter, null,
-                        AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
-                    AppConstantsHelper.Unknown;
-                var otherInfoCharacter =
-                    accountCharacterConverter?.Convert(accountCharacter, null,
-                        AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
-                    AppConstantsHelper.Unknown;
-
-                if (uidCharacterSelected != accountCharacter.UidCharacter)
-                    propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
-
-                TextBlockNicknameCharacter.Text = nicknameCharacter;
-                TextBlockOtherInfoCharacter.Text = otherInfoCharacter;
-                ToolTipService.SetToolTip(TextBlockNicknameCharacter, nicknameCharacter);
-                ToolTipService.SetToolTip(TextBlockOtherInfoCharacter, otherInfoCharacter);
-
-                if (ListViewAccountGroups.Tag as string == accountCharacter.UidCharacter) return;
-
-                UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
-                ListViewAccountGroups.Tag =
-                    accountCharacter.UidCharacter; // Store the UID from the selected item when ready.
-            } // end if...else
-        } // end method ListViewAccountGroups_OnSelectionChanged
-
-        // Handle the character's real-time notes' general section list view's size changed event.
-        private void ListViewCharacterRealTimeNotesGeneral_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            GridCharacter.Width = ListViewCharacterRealTimeNotesGeneral.ActualWidth;
-            GridCharacterRealTimeNotes.Width = GridCharacter.Width;
-            GridCharacterRealTimeNotesTimeUpdateLast.MaxWidth = GridCharacter.Width;
-            ListViewCharacterRealTimeNotesExpeditions.MaxWidth = GridCharacter.Width;
-            TextBlockTitle.MaxWidth = GridCharacter.Width;
-        } // end method ListViewCharacterRealTimeNotesGeneral_OnSizeChanged
-
-        // Handle the main window view model's property changed event.
-        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
-        } // end method MainWindowViewModel_OnPropertyChanged
-
-        // Handle the real-time notes page's loaded event.
-        private void RealTimeNotesPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
-            ToggleStatusVisibility();
-        } // end method RealTimeNotesPage_OnLoaded
-
-        // Handle the real-time notes page's unloaded event.
-        private void RealTimeNotesPage_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
-
-            _app = null;
-            _mainWindow = null;
-        } // end method RealTimeNotesPage_OnUnloaded
-
-        #endregion Event Handlers
     } // end class RealTimeNotesPage
 } // end namespace PaimonTray.Views

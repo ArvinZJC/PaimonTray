@@ -19,6 +19,86 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class SettingsWindow
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the settings window. No need to activate it for the 1st time.
+        /// </summary>
+        public SettingsWindow()
+        {
+            _app = Application.Current as App;
+            InitializeComponent();
+            CustomiseWindowAsync();
+            UpdateUiText();
+        } // end constructor SettingsWindow
+
+        #endregion Constructors
+
+        #region Events
+
+        // Handle the root grid's actual theme changed event.
+        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            CustomiseTitleBar();
+            SetRootGridBackground();
+        } // end method GridRoot_OnActualThemeChanged
+
+        // Handle the root grid's loaded event.
+        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _existingWindow = _app.WindowsH.GetExistingSettingsWindow();
+            SetRootGridBackground();
+            Activate(); // Activate when ready.
+        } // end method GridRoot_OnLoaded
+
+        // Handle the body navigation view's display mode changed event.
+        private void NavigationViewBody_OnDisplayModeChanged(NavigationView sender,
+            NavigationViewDisplayModeChangedEventArgs args)
+        {
+            NavigationViewBody.IsPaneToggleButtonVisible =
+                NavigationViewBody.DisplayMode is not NavigationViewDisplayMode.Expanded;
+            ScrollViewerBody.Padding = NavigationViewBody.DisplayMode is NavigationViewDisplayMode.Minimal
+                ? new Thickness(18, 18, 18, 0)
+                : new Thickness(56, 18, 56, 0);
+        } // end method NavigationViewBody_OnDisplayModeChanged
+
+        // Handle the body navigation view's selection changed event.
+        private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            var navigationViewBodySelectedItem = NavigationViewBody.SelectedItem as NavigationViewItem;
+            Type pageType;
+
+            if (navigationViewBodySelectedItem == NavigationViewItemBodyAbout) pageType = typeof(AboutAppPage);
+            else if (navigationViewBodySelectedItem == NavigationViewItemBodyAccounts)
+                pageType = typeof(AccountsSettingsPage);
+            else pageType = typeof(GeneralSettingsPage);
+
+            FrameBody.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
+            NavigationViewBody.Header = navigationViewBodySelectedItem?.Content;
+        } // end method NavigationViewBody_OnSelectionChanged
+
+        // Handle the settings window's activated event.
+        private void SettingsWindow_OnActivated(object sender, WindowActivatedEventArgs args)
+        {
+            if (args.WindowActivationState is WindowActivationState.Deactivated)
+                TextBlockWindowTitle.Foreground =
+                    GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush;
+            else
+                TextBlockWindowTitle.Foreground =
+                    GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush;
+        } // end method SettingsWindow_OnActivated
+
+        // Handle the settings window's closed event.
+        private void SettingsWindow_OnClosed(object sender, WindowEventArgs args)
+        {
+            _app = null;
+            _appWindow = null;
+            _existingWindow = null;
+        } // end method SettingsWindow_OnClosed
+
+        #endregion Event Handlers
+
         #region Fields
 
         /// <summary>
@@ -37,21 +117,6 @@ namespace PaimonTray.Views
         private ExistingWindow _existingWindow;
 
         #endregion Fields
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise the settings window. No need to activate it for the 1st time.
-        /// </summary>
-        public SettingsWindow()
-        {
-            _app = Application.Current as App;
-            InitializeComponent();
-            CustomiseWindowAsync();
-            UpdateUiText();
-        } // end constructor SettingsWindow
-
-        #endregion Constructors
 
         #region Methods
 
@@ -166,70 +231,5 @@ namespace PaimonTray.Views
         } // end method UpdateUiText
 
         #endregion Methods
-
-        #region Events
-
-        // Handle the root grid's actual theme changed event.
-        private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
-        {
-            CustomiseTitleBar();
-            SetRootGridBackground();
-        } // end method GridRoot_OnActualThemeChanged
-
-        // Handle the root grid's loaded event.
-        private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _existingWindow = _app.WindowsH.GetExistingSettingsWindow();
-            SetRootGridBackground();
-            Activate(); // Activate when ready.
-        } // end method GridRoot_OnLoaded
-
-        // Handle the body navigation view's display mode changed event.
-        private void NavigationViewBody_OnDisplayModeChanged(NavigationView sender,
-            NavigationViewDisplayModeChangedEventArgs args)
-        {
-            NavigationViewBody.IsPaneToggleButtonVisible =
-                NavigationViewBody.DisplayMode is not NavigationViewDisplayMode.Expanded;
-            ScrollViewerBody.Padding = NavigationViewBody.DisplayMode is NavigationViewDisplayMode.Minimal
-                ? new Thickness(18, 18, 18, 0)
-                : new Thickness(56, 18, 56, 0);
-        } // end method NavigationViewBody_OnDisplayModeChanged
-
-        // Handle the body navigation view's selection changed event.
-        private void NavigationViewBody_OnSelectionChanged(NavigationView sender,
-            NavigationViewSelectionChangedEventArgs args)
-        {
-            var navigationViewBodySelectedItem = NavigationViewBody.SelectedItem as NavigationViewItem;
-            Type pageType;
-
-            if (navigationViewBodySelectedItem == NavigationViewItemBodyAbout) pageType = typeof(AboutAppPage);
-            else if (navigationViewBodySelectedItem == NavigationViewItemBodyAccounts)
-                pageType = typeof(AccountsSettingsPage);
-            else pageType = typeof(GeneralSettingsPage);
-
-            FrameBody.Navigate(pageType, null, new EntranceNavigationTransitionInfo());
-            NavigationViewBody.Header = navigationViewBodySelectedItem?.Content;
-        } // end method NavigationViewBody_OnSelectionChanged
-
-        // Handle the settings window's activated event.
-        private void SettingsWindow_OnActivated(object sender, WindowActivatedEventArgs args)
-        {
-            if (args.WindowActivationState is WindowActivationState.Deactivated)
-                TextBlockWindowTitle.Foreground =
-                    GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush;
-            else
-                TextBlockWindowTitle.Foreground =
-                    GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush;
-        } // end method SettingsWindow_OnActivated
-
-        // Handle the settings window's closed event.
-        private void SettingsWindow_OnClosed(object sender, WindowEventArgs args)
-        {
-            _app = null;
-            _appWindow = null;
-            _existingWindow = null;
-        } // end method SettingsWindow_OnClosed
-
-        #endregion Event Handlers
     } // end class SettingsWindow
 } // end namespace PaimonTray.Views

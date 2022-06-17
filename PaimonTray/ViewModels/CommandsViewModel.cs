@@ -16,6 +16,32 @@ namespace PaimonTray.ViewModels
     /// </summary>
     public class CommandsViewModel
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the commands view model.
+        /// </summary>
+        public CommandsViewModel(MainWindow mainWindow)
+        {
+            _app = Application.Current as App;
+            _mainWindow = mainWindow;
+        } // end constructor CommandsViewModel
+
+        #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~CommandsViewModel()
+        {
+            _app = null;
+            _mainWindow = null;
+        } // end destructor CommandsViewModel
+
+        #endregion Destructor
+
         #region Fields
 
         /// <summary>
@@ -163,31 +189,5 @@ namespace PaimonTray.ViewModels
         } // end property ToggleMainWindowVisibilityCommand
 
         #endregion Properties
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise the commands view model.
-        /// </summary>
-        public CommandsViewModel(MainWindow mainWindow)
-        {
-            _app = Application.Current as App;
-            _mainWindow = mainWindow;
-        } // end constructor CommandsViewModel
-
-        #endregion Constructors
-
-        #region Destructor
-
-        /// <summary>
-        /// Ensure disposing.
-        /// </summary>
-        ~CommandsViewModel()
-        {
-            _app = null;
-            _mainWindow = null;
-        } // end destructor CommandsViewModel
-
-        #endregion Destructor
     } // end class CommandsViewModel
 } // end namespace PaimonTray.ViewModels

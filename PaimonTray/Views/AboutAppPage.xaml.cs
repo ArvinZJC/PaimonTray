@@ -10,15 +10,6 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class AboutAppPage
     {
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        #endregion Fields
-
         #region Constructors
 
         /// <summary>
@@ -36,6 +27,25 @@ namespace PaimonTray.Views
         } // end constructor AboutAppPage
 
         #endregion Constructors
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        #endregion Fields
+
+        #region Event Handlers
+
+        // Handle the app introduction page's unloaded event.
+        private void AboutAppPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app = null;
+        } // end method AboutAppPage_OnUnloaded
+
+        #endregion Event Handlers
 
         #region Methods
 
@@ -67,15 +77,5 @@ namespace PaimonTray.Views
         } // end method UpdateUiText
 
         #endregion Methods
-
-        #region Event Handlers
-
-        // Handle the app introduction page's unloaded event.
-        private void AboutAppPage_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            _app = null;
-        } // end method AboutAppPage_OnUnloaded
-
-        #endregion Event Handlers
     } // end class AboutAppPage
 } // end namespace PaimonTray.Views

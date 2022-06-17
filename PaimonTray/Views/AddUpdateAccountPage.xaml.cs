@@ -19,6 +19,178 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class AddUpdateAccountPage
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the page for adding/updating an account.
+        /// </summary>
+        public AddUpdateAccountPage()
+        {
+            _app = Application.Current as App;
+            _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
+            InitializeComponent();
+            ChooseLoginMethodAsync();
+            ToggleStatusVisibility();
+            UpdateUiText();
+        } // end constructor AddUpdateAccountPage
+
+        #endregion Constructors
+
+        #region Event Handlers
+
+        // Handle the accounts helper's property changed event.
+        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+                ToggleStatusVisibility();
+        } // end method AccountsHelper_OnPropertyChanged
+
+        // Handle the loaded event of the page for adding/updating an account.
+        private void AddUpdateAccountPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
+            ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
+            ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
+                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
+        } // end method AddUpdateAccountPage_OnLoaded
+
+        // Handle the unloaded event of the page for adding/updating an account.
+        private void AddUpdateAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (_isWebView2Available)
+            {
+                _webView2LoginWebPage.CoreWebView2.SourceChanged -= CoreWebView2LoginWebPage_OnSourceChanged;
+                _webView2LoginWebPage.Close(); // Close to ensure ending the WebView2 processes.
+                _webView2LoginWebPage = null;
+            } // end if
+
+            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
+            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
+            ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
+                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
+
+            _app = null;
+            _mainWindow = null;
+        } // end method AddUpdateAccountPage_OnUnloaded
+
+        // Handle the alternative login button's click event.
+        private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
+        {
+            LogInAsync();
+        } // end method ButtonLoginAlternative_OnClick
+
+        // Handle the click event of the button for clearing cookies for the alternative login.
+        private void ButtonLoginAlternativeClear_OnClick(object sender, RoutedEventArgs e)
+        {
+            TextBoxLoginAlternative.Text = string.Empty;
+        } // end method ButtonLoginAlternativeClear_OnClick
+
+        // Handle the click event of the button for assisting login.
+        private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
+            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
+        } // end method ButtonLoginAssist_OnClick
+
+        // Handle the click event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnClick(object sender, RoutedEventArgs e)
+        {
+            LogInAsync();
+        } // end method ButtonLoginCompleteConfirm_OnClick
+
+        // Handle the pointer pressed event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOff"); // NormalOnToNormalOff
+        } // end method ButtonLoginCompleteConfirm_OnPointerPressed
+
+        // Handle the pointer released event of the button for confirming completing login.
+        private void ButtonLoginCompleteConfirm_OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOn"); // NormalOffToNormalOn
+        } // end method ButtonLoginCompleteConfirm_OnPointerReleased
+
+        // Handle the server combo box item's loaded event.
+        private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemServerActualWidth = (sender as ComboBoxItem)?.ActualWidth ?? 0;
+
+            if (ComboBoxServer.MinWidth < comboBoxItemServerActualWidth)
+                ComboBoxServer.MinWidth = comboBoxItemServerActualWidth;
+        } // end method ComboBoxItemServer_OnLoaded
+
+        // Handle the server combo box's selection changed event.
+        private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyServerSelection();
+        } // end method ComboBoxServer_OnSelectionChanged
+
+        // Handle the web page login CoreWebView2's source changed event.
+        private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
+            CoreWebView2SourceChangedEventArgs args)
+        {
+            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
+            var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
+
+            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
+                _app.AccountsH.IsAddingUpdating = true;
+
+            ButtonLoginAssist.IsEnabled =
+                !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
+                                  webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginRedirectMiHoYo))) ||
+                  (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
+        } // end method CoreWebView2LoginWebPage_OnSourceChanged
+
+        // Handle the body grid's size changed event.
+        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetPageSize();
+        } // end method GridBody_OnSizeChanged
+
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the info bar's closing event.
+        private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            sender.Margin = new Thickness(0);
+        } // end method InfoBar_OnClosing
+
+        // Handle the main window view model's property changed event.
+        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+        } // end method MainWindowViewModel_OnPropertyChanged
+
+        // Handle the alternative login text box's text changed event.
+        private void TextBoxLoginAlternative_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            ButtonLoginAlternative.IsEnabled = TextBoxLoginAlternative.Text.Trim() != string.Empty;
+            ButtonLoginAlternativeClear.IsEnabled = TextBoxLoginAlternative.Text != string.Empty;
+        } // end method TextBoxLoginAlternative_OnTextChanged
+
+        // Handle the web page login WebView2's navigation completed event.
+        private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
+            CoreWebView2NavigationCompletedEventArgs args)
+        {
+            switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
+            {
+                // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
+                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlBaseLoginEndMiHoYo):
+                    LogInAsync();
+                    break;
+
+                case false:
+                    ButtonLoginCompleteConfirm.IsEnabled = true;
+                    break;
+            } // end switch-case
+        } // end method WebView2LoginWebPage_OnNavigationCompleted
+
+        #endregion Event Handlers
+
         #region Fields
 
         /// <summary>
@@ -42,23 +214,6 @@ namespace PaimonTray.Views
         private WebView2 _webView2LoginWebPage;
 
         #endregion Fields
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise the page for adding/updating an account.
-        /// </summary>
-        public AddUpdateAccountPage()
-        {
-            _app = Application.Current as App;
-            _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
-            InitializeComponent();
-            ChooseLoginMethodAsync();
-            ToggleStatusVisibility();
-            UpdateUiText();
-        } // end constructor AddUpdateAccountPage
-
-        #endregion Constructors
 
         #region Methods
 
@@ -434,160 +589,5 @@ namespace PaimonTray.Views
         } // end method UseAlternativeLoginMethod
 
         #endregion Methods
-
-        #region Event Handlers
-
-        // Handle the accounts helper's property changed event.
-        private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
-                ToggleStatusVisibility();
-        } // end method AccountsHelper_OnPropertyChanged
-
-        // Handle the loaded event of the page for adding/updating an account.
-        private void AddUpdateAccountPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
-            ButtonLoginCompleteConfirm.AddHandler(PointerPressedEvent,
-                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerPressed), true);
-            ButtonLoginCompleteConfirm.AddHandler(PointerReleasedEvent,
-                new PointerEventHandler(ButtonLoginCompleteConfirm_OnPointerReleased), true);
-        } // end method AddUpdateAccountPage_OnLoaded
-
-        // Handle the unloaded event of the page for adding/updating an account.
-        private void AddUpdateAccountPage_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (_isWebView2Available)
-            {
-                _webView2LoginWebPage.CoreWebView2.SourceChanged -= CoreWebView2LoginWebPage_OnSourceChanged;
-                _webView2LoginWebPage.Close(); // Close to ensure ending the WebView2 processes.
-                _webView2LoginWebPage = null;
-            } // end if
-
-            _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
-            ButtonLoginCompleteConfirm.RemoveHandler(PointerPressedEvent,
-                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerPressed);
-            ButtonLoginCompleteConfirm.RemoveHandler(PointerReleasedEvent,
-                (PointerEventHandler)ButtonLoginCompleteConfirm_OnPointerReleased);
-
-            _app = null;
-            _mainWindow = null;
-        } // end method AddUpdateAccountPage_OnUnloaded
-
-        // Handle the alternative login button's click event.
-        private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
-        {
-            LogInAsync();
-        } // end method ButtonLoginAlternative_OnClick
-
-        // Handle the click event of the button for clearing cookies for the alternative login.
-        private void ButtonLoginAlternativeClear_OnClick(object sender, RoutedEventArgs e)
-        {
-            TextBoxLoginAlternative.Text = string.Empty;
-        } // end method ButtonLoginAlternativeClear_OnClick
-
-        // Handle the click event of the button for assisting login.
-        private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
-        } // end method ButtonLoginAssist_OnClick
-
-        // Handle the click event of the button for confirming completing login.
-        private void ButtonLoginCompleteConfirm_OnClick(object sender, RoutedEventArgs e)
-        {
-            LogInAsync();
-        } // end method ButtonLoginCompleteConfirm_OnClick
-
-        // Handle the pointer pressed event of the button for confirming completing login.
-        private void ButtonLoginCompleteConfirm_OnPointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOff"); // NormalOnToNormalOff
-        } // end method ButtonLoginCompleteConfirm_OnPointerPressed
-
-        // Handle the pointer released event of the button for confirming completing login.
-        private void ButtonLoginCompleteConfirm_OnPointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOn"); // NormalOffToNormalOn
-        } // end method ButtonLoginCompleteConfirm_OnPointerReleased
-
-        // Handle the server combo box item's loaded event.
-        private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var comboBoxItemServerActualWidth = ((ComboBoxItem)sender).ActualWidth;
-
-            if (ComboBoxServer.MinWidth < comboBoxItemServerActualWidth)
-                ComboBoxServer.MinWidth = comboBoxItemServerActualWidth;
-        } // end method ComboBoxItemServer_OnLoaded
-
-        // Handle the server combo box's selection changed event.
-        private void ComboBoxServer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplyServerSelection();
-        } // end method ComboBoxServer_OnSelectionChanged
-
-        // Handle the web page login CoreWebView2's source changed event.
-        private void CoreWebView2LoginWebPage_OnSourceChanged(CoreWebView2 sender,
-            CoreWebView2SourceChangedEventArgs args)
-        {
-            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
-            var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
-
-            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
-                _app.AccountsH.IsAddingUpdating = true;
-
-            ButtonLoginAssist.IsEnabled =
-                !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
-                                  webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginRedirectMiHoYo))) ||
-                  (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
-        } // end method CoreWebView2LoginWebPage_OnSourceChanged
-
-        // Handle the body grid's size changed event.
-        private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SetPageSize();
-        } // end method GridBody_OnSizeChanged
-
-#pragma warning disable CA1822 // Mark members as static
-        // Handle the info bar's closing event.
-        private void InfoBar_OnClosing(InfoBar sender, InfoBarClosingEventArgs args)
-#pragma warning restore CA1822 // Mark members as static
-        {
-            sender.Margin = new Thickness(0);
-        } // end method InfoBar_OnClosing
-
-        // Handle the main window view model's property changed event.
-        private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
-        } // end method MainWindowViewModel_OnPropertyChanged
-
-        // Handle the alternative login text box's text changed event.
-        private void TextBoxLoginAlternative_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            ButtonLoginAlternative.IsEnabled = TextBoxLoginAlternative.Text.Trim() != string.Empty;
-            ButtonLoginAlternativeClear.IsEnabled = TextBoxLoginAlternative.Text != string.Empty;
-        } // end method TextBoxLoginAlternative_OnTextChanged
-
-        // Handle the web page login WebView2's navigation completed event.
-        private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
-            CoreWebView2NavigationCompletedEventArgs args)
-        {
-            switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
-            {
-                // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
-                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlBaseLoginEndMiHoYo):
-                    LogInAsync();
-                    break;
-
-                case false:
-                    ButtonLoginCompleteConfirm.IsEnabled = true;
-                    break;
-            } // end switch-case
-        } // end method WebView2LoginWebPage_OnNavigationCompleted
-
-        #endregion Event Handlers
     } // end class AddUpdateAccountPage
 } // end namespace PaimonTray.Views

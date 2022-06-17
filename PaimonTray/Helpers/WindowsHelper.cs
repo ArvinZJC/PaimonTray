@@ -36,24 +36,6 @@ namespace PaimonTray.Helpers
 
         #endregion Constants
 
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// A list of existing windows.
-        /// </summary>
-        public List<ExistingWindow> ExistingWindows { get; }
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -78,6 +60,77 @@ namespace PaimonTray.Helpers
         } // end destructor WindowsHelper
 
         #endregion Destructor
+
+        #region Event Handlers
+
+        // Handle the window's activated event.
+        private void Window_OnActivated(object sender, WindowActivatedEventArgs args)
+        {
+            var existingWindowTarget =
+                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
+
+            if (existingWindowTarget is null)
+            {
+                Log.Warning($"Failed to find the existing window (sender type: {sender?.GetType()}).");
+                return;
+            } // end if
+
+            var systemBackdropConfiguration = existingWindowTarget.SystemBackdropConfig;
+
+            if (systemBackdropConfiguration is null)
+            {
+                Log.Warning($"No system backdrop configuration (window type: {existingWindowTarget.Win.GetType()}).");
+                return;
+            } // end if
+
+            systemBackdropConfiguration.IsInputActive =
+                args.WindowActivationState is not WindowActivationState.Deactivated;
+        } // end method Window_OnActivated
+
+        // Handle the window's closed event.
+        private void Window_OnClosed(object sender, WindowEventArgs args)
+        {
+            var existingWindowTarget =
+                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
+
+            if (existingWindowTarget is null || !ExistingWindows.Remove(existingWindowTarget))
+            {
+                Log.Warning($"Failed to remove the existing window (sender type: {sender?.GetType()}).");
+                return;
+            } // end if
+
+            if (existingWindowTarget.DesktopAcrylicC is not null)
+            {
+                existingWindowTarget.DesktopAcrylicC.Dispose();
+                existingWindowTarget.DesktopAcrylicC = null;
+            } // end if
+
+            if (existingWindowTarget.MicaC is not null)
+            {
+                existingWindowTarget.MicaC.Dispose();
+                existingWindowTarget.MicaC = null;
+            } // end if
+
+            if (existingWindowTarget.SystemBackdropConfig is not null)
+            {
+                existingWindowTarget.Win.Activated -= Window_OnActivated;
+                existingWindowTarget.SystemBackdropConfig = null;
+            } // end if
+
+            existingWindowTarget.Win.Closed -= Window_OnClosed;
+            existingWindowTarget.Win = null;
+        } // end method Window_OnClosed
+
+        #endregion Event Handlers
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        #endregion Fields
 
         #region Methods
 
@@ -221,66 +274,13 @@ namespace PaimonTray.Helpers
 
         #endregion Methods
 
-        #region Event Handlers
+        #region Properties
 
-        // Handle the window's activated event.
-        private void Window_OnActivated(object sender, WindowActivatedEventArgs args)
-        {
-            var existingWindowTarget =
-                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
+        /// <summary>
+        /// A list of existing windows.
+        /// </summary>
+        public List<ExistingWindow> ExistingWindows { get; }
 
-            if (existingWindowTarget is null)
-            {
-                Log.Warning($"Failed to find the existing window (sender type: {sender?.GetType()}).");
-                return;
-            } // end if
-
-            var systemBackdropConfiguration = existingWindowTarget.SystemBackdropConfig;
-
-            if (systemBackdropConfiguration is null)
-            {
-                Log.Warning($"No system backdrop configuration (window type: {existingWindowTarget.Win.GetType()}).");
-                return;
-            } // end if
-
-            systemBackdropConfiguration.IsInputActive =
-                args.WindowActivationState is not WindowActivationState.Deactivated;
-        } // end method Window_OnActivated
-
-        // Handle the window's closed event.
-        private void Window_OnClosed(object sender, WindowEventArgs args)
-        {
-            var existingWindowTarget =
-                ExistingWindows.FirstOrDefault(existingWindow => existingWindow.Win == sender as Window, null);
-
-            if (existingWindowTarget is null || !ExistingWindows.Remove(existingWindowTarget))
-            {
-                Log.Warning($"Failed to remove the existing window (sender type: {sender?.GetType()}).");
-                return;
-            } // end if
-
-            if (existingWindowTarget.DesktopAcrylicC is not null)
-            {
-                existingWindowTarget.DesktopAcrylicC.Dispose();
-                existingWindowTarget.DesktopAcrylicC = null;
-            } // end if
-
-            if (existingWindowTarget.MicaC is not null)
-            {
-                existingWindowTarget.MicaC.Dispose();
-                existingWindowTarget.MicaC = null;
-            } // end if
-
-            if (existingWindowTarget.SystemBackdropConfig is not null)
-            {
-                existingWindowTarget.Win.Activated -= Window_OnActivated;
-                existingWindowTarget.SystemBackdropConfig = null;
-            } // end if
-
-            existingWindowTarget.Win.Closed -= Window_OnClosed;
-            existingWindowTarget.Win = null;
-        } // end method Window_OnClosed
-
-        #endregion Event Handlers
+        #endregion Properties
     } // end class WindowsHelper
 } // end namespace PaimonTray.Helpers

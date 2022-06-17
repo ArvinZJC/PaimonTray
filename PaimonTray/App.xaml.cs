@@ -14,50 +14,6 @@ namespace PaimonTray
     /// </summary>
     public partial class App
     {
-        #region Properties
-
-        /// <summary>
-        /// The accounts helper.
-        /// </summary>
-        public AccountsHelper AccountsH { get; }
-
-        /// <summary>
-        /// The app version.
-        /// </summary>
-        public string AppVersion { get; private set; }
-
-        /// <summary>
-        /// The commands view model.
-        /// </summary>
-        public CommandsViewModel CommandsVm { get; private set; }
-
-        /// <summary>
-        /// The HTTP client helper.
-        /// </summary>
-        public HttpClientHelper HttpClientH { get; }
-
-        /// <summary>
-        /// The logs directory.
-        /// </summary>
-        public string LogsDirectory { get; private set; }
-
-        /// <summary>
-        /// The settings helper.
-        /// </summary>
-        public SettingsHelper SettingsH { get; }
-
-        /// <summary>
-        /// The app's GitHub repository's specific release URL.
-        /// </summary>
-        public string UrlGitHubRepoRelease { get; }
-
-        /// <summary>
-        /// The windows helper.
-        /// </summary>
-        public WindowsHelper WindowsH { get; }
-
-        #endregion Properties
-
         #region Constructors
 
         /// <summary>
@@ -127,5 +83,49 @@ namespace PaimonTray
         } // end method OnLaunched
 
         #endregion Methods
+
+        #region Properties
+
+        /// <summary>
+        /// The accounts helper.
+        /// </summary>
+        public AccountsHelper AccountsH { get; }
+
+        /// <summary>
+        /// The app version.
+        /// </summary>
+        public string AppVersion { get; private set; }
+
+        /// <summary>
+        /// The commands view model.
+        /// </summary>
+        public CommandsViewModel CommandsVm { get; private set; }
+
+        /// <summary>
+        /// The HTTP client helper.
+        /// </summary>
+        public HttpClientHelper HttpClientH { get; }
+
+        /// <summary>
+        /// The logs directory.
+        /// </summary>
+        public string LogsDirectory { get; private set; }
+
+        /// <summary>
+        /// The settings helper.
+        /// </summary>
+        public SettingsHelper SettingsH { get; }
+
+        /// <summary>
+        /// The app's GitHub repository's specific release URL.
+        /// </summary>
+        public string UrlGitHubRepoRelease { get; }
+
+        /// <summary>
+        /// The windows helper.
+        /// </summary>
+        public WindowsHelper WindowsH { get; }
+
+        #endregion Properties
     } // end class App
 } // end namespace PaimonTray
