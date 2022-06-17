@@ -316,6 +316,9 @@
   <data name="Help" xml:space="preserve">
     <value>帮助</value>
   </data>
+  <data name="Hour" xml:space="preserve">
+    <value>小时</value>
+  </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
   </data>
@@ -403,6 +406,9 @@
   <data name="MiHoYo" xml:space="preserve">
     <value>米哈游</value>
   </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>分钟</value>
+  </data>
   <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
     <value>genshin.py</value>
     <comment>No need to translate.</comment>
@@ -444,6 +450,12 @@
   </data>
   <data name="RealTimeNotes" xml:space="preserve">
     <value>实时便笺</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefresh" xml:space="preserve">
+    <value>实时便笺刷新间隔时间</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefreshExplanation" xml:space="preserve">
+    <value>为所有已选择允许查询实时便笺的角色，选择更新实时便笺的大体间隔时间。</value>
   </data>
   <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
     <value>您未启用此角色的实时便笺</value>

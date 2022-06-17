@@ -95,6 +95,11 @@ namespace PaimonTray.Helpers
         public const string KeyNotificationGreeting = "notificationGreeting";
 
         /// <summary>
+        /// The real-time notes refresh interval key.
+        /// </summary>
+        public const string KeyRealTimeNotesIntervalRefresh = "realTimeNotesIntervalRefresh";
+
+        /// <summary>
         /// The key for the default server.
         /// </summary>
         public const string KeyServerDefault = "serverDefault";
@@ -120,6 +125,31 @@ namespace PaimonTray.Helpers
         public const string TagLanguageZhHansCn = "zh-Hans-CN";
 
         /// <summary>
+        /// The real-time notes refresh interval Other Option 1 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther1 = 20; // 8 × 2.5
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 2 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther2 = 30; // 8 × 3.75
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 3 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther3 = 40; // 8 × 5
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 4 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther4 = 60; // 8 × 7.5
+
+        /// <summary>
+        /// The tag for the real-time notes refresh interval which is equal to the Original Resin replenishment time.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshResinOriginal = 8;
+
+        /// <summary>
         /// The system default tag.
         /// </summary>
         public const string TagSystem = "system";
@@ -135,36 +165,6 @@ namespace PaimonTray.Helpers
         public const string TagThemeLight = "light";
 
         #endregion Constants
-
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// The culture applied in this app lifecycle due to the language selection applied.
-        /// </summary>
-        public CultureInfo CultureApplied { get; private set; }
-
-        /// <summary>
-        /// The language selection applied in this app lifecycle (the changes will be applied after app restart).
-        /// </summary>
-        public string LanguageSelectionApplied { get; private set; }
-
-        /// <summary>
-        /// The settings property set.
-        /// </summary>
-        public IPropertySet PropertySetSettings { get; }
-
-        public ResourceLoader ResLoader { get; private set; }
-
-        #endregion Properties
 
         #region Constructors
 
@@ -195,6 +195,15 @@ namespace PaimonTray.Helpers
         } // end destructor SettingsHelper
 
         #endregion Destructor
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        #endregion Fields
 
         #region Methods
 
@@ -318,12 +327,14 @@ namespace PaimonTray.Helpers
                     "The setting for checking and refreshing all accounts when the app starts",
                     DefaultAccountGroupsCheckRefreshWhenAppStarts);
 
-            if (!PropertySetSettings.ContainsKey(KeyLanguage) ||
-                (PropertySetSettings[KeyLanguage] is not TagLanguageEnGb &&
-                 PropertySetSettings[KeyLanguage] is not TagLanguageEnUs &&
-                 PropertySetSettings[KeyLanguage] is not TagLanguageZhHansCn &&
-                 PropertySetSettings[KeyLanguage] is not TagSystem))
-                InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
+            if (!PropertySetSettings.ContainsKey(KeyLanguage))
+            {
+                var language = PropertySetSettings[KeyLanguage];
+
+                if (language is not TagLanguageEnGb && language is not TagLanguageEnUs &&
+                    language is not TagLanguageZhHansCn &&
+                    language is not TagSystem) InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
+            } // end if
 
             if (!PropertySetSettings.ContainsKey(KeyLoginAlternativeAlways) ||
                 PropertySetSettings[KeyLoginAlternativeAlways] is not bool)
@@ -350,17 +361,58 @@ namespace PaimonTray.Helpers
                 InitialiseSetting(KeyNotificationGreeting, "Greeting notification setting",
                     DefaultNotificationGreeting);
 
-            if (!PropertySetSettings.ContainsKey(KeyServerDefault) ||
-                (PropertySetSettings[KeyServerDefault] is not AccountsHelper.TagServerCn &&
-                 PropertySetSettings[KeyServerDefault] is not AccountsHelper.TagServerGlobal))
-                InitialiseSetting(KeyServerDefault, "The setting for the default server", AccountsHelper.TagServerCn);
+            if (!PropertySetSettings.ContainsKey(KeyRealTimeNotesIntervalRefresh))
+            {
+                var realTimeNotesIntervalRefresh = PropertySetSettings[KeyRealTimeNotesIntervalRefresh];
 
-            if (!PropertySetSettings.ContainsKey(KeyTheme) || (PropertySetSettings[KeyTheme] is not TagSystem &&
-                                                               PropertySetSettings[KeyTheme] is not TagThemeDark &&
-                                                               PropertySetSettings[KeyTheme] is not TagThemeLight))
+                if (realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshOptionOther1 &&
+                    realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshOptionOther2 &&
+                    realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshOptionOther3 &&
+                    realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshOptionOther4 &&
+                    realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshResinOriginal)
+                    InitialiseSetting(KeyRealTimeNotesIntervalRefresh, "Real-time notes refresh interval setting",
+                        TagRealTimeNotesIntervalRefreshResinOriginal);
+            } // end if
+
+            if (!PropertySetSettings.ContainsKey(KeyServerDefault))
+            {
+                var serverDefault = PropertySetSettings[KeyServerDefault];
+
+                if (serverDefault is not AccountsHelper.TagServerCn &&
+                    serverDefault is not AccountsHelper.TagServerGlobal)
+                    InitialiseSetting(KeyServerDefault, "The setting for the default server",
+                        AccountsHelper.TagServerCn);
+            } // end if
+
+            if (PropertySetSettings.ContainsKey(KeyTheme)) return;
+
+            var theme = PropertySetSettings[KeyTheme];
+
+            if (theme is not TagSystem && theme is not TagThemeDark && theme is not TagThemeLight)
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
         } // end method InitialiseSettings
 
         #endregion Methods
+
+        #region Properties
+
+        /// <summary>
+        /// The culture applied in this app lifecycle due to the language selection applied.
+        /// </summary>
+        public CultureInfo CultureApplied { get; private set; }
+
+        /// <summary>
+        /// The language selection applied in this app lifecycle (the changes will be applied after app restart).
+        /// </summary>
+        public string LanguageSelectionApplied { get; private set; }
+
+        /// <summary>
+        /// The settings property set.
+        /// </summary>
+        public IPropertySet PropertySetSettings { get; }
+
+        public ResourceLoader ResLoader { get; private set; }
+
+        #endregion Properties
     } // end class SettingsHelper
 } // end namespace PaimonTray.Helpers

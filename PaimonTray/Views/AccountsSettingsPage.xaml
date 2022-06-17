@@ -45,6 +45,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!-- The account groups expander. -->
             <Expander
@@ -431,6 +432,65 @@
                     Margin="0, -2"
                     Toggled="ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts_OnToggled"
                     VerticalAlignment="Center" />
+            </Grid>
+            <!-- The grid for the real-time notes refresh interval. -->
+            <Grid
+                Background="{ThemeResource ExpanderHeaderBackground}"
+                BorderBrush="{ThemeResource ExpanderHeaderBorderBrush}"
+                BorderThickness="{ThemeResource ExpanderHeaderBorderThickness}"
+                ColumnSpacing="32"
+                CornerRadius="4"
+                Grid.Row="4"
+                Padding="16, 12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid
+                    Grid.Column="0"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TextBlockRealTimeNotesIntervalRefresh"
+                        Grid.Row="0"
+                        TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        x:Name="TextBlockRealTimeNotesIntervalRefreshExplanation"
+                        Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                        Grid.Row="1"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+                <ComboBox
+                    x:Name="ComboBoxRealTimeNotesIntervalRefresh"
+                    Grid.Column="1"
+                    Margin="0, 0, -8, 0"
+                    SelectionChanged="ComboBoxRealTimeNotesIntervalRefresh_OnSelectionChanged"
+                    VerticalAlignment="Center">
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal"
+                        Loaded="ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1"
+                        Loaded="ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2"
+                        Loaded="ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3"
+                        Loaded="ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3}" />
+                    <ComboBoxItem
+                        x:Name="ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4"
+                        Loaded="ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded"
+                        Tag="{x:Bind helpers:SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4}" />
+                </ComboBox>
             </Grid>
         </Grid>
     </Grid>

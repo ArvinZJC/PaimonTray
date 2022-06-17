@@ -16,25 +16,6 @@ namespace PaimonTray.Views
     /// </summary>
     public sealed partial class AccountsSettingsPage
     {
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        /// <summary>
-        /// A flag indicating if the program is updating the account groups source.
-        /// </summary>
-        private bool _isUpdatingAccountGroupsSource;
-
-        /// <summary>
-        /// The main window.
-        /// </summary>
-        private MainWindow _mainWindow;
-
-        #endregion Fields
-
         #region Constructors
 
         /// <summary>
@@ -52,74 +33,6 @@ namespace PaimonTray.Views
         } // end constructor AccountsSettingsPage
 
         #endregion Constructors
-
-        #region Methods
-
-        /// <summary>
-        /// Show/Hide the status.
-        /// </summary>
-        private void ToggleStatusVisibility()
-        {
-            ContentDialogueAccountGroupsRemove.Hide();
-
-            var resourceLoader = _app.SettingsH.ResLoader;
-
-            if (_app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging)
-            {
-                GridStatusWarning.Visibility = Visibility.Collapsed;
-                ProgressRingStatusLoading.Visibility = Visibility.Visible;
-                TextBlockStatus.Text = resourceLoader.GetString("StatusLoading");
-                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
-            }
-            else
-            {
-                var accountGroupInfoLists = _app.AccountsH.AccountGroupInfoLists
-                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
-
-                _isUpdatingAccountGroupsSource = true;
-                CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
-                _isUpdatingAccountGroupsSource = false;
-
-                if (accountGroupInfoLists.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
-                else
-                {
-                    GridStatusWarning.Visibility = Visibility.Visible;
-                    ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
-                    TextBlockStatus.Text = resourceLoader.GetString("AccountGroupNoCharacter");
-                    GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
-                } // end if...else
-            } // end if...else
-        } // end method ToggleStatusVisibility
-
-        /// <summary>
-        /// Update the UI text during the initialisation process.
-        /// </summary>
-        private void UpdateUiText()
-        {
-            var resourceLoader = _app.SettingsH.ResLoader;
-
-            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
-            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
-            ContentDialogueAccountGroupsRemove.CloseButtonText = resourceLoader.GetString("No");
-            ContentDialogueAccountGroupsRemove.PrimaryButtonText = resourceLoader.GetString("Yes");
-            InfoBarLoginAlternativeAlwaysAppliedLater.Title =
-                resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
-            InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
-            TextBlockAccountGroupsCheckRefreshWhenAppStarts.Text =
-                resourceLoader.GetString("AccountGroupsCheckRefreshWhenAppStarts");
-            TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
-            TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
-            TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
-            TextBlockLoginAlternativeAlwaysExplanation.Text =
-                resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
-            TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
-            TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");
-            ToolTipService.SetToolTip(AppBarButtonAccountGroupsCheckRefresh,
-                resourceLoader.GetString("AccountGroupsCheckRefresh"));
-            ToolTipService.SetToolTip(AppBarButtonAccountGroupsRemove, resourceLoader.GetString("AccountGroupsRemove"));
-        } // end method UpdateUiText
-
-        #endregion Methods
 
         #region Event Handlers
 
@@ -148,6 +61,21 @@ namespace PaimonTray.Views
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
             // Show the settings' selection.
+            ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] switch
+                {
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1 =>
+                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1,
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2 =>
+                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2,
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3 =>
+                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3,
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4 =>
+                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4,
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal =>
+                        ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal,
+                    _ => null
+                };
             ComboBoxServerDefault.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
             {
                 AccountsHelper.TagServerCn => ComboBoxItemServerCn,
@@ -201,20 +129,46 @@ namespace PaimonTray.Views
             else _app.AccountsH.RemoveAccount(appBarButton?.Tag as string);
         } // end method AppBarButtonAccountGroupsRemove_OnClick
 
+        // Handle the real-time notes refresh interval combo box item's loaded event.
+        private void ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var comboBoxItemRealTimeNotesIntervalRefreshActualWidth = (sender as ComboBoxItem)?.ActualWidth ?? 0;
+
+            if (ComboBoxRealTimeNotesIntervalRefresh.MinWidth < comboBoxItemRealTimeNotesIntervalRefreshActualWidth)
+                ComboBoxRealTimeNotesIntervalRefresh.MinWidth = comboBoxItemRealTimeNotesIntervalRefreshActualWidth;
+        } // end method ComboBoxItemRealTimeNotesIntervalRefresh_OnLoaded
+
         // Handle the server combo box item's loaded event.
         private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
         {
-            var comboBoxItemServerActualWidth = ((ComboBoxItem)sender).ActualWidth;
+            var comboBoxItemServerActualWidth = (sender as ComboBoxItem)?.ActualWidth ?? 0;
 
             if (ComboBoxServerDefault.MinWidth < comboBoxItemServerActualWidth)
                 ComboBoxServerDefault.MinWidth = comboBoxItemServerActualWidth;
         } // end method ComboBoxItemServer_OnLoaded
+
+        // Handle the real-time notes refresh interval combo box's selection changed event.
+        private void ComboBoxRealTimeNotesIntervalRefresh_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
+            // It is necessary to ignore the case when the selected real-time notes refresh interval is the same as the stored.
+            if (ComboBoxRealTimeNotesIntervalRefresh.SelectedItem is not ComboBoxItem
+                    comboBoxRealTimeNotesIntervalRefreshSelectedItem ||
+                propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int? ==
+                comboBoxRealTimeNotesIntervalRefreshSelectedItem.Tag as int?) return;
+
+            propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] =
+                comboBoxRealTimeNotesIntervalRefreshSelectedItem.Tag as int?; // Update the setting value first.
+            _app.AccountsH.SetRealTimeNotesDispatcherTimerInterval();
+        } // end method ComboBoxRealTimeNotesIntervalRefresh_OnSelectionChanged
 
         // Handle the default server combo box's selection changed event.
         private void ComboBoxServerDefault_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
+            // It is necessary to ignore the case when the selected default server is the same as the stored.
             if (ComboBoxServerDefault.SelectedItem is not ComboBoxItem comboBoxServerDefaultSelectedItem ||
                 propertySetSettings[SettingsHelper.KeyServerDefault] as string ==
                 comboBoxServerDefaultSelectedItem.Tag as string) return;
@@ -270,5 +224,131 @@ namespace PaimonTray.Views
         } // end method ToggleSwitchLoginAlternativeAlways_OnToggled
 
         #endregion Event Handlers
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        /// <summary>
+        /// A flag indicating if the program is updating the account groups source.
+        /// </summary>
+        private bool _isUpdatingAccountGroupsSource;
+
+        /// <summary>
+        /// The main window.
+        /// </summary>
+        private MainWindow _mainWindow;
+
+        #endregion Fields
+
+        #region Methods
+
+        /// <summary>
+        /// Generate the real-time notes refresh interval combo box item's content.
+        /// </summary>
+        /// <param name="optionValue">The option value.</param>
+        /// <param name="resinOriginal">The Original Resin name.</param>
+        /// <param name="timeUnit">The time unit.</param>
+        /// <param name="isHour">A flag indicating if the time unit is an hour.</param>
+        /// <returns>The real-time notes refresh interval combo box item's content.</returns>
+        private static string GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(int optionValue,
+            string resinOriginal,
+            string timeUnit, bool isHour = false)
+        {
+            var optionValueDisplay = isHour ? optionValue / 60.0 : optionValue;
+
+            return
+                $"{optionValueDisplay} {timeUnit} | {(double)optionValue / SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal} {resinOriginal}";
+        } // end method GenerateRealTimeNotesRefreshIntervalComboBoxItemContent
+
+        /// <summary>
+        /// Show/Hide the status.
+        /// </summary>
+        private void ToggleStatusVisibility()
+        {
+            ContentDialogueAccountGroupsRemove.Hide();
+
+            var resourceLoader = _app.SettingsH.ResLoader;
+
+            if (_app.AccountsH.IsAddingUpdating || _app.AccountsH.IsManaging)
+            {
+                GridStatusWarning.Visibility = Visibility.Collapsed;
+                ProgressRingStatusLoading.Visibility = Visibility.Visible;
+                TextBlockStatus.Text = resourceLoader.GetString("StatusLoading");
+                GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+            }
+            else
+            {
+                var accountGroupInfoLists = _app.AccountsH.AccountGroupInfoLists
+                    .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
+
+                _isUpdatingAccountGroupsSource = true;
+                CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+                _isUpdatingAccountGroupsSource = false;
+
+                if (accountGroupInfoLists.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
+                else
+                {
+                    GridStatusWarning.Visibility = Visibility.Visible;
+                    ProgressRingStatusLoading.Visibility = Visibility.Collapsed;
+                    TextBlockStatus.Text = resourceLoader.GetString("AccountGroupNoCharacter");
+                    GridStatus.Visibility = Visibility.Visible; // Show the status grid when ready.
+                } // end if...else
+            } // end if...else
+        } // end method ToggleStatusVisibility
+
+        /// <summary>
+        /// Update the UI text during the initialisation process.
+        /// </summary>
+        private void UpdateUiText()
+        {
+            var resourceLoader = _app.SettingsH.ResLoader; // Get the resource loader first.
+            var minutes = resourceLoader.GetString("Minutes");
+            var resinOriginal = resourceLoader.GetString("ResinOriginal");
+
+            ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1.Content =
+                GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1, resinOriginal, minutes);
+            ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2.Content =
+                GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2, resinOriginal, minutes);
+            ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3.Content =
+                GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3, resinOriginal, minutes);
+            ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4.Content =
+                GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4, resinOriginal,
+                    resourceLoader.GetString("Hour"), true);
+            ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal.Content =
+                GenerateRealTimeNotesRefreshIntervalComboBoxItemContent(
+                    SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal, resinOriginal, minutes);
+            ComboBoxItemServerCn.Content = resourceLoader.GetString("ServerCn");
+            ComboBoxItemServerGlobal.Content = resourceLoader.GetString("ServerGlobal");
+            ContentDialogueAccountGroupsRemove.CloseButtonText = resourceLoader.GetString("No");
+            ContentDialogueAccountGroupsRemove.PrimaryButtonText = resourceLoader.GetString("Yes");
+            InfoBarLoginAlternativeAlwaysAppliedLater.Title =
+                resourceLoader.GetString("LoginAlternativeAlwaysAppliedLater");
+            InfoBarServerDefaultAppliedLater.Title = resourceLoader.GetString("ServerDefaultAppliedLater");
+            TextBlockAccountGroupsCheckRefreshWhenAppStarts.Text =
+                resourceLoader.GetString("AccountGroupsCheckRefreshWhenAppStarts");
+            TextBlockAccountsManagement.Text = resourceLoader.GetString("AccountsManagement");
+            TextBlockAccountsManagementExplanation.Text = resourceLoader.GetString("AccountsManagementExplanation");
+            TextBlockLoginAlternativeAlways.Text = resourceLoader.GetString("LoginAlternativeAlways");
+            TextBlockLoginAlternativeAlwaysExplanation.Text =
+                resourceLoader.GetString("LoginAlternativeAlwaysExplanation");
+            TextBlockRealTimeNotesIntervalRefresh.Text = resourceLoader.GetString("RealTimeNotesIntervalRefresh");
+            TextBlockRealTimeNotesIntervalRefreshExplanation.Text =
+                resourceLoader.GetString("RealTimeNotesIntervalRefreshExplanation");
+            TextBlockServerDefault.Text = resourceLoader.GetString("ServerDefault");
+            TextBlockServerDefaultExplanation.Text = resourceLoader.GetString("ServerDefaultExplanation");
+            ToolTipService.SetToolTip(AppBarButtonAccountGroupsCheckRefresh,
+                resourceLoader.GetString("AccountGroupsCheckRefresh"));
+            ToolTipService.SetToolTip(AppBarButtonAccountGroupsRemove, resourceLoader.GetString("AccountGroupsRemove"));
+        } // end method UpdateUiText
+
+        #endregion Methods
     } // end class AccountsSettingsPage
 } // end namespace PaimonTray.Views

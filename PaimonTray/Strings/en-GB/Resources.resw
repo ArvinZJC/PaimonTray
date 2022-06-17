@@ -316,6 +316,9 @@
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="Hour" xml:space="preserve">
+    <value>hr</value>
+  </data>
   <data name="HoYoLab" xml:space="preserve">
     <value>HoYoLAB</value>
   </data>
@@ -403,6 +406,9 @@
   <data name="MiHoYo" xml:space="preserve">
     <value>miHoYo</value>
   </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>min</value>
+  </data>
   <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
     <value>genshin.py</value>
     <comment>No need to translate.</comment>
@@ -444,6 +450,12 @@
   </data>
   <data name="RealTimeNotes" xml:space="preserve">
     <value>Real-time notes</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefresh" xml:space="preserve">
+    <value>Real-time notes refresh interval</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefreshExplanation" xml:space="preserve">
+    <value>Select the general interval between updates on the real-time notes for all characters selected to allow retrieving real-time notes</value>
   </data>
   <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
     <value>You have not yet enabled the character's real-time notes</value>

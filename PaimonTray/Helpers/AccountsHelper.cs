@@ -425,6 +425,11 @@ namespace PaimonTray.Helpers
         public const string PropertyNameIsManaging = nameof(IsManaging);
 
         /// <summary>
+        /// The property name for the UID of the character updating the real-time notes.
+        /// </summary>
+        public const string PropertyNameUidCharacterRealTimeNotesUpdated = nameof(UidCharacterRealTimeNotesUpdated);
+
+        /// <summary>
         /// The disabled return code.
         /// </summary>
         private const int ReturnCodeDisabled = 10102;
@@ -438,6 +443,11 @@ namespace PaimonTray.Helpers
         /// The success return code.
         /// </summary>
         private const int ReturnCodeSuccess = 0;
+
+        /// <summary>
+        /// The tag indicating that all enabled characters have updated the real-time notes.
+        /// </summary>
+        public const string TagRealTimeNotesUpdatedCharactersAllEnabled = "realTimeNotesUpdatedCharactersAllEnabled";
 
         /// <summary>
         /// The CN server tag.
@@ -568,12 +578,88 @@ namespace PaimonTray.Helpers
 
         #endregion Constants
 
+        #region Constructors
+
+        /// <summary>
+        /// Initialise the accounts helper.
+        /// </summary>
+        public AccountsHelper()
+        {
+            _app = Application.Current as App;
+            _isAccountCharacterUpdated = false;
+            _isAccountGroupUpdated = false;
+            _isAddingUpdating = false;
+            _isManaging = false;
+
+            var resourceLoader = _app?.SettingsH.ResLoader;
+
+            _regions = new Dictionary<string, string>
+            {
+                [KeyRegionCnBilibili] = resourceLoader?.GetString("RegionCnBilibili"),
+                [KeyRegionCnOfficial] = resourceLoader?.GetString("RegionCnOfficial"),
+                [KeyRegionGlobalAmerica] = resourceLoader?.GetString("RegionGlobalAmerica"),
+                [KeyRegionGlobalAsia] = resourceLoader?.GetString("RegionGlobalAsia"),
+                [KeyRegionGlobalEurope] = resourceLoader?.GetString("RegionGlobalEurope"),
+                [KeyRegionGlobalSars] = resourceLoader?.GetString("RegionGlobalSars"),
+            };
+            _uidCharacterRealTimeNotesUpdated = string.Empty;
+            AccountGroupInfoLists = new ObservableCollection<GroupInfoList>();
+            ApplicationDataContainerAccounts =
+                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
+                    ApplicationDataCreateDisposition
+                        .Always); // The container's containers are in a read-only dictionary, and should not be stored.
+            CheckAccountsAsync(
+                _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
+            SetRealTimeNotesDispatcherTimerInterval();
+        } // end constructor AccountsHelper
+
+        #endregion Constructors
+
+        #region Destructor
+
+        /// <summary>
+        /// Ensure disposing.
+        /// </summary>
+        ~AccountsHelper()
+        {
+            _app = null;
+            _dispatcherTimerRealTimeNotes.Stop();
+            _dispatcherTimerRealTimeNotes.Tick -= DispatcherTimerRealTimeNotes_OnTick;
+        } // end destructor AccountsHelper
+
+        #endregion Destructor
+
+        #region Events
+
+        /// <summary>
+        /// The property changed event handler.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Events
+
+        #region Event Handlers
+
+        // Handle the real-time notes dispatcher timer's tick event.
+        private void DispatcherTimerRealTimeNotes_OnTick(object sender, object e)
+        {
+            Log.Debug(DateTimeOffset.Now.ToString("g")); // TODO
+            GetRealTimeNotesFromApiForAllEnabledAsync();
+        } // end method DispatcherTimerRealTimeNotes_OnTick
+
+        #endregion Event Handlers
+
         #region Fields
 
         /// <summary>
         /// The app.
         /// </summary>
         private App _app;
+
+        /// <summary>
+        /// The real-time notes dispatcher timer.
+        /// </summary>
+        private DispatcherTimer _dispatcherTimerRealTimeNotes;
 
         /// <summary>
         /// A flag indicating if an account's character is updated.
@@ -600,137 +686,13 @@ namespace PaimonTray.Helpers
         /// </summary>
         private readonly Dictionary<string, string> _regions;
 
+        /// <summary>
+        /// The UID of the character updating the real-time notes.
+        /// NOTE: Expected values include an empty string, a string indicating all enabled characters, and the character UID.
+        /// </summary>
+        private string _uidCharacterRealTimeNotesUpdated;
+
         #endregion Fields
-
-        #region Properties
-
-        /// <summary>
-        /// The accounts application data container.
-        /// </summary>
-        public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
-
-        /// <summary>
-        /// The account group info lists.
-        /// </summary>
-        public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
-
-        /// <summary>
-        /// A flag indicating if an account's character is updated.
-        /// </summary>
-        public bool IsAccountCharacterUpdated
-        {
-            get => _isAccountCharacterUpdated;
-            set
-            {
-                if (_isAccountCharacterUpdated == value) return;
-
-                _isAccountCharacterUpdated = value;
-                OnPropertyChanged();
-            } // end set
-        } // end property IsAccountCharacterUpdated
-
-        /// <summary>
-        /// A flag indicating if an account group is updated.
-        /// </summary>
-        public bool IsAccountGroupUpdated
-        {
-            get => _isAccountGroupUpdated;
-            set
-            {
-                if (_isAccountGroupUpdated == value) return;
-
-                _isAccountGroupUpdated = value;
-                OnPropertyChanged();
-            } // end set
-        } // end property IsAccountGroupUpdated
-
-        /// <summary>
-        /// A flag indicating if the program is adding/updating an account.
-        /// </summary>
-        public bool IsAddingUpdating
-        {
-            get => _isAddingUpdating;
-            set
-            {
-                if (_isAddingUpdating == value) return;
-
-                _isAddingUpdating = value;
-                OnPropertyChanged();
-            } // end set
-        } // end property IsAddingUpdating
-
-        /// <summary>
-        /// A flag indicating if the program is managing the accounts.
-        /// </summary>
-        public bool IsManaging
-        {
-            get => _isManaging;
-            set
-            {
-                if (_isManaging == value) return;
-
-                _isManaging = value;
-                OnPropertyChanged();
-            } // end set
-        } // end property IsManaging
-
-        #endregion Properties
-
-        #region Constructors
-
-        /// <summary>
-        /// Initialise the accounts helper.
-        /// </summary>
-        public AccountsHelper()
-        {
-            _app = Application.Current as App;
-            _isAccountCharacterUpdated = false;
-            _isAccountGroupUpdated = false;
-            _isAddingUpdating = false;
-            _isManaging = false;
-
-            var resourceLoader = _app?.SettingsH.ResLoader;
-
-            _regions = new Dictionary<string, string>
-            {
-                [KeyRegionCnBilibili] = resourceLoader?.GetString("RegionCnBilibili"),
-                [KeyRegionCnOfficial] = resourceLoader?.GetString("RegionCnOfficial"),
-                [KeyRegionGlobalAmerica] = resourceLoader?.GetString("RegionGlobalAmerica"),
-                [KeyRegionGlobalAsia] = resourceLoader?.GetString("RegionGlobalAsia"),
-                [KeyRegionGlobalEurope] = resourceLoader?.GetString("RegionGlobalEurope"),
-                [KeyRegionGlobalSars] = resourceLoader?.GetString("RegionGlobalSars"),
-            };
-            AccountGroupInfoLists = new ObservableCollection<GroupInfoList>();
-            ApplicationDataContainerAccounts =
-                ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
-                    ApplicationDataCreateDisposition
-                        .Always); // The container's containers are in a read-only dictionary, and should not be stored.
-            CheckAccountsAsync(
-                _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
-        } // end constructor AccountsHelper
-
-        #endregion Constructors
-
-        #region Destructor
-
-        /// <summary>
-        /// Ensure disposing.
-        /// </summary>
-        ~AccountsHelper()
-        {
-            _app = null;
-        } // end destructor AccountsHelper
-
-        #endregion Destructor
-
-        #region Events
-
-        /// <summary>
-        /// The property changed event handler.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Events
 
         #region Methods
 
@@ -1516,8 +1478,10 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
+        /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
         /// <returns>A task just to indicate that any later operation needs to wait.</returns>
-        private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter)
+        private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter,
+            bool isStandalone = false)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -1540,11 +1504,14 @@ namespace PaimonTray.Helpers
                 return;
             } // end if
 
+            if (isStandalone) UidCharacterRealTimeNotesUpdated = string.Empty;
+
             var applicationDataContainerRealTimeNotes =
                 applicationDataContainerCharacter.CreateContainer(ContainerKeyRealTimeNotes,
                     ApplicationDataCreateDisposition.Always);
             var propertySetAccount = applicationDataContainerAccount.Values;
             var propertySetRealTimeNotes = applicationDataContainerRealTimeNotes.Values;
+            var uidCharacter = applicationDataContainerCharacter.Name;
 
             propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
             propertySetRealTimeNotes[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
@@ -1554,6 +1521,9 @@ namespace PaimonTray.Helpers
                 Log.Warning(
                     $"Failed to get real-time notes from the API due to the specific account's expired status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+
+                if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                 return;
             } // end if
 
@@ -1564,11 +1534,14 @@ namespace PaimonTray.Helpers
                 Log.Warning(
                     $"Invalid region (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}, region: {region}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+
+                if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                 return;
             } // end if
 
             var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
-            var query = $"role_id={applicationDataContainerCharacter.Name}&server={region}";
+            var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
@@ -1578,6 +1551,9 @@ namespace PaimonTray.Helpers
                 Log.Warning(
                     $"Failed to get real-time notes from the API due to null HTTP response message content (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+
+                if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                 return;
             } // end if
 
@@ -1591,6 +1567,9 @@ namespace PaimonTray.Helpers
                         $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
                     Log.Information(httpResponseBody);
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+
+                    if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                     return;
                 } // end if
 
@@ -1602,6 +1581,9 @@ namespace PaimonTray.Helpers
                         $"Failed to get real-time notes from the specific API (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
                     propertySetAccount[KeyStatus] =
                         returnCode is ReturnCodeDisabled ? TagStatusDisabled : TagStatusFail;
+
+                    if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                     return;
                 } // end if
 
@@ -1612,6 +1594,9 @@ namespace PaimonTray.Helpers
                     Log.Warning(
                         $"Failed to get real-time notes data (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
+
+                    if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
+
                     return;
                 } // end if
 
@@ -1909,6 +1894,8 @@ namespace PaimonTray.Helpers
                 Log.Error(exception.ToString());
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
             } // end try...catch
+
+            if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
         } // end method GetRealTimeNotesFromApiAsync
 
         /// <summary>
@@ -1916,6 +1903,8 @@ namespace PaimonTray.Helpers
         /// </summary>
         private async void GetRealTimeNotesFromApiForAllEnabledAsync()
         {
+            UidCharacterRealTimeNotesUpdated = string.Empty;
+
             foreach (var keyValuePairAccount in ApplicationDataContainerAccounts.Containers)
             foreach (var keyValuePairCharacter in from keyValuePairCharacter in keyValuePairAccount.Value
                          .CreateContainer(ContainerKeyCharacters, ApplicationDataCreateDisposition.Always).Containers
@@ -1924,6 +1913,8 @@ namespace PaimonTray.Helpers
                      where propertySetCharacter[KeyIsEnabled] is true
                      select keyValuePairCharacter)
                 await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, keyValuePairCharacter.Key);
+
+            UidCharacterRealTimeNotesUpdated = TagRealTimeNotesUpdatedCharactersAllEnabled;
         } // end method GetRealTimeNotesFromApiForAllEnabledAsync
 
         /// <summary>
@@ -1996,6 +1987,25 @@ namespace PaimonTray.Helpers
             CheckSelectedCharacterUid();
             IsManaging = false;
         } // end method RemoveAccounts
+
+        /// <summary>
+        /// Set the real-time notes dispatcher timer's interval.
+        /// NOTE: The method will first initialise the timer if the timer is null.
+        /// </summary>
+        public void SetRealTimeNotesDispatcherTimerInterval()
+        {
+            if (_dispatcherTimerRealTimeNotes is null)
+            {
+                _dispatcherTimerRealTimeNotes = new DispatcherTimer();
+                _dispatcherTimerRealTimeNotes.Tick +=
+                    DispatcherTimerRealTimeNotes_OnTick; // Add the tick event handler first.
+                _dispatcherTimerRealTimeNotes.Start(); // The 1st tick occurs when the timer interval has elapsed.
+            } // end if
+
+            _dispatcherTimerRealTimeNotes.Interval = TimeSpan.FromMinutes(
+                _app.SettingsH.PropertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int? ??
+                SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal);
+        } // end method SetRealTimeNotesDispatcherTimerInterval
 
         /// <summary>
         /// Try changing the specific account's character's status.
@@ -2078,5 +2088,95 @@ namespace PaimonTray.Helpers
         } // end method ValidateAccountContainerKey
 
         #endregion Methods
+
+        #region Properties
+
+        /// <summary>
+        /// The accounts application data container.
+        /// </summary>
+        public ApplicationDataContainer ApplicationDataContainerAccounts { get; }
+
+        /// <summary>
+        /// The account group info lists.
+        /// </summary>
+        public ObservableCollection<GroupInfoList> AccountGroupInfoLists { get; }
+
+        /// <summary>
+        /// A flag indicating if an account's character is updated.
+        /// </summary>
+        public bool IsAccountCharacterUpdated
+        {
+            get => _isAccountCharacterUpdated;
+            set
+            {
+                if (_isAccountCharacterUpdated == value) return;
+
+                _isAccountCharacterUpdated = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property IsAccountCharacterUpdated
+
+        /// <summary>
+        /// A flag indicating if an account group is updated.
+        /// </summary>
+        public bool IsAccountGroupUpdated
+        {
+            get => _isAccountGroupUpdated;
+            set
+            {
+                if (_isAccountGroupUpdated == value) return;
+
+                _isAccountGroupUpdated = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property IsAccountGroupUpdated
+
+        /// <summary>
+        /// A flag indicating if the program is adding/updating an account.
+        /// </summary>
+        public bool IsAddingUpdating
+        {
+            get => _isAddingUpdating;
+            set
+            {
+                if (_isAddingUpdating == value) return;
+
+                _isAddingUpdating = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property IsAddingUpdating
+
+        /// <summary>
+        /// A flag indicating if the program is managing the accounts.
+        /// </summary>
+        public bool IsManaging
+        {
+            get => _isManaging;
+            set
+            {
+                if (_isManaging == value) return;
+
+                _isManaging = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property IsManaging
+
+        /// <summary>
+        /// The UID of the character updating the real-time notes.
+        /// NOTE: Expected values include an empty string, a string indicating all enabled characters, and the character UID.
+        /// </summary>
+        public string UidCharacterRealTimeNotesUpdated
+        {
+            get => _uidCharacterRealTimeNotesUpdated;
+            set
+            {
+                if (_uidCharacterRealTimeNotesUpdated == value) return;
+
+                _uidCharacterRealTimeNotesUpdated = value;
+                OnPropertyChanged();
+            } // end set
+        } // end property UidCharacterRealTimeNotesUpdated
+
+        #endregion Properties
     } // end class AccountsHelper
 } // end namespace PaimonTray.Helpers
