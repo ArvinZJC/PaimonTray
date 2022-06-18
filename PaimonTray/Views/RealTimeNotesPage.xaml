@@ -348,6 +348,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
+                                        <!-- The character's real-time notes' general section item image. -->
                                         <Image
                                             x:Phase="2"
                                             Grid.Column="0"
@@ -361,6 +362,7 @@
                                                     UriSource="{x:Bind UriImage}" />
                                             </Image.Source>
                                         </Image>
+                                        <!-- The character's real-time notes' general section item info stack panel. -->
                                         <StackPanel
                                             Grid.Column="1"
                                             VerticalAlignment="Center">
@@ -373,6 +375,7 @@
                                                 Text="{x:Bind Explanation}"
                                                 TextWrapping="WrapWholeWords" />
                                         </StackPanel>
+                                        <!-- The character's real-time notes' general section item status text block. -->
                                         <TextBlock
                                             x:Phase="1"
                                             Grid.Column="2"
@@ -434,60 +437,58 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Ellipse
-                                            x:Phase="1"
+                                        <!-- The character's real-time notes' expeditions section item image grid. -->
+                                        <Grid
                                             Grid.Column="0"
-                                            Height="32"
-                                            Stroke="{ThemeResource InfoBarSuccessSeverityIconBackground}"
-                                            StrokeThickness="2"
-                                            VerticalAlignment="Center"
-                                            Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusComplete}"
-                                            Width="32" />
-                                        <Ellipse
-                                            x:Phase="1"
-                                            Grid.Column="0"
-                                            Height="32"
-                                            Stroke="{ThemeResource InfoBarWarningSeverityIconBackground}"
-                                            StrokeThickness="2"
-                                            VerticalAlignment="Center"
-                                            Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusIncomplete}"
-                                            Width="32" />
-                                        <Image
-                                            x:Phase="2"
-                                            Grid.Column="0"
-                                            Height="30"
-                                            VerticalAlignment="Center"
-                                            Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIcon}"
-                                            Width="30">
-                                            <Image.RenderTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform
-                                                        ScaleX="1.2"
-                                                        ScaleY="1.2" />
-                                                    <TranslateTransform
-                                                        X="-4"
-                                                        Y="-6" />
-                                                </TransformGroup>
-                                            </Image.RenderTransform>
-                                            <Image.Source>
-                                                <BitmapImage
-                                                    DecodePixelHeight="36"
-                                                    UriSource="{x:Bind UriImage}" />
-                                            </Image.Source>
-                                        </Image>
-                                        <PersonPicture
-                                            x:Phase="2"
-                                            Grid.Column="0"
-                                            Height="32"
-                                            VerticalAlignment="Center"
-                                            Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIconUnknown}"
-                                            Width="32">
-                                            <PersonPicture.ProfilePicture>
-                                                <BitmapImage
-                                                    DecodePixelHeight="32"
-                                                    UriSource="{x:Bind helpers:AppConstantsHelper.UriImagePaimonSurprise}" />
-                                            </PersonPicture.ProfilePicture>
-                                        </PersonPicture>
+                                            VerticalAlignment="Center">
+                                            <Ellipse
+                                                x:Phase="1"
+                                                Height="32"
+                                                Stroke="{ThemeResource InfoBarSuccessSeverityIconBackground}"
+                                                StrokeThickness="2"
+                                                Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusComplete}"
+                                                Width="32" />
+                                            <Ellipse
+                                                x:Phase="1"
+                                                Height="32"
+                                                Stroke="{ThemeResource InfoBarWarningSeverityIconBackground}"
+                                                StrokeThickness="2"
+                                                Visibility="{x:Bind Status, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionStatusIncomplete}"
+                                                Width="32" />
+                                            <Image
+                                                x:Phase="2"
+                                                Height="30"
+                                                Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIcon}"
+                                                Width="30">
+                                                <Image.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform
+                                                            ScaleX="1.2"
+                                                            ScaleY="1.2" />
+                                                        <TranslateTransform
+                                                            X="-4"
+                                                            Y="-6" />
+                                                    </TransformGroup>
+                                                </Image.RenderTransform>
+                                                <Image.Source>
+                                                    <BitmapImage
+                                                        DecodePixelHeight="36"
+                                                        UriSource="{x:Bind UriImage}" />
+                                                </Image.Source>
+                                            </Image>
+                                            <PersonPicture
+                                                x:Phase="2"
+                                                Height="32"
+                                                Visibility="{x:Bind UriImage, Converter={StaticResource RealTimeNoteConverter}, ConverterParameter=expeditionAvatarSideIconUnknown}"
+                                                Width="32">
+                                                <PersonPicture.ProfilePicture>
+                                                    <BitmapImage
+                                                        DecodePixelHeight="32"
+                                                        UriSource="{x:Bind helpers:AppConstantsHelper.UriImagePaimonSurprise}" />
+                                                </PersonPicture.ProfilePicture>
+                                            </PersonPicture>
+                                        </Grid>
+                                        <!-- The character's real-time notes' expeditions section item explanation text block. -->
                                         <TextBlock
                                             Grid.Column="1"
                                             Style="{ThemeResource BaseTextBlockStyle}"
