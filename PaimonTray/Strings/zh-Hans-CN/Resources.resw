@@ -434,7 +434,7 @@
     <value>若应用图标不在任务栏角中，则您可将它从任务栏角溢出菜单中拖拽回任务栏角中。</value>
   </data>
   <data name="NotificationGreetingTitle" xml:space="preserve">
-    <value>派蒙进到您的“系统托盘”里啦！</value>
+    <value>嗨，派蒙在您的“系统托盘”里啦！</value>
   </data>
   <data name="Notifications" xml:space="preserve">
     <value>通知</value>
