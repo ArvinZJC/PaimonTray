@@ -1366,13 +1366,7 @@ namespace PaimonTray.Helpers
                                                 $"{urlBaseAvatarSideIcon}{expeditionAvatarSideIcon}{FileExtensionPng}")
                                     });
                                 } // end for
-                            }
-                            else
-                                realTimeNotesExpeditions.Add(new RealTimeNote
-                                {
-                                    Explanation = resourceLoader.GetString("ExpeditionsNone"),
-                                    UriImage = null
-                                });
+                            } // end nested if...else
 
                             switch (isParametricTransformerObtained)
                             {
@@ -1417,6 +1411,13 @@ namespace PaimonTray.Helpers
                                 resinOriginalExplanation +=
                                     $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
                         } // end if...else
+
+                        if (realTimeNotesExpeditions.Count == 0)
+                            realTimeNotesExpeditions.Add(new RealTimeNote
+                            {
+                                Explanation = resourceLoader.GetString("ExpeditionsNone"),
+                                UriImage = null
+                            });
                     } // end if...else
                 } // end if...else
             } // end if
@@ -1576,8 +1577,10 @@ namespace PaimonTray.Helpers
                 {
                     Log.Warning(
                         $"Failed to get real-time notes from the specific API (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
-                    propertySetAccount[KeyStatus] =
+                    propertySetRealTimeNotes[KeyStatus] =
                         returnCode is ReturnCodeDisabled ? TagStatusDisabled : TagStatusFail;
+
+                    if (returnCode is ReturnCodeLoginFail) propertySetAccount[KeyStatus] = TagStatusExpired;
 
                     if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
 
