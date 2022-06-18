@@ -143,7 +143,7 @@
     <value>检查并刷新此账号和其绑定的角色</value>
   </data>
   <data name="AccountGroupNoCharacter" xml:space="preserve">
-    <value>哎呀，没有角色呀！您可添加/更新账号。</value>
+    <value>哎呀，没有角色！您需要添加账号。</value>
   </data>
   <data name="AccountGroupNoCharacterEnabled" xml:space="preserve">
     <value>哎呀，没有允许查询实时便笺的角色！您可添加账号，或前往设置来管理您添加的账号。</value>
