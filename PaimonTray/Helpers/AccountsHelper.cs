@@ -1186,16 +1186,16 @@ namespace PaimonTray.Helpers
         } // end method GetCharactersFromApiAsync
 
         /// <summary>
-        /// Get a date and time string.
+        /// Get a local date and time string.
         /// </summary>
-        /// <param name="dateTime">The struct containing the date and time.</param>
-        /// <returns>The date and time string.</returns>
-        public string GetDateTimeString(DateTimeOffset? dateTime)
+        /// <param name="dateTimeOffset">The struct containing the date, time, and offset.</param>
+        /// <returns>The local date and time string.</returns>
+        public string GetLocalDateTimeString(DateTimeOffset? dateTimeOffset)
         {
-            if (dateTime is null) return AppConstantsHelper.Unknown;
+            if (dateTimeOffset is null) return AppConstantsHelper.Unknown;
 
             var cultureApplied = _app.SettingsH.CultureApplied;
-            var dateTimeOffsetLocal = ((DateTimeOffset)dateTime).ToLocalTime();
+            var dateTimeOffsetLocal = ((DateTimeOffset)dateTimeOffset).ToLocalTime();
             var dateTimeOffsetNow = DateTimeOffset.Now;
             var resourceLoader = _app.SettingsH.ResLoader;
 
@@ -1208,7 +1208,7 @@ namespace PaimonTray.Helpers
             return dateTimeOffsetLocal.Day == dateTimeOffsetNow.AddDays(1).Day
                 ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}"
                 : dateTimeOffsetLocal.ToString("g", cultureApplied);
-        } // end method GetDateTimeString
+        } // end method GetLocalDateTimeString
 
         /// <summary>
         /// Get the real-time notes.
@@ -1268,7 +1268,7 @@ namespace PaimonTray.Helpers
 
                         realTimeNotesStatus = propertySetRealTimeNotes[KeyStatus] as string;
                         realTimeNotesTimeUpdateLast =
-                            GetDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
+                            GetLocalDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
 
                         if (realTimeNotesStatus is null or TagStatusDisabled)
                         {
@@ -1323,7 +1323,7 @@ namespace PaimonTray.Helpers
                             }
                             else
                                 currencyRealmExplanation +=
-                                    $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] as DateTimeOffset?)}";
+                                    $"{colonAndEstimated}{GetLocalDateTimeString(propertySetRealTimeNotes[KeyCurrencyRealmTimeRecovery] as DateTimeOffset?)}";
 
                             if (expeditionsCurrent is null || expeditionsMax is null)
                                 realTimeNotesExpeditions.Add(new RealTimeNote
@@ -1354,7 +1354,7 @@ namespace PaimonTray.Helpers
 
                                     if (expeditionStatus is not ExpeditionStatusFinished)
                                         expeditionExplanation +=
-                                            $"{colonAndEstimated}{GetDateTimeString(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
+                                            $"{colonAndEstimated}{GetLocalDateTimeString(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
 
                                     realTimeNotesExpeditions.Add(new RealTimeNote
                                     {
@@ -1391,7 +1391,7 @@ namespace PaimonTray.Helpers
 
                                         default:
                                             transformerParametricExplanation +=
-                                                $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] as DateTimeOffset?)}";
+                                                $"{colonAndEstimated}{GetLocalDateTimeString(propertySetRealTimeNotes[KeyTransformerParametricTimeRecovery] as DateTimeOffset?)}";
                                             transformerParametricStatus =
                                                 resourceLoader.GetString("TransformerParametricCooldown");
                                             break;
@@ -1409,7 +1409,7 @@ namespace PaimonTray.Helpers
                             if (!(resinOriginalCurrent is not null && resinOriginalMax is not null &&
                                   resinOriginalCurrent == resinOriginalMax))
                                 resinOriginalExplanation +=
-                                    $"{colonAndEstimated}{GetDateTimeString(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
+                                    $"{colonAndEstimated}{GetLocalDateTimeString(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
                         } // end if...else
 
                         if (realTimeNotesExpeditions.Count == 0)
