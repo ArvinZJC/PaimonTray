@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using PaimonTray.Models;
 using Serilog;
 using System;
@@ -610,7 +611,7 @@ namespace PaimonTray.Helpers
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
             CheckAccountsAsync(
                 _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
-            SetRealTimeNotesDispatcherTimerInterval();
+            SetRealTimeNotesDispatcherQueueTimerInterval();
         } // end constructor AccountsHelper
 
         #endregion Constructors
@@ -623,9 +624,9 @@ namespace PaimonTray.Helpers
         ~AccountsHelper()
         {
             _app = null;
-            _dispatcherTimerRealTimeNotes.Stop();
-            _dispatcherTimerRealTimeNotes.Tick -= DispatcherTimerRealTimeNotes_OnTick;
-        } // end destructor AccountsHelper
+            _dispatcherQueueTimerRealTimeNotes.Stop();
+            _dispatcherQueueTimerRealTimeNotes.Tick -= DispatcherQueueTimerRealTimeNotes_OnTick;
+        } // end destructor
 
         #endregion Destructor
 
@@ -640,11 +641,11 @@ namespace PaimonTray.Helpers
 
         #region Event Handlers
 
-        // Handle the real-time notes dispatcher timer's tick event.
-        private void DispatcherTimerRealTimeNotes_OnTick(object sender, object e)
+        // Handle the real-time notes dispatcher queue timer's tick event.
+        private void DispatcherQueueTimerRealTimeNotes_OnTick(object sender, object e)
         {
             GetRealTimeNotesFromApiForAllEnabledAsync();
-        } // end method DispatcherTimerRealTimeNotes_OnTick
+        } // end method DispatcherQueueTimerRealTimeNotes_OnTick
 
         #endregion Event Handlers
 
@@ -656,9 +657,9 @@ namespace PaimonTray.Helpers
         private App _app;
 
         /// <summary>
-        /// The real-time notes dispatcher timer.
+        /// The real-time notes dispatcher queue timer.
         /// </summary>
-        private DispatcherTimer _dispatcherTimerRealTimeNotes;
+        private DispatcherQueueTimer _dispatcherQueueTimerRealTimeNotes;
 
         /// <summary>
         /// A flag indicating if an account's character is updated.
@@ -1196,18 +1197,18 @@ namespace PaimonTray.Helpers
 
             var cultureApplied = _app.SettingsH.CultureApplied;
             var dateTimeOffsetLocal = ((DateTimeOffset)dateTimeOffset).ToLocalTime();
-            var dateTimeOffsetNow = DateTimeOffset.Now;
             var resourceLoader = _app.SettingsH.ResLoader;
+            var dateSimplified = dateTimeOffsetLocal.Date.Subtract(DateTimeOffset.Now.Date).Days switch
+            {
+                -1 => resourceLoader.GetString("Yesterday"),
+                0 => resourceLoader.GetString("Today"),
+                1 => resourceLoader.GetString("Tomorrow"),
+                _ => null
+            }; // Get the simplified date string when ready.
 
-            if (dateTimeOffsetLocal.Day == dateTimeOffsetNow.AddDays(-1).Day)
-                return $"{resourceLoader.GetString("Yesterday")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}";
-
-            if (dateTimeOffsetLocal.Day == dateTimeOffsetNow.Day)
-                return $"{resourceLoader.GetString("Today")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}";
-
-            return dateTimeOffsetLocal.Day == dateTimeOffsetNow.AddDays(1).Day
-                ? $"{resourceLoader.GetString("Tomorrow")} {dateTimeOffsetLocal.ToString("t", cultureApplied)}"
-                : dateTimeOffsetLocal.ToString("g", cultureApplied);
+            return dateSimplified is null
+                ? dateTimeOffsetLocal.ToString("g", cultureApplied)
+                : $"{dateSimplified} {dateTimeOffsetLocal.ToString("t", cultureApplied)}";
         } // end method GetLocalDateTimeString
 
         /// <summary>
@@ -1215,7 +1216,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
-        /// <returns>A tuple. 1st item: the expeditions header; 2nd item: the expedition notes; 3rd item: the general notes; 4th item: the status; 5th item: the last update time.</returns>
+        /// <returns>A tuple. 1st item: the expeditions header; 2nd item: the expedition notes; 3rd item: the general notes; 4th item: the status; 5th item: the last update local time.</returns>
         public (RealTimeNote, ImmutableList<RealTimeNote>, ImmutableList<RealTimeNote>, string, string)
             GetRealTimeNotes(string containerKeyAccount,
                 string containerKeyCharacter)
@@ -1236,7 +1237,7 @@ namespace PaimonTray.Helpers
             var realTimeNotesExpeditions = new List<RealTimeNote>(); // 2. Real-time notes' expeditions section.
             var realTimeNotesGeneral = new List<RealTimeNote>(); // 1. Real-time notes' general section.
             string realTimeNotesStatus = null;
-            var realTimeNotesTimeUpdateLast = AppConstantsHelper.Unknown;
+            var realTimeNotesTimeLocalUpdateLast = AppConstantsHelper.Unknown;
             int? resinOriginalCurrent = null;
             var resinOriginalExplanation = AppConstantsHelper.Unknown;
             int? resinOriginalMax = null;
@@ -1267,7 +1268,7 @@ namespace PaimonTray.Helpers
                         var propertySetRealTimeNotes = applicationDataContainerRealTimeNotes.Values;
 
                         realTimeNotesStatus = propertySetRealTimeNotes[KeyStatus] as string;
-                        realTimeNotesTimeUpdateLast =
+                        realTimeNotesTimeLocalUpdateLast =
                             GetLocalDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
 
                         if (realTimeNotesStatus is null or TagStatusDisabled)
@@ -1468,7 +1469,7 @@ namespace PaimonTray.Helpers
                 realTimeNotesExpeditions.ToImmutableList(),
                 realTimeNotesGeneral.ToImmutableList(),
                 realTimeNotesStatus,
-                realTimeNotesTimeUpdateLast);
+                realTimeNotesTimeLocalUpdateLast);
         } // end method GetRealTimeNotes
 
         /// <summary>
@@ -1948,21 +1949,6 @@ namespace PaimonTray.Helpers
         } // end method GetRegion
 
         /// <summary>
-        /// Get the time span between the current and the midnight.
-        /// </summary>
-        /// <returns>The time span between the current and the midnight.</returns>
-        public static TimeSpan GetTimeSpanBetweenCurrentAndMidnight()
-        {
-            var dateTimeOffsetNow = DateTimeOffset.Now;
-            var dateTimeOffsetTomorrowNow = dateTimeOffsetNow.AddDays(1);
-            var dateTimeOffsetMidnight = new DateTimeOffset(dateTimeOffsetTomorrowNow.Year,
-                dateTimeOffsetTomorrowNow.Month, dateTimeOffsetTomorrowNow.Day, 0, 0, 0,
-                dateTimeOffsetTomorrowNow.Offset);
-
-            return dateTimeOffsetMidnight.Subtract(dateTimeOffsetNow);
-        } // end method GetTimeSpanBetweenCurrentAndMidnight
-
-        /// <summary>
         /// Occur when the specific property is changed.
         /// </summary>
         /// <param name="propertyName">The name of the property for the event.</param>
@@ -2004,24 +1990,24 @@ namespace PaimonTray.Helpers
         } // end method RemoveAccounts
 
         /// <summary>
-        /// Set the real-time notes dispatcher timer's interval.
+        /// Set the real-time notes dispatcher queue timer's interval.
         /// NOTE: The method will first initialise the timer if the timer is null.
         /// </summary>
-        public void SetRealTimeNotesDispatcherTimerInterval()
+        public void SetRealTimeNotesDispatcherQueueTimerInterval()
         {
-            if (_dispatcherTimerRealTimeNotes is null)
+            if (_dispatcherQueueTimerRealTimeNotes is null)
             {
-                _dispatcherTimerRealTimeNotes = new DispatcherTimer();
-                _dispatcherTimerRealTimeNotes.Tick +=
-                    DispatcherTimerRealTimeNotes_OnTick; // Add the tick event handler first.
+                _dispatcherQueueTimerRealTimeNotes = DispatcherQueue.GetForCurrentThread().CreateTimer();
+                _dispatcherQueueTimerRealTimeNotes.Tick +=
+                    DispatcherQueueTimerRealTimeNotes_OnTick; // Add the tick event handler first.
             } // end if
 
-            _dispatcherTimerRealTimeNotes.Interval = TimeSpan.FromMinutes(
+            _dispatcherQueueTimerRealTimeNotes.Interval = TimeSpan.FromMinutes(
                 _app.SettingsH.PropertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int? ??
                 SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal);
 
-            if (!_dispatcherTimerRealTimeNotes.IsEnabled)
-                _dispatcherTimerRealTimeNotes.Start(); // The 1st tick occurs when the timer interval has elapsed.
+            if (!_dispatcherQueueTimerRealTimeNotes.IsRunning)
+                _dispatcherQueueTimerRealTimeNotes.Start(); // The 1st tick occurs when the timer interval has elapsed.
         } // end method SetRealTimeNotesDispatcherTimerInterval
 
         /// <summary>

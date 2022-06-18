@@ -38,7 +38,7 @@ namespace PaimonTray.ViewModels
         {
             _app = null;
             _mainWindow = null;
-        } // end destructor CommandsViewModel
+        } // end destructor
 
         #endregion Destructor
 

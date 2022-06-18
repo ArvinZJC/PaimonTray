@@ -192,7 +192,7 @@ namespace PaimonTray.Helpers
         ~SettingsHelper()
         {
             _app = null;
-        } // end destructor SettingsHelper
+        } // end destructor
 
         #endregion Destructor
 

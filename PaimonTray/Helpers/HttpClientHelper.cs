@@ -90,7 +90,7 @@ namespace PaimonTray.Helpers
             _lazyHttpClient.Value.Dispose();
             _lazyHttpClient = null;
             _random = null;
-        } // end destructor HttpClientHelper
+        } // end destructor
 
         #endregion Destructor
 

@@ -17,7 +17,7 @@ namespace PaimonTray.Helpers
         ~DispatcherQueueControllerHelper()
         {
             _dispatcherQueueController = null;
-        } // end destructor DispatcherQueueControllerHelper
+        } // end destructor
 
         #endregion Destructor
 

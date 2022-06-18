@@ -57,7 +57,7 @@ namespace PaimonTray.Helpers
         ~WindowsHelper()
         {
             _app = null;
-        } // end destructor WindowsHelper
+        } // end destructor
 
         #endregion Destructor
 

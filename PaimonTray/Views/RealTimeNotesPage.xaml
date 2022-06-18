@@ -263,7 +263,7 @@
                                 TextWrapping="Wrap"
                                 VerticalAlignment="Center">
                                 <Run x:Name="RunCharacterRealTimeNotesUpdatedLast" />
-                                <Run x:Name="RunCharacterRealTimeNotesTimeUpdateLast" />
+                                <Run x:Name="RunCharacterRealTimeNotesTimeLocalUpdateLast" />
                             </TextBlock>
                             <!-- The character's real-time notes' status grids. -->
                             <Grid

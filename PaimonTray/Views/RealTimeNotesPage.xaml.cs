@@ -1,9 +1,11 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Converters;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
 using PaimonTray.ViewModels;
+using System;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -62,15 +64,31 @@ namespace PaimonTray.Views
             UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
         } // end method AccountsHelper_OnPropertyChanged
 
-        // Handle the midnight dispatcher timer's tick event.
-        private void DispatcherTimerMidnight_OnTick(object sender, object e)
+        // Handle the dispatcher queue timer's tick event.
+        private void DispatcherQueueTimer_OnTick(object sender, object e)
         {
-            ToggleStatusVisibility();
+            TimeZoneInfo.ClearCachedData();
+
+            if (_accountGroupInfoListsTimeLocalRefreshLast is not null)
+            {
+                var accountGroupInfoListsTimeLocalRefreshLast =
+                    (DateTimeOffset)_accountGroupInfoListsTimeLocalRefreshLast;
+
+                if (accountGroupInfoListsTimeLocalRefreshLast.Offset != DateTimeOffset.Now.Offset ||
+                    accountGroupInfoListsTimeLocalRefreshLast.Date != DateTimeOffset.Now.Date) ToggleStatusVisibility();
+            } // end if
+
+            if (_realTimeNotesTimeLocalRefreshLast is null) return;
+
+            var realTimeNotesTimeLocalRefreshLast = (DateTimeOffset)_realTimeNotesTimeLocalRefreshLast;
+
+            if (realTimeNotesTimeLocalRefreshLast.Offset == DateTimeOffset.Now.Offset &&
+                realTimeNotesTimeLocalRefreshLast.Date == DateTime.Now.Date) return;
 
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter) return;
 
             UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
-        } // end method DispatcherTimerMidnight_OnTick
+        } // end method DispatcherQueueTimer_OnTick
 
         // Handle the body grid's size changed event.
         private void GridBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -146,9 +164,12 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _dispatcherQueueTimer = DispatcherQueue.CreateTimer();
+            _dispatcherQueueTimer.Interval = TimeSpan.FromSeconds(1);
+            _dispatcherQueueTimer.Tick += DispatcherQueueTimer_OnTick;
             _mainWindow.MainWinViewModel.PropertyChanged += MainWindowViewModel_OnPropertyChanged;
-            SetMidnightDispatcherTimerInterval();
             ToggleStatusVisibility();
+            _dispatcherQueueTimer.Start(); // Start the dispatcher queue timer when ready.
         } // end method RealTimeNotesPage_OnLoaded
 
         // Handle the real-time notes page's unloaded event.
@@ -156,8 +177,8 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
-            _dispatcherTimerMidnight.Stop();
-            _dispatcherTimerMidnight.Tick -= DispatcherTimerMidnight_OnTick;
+            _dispatcherQueueTimer.Stop();
+            _dispatcherQueueTimer.Tick -= DispatcherQueueTimer_OnTick;
             _mainWindow.MainWinViewModel.PropertyChanged -= MainWindowViewModel_OnPropertyChanged;
 
             _app = null;
@@ -169,19 +190,29 @@ namespace PaimonTray.Views
         #region Fields
 
         /// <summary>
+        /// The account group info lists' last refresh local time.
+        /// </summary>
+        private DateTimeOffset? _accountGroupInfoListsTimeLocalRefreshLast;
+
+        /// <summary>
         /// The app.
         /// </summary>
         private App _app;
 
         /// <summary>
-        /// The midnight dispatcher timer.
+        /// The dispatcher queue timer.
         /// </summary>
-        private DispatcherTimer _dispatcherTimerMidnight;
+        private DispatcherQueueTimer _dispatcherQueueTimer;
 
         /// <summary>
         /// The main window.
         /// </summary>
         private MainWindow _mainWindow;
+
+        /// <summary>
+        /// The real-time notes' last refresh local time.
+        /// </summary>
+        private DateTimeOffset? _realTimeNotesTimeLocalRefreshLast;
 
         #endregion Fields
 
@@ -199,28 +230,11 @@ namespace PaimonTray.Views
             ListViewCharacterRealTimeNotesExpeditions.ItemsSource = null;
             ListViewCharacterRealTimeNotesGeneral.ItemsSource = null;
             ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Collapsed;
-            RunCharacterRealTimeNotesTimeUpdateLast.Text = null;
+            RunCharacterRealTimeNotesTimeLocalUpdateLast.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = null;
             TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = null;
         } // end method InitialiseRealTimeNotesArea
-
-        /// <summary>
-        /// Set the midnight dispatcher timer's interval.
-        /// </summary>
-        private void SetMidnightDispatcherTimerInterval()
-        {
-            if (_dispatcherTimerMidnight is null)
-            {
-                _dispatcherTimerMidnight = new DispatcherTimer();
-                _dispatcherTimerMidnight.Tick += DispatcherTimerMidnight_OnTick; // Add the tick event handler first.
-            } // end if
-
-            _dispatcherTimerMidnight.Interval = AccountsHelper.GetTimeSpanBetweenCurrentAndMidnight();
-
-            if (!_dispatcherTimerMidnight.IsEnabled)
-                _dispatcherTimerMidnight.Start(); // The 1st tick occurs when the timer interval has elapsed.
-        } // end method SetMidnightDispatcherTimerInterval
 
         /// <summary>
         /// Set the page size and other controls' sizes related to the page size.
@@ -268,6 +282,7 @@ namespace PaimonTray.Views
                     .OrderBy(accountGroupInfoList => accountGroupInfoList.Key).ToImmutableList();
 
                 CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+                _accountGroupInfoListsTimeLocalRefreshLast = DateTimeOffset.Now; // Record the time when ready.
 
                 if (accountGroupInfoLists.Count > 0)
                 {
@@ -319,7 +334,7 @@ namespace PaimonTray.Views
         private void UpdateRealTimeNotesArea(string containerKeyAccount, string containerKeyCharacter)
         {
             var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,
-                    realTimeNotesStatus, realTimeNotesTimeUpdateLast) =
+                    realTimeNotesStatus, realTimeNotesTimeLocalUpdateLast) =
                 _app.AccountsH.GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
 
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
@@ -336,10 +351,11 @@ namespace PaimonTray.Views
             ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
             ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
             ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;
-            RunCharacterRealTimeNotesTimeUpdateLast.Text = realTimeNotesTimeUpdateLast;
+            RunCharacterRealTimeNotesTimeLocalUpdateLast.Text = realTimeNotesTimeLocalUpdateLast;
             TextBlockCharacterRealTimeNotesExpeditionsExplanation.Text = realTimeNotesExpeditionsHeader.Explanation;
             TextBlockCharacterRealTimeNotesExpeditionsStatus.Text = realTimeNotesExpeditionsHeader.Status;
             TextBlockCharacterRealTimeNotesExpeditionsTitle.Text = realTimeNotesExpeditionsHeader.Title;
+            _realTimeNotesTimeLocalRefreshLast = DateTimeOffset.Now; // Record the time when ready.
         } // end method UpdateRealTimeNotesArea
 
         /// <summary>

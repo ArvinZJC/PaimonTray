@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using PaimonTray.Models;
@@ -56,7 +57,9 @@ namespace PaimonTray.Views
         {
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged += AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
-            SetMidnightDispatcherTimerInterval();
+            _dispatcherQueueTimer = DispatcherQueue.CreateTimer();
+            _dispatcherQueueTimer.Interval = TimeSpan.FromSeconds(1);
+            _dispatcherQueueTimer.Tick += DispatcherQueueTimer_OnTick;
             ToggleStatusVisibility();
 
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
@@ -89,6 +92,7 @@ namespace PaimonTray.Views
             ToggleSwitchLoginAlternativeAlways.IsOn =
                 propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ??
                 SettingsHelper.DefaultLoginAlternativeAlways;
+            _dispatcherQueueTimer.Start(); // Start the dispatcher queue timer when ready.
         } // end method AccountsSettingsPage_OnLoaded
 
         // Handle the accounts settings page's unloaded event.
@@ -97,8 +101,8 @@ namespace PaimonTray.Views
             _app.AccountsH.AccountGroupInfoLists.CollectionChanged -= AccountGroupInfoLists_CollectionChanged;
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             _app = null;
-            _dispatcherTimerMidnight.Stop();
-            _dispatcherTimerMidnight.Tick -= DispatcherTimerMidnight_OnTick;
+            _dispatcherQueueTimer.Stop();
+            _dispatcherQueueTimer.Tick -= DispatcherQueueTimer_OnTick;
             _mainWindow = null;
         } // end method AccountsSettingsPage_OnUnloaded
 
@@ -163,7 +167,7 @@ namespace PaimonTray.Views
 
             propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] =
                 comboBoxRealTimeNotesIntervalRefreshSelectedItem.Tag as int?; // Update the setting value first.
-            _app.AccountsH.SetRealTimeNotesDispatcherTimerInterval();
+            _app.AccountsH.SetRealTimeNotesDispatcherQueueTimerInterval();
         } // end method ComboBoxRealTimeNotesIntervalRefresh_OnSelectionChanged
 
         // Handle the default server combo box's selection changed event.
@@ -185,11 +189,18 @@ namespace PaimonTray.Views
             InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
         } // end method ComboBoxServerDefault_OnSelectionChanged
 
-        // Handle the midnight dispatcher timer's tick event.
-        private void DispatcherTimerMidnight_OnTick(object sender, object e)
+        // Handle the dispatcher queue timer's tick event.
+        private void DispatcherQueueTimer_OnTick(object sender, object e)
         {
-            ToggleStatusVisibility();
-        } // end method DispatcherTimerMidnight_OnTick
+            if (_accountGroupInfoListsTimeLocalRefreshLast is null) return;
+
+            TimeZoneInfo.ClearCachedData();
+
+            var accountGroupInfoListsTimeLocalRefreshLast = (DateTimeOffset)_accountGroupInfoListsTimeLocalRefreshLast;
+
+            if (accountGroupInfoListsTimeLocalRefreshLast.Offset != DateTimeOffset.Now.Offset ||
+                accountGroupInfoListsTimeLocalRefreshLast.Date != DateTimeOffset.Now.Date) ToggleStatusVisibility();
+        } // end method DispatcherQueueTimer_OnTick
 
 #pragma warning disable CA1822 // Mark members as static
         // Handle the info bar's closing event.
@@ -237,14 +248,19 @@ namespace PaimonTray.Views
         #region Fields
 
         /// <summary>
+        /// The account group info lists' last refresh local time.
+        /// </summary>
+        private DateTimeOffset? _accountGroupInfoListsTimeLocalRefreshLast;
+
+        /// <summary>
         /// The app.
         /// </summary>
         private App _app;
 
         /// <summary>
-        /// The midnight dispatcher timer.
+        /// The dispatcher queue timer.
         /// </summary>
-        private DispatcherTimer _dispatcherTimerMidnight;
+        private DispatcherQueueTimer _dispatcherQueueTimer;
 
         /// <summary>
         /// A flag indicating if the program is updating the account groups source.
@@ -279,23 +295,6 @@ namespace PaimonTray.Views
         } // end method GenerateRealTimeNotesRefreshIntervalComboBoxItemContent
 
         /// <summary>
-        /// Set the midnight dispatcher timer's interval.
-        /// </summary>
-        private void SetMidnightDispatcherTimerInterval()
-        {
-            if (_dispatcherTimerMidnight is null)
-            {
-                _dispatcherTimerMidnight = new DispatcherTimer();
-                _dispatcherTimerMidnight.Tick += DispatcherTimerMidnight_OnTick; // Add the tick event handler first.
-            } // end if
-
-            _dispatcherTimerMidnight.Interval = AccountsHelper.GetTimeSpanBetweenCurrentAndMidnight();
-
-            if (!_dispatcherTimerMidnight.IsEnabled)
-                _dispatcherTimerMidnight.Start(); // The 1st tick occurs when the timer interval has elapsed.
-        } // end method SetMidnightDispatcherTimerInterval
-
-        /// <summary>
         /// Show/Hide the status.
         /// </summary>
         private void ToggleStatusVisibility()
@@ -318,6 +317,7 @@ namespace PaimonTray.Views
 
                 _isUpdatingAccountGroupsSource = true;
                 CollectionViewSourceAccountGroups.Source = accountGroupInfoLists;
+                _accountGroupInfoListsTimeLocalRefreshLast = DateTimeOffset.Now; // Record the time when ready.
                 _isUpdatingAccountGroupsSource = false;
 
                 if (accountGroupInfoLists.Count > 0) GridStatus.Visibility = Visibility.Collapsed;
