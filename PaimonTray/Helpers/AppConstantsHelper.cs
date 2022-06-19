@@ -187,16 +187,6 @@
         /// </summary>
         public const string UrlWebView2Runtime = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
 
-        /// <summary>
-        /// The minimum beta revision version.
-        /// </summary>
-        public const int VersionRevisionBetaMin = 100;
-
-        /// <summary>
-        /// The stable revision version.
-        /// </summary>
-        public const int VersionRevisionStable = 200;
-
         #endregion Constants
     } // end class AppConstantsHelper
 } // end namespace PaimonTray.Helpers

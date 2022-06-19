@@ -23,7 +23,7 @@ namespace PaimonTray
         {
             ConfigLogger();
             GenerateAppVersion();
-            Log.Information("{DisplayName} V{AppVersion} started.", Package.Current.DisplayName, AppVersion);
+            Log.Information($"{Package.Current.DisplayName} V{AppVersion} started.");
             SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
             HttpClientH =
                 new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
@@ -60,15 +60,8 @@ namespace PaimonTray
         private void GenerateAppVersion()
         {
             var packageVersion = Package.Current.Id.Version;
-            var suffix = packageVersion.Revision switch
-            {
-                < AppConstantsHelper.VersionRevisionBetaMin => $"-alpha.{packageVersion.Revision + 1}",
-                < AppConstantsHelper.VersionRevisionStable =>
-                    $"-beta.{packageVersion.Revision - AppConstantsHelper.VersionRevisionBetaMin + 1}",
-                _ => string.Empty
-            };
 
-            AppVersion = $"{packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}{suffix}";
+            AppVersion = $"{packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}";
         } // end method GetAppVersion
 
         /// <summary>

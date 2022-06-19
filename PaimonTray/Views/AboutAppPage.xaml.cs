@@ -54,7 +54,6 @@ namespace PaimonTray.Views
         /// </summary>
         private void UpdateUiText()
         {
-            var packageVersion = Package.Current.Id.Version;
             var resourceLoader = _app.SettingsH.ResLoader;
 
             HyperlinkButtonGiteeRepo.Content = resourceLoader?.GetString("GiteeRepo");
@@ -72,8 +71,7 @@ namespace PaimonTray.Views
             RunNameGitHubRepoApiUsesPrimary.Text = resourceLoader?.GetString("NameGitHubRepoApiUsesPrimary");
             RunNameGitHubRepoApiUsesSecondary.Text = resourceLoader?.GetString("NameGitHubRepoApiUsesSecondary");
             RunNameGitHubRepoInspiration.Text = resourceLoader?.GetString("NameGitHubRepoInspiration");
-            TextBlockVersion.Text =
-                $"{resourceLoader?.GetString("Version")} {_app.AppVersion} ({packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}.{packageVersion.Revision})";
+            TextBlockVersion.Text = $"{resourceLoader?.GetString("Version")} {_app.AppVersion}";
         } // end method UpdateUiText
 
         #endregion Methods
