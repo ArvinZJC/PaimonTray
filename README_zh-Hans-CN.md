@@ -3,6 +3,7 @@
 # PaimonTray
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ArvinZJC/PaimonTray&amp;utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
 ![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)
 
