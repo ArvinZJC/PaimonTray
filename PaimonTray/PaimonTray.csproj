@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!--EXTERNAL_PROPERTIES: DisableMsixProjectCapabilityAddedByProject-->
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
@@ -14,22 +15,40 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <RepositoryUrl>https://github.com/ArvinZJC/PaimonTray</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageLicenseExpression> GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <Authors>ArvinZJC</Authors>
-    <Description>Paimon's now in your Windows "system tray"!</Description>
+    <Description>Now, Paimon is on your Windows "system tray"!</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/ArvinZJC/PaimonTray</PackageProjectUrl>
     <PackageTags>desktop-app;dotnet6;genshin-impact;paimon;windows;winui3;windows-app-sdk</PackageTags>
     <Copyright>© 2022 $(Authors)</Copyright>
-    <Version>1.0.0-alpha.1</Version>
+    <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <ApplicationIcon>Assets\AppIcon\AppIcon.ico</ApplicationIcon>
     <PackageIcon>AppIcon.png</PackageIcon>
-    <PackageCertificateThumbprint>0B37E1DBAA466AEA1D640801193EE5A4C00A2B35</PackageCertificateThumbprint>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxPackageDir>AppPackages\$(Platform)\</AppxPackageDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
@@ -38,22 +57,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
-    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Views\AboutAppPage.xaml" />
-    <None Remove="Views\AccountsSettingsPage.xaml" />
-    <None Remove="Views\AddUpdateAccountPage.xaml" />
-    <None Remove="Views\GeneralSettingsPage.xaml" />
-    <None Remove="Views\RealTimeNotesPage.xaml" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.50" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />

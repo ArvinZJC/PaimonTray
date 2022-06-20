@@ -8,8 +8,8 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="com.isarvin.PaimonTray"
-    Publisher="CN=Arvin Zhao"
+    Name="12436ArvinZJC.40085CBC45AEE"
+    Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6"
     Version="1.0.0.0" />
 
   <Properties>
@@ -35,7 +35,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="PaimonTray"
-        Description="Paimon&apos;s now in your Windows &quot;system tray&quot;!"
+        Description="Now, Paimon is on your Windows &quot;system tray&quot;!"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\AppIcon\Square150x150Logo.png"
         Square44x44Logo="Assets\AppIcon\Square44x44Logo.png">
@@ -61,7 +61,6 @@
       </Extensions>
     </Application>
   </Applications>
-
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
