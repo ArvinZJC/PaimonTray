@@ -39,6 +39,29 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
   - English (United States) ——无匹配语言时默认
   - 中文（简体，中国）
 
+## 💡 要不用用试试？
+
+您可用如下方式获取 PaimonTray：
+
+- **_(推荐)_ Microsoft Store**
+
+  > ❌ 将在未来上线。待完成调整、微软的应用认证过程，以及最终测试。
+
+  请尽可能使用此方式，从而能在有可自动更新的新版发布时保持最新版本。不过，这取决于[微软的应用认证过程](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process)。
+
+- [发行](https://github.com/ArvinZJC/PaimonTray/releases)
+
+  > ❌ 应在最近上线！待签名和最终测试。
+
+  若您不方便使用上面推荐的方式，则下载 MSIX 捆绑包（`PaimonTray_<version>.msixbundle`）也是一种选择。您可双击下载的文件来通过应用安装程序安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
+
+  ```PowerShell
+  # 注意: 若您使用 PowerShell 7+，则请在使用 Add-AppxPackage 前先运行如下命令：
+  # Import-Module Appx -UseWindowsPowerShell
+
+  Add-AppxPackage PaimonTray_<version>.msixbundle
+  ```
+
 ## ❗ 注意
 
 > 敲黑板了！敲黑板了！🔥
@@ -50,7 +73,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
    - 应用图标来源于 [Chawong](https://www.pixiv.net/en/artworks/92415888)。
    - README 横幅背景来源于 [void_0](https://www.pixiv.net/en/artworks/85543107)。
 
-2. 受 [Windows 应用 SDK 的影响](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk) 应能支持 Windows 10 版本 1809（内部版本 17763）及更高版本。**在安装、使用和卸载此应用的过程中，任何来自系统的安全提示都可授权允许。此应用已签名，无恶意行为，亦不会收集并上传任何用户隐私。** 若遇问题，可移步[议题](https://github.com/ArvinZJC/PaimonTray/issues)。
+2. 受 [Windows 应用 SDK 的影响](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk) ，PaimonTray 应能支持 Windows 10 版本 1809（内部版本 17763）及更高版本（arm64、x64 和 x86）。**在安装、使用和卸载此应用的过程中，任何来自系统的安全提示都可授权允许。此应用已签名，无恶意行为，亦不会收集并上传任何用户隐私。** 若遇问题，可移步[议题](https://github.com/ArvinZJC/PaimonTray/issues)。
 3. 项目 NuGet 包参见下面的表格。
 
    | 名称                                |     版本     |

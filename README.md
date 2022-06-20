@@ -29,7 +29,7 @@ PaimonTray also has some other highlights that may interest you. These include b
 - Multiple accounts<sup id="source2">[2](#footnote2)</sup> with nifty management: all your added accounts can be updated, checked and refreshed, or removed.
 - Only your selected characters: all characters (aka Genshin Impact accounts) linked with a miHoYo/HoYoLAB account are there for you to select whether to allow retrieving real-time notes.
 - Configurable real-time notes refresh interval.
-- *Real-time notes reminders (will be available in the future).*
+- _Real-time notes reminders (will be available in the future)._
 - Date and time rather than duration: e.g., Paimon converts the duration required to complete/fully replenish/... to an estimated date and time to make it clear.
 - Hints for "not yet unlocked" if Paimon can tell you.
 - Dark mode support.
@@ -38,6 +38,29 @@ PaimonTray also has some other highlights that may interest you. These include b
   - English (United Kingdom)
   - English (United States) - default if no matches
   - 中文（简体，中国）
+
+## 💡 Why not give it a try?
+
+You can get PaimonTray from:
+
+- **_(Recommended)_ Microsoft Store**
+
+  > ❌ Will be available in the future. Pending some tweaks, completing Microsoft's app certification process, and final tests.
+
+  Please always use this way if possible. It allows you to always be on the latest version when a new build with automatic updates is released, although it depends on [Microsoft's app certification process](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process).
+
+- [Releases](https://github.com/ArvinZJC/PaimonTray/releases)
+
+  > ❌ Should be available soon! Pending code signing and final tests.
+
+  If the above recommended way is inconvenient for you, downloading the latest MSIX bundle file (`PaimonTray_<version>.msixbundle`) is another option. You can double-click the downloaded file to install the app via the app installer. In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
+
+  ```PowerShell
+  # NOTE: If you are using PowerShell 7+, please run the following command before using Add-AppxPackage.
+  # Import-Module Appx -UseWindowsPowerShell
+
+  Add-AppxPackage PaimonTray_<version>.msixbundle
+  ```
 
 ## ❗ ATTENTION
 
@@ -50,7 +73,7 @@ PaimonTray also has some other highlights that may interest you. These include b
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
    - README banner background credited to [void_0](https://www.pixiv.net/en/artworks/85543107).
 
-2. Due to [the use of the Windows App SDK](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk), PaimonTray is expected to work well on Windows 10, version 1809 (build 17763) and later. **It is awfully safe to permit the app behaviour for any system prompt regarding safety confirmation. The app is signed, is not malware, and will never ever collect and upload any user privacy.** Should you report a problem encountered, you may find [issues](https://github.com/ArvinZJC/PaimonTray/issues) useful.
+2. Due to [the use of the Windows App SDK](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk), PaimonTray is expected to work well on Windows 10, version 1809 (build 17763) and later (arm64, x64, and x86). **It is awfully safe to permit the app behaviour for any system prompt regarding safety confirmation. The app is signed, is not malware, and will never ever collect and upload any user privacy.** Should you report a problem encountered, you may find [issues](https://github.com/ArvinZJC/PaimonTray/issues) useful.
 3. The NuGet packages of the project are listed in the following table.
 
    | Name                                |   Version    |
