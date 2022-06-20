@@ -533,9 +533,6 @@
   <data name="SystemDefault" xml:space="preserve">
     <value>使用系统默认值</value>
   </data>
-  <data name="TaskbarIconAppTooltip" xml:space="preserve">
-    <value>左击来显示/隐藏主界面，右击来显示快捷菜单</value>
-  </data>
   <data name="Theme" xml:space="preserve">
     <value>主题</value>
   </data>

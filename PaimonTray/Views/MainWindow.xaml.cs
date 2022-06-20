@@ -220,8 +220,7 @@ namespace PaimonTray.Views
             MenuFlyoutItemMainMenuHelpUserManual.Text = resourceLoader.GetString("UserManual");
             MenuFlyoutItemMainMenuMainWindowHide.Text = resourceLoader.GetString("MainWindowHide");
             MenuFlyoutSubItemMainMenuHelp.Text = resourceLoader.GetString("Help");
-            TaskbarIconApp.ToolTipText =
-                $"{Package.Current.DisplayName} - {resourceLoader.GetString("TaskbarIconAppTooltip")}";
+            TaskbarIconApp.ToolTipText = Package.Current.DisplayName;
             ToolTipService.SetToolTip(ButtonMainMenu, resourceLoader.GetString("MainMenuButtonTooltip"));
             ToolTipService.SetToolTip(NavigationViewItemBodyAccountAddUpdate,
                 resourceLoader.GetString("AccountAddUpdate"));

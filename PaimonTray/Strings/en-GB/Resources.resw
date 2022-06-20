@@ -533,9 +533,6 @@
   <data name="SystemDefault" xml:space="preserve">
     <value>Use system default</value>
   </data>
-  <data name="TaskbarIconAppTooltip" xml:space="preserve">
-    <value>Left click to show/hide the main window, and right click to show the context menu</value>
-  </data>
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
   </data>
