@@ -101,6 +101,6 @@
         <HyperlinkButton
             x:Name="HyperlinkButtonGiteeRepo"
             Grid.Row="7"
-            IsEnabled="False" />
+            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGiteeRepo}" />
     </Grid>
 </Page>

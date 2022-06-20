@@ -126,7 +126,8 @@
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpGiteeRepo"
-                                    IsEnabled="False" />
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
+                                    CommandParameter="{x:Bind helpers:AppConstantsHelper.UrlGiteeRepo}" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpLogsShow"

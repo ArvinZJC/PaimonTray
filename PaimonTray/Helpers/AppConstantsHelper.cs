@@ -148,6 +148,11 @@
         public const string UrlCookiesHowToGet = "https://paimon.swo.moe/#how-to-get-my-cookie";
 
         /// <summary>
+        /// The app's Gitee repository URL.
+        /// </summary>
+        public const string UrlGiteeRepo = "https://gitee.com/ArvinZJC/PaimonTray";
+
+        /// <summary>
         /// The app's GitHub repository URL.
         /// </summary>
         public const string UrlGitHubRepo = "https://github.com/ArvinZJC/PaimonTray";
