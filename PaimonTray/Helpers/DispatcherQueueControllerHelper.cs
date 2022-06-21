@@ -152,7 +152,7 @@ namespace PaimonTray.Helpers
             /// <returns>The hash code.</returns>
             public override int GetHashCode()
             {
-                return HashCode.Combine(dwSize, threadType, apartmentType);
+                return dwSize.GetHashCode() ^ threadType.GetHashCode() ^ apartmentType.GetHashCode();
             } // end method GetHashCode
 
             #endregion Methods
