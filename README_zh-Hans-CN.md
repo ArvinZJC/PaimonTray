@@ -3,7 +3,7 @@
 # PaimonTray
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ArvinZJC/PaimonTray&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ArvinZJC/PaimonTray&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
 ![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)
 
@@ -46,13 +46,13 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 - **_(推荐)_ Microsoft Store**
 
-  > ❌ 将在未来上线。待完成调整、微软的应用认证过程，以及最终测试。
+  > ❌ 希望能在最近上线！待完成微软的应用首次认证过程。
 
   请尽可能使用此方式，从而能在有可自动更新的新版发布时保持最新版本。不过，这取决于[微软的应用认证过程](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process)。
 
 - [发行](https://github.com/ArvinZJC/PaimonTray/releases)
 
-  > ❌ 应在最近上线！待签名和最终测试。
+  > ❌ 应在最近上线！待签名和最终验证。
 
   若您不方便使用上面推荐的方式，则下载 MSIX 捆绑包（`PaimonTray_<version>.msixbundle`）也是一种选择。您可双击下载的文件来通过应用安装程序安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
 

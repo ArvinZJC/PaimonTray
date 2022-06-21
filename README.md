@@ -3,7 +3,7 @@
 # PaimonTray
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ArvinZJC/PaimonTray&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ArvinZJC/PaimonTray&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
 ![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)
 
@@ -46,13 +46,13 @@ You can get PaimonTray from:
 
 - **_(Recommended)_ Microsoft Store**
 
-  > ❌ Will be available in the future. Pending some tweaks, completing Microsoft's app certification process, and final tests.
+  > ❌ Expected to be available soon! Pending completing Microsoft's app certification process for the 1st submission.
 
   Please always use this way if possible. It allows you to always be on the latest version when a new build with automatic updates is released, though it depends on [Microsoft's app certification process](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process).
 
 - [Releases](https://github.com/ArvinZJC/PaimonTray/releases)
 
-  > ❌ Should be available soon! Pending code signing and final tests.
+  > ❌ Should be available soon! Pending code signing and final validation.
 
   If the above recommended way is inconvenient for you, downloading the latest MSIX bundle file (`PaimonTray_<version>.msixbundle`) is another option. You can double-click the downloaded file to install the app via the app installer. In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
 
@@ -95,6 +95,6 @@ Good luck! 💖
 
 <sub id="footnote1">[1.](#source1) This feature relies on Microsoft Edge WebView2 Runtime. PaimonTray will guide you properly if the runtime cannot be detected. You can also download the runtime by clicking [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703).</sub>
 
-<sub id="footnote2">[2.](#source2) Currently at max 5 accounts due to performance consideration. It may be tweaked, as PaimonTray sharpens itself.</sub>
+<sub id="footnote2">[2.](#source2) Currently up to 5 accounts due to performance consideration. It may be tweaked, as PaimonTray sharpens itself.</sub>
 
 <sub id="footnote3">[3.](#source3) This feature depends on your Windows version and some system settings. The actual visual effects can vary.</sub>
