@@ -1,7 +1,6 @@
 ﻿using Serilog;
 using System;
 using System.Runtime.InteropServices;
-using Windows.ApplicationModel;
 using Windows.System;
 
 namespace PaimonTray.Helpers
