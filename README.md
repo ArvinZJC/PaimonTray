@@ -48,7 +48,7 @@ You can get PaimonTray from:
 
   > ❌ Will be available in the future. Pending some tweaks, completing Microsoft's app certification process, and final tests.
 
-  Please always use this way if possible. It allows you to always be on the latest version when a new build with automatic updates is released, although it depends on [Microsoft's app certification process](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process).
+  Please always use this way if possible. It allows you to always be on the latest version when a new build with automatic updates is released, though it depends on [Microsoft's app certification process](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process).
 
 - [Releases](https://github.com/ArvinZJC/PaimonTray/releases)
 
