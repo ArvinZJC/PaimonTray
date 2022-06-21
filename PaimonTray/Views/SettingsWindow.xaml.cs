@@ -189,7 +189,7 @@ namespace PaimonTray.Views
             } // end if
 
             _appWindow.SetIcon(
-                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppConstantsHelper.UriAppIcon))).Path);
+                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppFieldsHelper.UriAppIcon))).Path);
             CustomiseTitleBar();
 
             var workArea = WindowsHelper.GetWorkArea(windowId);

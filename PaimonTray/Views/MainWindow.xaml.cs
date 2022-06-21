@@ -49,7 +49,7 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating)
+            if (e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating)
                 NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
         } // end method AccountsHelper_OnPropertyChanged
 
@@ -233,7 +233,7 @@ namespace PaimonTray.Views
                     .Show(toast =>
                     {
                         toast.Group = Package.Current.DisplayName;
-                        toast.Tag = AppConstantsHelper.TagNotificationGreeting;
+                        toast.Tag = AppFieldsHelper.TagNotificationGreeting;
                     });
         } // end method UpdateUiText
 

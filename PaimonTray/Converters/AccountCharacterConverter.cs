@@ -18,21 +18,25 @@ namespace PaimonTray.Converters
         private const string ParameterHasCharacter = "hasCharacter";
 
         /// <summary>
-        /// The character's nickname parameter.
-        /// </summary>
-        public const string ParameterNicknameCharacter = "nicknameCharacter";
-
-        /// <summary>
-        /// The character's other info parameter.
-        /// </summary>
-        public const string ParameterOtherInfoCharacter = "otherInfoCharacter";
-
-        /// <summary>
         /// The character's other info visibility parameter.
         /// </summary>
         private const string ParameterOtherInfoVisibilityCharacter = "otherInfoVisibilityCharacter";
 
         #endregion Constants
+
+        #region Fields
+
+        /// <summary>
+        /// The character's nickname parameter.
+        /// </summary>
+        public static readonly string ParameterNicknameCharacter = "nicknameCharacter";
+
+        /// <summary>
+        /// The character's other info parameter.
+        /// </summary>
+        public static readonly string ParameterOtherInfoCharacter = "otherInfoCharacter";
+
+        #endregion Fields
 
         #region Methods
 
@@ -53,15 +57,21 @@ namespace PaimonTray.Converters
 
             if (value is not AccountCharacter accountCharacter) return isForVisibility ? Visibility.Collapsed : null;
 
-            return parameter switch
+            var parameterValue = parameter as string;
+
+            if (parameterValue == ParameterNicknameCharacter)
+                return accountCharacter.UidCharacter is null
+                    ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
+                    : accountCharacter.NicknameCharacter;
+
+            if (parameterValue == ParameterOtherInfoCharacter)
+                return accountCharacter.UidCharacter is null
+                    ? null
+                    : $"{accountCharacter.UidCharacter} | {accountCharacter.Region} | {accountCharacter.Level}";
+
+            return parameterValue switch
             {
                 ParameterHasCharacter => accountCharacter.UidCharacter is not null,
-                ParameterNicknameCharacter => accountCharacter.UidCharacter is null
-                    ? (Application.Current as App)?.SettingsH.ResLoader.GetString("AccountNoCharacter")
-                    : accountCharacter.NicknameCharacter,
-                ParameterOtherInfoCharacter => accountCharacter.UidCharacter is null
-                    ? null
-                    : $"{accountCharacter.UidCharacter} | {accountCharacter.Region} | {accountCharacter.Level}",
                 ParameterOtherInfoVisibilityCharacter => accountCharacter.UidCharacter is null
                     ? Visibility.Collapsed
                     : Visibility.Visible,

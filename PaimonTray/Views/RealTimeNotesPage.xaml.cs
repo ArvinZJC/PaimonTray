@@ -45,20 +45,20 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
+            if ((e.PropertyName == AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
                  _app.AccountsH.IsAccountCharacterUpdated) ||
-                (e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
+                (e.PropertyName == AccountsHelper.PropertyNameIsAccountGroupUpdated &&
                  _app.AccountsH.IsAccountGroupUpdated) ||
-                e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
 
             var uidCharacterRealTimeNotesUpdated = _app.AccountsH.UidCharacterRealTimeNotesUpdated;
 
-            if (e.PropertyName is not AccountsHelper.PropertyNameUidCharacterRealTimeNotesUpdated ||
+            if (e.PropertyName != AccountsHelper.PropertyNameUidCharacterRealTimeNotesUpdated ||
                 string.IsNullOrWhiteSpace(uidCharacterRealTimeNotesUpdated)) return;
 
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter) return;
 
-            if (uidCharacterRealTimeNotesUpdated is not AccountsHelper.TagRealTimeNotesUpdatedCharactersAllEnabled &&
+            if (uidCharacterRealTimeNotesUpdated != AccountsHelper.TagRealTimeNotesUpdatedCharactersAllEnabled &&
                 uidCharacterRealTimeNotesUpdated != accountCharacter.UidCharacter) return;
 
             UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
@@ -112,8 +112,8 @@ namespace PaimonTray.Views
 
                 InitialiseRealTimeNotesArea();
                 ListViewAccountGroups.Tag = null;
-                TextBlockNicknameCharacter.Text = AppConstantsHelper.Unknown;
-                TextBlockOtherInfoCharacter.Text = AppConstantsHelper.Unknown;
+                TextBlockNicknameCharacter.Text = AppFieldsHelper.Unknown;
+                TextBlockOtherInfoCharacter.Text = AppFieldsHelper.Unknown;
             }
             else
             {
@@ -121,11 +121,11 @@ namespace PaimonTray.Views
                 var nicknameCharacter =
                     accountCharacterConverter?.Convert(accountCharacter, null,
                         AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
-                    AppConstantsHelper.Unknown;
+                    AppFieldsHelper.Unknown;
                 var otherInfoCharacter =
                     accountCharacterConverter?.Convert(accountCharacter, null,
                         AccountCharacterConverter.ParameterOtherInfoCharacter, null) as string ??
-                    AppConstantsHelper.Unknown;
+                    AppFieldsHelper.Unknown;
 
                 if (uidCharacterSelected != accountCharacter.UidCharacter)
                     propertySetAccounts[AccountsHelper.KeyUidCharacterSelected] = accountCharacter.UidCharacter;
@@ -156,7 +156,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the real-time notes page's loaded event.
@@ -338,16 +338,16 @@ namespace PaimonTray.Views
                 _app.AccountsH.GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
 
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
-                realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
+                realTimeNotesStatus == AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusFail.Visibility =
-                realTimeNotesStatus is null or AccountsHelper.TagStatusFail
+                realTimeNotesStatus is null || realTimeNotesStatus == AccountsHelper.TagStatusFail
                     ? Visibility.Visible
                     : Visibility.Collapsed;
-            GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus is AccountsHelper.TagStatusReady
+            GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus == AccountsHelper.TagStatusReady
                 ? Visibility.Visible
                 : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusUpdating.Visibility =
-                realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
+                realTimeNotesStatus == AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
             ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
             ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
             ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;

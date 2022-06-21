@@ -86,7 +86,7 @@ namespace PaimonTray.Views
                 comboBoxLanguageSelectedItemTag != _app.SettingsH.LanguageSelectionApplied;
 
             if (InfoBarLanguageAppliedLater.IsOpen)
-                InfoBarLanguageAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
+                InfoBarLanguageAppliedLater.Margin = new Thickness(0, 0, 0, AppFieldsHelper.InfoBarMarginBottom);
         } // end method ComboBoxLanguage_OnSelectionChanged
 
         // Handle the theme combo box's selection changed event.
@@ -109,21 +109,23 @@ namespace PaimonTray.Views
             CheckBoxNotificationGreeting.IsChecked =
                 propertySetSettings[SettingsHelper.KeyNotificationGreeting] as bool? ??
                 SettingsHelper.DefaultNotificationGreeting;
-            ComboBoxLanguage.SelectedItem = propertySetSettings[SettingsHelper.KeyLanguage] switch
-            {
-                SettingsHelper.TagLanguageEnGb => ComboBoxItemLanguageEnGb,
-                SettingsHelper.TagLanguageEnUs => ComboBoxItemLanguageEnUs,
-                SettingsHelper.TagLanguageZhHansCn => ComboBoxItemLanguageZhHansCn,
-                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
-                _ => null
-            };
-            ComboBoxTheme.SelectedItem = propertySetSettings[SettingsHelper.KeyTheme] switch
-            {
-                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
-                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
-                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
-                _ => null
-            };
+
+            var language = propertySetSettings[SettingsHelper.KeyLanguage] as string;
+            var theme = propertySetSettings[SettingsHelper.KeyTheme] as string;
+
+            if (language == SettingsHelper.TagLanguageEnGb) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnGb;
+            else if (language == SettingsHelper.TagLanguageEnUs)
+                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnUs;
+            else if (language == SettingsHelper.TagLanguageZhHansCn)
+                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageZhHansCn;
+            else if (language == SettingsHelper.TagSystem) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageSystem;
+            else ComboBoxLanguage.SelectedItem = null;
+
+            if (theme == SettingsHelper.TagSystem) ComboBoxTheme.SelectedItem = ComboBoxItemThemeSystem;
+            else if (theme == SettingsHelper.TagThemeDark) ComboBoxTheme.SelectedItem = ComboBoxItemThemeDark;
+            else if (theme == SettingsHelper.TagThemeLight) ComboBoxTheme.SelectedItem = ComboBoxItemThemeLight;
+            else ComboBoxTheme.SelectedItem = null;
+
             ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
                 propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultMainWindowShowWhenAppStarts;
@@ -141,13 +143,13 @@ namespace PaimonTray.Views
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
         private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsStartupApps);
+            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
         } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
 
         // Handle the click event of the link of the notifications setting.
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UriSystemSettingsNotifications);
+            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static

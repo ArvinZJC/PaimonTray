@@ -132,21 +132,21 @@ namespace PaimonTray.Converters
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
                 ParameterOtherInfoAccount =>
                     $"{accountCharacter.UidAccount} | {accountCharacter.Server} | {resourceLoader?.GetString("UpdatedLast")}{resourceLoader?.GetString("Colon")}{app?.AccountsH.GetLocalDateTimeString(accountCharacter.TimeUpdateLast)}",
-                ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding
-                    or AccountsHelper.TagStatusUpdating
+                ParameterStatusAddingUpdating => accountCharacter.Status == AccountsHelper.TagStatusAdding ||
+                                                 accountCharacter.Status == AccountsHelper.TagStatusUpdating
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusAddingUpdatingExplanation => resourceLoader?.GetString(
                     "AccountStatusAddingUpdatingExplanation"),
-                ParameterStatusExpired => accountCharacter.Status is AccountsHelper.TagStatusExpired
+                ParameterStatusExpired => accountCharacter.Status == AccountsHelper.TagStatusExpired
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusExpiredExplanation => resourceLoader?.GetString("AccountStatusExpiredExplanation"),
-                ParameterStatusFail => accountCharacter.Status is AccountsHelper.TagStatusFail
+                ParameterStatusFail => accountCharacter.Status == AccountsHelper.TagStatusFail
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusFailExplanation => resourceLoader?.GetString("AccountStatusFailExplanation"),
-                ParameterStatusReady => accountCharacter.Status is AccountsHelper.TagStatusReady
+                ParameterStatusReady => accountCharacter.Status == AccountsHelper.TagStatusReady
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusReadyExplanation => resourceLoader?.GetString("AccountStatusReadyExplanation"),

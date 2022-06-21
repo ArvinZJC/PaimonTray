@@ -45,31 +45,6 @@ namespace PaimonTray.Helpers
         private const string ContainerKeyRealTimeNotes = "realTimeNotes";
 
         /// <summary>
-        /// The token cookie key.
-        /// </summary>
-        public const string CookieKeyToken = "ltoken";
-
-        /// <summary>
-        /// The UID cookie key.
-        /// </summary>
-        public const string CookieKeyUid = "ltuid";
-
-        /// <summary>
-        /// The max number of accounts.
-        /// </summary>
-        public const int CountAccountsMax = 5;
-
-        /// <summary>
-        /// The finished expedition status in JSON data.
-        /// </summary>
-        public const string ExpeditionStatusFinished = "Finished";
-
-        /// <summary>
-        /// The ongoing expedition status in JSON data.
-        /// </summary>
-        public const string ExpeditionStatusOngoing = "Ongoing";
-
-        /// <summary>
         /// The PNG file extension.
         /// </summary>
         private const string FileExtensionPng = ".png";
@@ -113,11 +88,6 @@ namespace PaimonTray.Helpers
         /// The max daily commissions key for processing JSON data.
         /// </summary>
         private const string KeyCommissionsDailyMaxRaw = "total_task_num";
-
-        /// <summary>
-        /// The cookies key.
-        /// </summary>
-        public const string KeyCookies = "cookies";
 
         /// <summary>
         /// The current Realm Currency key.
@@ -343,22 +313,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The return code key.
         /// </summary>
-        public const string KeyReturnCode = "retcode";
+        private const string KeyReturnCode = "retcode";
 
         /// <summary>
         /// The second key for processing JSON data.
         /// </summary>
         private const string KeySecondRaw = "Second";
-
-        /// <summary>
-        /// The server key.
-        /// </summary>
-        public const string KeyServer = "server";
-
-        /// <summary>
-        /// The status key.
-        /// </summary>
-        public const string KeyStatus = "status";
 
         /// <summary>
         /// The remaining time key.
@@ -386,16 +346,6 @@ namespace PaimonTray.Helpers
         private const string KeyTransformerParametricTimeRecoveryRaw = "recovery_time";
 
         /// <summary>
-        /// The UID key.
-        /// </summary>
-        public const string KeyUid = "uid";
-
-        /// <summary>
-        /// The selected character's UID key.
-        /// </summary>
-        public const string KeyUidCharacterSelected = "uidCharacterSelected";
-
-        /// <summary>
         /// The user info key.
         /// </summary>
         private const string KeyUserInfo = "user_info";
@@ -404,31 +354,6 @@ namespace PaimonTray.Helpers
         /// The level prefix.
         /// </summary>
         private const string PrefixLevel = "Lv.";
-
-        /// <summary>
-        /// The property name for the flag indicating if an account's character is updated.
-        /// </summary>
-        public const string PropertyNameIsAccountCharacterUpdated = nameof(IsAccountCharacterUpdated);
-
-        /// <summary>
-        /// The property name for the flag indicating if an account group is updated.
-        /// </summary>
-        public const string PropertyNameIsAccountGroupUpdated = nameof(IsAccountGroupUpdated);
-
-        /// <summary>
-        /// The property name for the flag indicating if the program is adding/updating an account.
-        /// </summary>
-        public const string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
-
-        /// <summary>
-        /// The property name for the flag indicating if the program is managing the accounts.
-        /// </summary>
-        public const string PropertyNameIsManaging = nameof(IsManaging);
-
-        /// <summary>
-        /// The property name for the UID of the character updating the real-time notes.
-        /// </summary>
-        public const string PropertyNameUidCharacterRealTimeNotesUpdated = nameof(UidCharacterRealTimeNotesUpdated);
 
         /// <summary>
         /// The disabled return code.
@@ -444,51 +369,6 @@ namespace PaimonTray.Helpers
         /// The success return code.
         /// </summary>
         private const int ReturnCodeSuccess = 0;
-
-        /// <summary>
-        /// The tag indicating that all enabled characters have updated the real-time notes.
-        /// </summary>
-        public const string TagRealTimeNotesUpdatedCharactersAllEnabled = "realTimeNotesUpdatedCharactersAllEnabled";
-
-        /// <summary>
-        /// The CN server tag.
-        /// </summary>
-        public const string TagServerCn = "cn";
-
-        /// <summary>
-        /// The global server tag.
-        /// </summary>
-        public const string TagServerGlobal = "global";
-
-        /// <summary>
-        /// The adding status tag.
-        /// </summary>
-        public const string TagStatusAdding = "adding";
-
-        /// <summary>
-        /// The disabled status tag.
-        /// </summary>
-        public const string TagStatusDisabled = "disabled";
-
-        /// <summary>
-        /// The expired status tag.
-        /// </summary>
-        public const string TagStatusExpired = "expired";
-
-        /// <summary>
-        /// The fail status tag.
-        /// </summary>
-        public const string TagStatusFail = "fail";
-
-        /// <summary>
-        /// The ready status tag.
-        /// </summary>
-        public const string TagStatusReady = "ready";
-
-        /// <summary>
-        /// The updating status tag.
-        /// </summary>
-        public const string TagStatusUpdating = "updating";
 
         /// <summary>
         /// The URL for the CN server to get an account.
@@ -523,11 +403,6 @@ namespace PaimonTray.Helpers
             "https://upload-os-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_";
 
         /// <summary>
-        /// The base URL for indicating the success of logging into miHoYo.
-        /// </summary>
-        public const string UrlBaseLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
-
-        /// <summary>
         /// The base URL for the CN server to get real-time notes.
         /// </summary>
         private const string UrlBaseRealTimeNotesServerCn =
@@ -550,32 +425,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private const string UrlCharactersServerGlobal =
             "https://api-os-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_global";
-
-        /// <summary>
-        /// The HoYoLAB cookies URL.
-        /// </summary>
-        public const string UrlCookiesHoYoLab = "https://www.hoyolab.com";
-
-        /// <summary>
-        /// The miHoYo cookies URL.
-        /// </summary>
-        public const string UrlCookiesMiHoYo = "https://www.mihoyo.com";
-
-        /// <summary>
-        /// The URL for logging into HoYoLAB.
-        /// </summary>
-        public const string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
-
-        /// <summary>
-        /// The URL for logging into miHoYo.
-        /// </summary>
-        public const string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
-
-        /// <summary>
-        /// The URL for indicating the success of redirecting to the actual URL for logging into miHoYo.
-        /// </summary>
-        public const string UrlLoginRedirectMiHoYo =
-            "https://user.mihoyo.com/?cb_url=//bbs.mihoyo.com/ys/accountCenter&week=1#/login";
 
         #endregion Constants
 
@@ -692,6 +541,159 @@ namespace PaimonTray.Helpers
         /// </summary>
         private string _uidCharacterRealTimeNotesUpdated;
 
+        /// <summary>
+        /// The token cookie key.
+        /// </summary>
+        public static readonly string CookieKeyToken = "ltoken";
+
+        /// <summary>
+        /// The UID cookie key.
+        /// </summary>
+        public static readonly string CookieKeyUid = "ltuid";
+
+        /// <summary>
+        /// The max number of accounts.
+        /// </summary>
+        public static readonly int CountAccountsMax = 5;
+
+        /// <summary>
+        /// The finished expedition status in JSON data.
+        /// </summary>
+        public static readonly string ExpeditionStatusFinished = "Finished";
+
+        /// <summary>
+        /// The ongoing expedition status in JSON data.
+        /// </summary>
+        public static readonly string ExpeditionStatusOngoing = "Ongoing";
+
+        /// <summary>
+        /// The cookies key.
+        /// </summary>
+        public static readonly string KeyCookies = "cookies";
+
+        /// <summary>
+        /// The property name for the flag indicating if an account's character is updated.
+        /// </summary>
+        public static readonly string PropertyNameIsAccountCharacterUpdated = nameof(IsAccountCharacterUpdated);
+
+        /// <summary>
+        /// The property name for the flag indicating if an account group is updated.
+        /// </summary>
+        public static readonly string PropertyNameIsAccountGroupUpdated = nameof(IsAccountGroupUpdated);
+
+        /// <summary>
+        /// The property name for the flag indicating if the program is adding/updating an account.
+        /// </summary>
+        public static readonly string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
+
+        /// <summary>
+        /// The property name for the flag indicating if the program is managing the accounts.
+        /// </summary>
+        public static readonly string PropertyNameIsManaging = nameof(IsManaging);
+
+        /// <summary>
+        /// The property name for the UID of the character updating the real-time notes.
+        /// </summary>
+        public static readonly string PropertyNameUidCharacterRealTimeNotesUpdated =
+            nameof(UidCharacterRealTimeNotesUpdated);
+
+        /// <summary>
+        /// The tag indicating that all enabled characters have updated the real-time notes.
+        /// </summary>
+        public static readonly string TagRealTimeNotesUpdatedCharactersAllEnabled =
+            "realTimeNotesUpdatedCharactersAllEnabled";
+
+        /// <summary>
+        /// The CN server tag.
+        /// </summary>
+        public static readonly string TagServerCn = "cn";
+
+        /// <summary>
+        /// The global server tag.
+        /// </summary>
+        public static readonly string TagServerGlobal = "global";
+
+        /// <summary>
+        /// The adding status tag.
+        /// </summary>
+        public static readonly string TagStatusAdding = "adding";
+
+        /// <summary>
+        /// The disabled status tag.
+        /// </summary>
+        public static readonly string TagStatusDisabled = "disabled";
+
+        /// <summary>
+        /// The expired status tag.
+        /// </summary>
+        public static readonly string TagStatusExpired = "expired";
+
+        /// <summary>
+        /// The fail status tag.
+        /// </summary>
+        public static readonly string TagStatusFail = "fail";
+
+        /// <summary>
+        /// The ready status tag.
+        /// </summary>
+        public static readonly string TagStatusReady = "ready";
+
+        /// <summary>
+        /// The updating status tag.
+        /// </summary>
+        public static readonly string TagStatusUpdating = "updating";
+
+        /// <summary>
+        /// The base URL for indicating the success of logging into miHoYo.
+        /// </summary>
+        public static readonly string UrlBaseLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
+
+        /// <summary>
+        /// The HoYoLAB cookies URL.
+        /// </summary>
+        public static readonly string UrlCookiesHoYoLab = "https://www.hoyolab.com";
+
+        /// <summary>
+        /// The miHoYo cookies URL.
+        /// </summary>
+        public static readonly string UrlCookiesMiHoYo = "https://www.mihoyo.com";
+
+        /// <summary>
+        /// The URL for logging into HoYoLAB.
+        /// </summary>
+        public static readonly string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
+
+        /// <summary>
+        /// The URL for logging into miHoYo.
+        /// </summary>
+        public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
+
+        /// <summary>
+        /// The URL for indicating the success of redirecting to the actual URL for logging into miHoYo.
+        /// </summary>
+        public static readonly string UrlLoginRedirectMiHoYo =
+            "https://user.mihoyo.com/?cb_url=//bbs.mihoyo.com/ys/accountCenter&week=1#/login";
+
+        /// <summary>
+        /// The server key.
+        /// </summary>
+        public static readonly string KeyServer = "server";
+
+        /// <summary>
+        /// The status key.
+        /// </summary>
+        public static readonly string KeyStatus = "status";
+
+        /// <summary>
+        /// The UID key.
+        /// </summary>
+        public static readonly string KeyUid = "uid";
+
+        /// <summary>
+        /// The selected character's UID key.
+        /// </summary>
+        public static readonly string KeyUidCharacterSelected = "uidCharacterSelected";
+
         #endregion Fields
 
         #region Methods
@@ -712,12 +714,12 @@ namespace PaimonTray.Helpers
             var cookies = propertySetAccount[KeyCookies] as string;
             var nicknameAccount = propertySetAccount[KeyNickname] as string;
             var resourceLoader = _app.SettingsH.ResLoader;
-            var server = propertySetAccount[KeyServer] switch
-            {
-                TagServerCn => resourceLoader.GetString("ServerCn"),
-                TagServerGlobal => resourceLoader.GetString("ServerGlobal"),
-                _ => AppConstantsHelper.Unknown
-            };
+            var server = propertySetAccount[KeyServer] as string;
+            var serverName = AppFieldsHelper.Unknown;
+
+            if (server == TagServerCn) serverName = resourceLoader.GetString("ServerCn");
+            else if (server == TagServerGlobal) serverName = resourceLoader.GetString("ServerGlobal");
+
             var status = propertySetAccount[KeyStatus] as string;
             var timeUpdateLast = propertySetAccount[KeyTimeUpdateLast] as DateTimeOffset?;
             var uidAccount = propertySetAccount[KeyUid] as string;
@@ -732,11 +734,11 @@ namespace PaimonTray.Helpers
                         Cookies = cookies,
                         IsEnabled = propertySetCharacter[KeyIsEnabled] as bool? ?? true,
                         Key = containerKeyAccount,
-                        Level = level is null ? $"{PrefixLevel}{AppConstantsHelper.Unknown}" : $"{PrefixLevel}{level}",
+                        Level = level is null ? $"{PrefixLevel}{AppFieldsHelper.Unknown}" : $"{PrefixLevel}{level}",
                         NicknameAccount = nicknameAccount,
                         NicknameCharacter = propertySetCharacter[KeyNickname] as string,
                         Region = GetRegion(propertySetCharacter[KeyRegion] as string),
-                        Server = server,
+                        Server = serverName,
                         Status = status,
                         TimeUpdateLast = timeUpdateLast,
                         UidAccount = uidAccount,
@@ -748,7 +750,7 @@ namespace PaimonTray.Helpers
                     Cookies = cookies,
                     Key = containerKeyAccount,
                     NicknameAccount = nicknameAccount,
-                    Server = server,
+                    Server = serverName,
                     Status = status,
                     TimeUpdateLast = timeUpdateLast,
                     UidAccount = uidAccount
@@ -790,20 +792,19 @@ namespace PaimonTray.Helpers
                 applicationDataContainerAccount.CreateContainer(ContainerKeyCharacters,
                     ApplicationDataCreateDisposition.Always);
             var propertySetAccount = applicationDataContainerAccount.Values;
+            var status = propertySetAccount[KeyStatus] as string;
 
             if (characters is null)
             {
                 Log.Warning($"Failed to store null characters (account container key: {containerKeyAccount}).");
-                propertySetAccount[KeyStatus] = propertySetAccount[KeyStatus] is TagStatusExpired
-                    ? TagStatusExpired
-                    : TagStatusFail;
+                propertySetAccount[KeyStatus] = status == TagStatusExpired ? TagStatusExpired : TagStatusFail;
             }
             else if (characters.Count is 0)
             {
                 foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
                     applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
 
-                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                if (status == TagStatusAdding || status == TagStatusUpdating)
                     propertySetAccount[KeyStatus] = TagStatusReady;
             }
             else
@@ -828,7 +829,7 @@ namespace PaimonTray.Helpers
                     await GetRealTimeNotesFromApiAsync(containerKeyAccount, character.Uid);
                 } // end foreach
 
-                if (propertySetAccount[KeyStatus] is TagStatusAdding or TagStatusUpdating)
+                if (status == TagStatusAdding || status == TagStatusUpdating)
                     propertySetAccount[KeyStatus] = TagStatusReady;
             } // end if...else
 
@@ -877,37 +878,26 @@ namespace PaimonTray.Helpers
             if (isStandalone) IsManaging = true;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
+            var status = propertySetAccount[KeyStatus] as string;
 
-            if (propertySetAccount[KeyStatus] is not TagStatusAdding &&
-                propertySetAccount[KeyStatus] is not TagStatusExpired &&
-                propertySetAccount[KeyStatus] is not TagStatusFail &&
-                propertySetAccount[KeyStatus] is not TagStatusReady &&
-                propertySetAccount[KeyStatus] is not TagStatusUpdating)
-                propertySetAccount[KeyStatus] = TagStatusAdding;
+            if (status != TagStatusAdding && status != TagStatusExpired && status != TagStatusFail &&
+                status != TagStatusReady &&
+                status != TagStatusUpdating) propertySetAccount[KeyStatus] = TagStatusAdding;
 
             var shouldAddUpdateCharacters = true;
 
-            switch (propertySetAccount[KeyStatus])
+            if (status == TagStatusAdding)
             {
-                case TagStatusAdding:
-                    if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
-                        propertySetAccount[KeyUid] is null)
-                    {
-                        ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
-                        shouldAddUpdateCharacters = false;
-                    } // end if
-
-                    break;
-
-                case TagStatusExpired:
+                if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
+                    propertySetAccount[KeyUid] is null)
+                {
+                    ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
                     shouldAddUpdateCharacters = false;
-                    break;
-
-                case TagStatusFail:
-                case TagStatusReady:
-                    propertySetAccount[KeyStatus] = TagStatusUpdating;
-                    break;
-            } // end switch-case
+                } // end if
+            }
+            else if (status == TagStatusExpired) shouldAddUpdateCharacters = false;
+            else if (status == TagStatusFail || status == TagStatusReady)
+                propertySetAccount[KeyStatus] = TagStatusUpdating;
 
             if (shouldAddUpdateCharacters)
                 await AddUpdateCharactersAsync(await GetAccountCharactersFromApiAsync(containerKeyAccount),
@@ -1000,7 +990,7 @@ namespace PaimonTray.Helpers
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
-            if (propertySetAccount[KeyStatus] is TagStatusExpired)
+            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
@@ -1009,8 +999,7 @@ namespace PaimonTray.Helpers
 
             propertySetAccount[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
-            var isServerCn =
-                propertySetAccount[KeyServer] is TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal); // Send an HTTP GET request when ready.
@@ -1108,7 +1097,7 @@ namespace PaimonTray.Helpers
             if (!ValidateAccountContainerKey(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
-            var urlBaseAvatar = propertySetAccount[KeyServer] is TagServerCn
+            var urlBaseAvatar = propertySetAccount[KeyServer] as string == TagServerCn
                 ? UrlBaseAvatarServerCn
                 : UrlBaseAvatarServerGlobal;
 
@@ -1126,14 +1115,14 @@ namespace PaimonTray.Helpers
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
-            if (propertySetAccount[KeyStatus] is TagStatusExpired)
+            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get characters from the API due to the specific account's expired status (account container key: {containerKeyAccount}).");
                 return null;
             } // end if
 
-            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal); // Send an HTTP GET request when ready.
@@ -1193,7 +1182,7 @@ namespace PaimonTray.Helpers
         /// <returns>The local date and time string.</returns>
         public string GetLocalDateTimeString(DateTimeOffset? dateTimeOffset)
         {
-            if (dateTimeOffset is null) return AppConstantsHelper.Unknown;
+            if (dateTimeOffset is null) return AppFieldsHelper.Unknown;
 
             var cultureApplied = _app.SettingsH.CultureApplied;
             var dateTimeOffsetLocal = ((DateTimeOffset)dateTimeOffset).ToLocalTime();
@@ -1224,11 +1213,11 @@ namespace PaimonTray.Helpers
             var resourceLoader = _app.SettingsH.ResLoader; // Get the resource loader first.
             var colonAndEstimated =
                 $"{resourceLoader.GetString("Colon")}{resourceLoader.GetString("Estimated")} "; // The resource string for ": est. ".
-            var commissionsDailyExplanation = AppConstantsHelper.Unknown;
+            var commissionsDailyExplanation = AppFieldsHelper.Unknown;
             int? commissionsDailyFinished = null;
             int? commissionsDailyMax = null;
             int? currencyRealmCurrent = null;
-            var currencyRealmExplanation = AppConstantsHelper.Unknown;
+            var currencyRealmExplanation = AppFieldsHelper.Unknown;
             int? currencyRealmMax = null;
             int? domainsTrounceDiscountsMax = null;
             int? domainsTrounceDiscountsRemaining = null;
@@ -1237,12 +1226,12 @@ namespace PaimonTray.Helpers
             var realTimeNotesExpeditions = new List<RealTimeNote>(); // 2. Real-time notes' expeditions section.
             var realTimeNotesGeneral = new List<RealTimeNote>(); // 1. Real-time notes' general section.
             string realTimeNotesStatus = null;
-            var realTimeNotesTimeLocalUpdateLast = AppConstantsHelper.Unknown;
+            var realTimeNotesTimeLocalUpdateLast = AppFieldsHelper.Unknown;
             int? resinOriginalCurrent = null;
-            var resinOriginalExplanation = AppConstantsHelper.Unknown;
+            var resinOriginalExplanation = AppFieldsHelper.Unknown;
             int? resinOriginalMax = null;
-            var transformerParametricExplanation = AppConstantsHelper.Unknown;
-            var transformerParametricStatus = AppConstantsHelper.Unknown;
+            var transformerParametricExplanation = AppFieldsHelper.Unknown;
+            var transformerParametricStatus = AppFieldsHelper.Unknown;
 
             if (ValidateAccountContainerKey(containerKeyAccount))
             {
@@ -1271,7 +1260,7 @@ namespace PaimonTray.Helpers
                         realTimeNotesTimeLocalUpdateLast =
                             GetLocalDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
 
-                        if (realTimeNotesStatus is null or TagStatusDisabled)
+                        if (realTimeNotesStatus is null || realTimeNotesStatus == TagStatusDisabled)
                         {
                             realTimeNotesStatus ??= TagStatusFail; // Ensure the local variable first.
                             propertySetRealTimeNotes[KeyStatus] = realTimeNotesStatus;
@@ -1329,7 +1318,7 @@ namespace PaimonTray.Helpers
                             if (expeditionsCurrent is null || expeditionsMax is null)
                                 realTimeNotesExpeditions.Add(new RealTimeNote
                                 {
-                                    Explanation = AppConstantsHelper.Unknown,
+                                    Explanation = AppFieldsHelper.Unknown,
                                     UriImage = null
                                 });
                             else if (expeditionsCurrent > 0)
@@ -1342,18 +1331,19 @@ namespace PaimonTray.Helpers
                                 for (var i = 0; i < expeditionsCurrent; i++)
                                 {
                                     var propertySetExpedition = applicationDataContainerExpeditions
-                                        .CreateContainer(i.ToString(), ApplicationDataCreateDisposition.Always).Values;
+                                        .CreateContainer(i.ToString(), ApplicationDataCreateDisposition.Always)
+                                        .Values; // Get the expedition property set first.
                                     var expeditionAvatarSideIcon = propertySetExpedition[KeyAvatarSideIcon] as string;
                                     var expeditionExplanation = resourceLoader.GetString("ExpeditionComplete");
                                     var expeditionStatus = propertySetExpedition[KeyStatus] as string;
-                                    var urlBaseAvatarSideIcon = applicationDataContainerAccount.Values[KeyServer] switch
-                                    {
-                                        TagServerCn => UrlBaseAvatarSideIconServerCn,
-                                        TagServerGlobal => UrlBaseAvatarSideIconServerGlobal,
-                                        _ => null
-                                    };
+                                    var server = applicationDataContainerAccount.Values[KeyServer] as string;
+                                    string urlBaseAvatarSideIcon = null;
 
-                                    if (expeditionStatus is not ExpeditionStatusFinished)
+                                    if (server == TagServerCn) urlBaseAvatarSideIcon = UrlBaseAvatarSideIconServerCn;
+                                    else if (server == TagServerGlobal)
+                                        urlBaseAvatarSideIcon = UrlBaseAvatarSideIconServerGlobal;
+
+                                    if (expeditionStatus != ExpeditionStatusFinished)
                                         expeditionExplanation +=
                                             $"{colonAndEstimated}{GetLocalDateTimeString(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
 
@@ -1382,7 +1372,7 @@ namespace PaimonTray.Helpers
                                     {
                                         case null:
                                             transformerParametricExplanation +=
-                                                $"{colonAndEstimated}{AppConstantsHelper.Unknown}";
+                                                $"{colonAndEstimated}{AppFieldsHelper.Unknown}";
                                             break;
 
                                         case true:
@@ -1428,35 +1418,35 @@ namespace PaimonTray.Helpers
                 Explanation = resinOriginalExplanation,
                 Status = GetRealTimeNoteStatus(resinOriginalCurrent, resinOriginalMax),
                 Title = resourceLoader.GetString("ResinOriginal"),
-                UriImage = new Uri(AppConstantsHelper.UriImageResinOriginal)
+                UriImage = new Uri(AppFieldsHelper.UriImageResinOriginal)
             }); // 1.1. Original Resin.
             realTimeNotesGeneral.Add(new RealTimeNote
             {
                 Explanation = currencyRealmExplanation,
                 Status = GetRealTimeNoteStatus(currencyRealmCurrent, currencyRealmMax),
                 Title = resourceLoader.GetString("CurrencyRealm"),
-                UriImage = new Uri(AppConstantsHelper.UriImageCurrencyRealm)
+                UriImage = new Uri(AppFieldsHelper.UriImageCurrencyRealm)
             }); // 1.2. Realm Currency.
             realTimeNotesGeneral.Add(new RealTimeNote
             {
                 Explanation = commissionsDailyExplanation,
                 Status = GetRealTimeNoteStatus(commissionsDailyFinished, commissionsDailyMax),
                 Title = resourceLoader.GetString("CommissionsDaily"),
-                UriImage = new Uri(AppConstantsHelper.UriImageCommissionsDaily)
+                UriImage = new Uri(AppFieldsHelper.UriImageCommissionsDaily)
             }); // 1.3. Daily commissions.
             realTimeNotesGeneral.Add(new RealTimeNote
             {
                 Explanation = resourceLoader.GetString("DomainsTrounceDiscountsExplanation"),
                 Status = GetRealTimeNoteStatus(domainsTrounceDiscountsRemaining, domainsTrounceDiscountsMax),
                 Title = resourceLoader.GetString("DomainsTrounceDiscounts"),
-                UriImage = new Uri(AppConstantsHelper.UriImageDomainsTrounce)
+                UriImage = new Uri(AppFieldsHelper.UriImageDomainsTrounce)
             }); // 1.4. Trounce Domains discounts.
             realTimeNotesGeneral.Add(new RealTimeNote
             {
                 Explanation = transformerParametricExplanation,
                 Status = transformerParametricStatus,
                 Title = resourceLoader.GetString("TransformerParametric"),
-                UriImage = new Uri(AppConstantsHelper.UriImageTransformerParametric)
+                UriImage = new Uri(AppFieldsHelper.UriImageTransformerParametric)
             }); // 1.5. Parametric Transformer.
 
             return (
@@ -1515,7 +1505,7 @@ namespace PaimonTray.Helpers
             propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
             propertySetRealTimeNotes[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
-            if (propertySetAccount[KeyStatus] is TagStatusExpired)
+            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get real-time notes from the API due to the specific account's expired status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
@@ -1539,7 +1529,7 @@ namespace PaimonTray.Helpers
                 return;
             } // end if
 
-            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
@@ -1884,7 +1874,7 @@ namespace PaimonTray.Helpers
                     } // end if...else
                 } // end if...else
 
-                if (propertySetRealTimeNotes[KeyStatus] is TagStatusUpdating)
+                if (propertySetRealTimeNotes[KeyStatus] as string == TagStatusUpdating)
                     propertySetRealTimeNotes[KeyStatus] = TagStatusReady;
             }
             catch (Exception exception)
@@ -1926,13 +1916,13 @@ namespace PaimonTray.Helpers
         /// <returns>The real-time note's status.</returns>
         private string GetRealTimeNoteStatus(object valueCurrent, object valueMax)
         {
-            var current = valueCurrent is null or not int ? AppConstantsHelper.Unknown : valueCurrent;
-            var max = valueMax is null or not int ? AppConstantsHelper.Unknown : valueMax;
+            var current = valueCurrent is null or not int ? AppFieldsHelper.Unknown : valueCurrent;
+            var max = valueMax is null or not int ? AppFieldsHelper.Unknown : valueMax;
 
             return current is 0 && max is 0
                 ? _app.SettingsH.ResLoader.GetString("RealTimeNotesStatusLocked")
-                : current is AppConstantsHelper.Unknown && max is AppConstantsHelper.Unknown
-                    ? AppConstantsHelper.Unknown
+                : current as string == AppFieldsHelper.Unknown && max as string == AppFieldsHelper.Unknown
+                    ? AppFieldsHelper.Unknown
                     : $"{current}/{max}";
         } // end method GetRealTimeNoteStatus
 
@@ -1944,7 +1934,7 @@ namespace PaimonTray.Helpers
         private string GetRegion(string keyRegion)
         {
             return keyRegion is null || !_regions.TryGetValue(keyRegion, out var region)
-                ? AppConstantsHelper.Unknown
+                ? AppFieldsHelper.Unknown
                 : region;
         } // end method GetRegion
 

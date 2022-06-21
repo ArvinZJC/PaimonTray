@@ -27,7 +27,7 @@
             <Image
                 Height="96"
                 Margin="0, 0, 16, 0"
-                Source="{x:Bind helpers:AppConstantsHelper.UriImageAppIcon}"
+                Source="{x:Bind helpers:AppFieldsHelper.UriImageAppIcon}"
                 Width="96" />
             <TextBlock
                 FontWeight="SemiBold"
@@ -52,7 +52,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementInspiration" />
-                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoInspiration}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoInspiration}">
                     <Run x:Name="RunNameGitHubRepoInspiration" />
                 </Hyperlink>
             </TextBlock>
@@ -60,11 +60,11 @@
                 Grid.Row="1"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementApiUses" />
-                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoApiUsesPrimary}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoApiUsesPrimary}">
                     <Run x:Name="RunNameGitHubRepoApiUsesPrimary" />
                 </Hyperlink>
                 <Run x:Name="RunAcknowledgementApiUsesAnd" />
-                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoApiUsesSecondary}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoApiUsesSecondary}">
                     <Run x:Name="RunNameGitHubRepoApiUsesSecondary" />
                 </Hyperlink>
             </TextBlock>
@@ -72,7 +72,7 @@
                 Grid.Row="2"
                 HorizontalAlignment="Left">
                 <Run x:Name="RunAcknowledgementAppIcon" />
-                <Hyperlink NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlAppIconSource}">
+                <Hyperlink NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlAppIconSource}">
                     <Run x:Name="RunAppIconAuthor" />
                 </Hyperlink>
             </TextBlock>
@@ -80,7 +80,7 @@
         <HyperlinkButton
             x:Name="HyperlinkButtonLicence"
             Grid.Row="4"
-            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoLicence}" />
+            NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoLicence}" />
         <StackPanel Grid.Row="5">
             <HyperlinkButton
                 x:Name="HyperlinkButtonAppSite"
@@ -92,15 +92,15 @@
         <StackPanel Grid.Row="6">
             <HyperlinkButton
                 x:Name="HyperlinkButtonGitHubRepo"
-                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepo}" />
+                NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepo}" />
             <HyperlinkButton
                 x:Name="HyperlinkButtonIssues"
-                NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGitHubRepoIssues}" />
+                NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoIssues}" />
             <HyperlinkButton x:Name="HyperlinkButtonReleaseNotes" />
         </StackPanel>
         <HyperlinkButton
             x:Name="HyperlinkButtonGiteeRepo"
             Grid.Row="7"
-            NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlGiteeRepo}" />
+            NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlGiteeRepo}" />
     </Grid>
 </Page>

@@ -28,7 +28,7 @@ namespace PaimonTray
             HttpClientH =
                 new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
             AccountsH = new AccountsHelper();
-            UrlGitHubRepoRelease = $"{AppConstantsHelper.UrlBaseGitHubRepoRelease}{AppVersion}";
+            UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersion}";
             WindowsH = new WindowsHelper();
             InitializeComponent();
         } // end constructor App

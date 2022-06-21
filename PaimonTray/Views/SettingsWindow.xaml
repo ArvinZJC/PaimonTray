@@ -66,7 +66,7 @@
                 <Image
                     Height="16"
                     Margin="16,0"
-                    Source="{x:Bind helpers:AppConstantsHelper.UriAppIcon}"
+                    Source="{x:Bind helpers:AppFieldsHelper.UriAppIcon}"
                     Width="16" />
                 <TextBlock
                     x:Name="TextBlockWindowTitle"
@@ -90,7 +90,7 @@
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:AppConstantsHelper.GlyphInfo}" />
+                            Glyph="{x:Bind helpers:AppFieldsHelper.GlyphInfo}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.FooterMenuItems>
@@ -101,7 +101,7 @@
                     <NavigationViewItem.Icon>
                         <FontIcon
                             FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:AppConstantsHelper.GlyphProcessing}" />
+                            Glyph="{x:Bind helpers:AppFieldsHelper.GlyphProcessing}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem

@@ -46,10 +46,10 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
+            if ((e.PropertyName == AccountsHelper.PropertyNameIsAccountGroupUpdated &&
                  _app.AccountsH.IsAccountGroupUpdated) ||
-                e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
-                ToggleStatusVisibility();
+                e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating ||
+                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the accounts settings page's loaded event.
@@ -63,29 +63,33 @@ namespace PaimonTray.Views
             ToggleStatusVisibility();
 
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
+            var realTimeNotesIntervalRefresh =
+                propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int?;
+            var serverDefault = propertySetSettings[SettingsHelper.KeyServerDefault] as string;
 
             // Show the settings' selection.
-            ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] switch
-                {
-                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1 =>
-                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1,
-                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2 =>
-                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2,
-                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3 =>
-                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3,
-                    SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4 =>
-                        ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4,
-                    SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal =>
-                        ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal,
-                    _ => null
-                };
-            ComboBoxServerDefault.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
-            {
-                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
-                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
-                _ => null
-            };
+            if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1)
+                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1;
+            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2)
+                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2;
+            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3)
+                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3;
+            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4)
+                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4;
+            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal)
+                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
+                    ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal;
+            else ComboBoxRealTimeNotesIntervalRefresh.SelectedItem = null;
+
+            if (serverDefault == AccountsHelper.TagServerCn) ComboBoxServerDefault.SelectedItem = ComboBoxItemServerCn;
+            else if (serverDefault == AccountsHelper.TagServerGlobal)
+                ComboBoxServerDefault.SelectedItem = ComboBoxItemServerGlobal;
+            else ComboBoxServerDefault.SelectedItem = null;
+
             ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts.IsOn =
                 propertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultAccountGroupsCheckRefreshWhenAppStarts;
@@ -186,7 +190,7 @@ namespace PaimonTray.Views
                 _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;
 
             InfoBarServerDefaultAppliedLater.IsOpen = true;
-            InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
+            InfoBarServerDefaultAppliedLater.Margin = new Thickness(0, 0, 0, AppFieldsHelper.InfoBarMarginBottom);
         } // end method ComboBoxServerDefault_OnSelectionChanged
 
         // Handle the dispatcher queue timer's tick event.
@@ -240,7 +244,7 @@ namespace PaimonTray.Views
 
             InfoBarLoginAlternativeAlwaysAppliedLater.IsOpen = true;
             InfoBarLoginAlternativeAlwaysAppliedLater.Margin =
-                new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
+                new Thickness(0, 0, 0, AppFieldsHelper.InfoBarMarginBottom);
         } // end method ToggleSwitchLoginAlternativeAlways_OnToggled
 
         #endregion Event Handlers

@@ -227,7 +227,7 @@
                             </Button.Flyout>
                             <FontIcon
                                 FontSize="{ThemeResource ControlContentThemeFontSize}"
-                                Glyph="{x:Bind helpers:AppConstantsHelper.GlyphSwitchUser}" />
+                                Glyph="{x:Bind helpers:AppFieldsHelper.GlyphSwitchUser}" />
                         </Button>
                     </Grid>
                     <!-- The character's real-time notes grid. -->
@@ -484,7 +484,7 @@
                                                 <PersonPicture.ProfilePicture>
                                                     <BitmapImage
                                                         DecodePixelHeight="32"
-                                                        UriSource="{x:Bind helpers:AppConstantsHelper.UriImagePaimonSurprise}" />
+                                                        UriSource="{x:Bind helpers:AppFieldsHelper.UriImagePaimonSurprise}" />
                                                 </PersonPicture.ProfilePicture>
                                             </PersonPicture>
                                         </Grid>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
+using PaimonTray.Helpers;
 using System;
 using Windows.ApplicationModel;
-using PaimonTray.Helpers;
 
 namespace PaimonTray.Views
 {
@@ -22,7 +22,7 @@ namespace PaimonTray.Views
             UpdateUiText();
 
             HyperlinkButtonReleaseNotes.NavigateUri =
-                new Uri(_app?.UrlGitHubRepoRelease ?? AppConstantsHelper.UrlGitHubRepoReleases);
+                new Uri(_app?.UrlGitHubRepoRelease ?? AppFieldsHelper.UrlGitHubRepoReleases);
             TextBlockCopyright.Text = $"© {DateTime.Now.Year} {Package.Current.PublisherDisplayName}";
         } // end constructor AboutAppPage
 

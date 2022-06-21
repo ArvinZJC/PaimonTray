@@ -114,7 +114,7 @@
                                     <HyperlinkButton
                                         x:Name="HyperlinkButtonWebView2RuntimeDownload"
                                         Grid.Column="1"
-                                        NavigateUri="{x:Bind helpers:AppConstantsHelper.UrlWebView2Runtime}" />
+                                        NavigateUri="{x:Bind helpers:AppFieldsHelper.UrlWebView2Runtime}" />
                                 </InfoBar.ActionButton>
                             </InfoBar>
                             <!-- The login info bar. -->
@@ -167,7 +167,7 @@
                                         <AnimatedIcon.FallbackIconSource>
                                             <FontIconSource
                                                 FontSize="{ThemeResource ToolTipContentThemeFontSize}"
-                                                Glyph="{x:Bind helpers:AppConstantsHelper.GlyphAccept}" />
+                                                Glyph="{x:Bind helpers:AppFieldsHelper.GlyphAccept}" />
                                         </AnimatedIcon.FallbackIconSource>
                                         <AnimatedIcon.Source>
                                             <animatedVisuals:AnimatedAcceptVisualSource />

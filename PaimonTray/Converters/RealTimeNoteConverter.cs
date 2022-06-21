@@ -52,10 +52,10 @@ namespace PaimonTray.Converters
             {
                 ParameterExpeditionAvatarSideIcon => value is null ? Visibility.Collapsed : Visibility.Visible,
                 ParameterExpeditionAvatarSideIconUnknown => value is null ? Visibility.Visible : Visibility.Collapsed,
-                ParameterExpeditionStatusComplete => value is AccountsHelper.ExpeditionStatusFinished
+                ParameterExpeditionStatusComplete => value as string == AccountsHelper.ExpeditionStatusFinished
                     ? Visibility.Visible
                     : Visibility.Collapsed,
-                ParameterExpeditionStatusIncomplete => value is AccountsHelper.ExpeditionStatusOngoing
+                ParameterExpeditionStatusIncomplete => value as string == AccountsHelper.ExpeditionStatusOngoing
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 _ => isForVisibility ? Visibility.Collapsed : null

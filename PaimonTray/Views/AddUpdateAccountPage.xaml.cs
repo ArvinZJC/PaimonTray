@@ -41,8 +41,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
-                ToggleStatusVisibility();
+            if (e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating ||
+                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the loaded event of the page for adding/updating an account.
@@ -93,7 +93,7 @@ namespace PaimonTray.Views
         private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppConstantsHelper.UrlCookiesHowToGet);
+            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UrlCookiesHowToGet);
         } // end method ButtonLoginAssist_OnClick
 
         // Handle the click event of the button for confirming completing login.
@@ -162,7 +162,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the alternative login text box's text changed event.
@@ -356,7 +356,7 @@ namespace PaimonTray.Views
                     var resourceLoader = _app.SettingsH.ResLoader;
 
                     ButtonLoginAssist.IsEnabled = false;
-                    FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphUpdateRestore;
+                    FontIconLoginAssist.Glyph = AppFieldsHelper.GlyphUpdateRestore;
                     GridLogin.Children.Add(_webView2LoginWebPage);
                     Grid.SetRow(_webView2LoginWebPage, 1);
                     TextBlockLoginHeaderWebPage.Text = resourceLoader.GetString("LoginHeaderWebPage");
@@ -371,12 +371,12 @@ namespace PaimonTray.Views
                     UseAlternativeLoginMethod();
                 } // end try...catch
 
-            ComboBoxServer.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
-            {
-                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
-                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
-                _ => null
-            };
+            var serverDefault = propertySetSettings[SettingsHelper.KeyServerDefault] as string;
+
+            if (serverDefault == AccountsHelper.TagServerCn) ComboBoxServer.SelectedItem = ComboBoxItemServerCn;
+            else if (serverDefault == AccountsHelper.TagServerGlobal)
+                ComboBoxServer.SelectedItem = ComboBoxItemServerGlobal;
+            else ComboBoxServer.SelectedItem = null;
         } // end method ChooseLoginMethodAsync
 
         /// <summary>
@@ -484,11 +484,11 @@ namespace PaimonTray.Views
                         break;
                 } // end switch-case
 
-                if (cookieName is not (AccountsHelper.CookieKeyUid or AccountsHelper.CookieKeyToken)) continue;
+                if (cookieName != AccountsHelper.CookieKeyUid || cookieName != AccountsHelper.CookieKeyToken) continue;
 
                 cookies.Add($"{cookieName}={cookieValue};");
 
-                if (cookieName is AccountsHelper.CookieKeyUid) aUid = cookieValue;
+                if (cookieName == AccountsHelper.CookieKeyUid) aUid = cookieValue;
 
                 if (cookies.Count is 2) break; // The UID and token cookies.
             } // end foreach
@@ -516,7 +516,7 @@ namespace PaimonTray.Views
         private void ShowLoginInfoBar(string message, string title,
             InfoBarSeverity infoBarSeverity = InfoBarSeverity.Informational)
         {
-            InfoBarLogin.Margin = new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
+            InfoBarLogin.Margin = new Thickness(0, 0, 0, AppFieldsHelper.InfoBarMarginBottom);
             InfoBarLogin.Message = message;
             InfoBarLogin.Severity = infoBarSeverity;
             InfoBarLogin.Title = title;
@@ -570,7 +570,7 @@ namespace PaimonTray.Views
             {
                 HyperlinkButtonWebView2RuntimeDownload.Content = resourceLoader.GetString("WebView2RuntimeDownload");
                 InfoBarLoginAlternativeAutomatically.Margin =
-                    new Thickness(0, 0, 0, AppConstantsHelper.InfoBarMarginBottom);
+                    new Thickness(0, 0, 0, AppFieldsHelper.InfoBarMarginBottom);
                 InfoBarLoginAlternativeAutomatically.Message =
                     resourceLoader.GetString("LoginAlternativeAutomaticallyExtraInfo");
                 InfoBarLoginAlternativeAutomatically.Title = resourceLoader.GetString("LoginAlternativeAutomatically");
@@ -579,7 +579,7 @@ namespace PaimonTray.Views
 
             ButtonLoginAlternative.Content = resourceLoader.GetString("Login");
             ButtonLoginAlternativeClear.Content = resourceLoader.GetString("Clear");
-            FontIconLoginAssist.Glyph = AppConstantsHelper.GlyphHelp;
+            FontIconLoginAssist.Glyph = AppFieldsHelper.GlyphHelp;
             GridLoginAlternative.Visibility = Visibility.Visible;
             RunLoginHeaderCookies.Text = resourceLoader.GetString("Cookies");
             RunLoginHeaderEnter.Text = resourceLoader.GetString("Enter");

@@ -22,20 +22,6 @@ namespace PaimonTray.Helpers
     /// </summary>
     public class WindowsHelper
     {
-        #region Constants
-
-        /// <summary>
-        /// The main window's position offset.
-        /// </summary>
-        public const int MainWindowPositionOffset = 12;
-
-        /// <summary>
-        /// The main window's side length offset.
-        /// </summary>
-        public const int MainWindowSideLengthOffset = 2;
-
-        #endregion Constants
-
         #region Constructors
 
         /// <summary>
@@ -130,6 +116,16 @@ namespace PaimonTray.Helpers
         /// </summary>
         private App _app;
 
+        /// <summary>
+        /// The main window's position offset.
+        /// </summary>
+        public static readonly int MainWindowPositionOffset = 12;
+
+        /// <summary>
+        /// The main window's side length offset.
+        /// </summary>
+        public static readonly int MainWindowSideLengthOffset = 2;
+
         #endregion Fields
 
         #region Methods
@@ -175,8 +171,8 @@ namespace PaimonTray.Helpers
             var mainExistingWindow = GetExistingMainWindow();
             var workArea =
                 GetWorkArea(mainExistingWindow is null ? new WindowId() : GetWindowId(mainExistingWindow.Win));
-            const int workAreaOffset = 2 * MainWindowPositionOffset;
-            const int workAreaAdditionalOffset = 4 * MainWindowPositionOffset; // Reserved for the navigation pane.
+            var workAreaOffset = 2 * MainWindowPositionOffset;
+            var workAreaAdditionalOffset = 4 * MainWindowPositionOffset; // Reserved for the navigation pane.
 
             return new SizeInt32(
                 workArea.Width - workAreaOffset - (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset),
