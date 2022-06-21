@@ -127,7 +127,7 @@ namespace PaimonTray.Helpers
             if (string.IsNullOrWhiteSpace(query) || !query.Contains('=')) Log.Warning($"Invalid query ({query}).");
 
             return
-                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLower()}";
+                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
         } // end method GenerateDynamicSecret
 
         /// <summary>
@@ -136,11 +136,23 @@ namespace PaimonTray.Helpers
         /// <param name="cookies">The cookies.</param>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="url">The URL.</param>
+        /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
+        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url)
+        {
+            return await SendGetRequestAsync(cookies, isServerCn, false, null, url);
+        } // end method SendGetRequestAsync(String, Boolean, String)
+
+        /// <summary>
+        /// Send an HTTP GET request.
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret.</param>
         /// <param name="query">The query.</param>
+        /// <param name="url">The URL.</param>
         /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
-        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url,
-            bool needDynamicSecret = false, string query = null)
+        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, bool needDynamicSecret,
+            string query, string url)
         {
             if (string.IsNullOrWhiteSpace(url) || !url.StartsWith("http"))
             {
@@ -204,7 +216,7 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             return await httpResponseMessage.Content.ReadAsStringAsync();
-        } // end method SendGetRequestAsync
+        } // end method SendGetRequestAsync(String, Boolean, Boolean, String, String)
 
         #endregion Methods
     } // end class HttpClientHelper

@@ -11,7 +11,7 @@ using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
 {
-    internal class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the app.

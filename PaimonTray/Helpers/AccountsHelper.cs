@@ -458,7 +458,8 @@ namespace PaimonTray.Helpers
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
-            _ = CheckAccountsAsync(_app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
+            _ = CheckAccountsAsync(
+                _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
             SetRealTimeNotesDispatcherQueueTimerInterval();
         } // end constructor AccountsHelper
 
@@ -868,9 +869,19 @@ namespace PaimonTray.Helpers
         /// Check the account.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
+        /// <returns>Void.</returns>
+        public async Task CheckAccountAsync(string containerKeyAccount)
+        {
+            await CheckAccountAsync(containerKeyAccount, false);
+        } // end method CheckAccountAsync(String)
+
+        /// <summary>
+        /// Check the account.
+        /// </summary>
+        /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false)
+        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -906,14 +917,23 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountAsync
+        } // end method CheckAccountAsync(String, Boolean)
+
+        /// <summary>
+        /// Check the accounts.
+        /// </summary>
+        /// <returns>Void.</returns>
+        public async Task CheckAccountsAsync()
+        {
+            await CheckAccountsAsync(true);
+        } // end method CheckAccountsAsync
 
         /// <summary>
         /// Check the accounts.
         /// </summary>
         /// <param name="shouldCheckAccount">A flag indicating if an account should be checked.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountsAsync(bool shouldCheckAccount = true)
+        public async Task CheckAccountsAsync(bool shouldCheckAccount)
         {
             IsManaging = true;
 
@@ -925,7 +945,7 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountsAsync
+        } // end method CheckAccountsAsync(Boolean)
 
         /// <summary>
         /// Check if the selected character's UID can be found in the account group info lists.
@@ -1533,7 +1553,7 @@ namespace PaimonTray.Helpers
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
-                isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
+                isServerCn, true, query, $"{urlBaseRealTimeNotes}{query}"); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
