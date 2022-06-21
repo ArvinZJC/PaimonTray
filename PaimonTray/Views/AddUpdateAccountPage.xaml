@@ -74,6 +74,7 @@
                             </Grid>
                             <ComboBox
                                 x:Name="ComboBoxServer"
+                                DropDownClosed="ComboBox_OnDropDownClosed"
                                 Grid.Column="1"
                                 SelectionChanged="ComboBoxServer_OnSelectionChanged"
                                 VerticalAlignment="Center">

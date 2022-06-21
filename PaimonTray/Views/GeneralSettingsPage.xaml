@@ -104,6 +104,7 @@
                 </Grid>
                 <ComboBox
                     x:Name="ComboBoxLanguage"
+                    DropDownClosed="ComboBox_OnDropDownClosed"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
                     SelectionChanged="ComboBoxLanguage_OnSelectionChanged"
@@ -159,6 +160,7 @@
                 </Grid>
                 <ComboBox
                     x:Name="ComboBoxTheme"
+                    DropDownClosed="ComboBox_OnDropDownClosed"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
                     SelectionChanged="ComboBoxTheme_OnSelectionChanged"

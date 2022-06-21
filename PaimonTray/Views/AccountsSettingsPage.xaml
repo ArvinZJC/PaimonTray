@@ -393,6 +393,7 @@
                 </Grid>
                 <ComboBox
                     x:Name="ComboBoxServerDefault"
+                    DropDownClosed="ComboBox_OnDropDownClosed"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
                     SelectionChanged="ComboBoxServerDefault_OnSelectionChanged"
@@ -466,6 +467,7 @@
                 </Grid>
                 <ComboBox
                     x:Name="ComboBoxRealTimeNotesIntervalRefresh"
+                    DropDownClosed="ComboBox_OnDropDownClosed"
                     Grid.Column="1"
                     Margin="0, 0, -8, 0"
                     SelectionChanged="ComboBoxRealTimeNotesIntervalRefresh_OnSelectionChanged"

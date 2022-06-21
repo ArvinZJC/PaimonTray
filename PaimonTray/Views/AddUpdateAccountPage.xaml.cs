@@ -114,6 +114,16 @@ namespace PaimonTray.Views
             AnimatedIcon.SetState(AnimatedIconLoginCompleteConfirm, "NormalOn"); // NormalOffToNormalOn
         } // end method ButtonLoginCompleteConfirm_OnPointerReleased
 
+#pragma warning disable CA1822 // Mark members as static
+        // Handle the combo box's drop-down closed event.
+        private void ComboBox_OnDropDownClosed(object sender, object e)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            if (sender is not ComboBox comboBox) return;
+
+            comboBox.MinWidth = 0;
+        } // end method ComboBox_OnDropDownClosed
+
         // Handle the server combo box item's loaded event.
         private void ComboBoxItemServer_OnLoaded(object sender, RoutedEventArgs e)
         {
