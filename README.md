@@ -24,9 +24,9 @@ Paimon now makes real-time notes available on your Windows taskbar corner (aka t
 
 PaimonTray also has some other highlights that may interest you. These include but not limited to:
 
-- Web page login method: logging into your account on the specific web page just like in a browser<sup id="source1">[1](#footnote1)</sup> to add/update an account.
+- Web page login method: log into your account on the specific web page just like in a browser<sup id="source1">[1](#footnote1)</sup> to add/update an account.
 - Alternative login method: logging into your account by entering cookies manually is another way to add/update an account.
-- Not only the CN server (aka a miHoYo account), but also the global (aka a HoYoLAB account).
+- Not only the CN server (aka a miHoYo account) but also the global (aka a HoYoLAB account).
 - Multiple accounts<sup id="source2">[2](#footnote2)</sup> with nifty management: all your added accounts can be updated, checked and refreshed, or removed.
 - Only your selected characters: all characters (aka Genshin Impact accounts) linked with a miHoYo/HoYoLAB account are there for you to select whether to allow retrieving real-time notes.
 - Configurable real-time notes refresh interval.
