@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using System;
 using System.Runtime.InteropServices;
 using Windows.System;
 
@@ -80,8 +81,10 @@ namespace PaimonTray.Helpers
         /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/dispatcherqueue/ns-dispatcherqueue-dispatcherqueueoptions
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        private struct DispatcherQueueOptions
+        private struct DispatcherQueueOptions : IEquatable<DispatcherQueueOptions>
         {
+            #region Fields
+
             /// <summary>
             /// The size of this dispatcher queue options structure.
             /// </summary>
@@ -96,6 +99,63 @@ namespace PaimonTray.Helpers
             /// Specify whether to initialise COM apartment on the new thread as an application single-threaded apartment (ASTA) or single-threaded apartment (STA).
             /// </summary>
             internal int apartmentType;
+
+            #endregion Fields
+
+            #region Methods
+
+            /// <summary>
+            /// Determine whether 2 values are equal.
+            /// </summary>
+            /// <param name="left">The value for comparison on the left of the operator.</param>
+            /// <param name="right">The value for comparison on the right of the operator.</param>
+            /// <returns>A flag indicating whether 2 values are equal.</returns>
+            public static bool operator ==(DispatcherQueueOptions left, DispatcherQueueOptions right)
+            {
+                return left.Equals(right);
+            } // end operator ==
+
+            /// <summary>
+            /// Determine whether 2 values are not equal.
+            /// </summary>
+            /// <param name="left">The value for comparison on the left of the operator.</param>
+            /// <param name="right">The value for comparison on the right of the operator.</param>
+            /// <returns>A flag indicating whether 2 values are not equal.</returns>
+            public static bool operator !=(DispatcherQueueOptions left, DispatcherQueueOptions right)
+            {
+                return !(left == right);
+            } // end operator !=
+
+            /// <summary>
+            /// Determine whether 2 structures are equal.
+            /// </summary>
+            /// <param name="other">The structure to compare with the current structure.</param>
+            /// <returns>A flag indicating whether 2 structures are equal.</returns>
+            public bool Equals(DispatcherQueueOptions other)
+            {
+                return apartmentType == other.apartmentType && dwSize == other.dwSize && threadType == other.threadType;
+            } // end method Equals(DispatcherQueueOptions)
+
+            /// <summary>
+            /// Determine whether 2 object instances are equal.
+            /// </summary>
+            /// <param name="obj">The object to compare with the current object.</param>
+            /// <returns>A flag indicating whether 2 object instances are equal.</returns>
+            public override bool Equals(object obj)
+            {
+                return obj is DispatcherQueueOptions equatable && Equals(equatable);
+            } // end method Equals(Object)
+
+            /// <summary>
+            /// Get the hash code.
+            /// </summary>
+            /// <returns>The hash code.</returns>
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(dwSize, threadType, apartmentType);
+            } // end method GetHashCode
+
+            #endregion Methods
         } // end struct DispatcherQueueOptions
 
         #endregion Structures
