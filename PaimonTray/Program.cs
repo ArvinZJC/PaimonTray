@@ -66,7 +66,7 @@ namespace PaimonTray
         /// <returns>A flag indicating if the app should be redirected to the new app instance.</returns>
         private static bool DecideRedirection()
         {
-            var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.Id.Name);
+            var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.Id.FamilyName);
 
             if (appInstance.IsCurrent) return false;
 
