@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using WinRT;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
@@ -19,7 +20,7 @@ namespace PaimonTray
         static void
             Main() // Note: STAThread is required for the app to run in the background. The error of defining more than 1 entry point can be ignored.
         {
-            WinRT.ComWrappersSupport.InitializeComWrappers();
+            ComWrappersSupport.InitializeComWrappers();
 
             if (!DecideRedirection())
                 Application.Start(p =>
@@ -65,7 +66,7 @@ namespace PaimonTray
         /// <returns>A flag indicating if the app should be redirected to the new app instance.</returns>
         private static bool DecideRedirection()
         {
-            var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.DisplayName);
+            var appInstance = AppInstance.FindOrRegisterForKey(Package.Current.Id.Name);
 
             if (appInstance.IsCurrent) return false;
 
