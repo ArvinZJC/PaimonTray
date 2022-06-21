@@ -330,7 +330,6 @@ namespace PaimonTray.Views
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
-        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
         private void UpdateRealTimeNotesArea(string containerKeyAccount, string containerKeyCharacter)
         {
             var (realTimeNotesExpeditionsHeader, realTimeNotesExpeditionNotes, realTimeNotesGeneralNotes,

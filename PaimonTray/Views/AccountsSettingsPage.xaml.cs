@@ -116,7 +116,7 @@ namespace PaimonTray.Views
             var appBarButton = sender as AppBarButton;
             var shouldCheckRefreshAccountGroups = appBarButton == AppBarButtonAccountGroupsCheckRefresh;
 
-            if (shouldCheckRefreshAccountGroups) _app.AccountsH.CheckAccountsAsync();
+            if (shouldCheckRefreshAccountGroups) _ = _app.AccountsH.CheckAccountsAsync();
             else await _app.AccountsH.CheckAccountAsync(appBarButton?.Tag as string, true);
         } // end method AppBarButtonAccountGroupsCheckRefresh_OnClick
 

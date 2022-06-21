@@ -29,7 +29,7 @@ namespace PaimonTray.Views
             _app = Application.Current as App;
             _mainWindow = _app?.WindowsH.GetExistingMainWindow()?.Win as MainWindow;
             InitializeComponent();
-            ChooseLoginMethodAsync();
+            _ = ChooseLoginMethodAsync();
             ToggleStatusVisibility();
             UpdateUiText();
         } // end constructor AddUpdateAccountPage
@@ -80,7 +80,7 @@ namespace PaimonTray.Views
         // Handle the alternative login button's click event.
         private void ButtonLoginAlternative_OnClick(object sender, RoutedEventArgs e)
         {
-            LogInAsync();
+            _ = LogInAsync();
         } // end method ButtonLoginAlternative_OnClick
 
         // Handle the click event of the button for clearing cookies for the alternative login.
@@ -99,7 +99,7 @@ namespace PaimonTray.Views
         // Handle the click event of the button for confirming completing login.
         private void ButtonLoginCompleteConfirm_OnClick(object sender, RoutedEventArgs e)
         {
-            LogInAsync();
+            _ = LogInAsync();
         } // end method ButtonLoginCompleteConfirm_OnClick
 
         // Handle the pointer pressed event of the button for confirming completing login.
@@ -190,7 +190,7 @@ namespace PaimonTray.Views
             {
                 // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
                 case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlBaseLoginEndMiHoYo):
-                    LogInAsync();
+                    _ = LogInAsync();
                     break;
 
                 case false:
@@ -232,7 +232,7 @@ namespace PaimonTray.Views
         /// </summary>
         /// <param name="aUid">The account's UID.</param>
         /// <param name="cookies">The cookies.</param>
-        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        /// <returns>Void.</returns>
         private async Task AddUpdateAccountAsync(string aUid, string cookies)
         {
             var applicationDataContainerAccounts = _app.AccountsH.ApplicationDataContainerAccounts;
@@ -346,7 +346,8 @@ namespace PaimonTray.Views
         /// <summary>
         /// Choose the login method automatically.
         /// </summary>
-        private async void ChooseLoginMethodAsync()
+        /// <returns>Void.</returns>
+        private async Task ChooseLoginMethodAsync()
         {
             var propertySetSettings = _app.SettingsH.PropertySetSettings;
 
@@ -419,7 +420,8 @@ namespace PaimonTray.Views
         /// <summary>
         /// Log in.
         /// </summary>
-        private async void LogInAsync()
+        /// <returns>Void.</returns>
+        private async Task LogInAsync()
         {
             _app.AccountsH.IsAddingUpdating = true;
 

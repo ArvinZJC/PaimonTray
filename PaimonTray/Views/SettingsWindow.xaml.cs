@@ -8,6 +8,7 @@ using PaimonTray.Helpers;
 using PaimonTray.Models;
 using Serilog;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Graphics;
 using Windows.Storage;
@@ -28,7 +29,7 @@ namespace PaimonTray.Views
         {
             _app = Application.Current as App;
             InitializeComponent();
-            CustomiseWindowAsync();
+            _ = CustomiseWindowAsync();
             UpdateUiText();
         } // end constructor SettingsWindow
 
@@ -176,7 +177,8 @@ namespace PaimonTray.Views
         /// <summary>
         /// Customise the window.
         /// </summary>
-        private async void CustomiseWindowAsync()
+        /// <returns>Void.</returns>
+        private async Task CustomiseWindowAsync()
         {
             var windowId = WindowsHelper.GetWindowId(this);
 

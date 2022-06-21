@@ -458,8 +458,7 @@ namespace PaimonTray.Helpers
                 ApplicationData.Current.LocalSettings.CreateContainer(ContainerKeyAccounts,
                     ApplicationDataCreateDisposition
                         .Always); // The container's containers are in a read-only dictionary, and should not be stored.
-            CheckAccountsAsync(
-                _app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
+            _ = CheckAccountsAsync(_app?.SettingsH.PropertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] is true);
             SetRealTimeNotesDispatcherQueueTimerInterval();
         } // end constructor AccountsHelper
 
@@ -493,7 +492,7 @@ namespace PaimonTray.Helpers
         // Handle the real-time notes dispatcher queue timer's tick event.
         private void DispatcherQueueTimerRealTimeNotes_OnTick(object sender, object e)
         {
-            GetRealTimeNotesFromApiForAllEnabledAsync();
+            _ = GetRealTimeNotesFromApiForAllEnabledAsync();
         } // end method DispatcherQueueTimerRealTimeNotes_OnTick
 
         #endregion Event Handlers
@@ -781,7 +780,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="characters">A list of characters.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
-        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        /// <returns>Void.</returns>
         public async Task AddUpdateCharactersAsync(ImmutableList<Character> characters,
             string containerKeyAccount)
         {
@@ -870,7 +869,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
-        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        /// <returns>Void.</returns>
         public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
@@ -913,7 +912,8 @@ namespace PaimonTray.Helpers
         /// Check the accounts.
         /// </summary>
         /// <param name="shouldCheckAccount">A flag indicating if an account should be checked.</param>
-        public async void CheckAccountsAsync(bool shouldCheckAccount = true)
+        /// <returns>Void.</returns>
+        public async Task CheckAccountsAsync(bool shouldCheckAccount = true)
         {
             IsManaging = true;
 
@@ -921,7 +921,7 @@ namespace PaimonTray.Helpers
                 if (shouldCheckAccount) await CheckAccountAsync(containerKeyAccount);
                 else AddUpdateAccountGroup(containerKeyAccount);
 
-            if (!shouldCheckAccount) GetRealTimeNotesFromApiForAllEnabledAsync();
+            if (!shouldCheckAccount) _ = GetRealTimeNotesFromApiForAllEnabledAsync();
 
             CheckSelectedCharacterUid();
             IsManaging = false;
@@ -1468,7 +1468,7 @@ namespace PaimonTray.Helpers
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
-        /// <returns>A task just to indicate that any later operation needs to wait.</returns>
+        /// <returns>Void.</returns>
         private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter,
             bool isStandalone = true)
         {
@@ -1892,7 +1892,8 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Get the real-time notes from the API for all enabled characters.
         /// </summary>
-        private async void GetRealTimeNotesFromApiForAllEnabledAsync()
+        /// <returns>Void.</returns>
+        private async Task GetRealTimeNotesFromApiForAllEnabledAsync()
         {
             UidCharacterRealTimeNotesUpdated = string.Empty;
 
