@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Runtime.InteropServices;
+using Windows.ApplicationModel;
 using Windows.System;
 
 namespace PaimonTray.Helpers
@@ -152,7 +153,7 @@ namespace PaimonTray.Helpers
             /// <returns>The hash code.</returns>
             public override int GetHashCode()
             {
-                return dwSize.GetHashCode() ^ threadType.GetHashCode() ^ apartmentType.GetHashCode();
+                return Package.Current.Id.FamilyName.GetHashCode();
             } // end method GetHashCode
 
             #endregion Methods
