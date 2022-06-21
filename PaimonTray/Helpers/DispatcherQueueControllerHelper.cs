@@ -153,7 +153,7 @@ namespace PaimonTray.Helpers
             /// <returns>The hash code.</returns>
             public override int GetHashCode()
             {
-                return Package.Current.Id.FamilyName.GetHashCode();
+                return nameof(DispatcherQueueOptions).GetHashCode();
             } // end method GetHashCode
 
             #endregion Methods
