@@ -484,7 +484,7 @@ namespace PaimonTray.Views
                         break;
                 } // end switch-case
 
-                if (cookieName != AccountsHelper.CookieKeyUid || cookieName != AccountsHelper.CookieKeyToken) continue;
+                if (cookieName != AccountsHelper.CookieKeyUid && cookieName != AccountsHelper.CookieKeyToken) continue;
 
                 cookies.Add($"{cookieName}={cookieValue};");
 
