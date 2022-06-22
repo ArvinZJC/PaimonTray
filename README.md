@@ -54,7 +54,7 @@ You can get PaimonTray from:
 
   > ❌ Should be available soon! Pending code signing and final validation.
 
-  If the above recommended way is inconvenient for you, downloading the latest MSIX bundle file (`PaimonTray_<version>.msixbundle`) is another option. You can double-click the downloaded file to install the app via the app installer. In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
+  If the above recommended way is inconvenient for you, downloading the `PaimonTray_<version>.msixbundle` file is another option. You can double-click the downloaded file to install the app via the app installer. In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
 
   ```PowerShell
   # NOTE: If you are using PowerShell 7+, please run the following command before using Add-AppxPackage.
@@ -63,11 +63,15 @@ You can get PaimonTray from:
   Add-AppxPackage PaimonTray_<version>.msixbundle
   ```
 
+  > Q: Why does this `.msixbundle` file a little large?
+  >
+  > A: The framework-dependent deployment has already reduced the file size significantly. However, first, the file bundles the multiple architecture versions of the installer into one entity. Second, it is [a C#/WinRT issue that IL trimming is currently unsupported](https://github.com/microsoft/CsWinRT/issues/373).
+
 ## ❗ ATTENTION
 
 > May I have your attention pls? 🔥
 
-1. This project is licensed under [the GPL-3.0 Licence](./LICENCE). By 19 June 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following author/projects.
+1. This project is licensed under [the GPL-3.0 Licence](./LICENCE). By 22 June 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following author/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).

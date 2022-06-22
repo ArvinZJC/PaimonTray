@@ -54,7 +54,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
   > ❌ 应在最近上线！待签名和最终验证。
 
-  若您不方便使用上面推荐的方式，则下载 MSIX 捆绑包（`PaimonTray_<version>.msixbundle`）也是一种选择。您可双击下载的文件来通过应用安装程序安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
+  若您不方便使用上面推荐的方式，则下载 `PaimonTray_<version>.msixbundle` 文件也是一种选择。您可双击下载的文件来通过应用安装程序安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
 
   ```PowerShell
   # 注意: 若您使用 PowerShell 7+，则请在使用 Add-AppxPackage 前先运行如下命令：
@@ -63,11 +63,15 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
   Add-AppxPackage PaimonTray_<version>.msixbundle
   ```
 
+  > 问：为什么这个 `.msixbundle` 文件有点儿大？
+  >
+  > 答: 依赖于框架式的部署已经大幅减小文件大小。不过呢，首先，这个文件将安装程序的多个体系结构版本捆绑成一个实体。其次，[C#/WinRT 目前暂不支持 IL 剪裁](https://github.com/microsoft/CsWinRT/issues/373).
+
 ## ❗ 注意
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 此项目使用 [GPL-3.0 协议](./LICENCE)。截至 2022 年 6 月 19 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 此项目使用 [GPL-3.0 协议](./LICENCE)。截至 2022 年 6 月 22 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
