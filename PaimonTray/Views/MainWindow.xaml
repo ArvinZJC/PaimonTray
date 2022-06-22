@@ -140,11 +140,7 @@
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
                                 x:Name="MenuFlyoutItemMainMenuMainWindowHide"
-                                Command="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphHide}" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                Command="{x:Bind _app.CommandsVm.ToggleMainWindowVisibilityCommand}" />
                             <MenuFlyoutItem
                                 Command="{x:Bind _app.CommandsVm.ExitAppCommand}"
                                 CommandParameter="{x:Bind TaskbarIconApp}" />

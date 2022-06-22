@@ -166,7 +166,6 @@ namespace PaimonTray.ViewModels
                     if (_mainWindow.Visible)
                     {
                         _mainWindow.Hide();
-                        _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Icon = new SymbolIcon(Symbol.View);
                         _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
                             resourceLoader.GetString("MainWindowShow");
 
@@ -178,8 +177,6 @@ namespace PaimonTray.ViewModels
                     else
                     {
                         _mainWindow.Show();
-                        _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Icon =
-                            new FontIcon { Glyph = AppFieldsHelper.GlyphHide };
                         _mainWindow.MenuFlyoutItemAppMenuMainWindowVisibility.Text =
                             resourceLoader.GetString("MainWindowHide");
                     } // end if...else

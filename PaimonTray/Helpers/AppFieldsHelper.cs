@@ -28,11 +28,6 @@
         public static readonly string GlyphHelp = "\xE897";
 
         /// <summary>
-        /// The code of the glyph Hide.
-        /// </summary>
-        public static readonly string GlyphHide = "\xED1A";
-
-        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public static readonly string GlyphInfo = "\xE946";
