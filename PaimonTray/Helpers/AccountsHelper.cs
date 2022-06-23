@@ -644,11 +644,6 @@ namespace PaimonTray.Helpers
         public static readonly string TagStatusUpdating = "updating";
 
         /// <summary>
-        /// The base URL for indicating the success of logging into miHoYo.
-        /// </summary>
-        public static readonly string UrlBaseLoginEndMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter/postList?";
-
-        /// <summary>
         /// The HoYoLAB cookies URL.
         /// </summary>
         public static readonly string UrlCookiesHoYoLab = "https://www.hoyolab.com";
@@ -666,13 +661,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The URL for logging into miHoYo.
         /// </summary>
-        public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys/accountCenter";
-
-        /// <summary>
-        /// The URL for indicating the success of redirecting to the actual URL for logging into miHoYo.
-        /// </summary>
-        public static readonly string UrlLoginRedirectMiHoYo =
-            "https://user.mihoyo.com/?cb_url=//bbs.mihoyo.com/ys/accountCenter&week=1#/login";
+        public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys";
 
         /// <summary>
         /// The server key.

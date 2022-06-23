@@ -162,7 +162,6 @@
                                     IsEnabled="False"
                                     Padding="0"
                                     Style="{ThemeResource AccentButtonStyle}"
-                                    Visibility="Collapsed"
                                     Width="22">
                                     <AnimatedIcon x:Name="AnimatedIconLoginCompleteConfirm">
                                         <AnimatedIcon.FallbackIconSource>

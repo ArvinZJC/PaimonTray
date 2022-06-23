@@ -146,12 +146,8 @@ namespace PaimonTray.Views
             var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
             var webView2LoginWebPageSource = _webView2LoginWebPage.Source.ToString();
 
-            if (isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlBaseLoginEndMiHoYo))
-                _app.AccountsH.IsAddingUpdating = true;
-
             ButtonLoginAssist.IsEnabled =
-                !((isServerCn && (webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo) ||
-                                  webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginRedirectMiHoYo))) ||
+                !((isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginMiHoYo)) ||
                   (!isServerCn && webView2LoginWebPageSource.Contains(AccountsHelper.UrlLoginHoYoLab)));
         } // end method CoreWebView2LoginWebPage_OnSourceChanged
 
@@ -186,17 +182,7 @@ namespace PaimonTray.Views
         private void WebView2LoginWebPage_OnNavigationCompleted(WebView2 sender,
             CoreWebView2NavigationCompletedEventArgs args)
         {
-            switch (ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn)
-            {
-                // Although the CoreWebView2's source changed event uses the same condition, this event is to ensure cookies.
-                case true when _webView2LoginWebPage.Source.ToString().Contains(AccountsHelper.UrlBaseLoginEndMiHoYo):
-                    _ = LogInAsync();
-                    break;
-
-                case false:
-                    ButtonLoginCompleteConfirm.IsEnabled = true;
-                    break;
-            } // end switch-case
+            ButtonLoginCompleteConfirm.IsEnabled = true;
         } // end method WebView2LoginWebPage_OnNavigationCompleted
 
         #endregion Event Handlers
@@ -325,11 +311,9 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
-                _webView2LoginWebPage.Height = isServerCn ? 616 : 608;
+                _webView2LoginWebPage.Height = isServerCn ? 488 : 608;
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                ButtonLoginCompleteConfirm.IsEnabled = false;
-                ButtonLoginCompleteConfirm.Visibility = isServerCn ? Visibility.Collapsed : Visibility.Visible;
-                GridServer.Width = isServerCn ? 632 : 740;
+                GridServer.Width = isServerCn ? 1220 : 740;
             }
             else
             {
@@ -541,6 +525,7 @@ namespace PaimonTray.Views
         private void ToggleStatusVisibility()
         {
             var resourceLoader = _app.SettingsH.ResLoader;
+
             if (_app.AccountsH.CountAccounts() < AccountsHelper.CountAccountsMax &&
                 InfoBarLogin.Title == resourceLoader.GetString("AccountAddReachLimit")) InfoBarLogin.IsOpen = false;
 
