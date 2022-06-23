@@ -52,15 +52,13 @@ You can get PaimonTray from:
 
 - [Releases](https://github.com/ArvinZJC/PaimonTray/releases)
 
-  > ❌ Should be available soon! Pending code signing and final validation.
-
-  If the above recommended way is inconvenient for you, downloading the `PaimonTray_<version>.msixbundle` file is another option. You can double-click the downloaded file to install the app via the app installer. In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
+  If the above recommended way is inconvenient for you, downloading the `PaimonTray_<version>_sideloading.msixbundle` file is another option. You can double-click the downloaded file to install the app via [the App Installer](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1?hl=en-gb&gl=GB). In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
 
   ```PowerShell
   # NOTE: If you are using PowerShell 7+, please run the following command before using Add-AppxPackage.
   # Import-Module Appx -UseWindowsPowerShell
 
-  Add-AppxPackage PaimonTray_<version>.msixbundle
+  Add-AppxPackage PaimonTray_<version>_sideloading.msixbundle
   ```
 
   > Q: Why does this `.msixbundle` file a little large?

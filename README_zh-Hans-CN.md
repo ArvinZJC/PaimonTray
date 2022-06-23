@@ -52,15 +52,13 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 - [发行](https://github.com/ArvinZJC/PaimonTray/releases)
 
-  > ❌ 应在最近上线！待签名和最终验证。
-
-  若您不方便使用上面推荐的方式，则下载 `PaimonTray_<version>.msixbundle` 文件也是一种选择。您可双击下载的文件来通过应用安装程序安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
+  若您不方便使用上面推荐的方式，则下载 `PaimonTray_<version>_sideloading.msixbundle` 文件也是一种选择。您可双击下载的文件来通过[应用安装程序](https://apps.microsoft.com/store/detail/%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F/9NBLGGH4NNS1?hl=zh-cn&gl=CN)安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
 
   ```PowerShell
   # 注意: 若您使用 PowerShell 7+，则请在使用 Add-AppxPackage 前先运行如下命令：
   # Import-Module Appx -UseWindowsPowerShell
 
-  Add-AppxPackage PaimonTray_<version>.msixbundle
+  Add-AppxPackage PaimonTray_<version>_sideloading.msixbundle
   ```
 
   > 问：为什么这个 `.msixbundle` 文件有点儿大？
