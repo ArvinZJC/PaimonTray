@@ -22,8 +22,8 @@
     <PackageProjectUrl>https://github.com/ArvinZJC/PaimonTray</PackageProjectUrl>
     <PackageTags>desktop-app;dotnet6;genshin-impact;paimon;windows;winui3;windows-app-sdk</PackageTags>
     <Copyright>© 2022 $(Authors)</Copyright>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <ApplicationIcon>Assets\AppIcon\AppIcon.ico</ApplicationIcon>
     <PackageIcon>AppIcon.png</PackageIcon>

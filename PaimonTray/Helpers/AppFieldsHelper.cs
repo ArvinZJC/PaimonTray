@@ -8,6 +8,21 @@
         #region Fields
 
         /// <summary>
+        /// The alpha build.
+        /// </summary>
+        public static readonly string BuildAlpha = "alpha";
+
+        /// <summary>
+        /// The beta build.
+        /// </summary>
+        public static readonly string BuildBeta = "beta";
+
+        /// <summary>
+        /// The stable build.
+        /// </summary>
+        public static readonly string BuildStable = "stable";
+
+        /// <summary>
         /// The code of the glyph Accept.
         /// </summary>
         public static readonly string GlyphAccept = "\xE8FB";
@@ -187,6 +202,16 @@
         /// The URL for downloading the Microsoft Edge WebView2 Runtime.
         /// </summary>
         public static readonly string UrlWebView2Runtime = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
+
+        /// <summary>
+        /// The min beta build version.
+        /// </summary>
+        public static readonly int VersionBuildBetaMin = 100;
+
+        /// <summary>
+        /// The min stable build version.
+        /// </summary>
+        public static readonly int VersionBuildStableMin = 200;
 
         #endregion Fields
     } // end class AppFieldsHelper

@@ -23,12 +23,12 @@ namespace PaimonTray
         {
             ConfigLogger();
             GenerateAppVersion();
-            Log.Information($"{Package.Current.DisplayName} V{AppVersion} started.");
+            Log.Information($"{Package.Current.DisplayName} v{AppVersionTag} started.");
             SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
             HttpClientH =
                 new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
             AccountsH = new AccountsHelper();
-            UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersion}";
+            UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersionTag}";
             WindowsH = new WindowsHelper();
             InitializeComponent();
         } // end constructor App
@@ -59,9 +59,21 @@ namespace PaimonTray
         /// </summary>
         private void GenerateAppVersion()
         {
-            var packageVersion = Package.Current.Id.Version;
+            var packageVersion = Package.Current.Id.Version; // Get the package version first.
+            var appVersionBase = $"{packageVersion.Major}.{packageVersion.Minor}";
+            string suffix;
 
-            AppVersion = $"{packageVersion.Major}.{packageVersion.Minor}.{packageVersion.Build}";
+            if (packageVersion.Build < AppFieldsHelper.VersionBuildBetaMin)
+                suffix = $"{AppFieldsHelper.BuildAlpha}.{packageVersion.Build + 1}";
+            else if (packageVersion.Build < AppFieldsHelper.VersionBuildStableMin)
+                suffix =
+                    $"{AppFieldsHelper.BuildBeta}.{packageVersion.Build - AppFieldsHelper.VersionBuildBetaMin + 1}";
+            else
+                suffix =
+                    $"{AppFieldsHelper.BuildStable}.{packageVersion.Build - AppFieldsHelper.VersionBuildStableMin + 1}";
+
+            AppVersion = $"{appVersionBase}-{suffix}";
+            AppVersionTag = $"{appVersionBase}.{packageVersion.Build}";
         } // end method GetAppVersion
 
         /// <summary>
@@ -88,6 +100,11 @@ namespace PaimonTray
         /// The app version.
         /// </summary>
         public string AppVersion { get; private set; }
+
+        /// <summary>
+        /// The app version tag.
+        /// </summary>
+        public string AppVersionTag { get; private set; }
 
         /// <summary>
         /// The commands view model.

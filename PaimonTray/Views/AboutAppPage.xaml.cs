@@ -71,7 +71,7 @@ namespace PaimonTray.Views
             RunNameGitHubRepoApiUsesPrimary.Text = resourceLoader?.GetString("NameGitHubRepoApiUsesPrimary");
             RunNameGitHubRepoApiUsesSecondary.Text = resourceLoader?.GetString("NameGitHubRepoApiUsesSecondary");
             RunNameGitHubRepoInspiration.Text = resourceLoader?.GetString("NameGitHubRepoInspiration");
-            TextBlockVersion.Text = $"{resourceLoader?.GetString("Version")} {_app.AppVersion}";
+            TextBlockVersion.Text = $"{resourceLoader?.GetString("Version")} {_app.AppVersion} ({_app.AppVersionTag})";
         } // end method UpdateUiText
 
         #endregion Methods
