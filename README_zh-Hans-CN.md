@@ -2,16 +2,18 @@
 
 # PaimonTray
 
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ArvinZJC/PaimonTray&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
-![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)
+[![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)](./LICENCE)
 
 [English (United Kingdom)](./README.md) | **中文（简体，中国）**
 
 > 嗨，派蒙在您 Windows 的“系统托盘”上啦！
 
 PaimonTray 是一个 Windows 桌面应用，它用来向用户展示原神的实时便笺。多亏了实时便笺，玩家们可更方便地跟进如下事项：
+
+<details>
+  <summary>点我展开</summary>
 
 - 每日委托任务：已完成，并已领取额外奖励？
 - 值得铭记的强敌：本周还有剩余消耗原粹树脂减半次数？
@@ -20,9 +22,14 @@ PaimonTray 是一个 Windows 桌面应用，它用来向用户展示原神的实
 - 参量质变仪：可使用？
 - 洞天宝钱：达到上限？
 
+</details>
+
 派蒙现在将实时便笺带到您 Windows 任务栏角（亦称通知区域或“系统托盘”）上。没有这个工具应用会是多么痛苦的事情呀！您说呢？🤪
 
 PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
+
+<details>
+  <summary>点我展开</summary>
 
 - 网页登录方案：就像在浏览器中<sup id="source1">[1](#footnote1)</sup>，在指定网页上登录到您的账号来添加/更新账号。
 - 替代的登录方案：手动输入 cookie 来登录到您的账号是另一种添加/更新账号的方式。
@@ -40,36 +47,61 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
   - English (United States) ——无匹配语言时默认
   - 中文（简体，中国）
 
+</details>
+
 ## 💡 要不用用试试？
 
 您可用如下方式获取 PaimonTray：
 
-- **_(推荐)_ Microsoft Store**
+| 渠道                        | 最新版本                                                                                                                                               | 稳定版 | 预发布 | 自动更新 |
+| :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------: | :----------: | :---------: |
+| **微软应用商店**            | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |       ✅        |              |     ✅      |
+| [**发行**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |       ✅        |      ✅      |             |
 
-  > ❌ 希望能在最近上线！待完成微软的应用首次认证过程。
+<details>
+  <summary>问与答</summary>
 
-  请尽可能使用此方式，从而能在有可自动更新的新版发布时保持最新版本。不过，这取决于[微软的应用认证过程](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process)。
+- **我应该选择哪个渠道来获取此应用？**
 
-- [发行](https://github.com/ArvinZJC/PaimonTray/releases)
+  请尽可能通过微软应用商店来获取此应用。它能对处理前提要求（如：应用所需依赖）提供更稳定的支持。
 
-  若您不方便使用上面推荐的方式，则下载 `PaimonTray_<version>_sideloading.msixbundle` 文件也是一种选择。您可双击下载的文件来通过[应用安装程序](https://apps.microsoft.com/store/detail/%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F/9NBLGGH4NNS1?hl=zh-cn&gl=CN)安装此应用。这种方式会导致此应用不会在有新版本时自动更新，所以您会需要常规安装最新更新。若有任何错误，则您可在 PowerShell 中尝试如下命令。
+  从[发行](../../releases)下载 `PaimonTray_<version>.msixbundle` 文件是一个替代的选择。若您属于下列情况，您可能更适合从此渠道来获取此应用。
+
+  - 您不能/讨厌使用微软应用商店。
+  - 您不在乎是否能自动更新。
+  - 您希望体验预发布。
+  - 您能在必要时处理前提要求。
+
+  由于这两个渠道使用不用的包名，您可同时安装来自两个渠道的此应用。
+
+- **我无法从微软应用商店获取如上所示的最新版本。**
+
+  > ❌ 此应用的微软应用商店渠道有望能在最近上线！待完成微软的应用首次认证过程。
+
+  这取决于[微软的应用认证过程](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process)，可能造成上线延迟。
+
+- **如何用下载的 `.msixbundle` 文件来安装此应用？**
+
+  您可双击下载的文件来通过[应用安装程序](https://apps.microsoft.com/store/detail/%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F/9NBLGGH4NNS1?hl=zh-cn&gl=CN)安装此应用。若有任何错误，则您可在 PowerShell 中尝试如下命令。
 
   ```PowerShell
   # 注意: 若您使用 PowerShell 7+，则请在使用 Add-AppxPackage 前先运行如下命令：
   # Import-Module Appx -UseWindowsPowerShell
 
-  Add-AppxPackage PaimonTray_<version>_sideloading.msixbundle
+  Add-AppxPackage PaimonTray_<version>.msixbundle
   ```
 
-  > 问：为什么这个 `.msixbundle` 文件有点儿大？
-  >
-  > 答: 依赖于框架式的部署已经大幅减小文件大小。不过呢，首先，这个文件将安装程序的多个体系结构版本捆绑成一个实体。其次，[C#/WinRT 目前暂不支持 IL 剪裁](https://github.com/microsoft/CsWinRT/issues/373).
+- **为什么提供的 `.msixbundle` 文件有点儿大？**
+
+  依赖于框架式的部署已经大幅减小文件大小。不过呢，首先，这个文件将安装程序的多个体系结构版本捆绑成一个实体。其次，[C#/WinRT 目前暂不支持 IL 剪裁](https://github.com/microsoft/CsWinRT/issues/373)。
+
+</details>
 
 ## ❗ 注意
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 此项目使用 [GPL-3.0 协议](./LICENCE)。截至 2022 年 6 月 22 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 6 月 25 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
