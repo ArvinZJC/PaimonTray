@@ -53,10 +53,12 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 您可用如下方式获取 PaimonTray：
 
-| 渠道                        | 最新版本                                                                                                                                               | 稳定版 | 预发布 | 自动更新 |
-| :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------: | :----------: | :---------: |
-| **微软应用商店**            | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |       ✅        |              |     ✅      |
-| [**发行**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |       ✅        |      ✅      |             |
+| 渠道                       | 最新版本                                                                                                                                                     | 稳定版 | 预发布 | 自动更新 |
+| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :----: | :----: | :------: |
+| **微软应用商店**           | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |   ✅   |        |    ✅    |
+| [**发行**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |   ✅   |   ✅   |          |
+
+> ❌ 此应用的微软应用商店渠道有望能在最近上线！待完成微软的应用首次认证过程。
 
 <details>
   <summary>问与答</summary>
@@ -70,13 +72,11 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
   - 您不能/讨厌使用微软应用商店。
   - 您不在乎是否能自动更新。
   - 您希望体验预发布。
-  - 您能在必要时处理前提要求。
+  - 您能在必要时自行处理前提要求。
 
   由于这两个渠道使用不用的包名，您可同时安装来自两个渠道的此应用。
 
 - **我无法从微软应用商店获取如上所示的最新版本。**
-
-  > ❌ 此应用的微软应用商店渠道有望能在最近上线！待完成微软的应用首次认证过程。
 
   这取决于[微软的应用认证过程](https://docs.microsoft.com/en-gb/windows/uwp/publish/the-app-certification-process)，可能造成上线延迟。
 
