@@ -13,6 +13,9 @@
 
 PaimonTray is a Windows desktop app that can present Genshin Impact's real-time notes for users. Thanks to real-time notes, it becomes more convenient for the game players to be able to track a list of things as follows.
 
+<details>
+  <summary>Click to expand</summary>
+
 - Daily commissions: completed with bonus rewards claimed?
 - Enemies of Note: any remaining Original Resin cost-halving opportunity this week?
 - Expeditions: show me the game characters dispatched!
@@ -20,9 +23,14 @@ PaimonTray is a Windows desktop app that can present Genshin Impact's real-time 
 - Parametric Transformer: can be used?
 - Realm Currency: limit reached?
 
+</details>
+
 Paimon now makes real-time notes available on your Windows taskbar corner (aka the notification area or "system tray"). It can be absolutely a pain in the arse without this tool app. What do you reckon? 🤪
 
 PaimonTray also has some other highlights that may interest you. These include but not limited to:
+
+<details>
+  <summary>Click to expand</summary>
 
 - Web page login method: log into your account on the specific web page just like in a browser<sup id="source1">[1](#footnote1)</sup> to add/update an account.
 - Alternative login method: logging into your account by entering cookies manually is another way to add/update an account.
@@ -40,6 +48,8 @@ PaimonTray also has some other highlights that may interest you. These include b
   - English (United States) - default if no matches
   - 中文（简体，中国）
 
+</details>
+
 ## 💡 Why not give it a try?
 
 You can get PaimonTray from:
@@ -52,13 +62,13 @@ You can get PaimonTray from:
 
 - [Releases](https://github.com/ArvinZJC/PaimonTray/releases)
 
-  If the above recommended way is inconvenient for you, downloading the `PaimonTray_<version>_sideloading.msixbundle` file is another option. You can double-click the downloaded file to install the app via [the App Installer](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1?hl=en-gb&gl=GB). In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
+  If the above recommended way is inconvenient for you, downloading the `PaimonTray_<version>.msixbundle` file is another option. You can double-click the downloaded file to install the app via [the App Installer](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1?hl=en-gb&gl=GB). In this way, the app will NOT auto-update when new builds are released, so you will need to regularly install the latest release. If it fails for any reason, you can try the following command at a PowerShell prompt.
 
   ```PowerShell
   # NOTE: If you are using PowerShell 7+, please run the following command before using Add-AppxPackage.
   # Import-Module Appx -UseWindowsPowerShell
 
-  Add-AppxPackage PaimonTray_<version>_sideloading.msixbundle
+  Add-AppxPackage PaimonTray_<version>.msixbundle
   ```
 
   > Q: Why does this `.msixbundle` file a little large?
@@ -69,15 +79,17 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. This project is licensed under [the GPL-3.0 Licence](./LICENCE). By 22 June 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following author/projects.
+1. This project is licensed under [the GPL-3.0 Licence](./LICENCE). By 22 June 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
+     > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
    - README banner background credited to [void_0](https://www.pixiv.net/en/artworks/85543107).
 
 2. Due to [the use of the Windows App SDK](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk), PaimonTray is expected to work well on Windows 10, version 1809 (build 17763) and later (arm64, x64, and x86). **It is awfully safe to permit the app behaviour for any system prompt regarding safety confirmation. The app is signed, is not malware, and will never ever collect and upload any user privacy.** Should you report a problem encountered, you may find [issues](https://github.com/ArvinZJC/PaimonTray/issues) useful.
-3. The NuGet packages of the project are listed in the following table.
+3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
+4. The NuGet packages of the project are listed in the following table.
 
    | Name                                |   Version    |
    | :---------------------------------- | :----------: |
@@ -87,9 +99,6 @@ You can get PaimonTray from:
    | Microsoft.WindowsAppSDK             |    1.1.1     |
    | Serilog.Sinks.Async                 |    1.5.0     |
    | Serilog.Sinks.File                  |    5.0.0     |
-
-4. As stated above, PaimonTray is inspired by PaimonMenuBar. We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
-5. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
 
 Good luck! 💖
 
