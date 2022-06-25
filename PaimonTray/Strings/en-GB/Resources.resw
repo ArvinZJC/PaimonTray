@@ -146,7 +146,7 @@
     <value>Oops, no character! You need to add an account.</value>
   </data>
   <data name="AccountGroupNoCharacterEnabled" xml:space="preserve">
-    <value>Oops, no character is allowed to retrieve real-time notes. You can add an account, or go to the settings to manage your account(s) added.</value>
+    <value>Oops, no character is allowed to retrieve real-time notes. You can add/update an account, or go to the settings to manage your account(s) added.</value>
   </data>
   <data name="AccountGroupRemove" xml:space="preserve">
     <value>Remove the account and its linked character(s)</value>
