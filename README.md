@@ -13,7 +13,7 @@
 PaimonTray is a Windows desktop app that can present Genshin Impact's real-time notes for users. Thanks to real-time notes, it becomes more convenient for the game players to be able to track a list of things as follows.
 
 <details>
-  <summary>Click to expand</summary>
+  <summary>Click to expand/collapse</summary>
 
 - Daily commissions: completed with bonus rewards claimed?
 - Enemies of Note: any remaining Original Resin cost-halving opportunity this week?
@@ -29,7 +29,7 @@ Paimon now makes real-time notes available on your Windows taskbar corner (aka t
 PaimonTray also has some other highlights that may interest you. These include but not limited to:
 
 <details>
-  <summary>Click to expand</summary>
+  <summary>Click to expand/collapse</summary>
 
 - Web page login method: log into your account on the specific web page just like in a browser<sup id="source1">[1](#footnote1)</sup> to add/update an account.
 - Alternative login method: logging into your account by entering cookies manually is another way to add/update an account.

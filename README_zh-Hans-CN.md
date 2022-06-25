@@ -13,7 +13,7 @@
 PaimonTray 是一个 Windows 桌面应用，它用来向用户展示原神的实时便笺。多亏了实时便笺，玩家们可更方便地跟进如下事项：
 
 <details>
-  <summary>点我展开</summary>
+  <summary>点我展开/折叠</summary>
 
 - 每日委托任务：已完成，并已领取额外奖励？
 - 值得铭记的强敌：本周还有剩余消耗原粹树脂减半次数？
@@ -29,7 +29,7 @@ PaimonTray 是一个 Windows 桌面应用，它用来向用户展示原神的实
 PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 <details>
-  <summary>点我展开</summary>
+  <summary>点我展开/折叠</summary>
 
 - 网页登录方案：就像在浏览器中<sup id="source1">[1](#footnote1)</sup>，在指定网页上登录到您的账号来添加/更新账号。
 - 替代的登录方案：手动输入 cookie 来登录到您的账号是另一种添加/更新账号的方式。
