@@ -246,8 +246,13 @@ namespace PaimonTray.Views
         // Handle the toggled event of the toggle switch of the setting for always using the alternative login method.
         private void ToggleSwitchLoginAlternativeAlways_OnToggled(object sender, RoutedEventArgs e)
         {
-            _app.SettingsH.PropertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] =
-                ToggleSwitchLoginAlternativeAlways.IsOn;
+            var propertySetSettings = _app.SettingsH.PropertySetSettings;
+
+            // It is required for properly showing the info bar for informing of applying always using the alternative login method later.
+            if (propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] as bool? ==
+                ToggleSwitchLoginAlternativeAlways.IsOn) return;
+
+            propertySetSettings[SettingsHelper.KeyLoginAlternativeAlways] = ToggleSwitchLoginAlternativeAlways.IsOn;
 
             if (_mainWindow.NavigationViewBody.SelectedItem as NavigationViewItem !=
                 _mainWindow.NavigationViewItemBodyAccountAddUpdate) return;
