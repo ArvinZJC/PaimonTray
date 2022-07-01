@@ -82,7 +82,7 @@ You can get PaimonTray from:
 
 - **How to use the downloaded `.msixbundle` file to install the app?**
 
-  You can double-click the file to install the app via [the App Installer](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1?hl=en-gb&gl=GB). If it fails for any reason, you can try the following command at a PowerShell prompt.
+  You can double-click the file to install the app via [the App Installer](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1?hl=en-gb&gl=GB). If it fails for any reason, you can try the following command at a PowerShell prompt. You may need an elevated PowerShell prompt if any error like "access is denied" occurs.
 
   ```PowerShell
   # NOTE: If you are using PowerShell 7+, please run the following command before using Add-AppxPackage.
@@ -101,7 +101,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 27 June 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following authors/projects.
+1. By 1 July 2022, everything looks good with Visual Studio 2022 (Version: 17.2.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
