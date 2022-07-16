@@ -58,7 +58,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 | **微软应用商店**           | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |   ✅   |        |    ✅    |
 | [**发行**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |   ✅   |   ✅   |          |
 
-> ❌ 此应用的微软应用商店渠道有望能在最近上线！待完成微软的应用首次认证过程。
+> ❌ 此应用的微软应用商店渠道有望能在最近上线！待解决一些问题来完成微软的应用首次认证过程。
 
 <details>
   <summary>问与答</summary>
@@ -101,7 +101,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 7 月 1 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 7 月 16 日，使用 Visual Studio 2022（版本：17.2.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
@@ -113,10 +113,10 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
    | 名称                                |     版本     |
    | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.53    |
+   | H.NotifyIcon.WinUI                  |    2.0.55    |
    | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
    | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
-   | Microsoft.WindowsAppSDK             |    1.1.1     |
+   | Microsoft.WindowsAppSDK             |    1.1.2     |
    | Serilog.Sinks.Async                 |    1.5.0     |
    | Serilog.Sinks.File                  |    5.0.0     |
 

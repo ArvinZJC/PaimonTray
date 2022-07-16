@@ -22,7 +22,7 @@
     <PackageProjectUrl>https://github.com/ArvinZJC/PaimonTray</PackageProjectUrl>
     <PackageTags>desktop-app;dotnet6;genshin-impact;paimon;windows;winui3;windows-app-sdk</PackageTags>
     <Copyright>© 2022 $(Authors)</Copyright>
-    <Version>1.1.0</Version>
+    <Version>1.0.201</Version>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <ApplicationIcon>Assets\AppIcon\AppIcon.ico</ApplicationIcon>
@@ -58,9 +58,9 @@
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.53" />
+    <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.55" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
