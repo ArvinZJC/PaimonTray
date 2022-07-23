@@ -16,7 +16,9 @@
             x:Name="ContentDialogueAccountAddNoCharacter"
             DefaultButton="Close" />
         <!-- The body scroll viewer. -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
             <!-- The body grid. -->
             <Grid
                 x:Name="GridBody"
