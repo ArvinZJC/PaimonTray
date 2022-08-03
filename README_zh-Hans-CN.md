@@ -58,8 +58,6 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 | [**微软应用商店**](https://www.microsoft.com/store/productId/9PP6PJDDRNRZ) | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |   ✅   |        |    ✅    |
 | [**发行**](../../releases)                                                 | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |   ✅   |   ✅   |          |
 
-> ❌ 此应用的微软应用商店渠道有望能在最近上线！待解决一些问题来完成微软的应用首次认证过程。
-
 <details>
   <summary>问与答</summary>
 

@@ -58,8 +58,6 @@ You can get PaimonTray from:
 | [**Microsoft Store**](https://www.microsoft.com/store/productId/9PP6PJDDRNRZ) | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |       ✅        |              |     ✅      |
 | [**Releases**](../../releases)                                                | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |       ✅        |      ✅      |             |
 
-> ❌ The app's Microsoft Store channel is expected to be available soon! Pending solving some issues to complete Microsoft's app certification process for the 1st submission.
-
 <details>
   <summary>Q & A</summary>
 
