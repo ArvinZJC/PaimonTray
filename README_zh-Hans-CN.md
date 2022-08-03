@@ -53,10 +53,10 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 您可用如下方式获取 PaimonTray：
 
-| 渠道                       | 最新版本                                                                                                                                                     | 稳定版 | 预发布 | 自动更新 |
-| :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :----: | :----: | :------: |
-| **微软应用商店**           | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |   ✅   |        |    ✅    |
-| [**发行**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |   ✅   |   ✅   |          |
+| 渠道                                                                       | 最新版本                                                                                                                                                     | 稳定版 | 预发布 | 自动更新 |
+| :------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :----: | :----: | :------: |
+| [**微软应用商店**](https://www.microsoft.com/store/productId/9PP6PJDDRNRZ) | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |   ✅   |        |    ✅    |
+| [**发行**](../../releases)                                                 | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |   ✅   |   ✅   |          |
 
 > ❌ 此应用的微软应用商店渠道有望能在最近上线！待解决一些问题来完成微软的应用首次认证过程。
 
@@ -101,7 +101,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 7 月 23 日，使用 Visual Studio 2022（版本：17.2.6）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 8 月 3 日，使用 Visual Studio 2022（版本：17.2.6）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
@@ -113,7 +113,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
    | 名称                                |     版本     |
    | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.57    |
+   | H.NotifyIcon.WinUI                  |    2.0.59    |
    | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
    | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
    | Microsoft.WindowsAppSDK             |    1.1.3     |

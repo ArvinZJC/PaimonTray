@@ -53,10 +53,10 @@ PaimonTray also has some other highlights that may interest you. These include b
 
 You can get PaimonTray from:
 
-| Channel                        | Latest version                                                                                                                                               | Stable releases | Pre-releases | Auto-update |
-| :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------: | :----------: | :---------: |
-| **Microsoft Store**            | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |       ✅        |              |     ✅      |
-| [**Releases**](../../releases) | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |       ✅        |      ✅      |             |
+| Channel                                                                       | Latest version                                                                                                                                               | Stable releases | Pre-releases | Auto-update |
+| :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------: | :----------: | :---------: |
+| [**Microsoft Store**](https://www.microsoft.com/store/productId/9PP6PJDDRNRZ) | [![GitHub release](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray)](../../releases)                                                             |       ✅        |              |     ✅      |
+| [**Releases**](../../releases)                                                | [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/ArvinZJC/PaimonTray?include_prereleases)](../../releases) |       ✅        |      ✅      |             |
 
 > ❌ The app's Microsoft Store channel is expected to be available soon! Pending solving some issues to complete Microsoft's app certification process for the 1st submission.
 
@@ -101,7 +101,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 23 July 2022, everything looks good with Visual Studio 2022 (Version: 17.2.6) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following authors/projects.
+1. By 3 August 2022, everything looks good with Visual Studio 2022 (Version: 17.2.6) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionaly, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
@@ -115,7 +115,7 @@ You can get PaimonTray from:
 
    | Name                                |   Version    |
    | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.57    |
+   | H.NotifyIcon.WinUI                  |    2.0.59    |
    | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
    | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
    | Microsoft.WindowsAppSDK             |    1.1.3     |

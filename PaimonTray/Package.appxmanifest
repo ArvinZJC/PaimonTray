@@ -9,7 +9,7 @@
   <Identity
     Name="12436ArvinZJC.40085CBC45AEE"
     Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6"
-    Version="1.0.201.0" />
+    Version="1.1.0.0" />
   <Properties>
     <DisplayName>PaimonTray</DisplayName>
     <PublisherDisplayName>ArvinZJC</PublisherDisplayName>
