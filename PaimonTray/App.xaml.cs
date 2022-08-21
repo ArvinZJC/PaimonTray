@@ -1,11 +1,13 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 using PaimonTray.Helpers;
+using PaimonTray.Views;
 using PaimonTray.ViewModels;
 using Serilog;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
-using PaimonTray.Views;
 
 namespace PaimonTray
 {
@@ -24,12 +26,6 @@ namespace PaimonTray
             ConfigLogger();
             GenerateAppVersion();
             Log.Information($"{Package.Current.DisplayName} v{AppVersionTag} started.");
-            SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
-            HttpClientH =
-                new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
-            AccountsH = new AccountsHelper();
-            UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersionTag}";
-            WindowsH = new WindowsHelper();
             InitializeComponent();
         } // end constructor App
 
@@ -83,7 +79,34 @@ namespace PaimonTray
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            CommandsVm = new CommandsViewModel(WindowsH.GetExistingMainWindow()?.Win as MainWindow);
+            if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
+            {
+                Log.Warning("The Windows App SDK runtime not in a good deployment status.");
+
+                var initialiseTask = Task.Run(DeploymentManager.Initialize);
+
+                initialiseTask.Wait();
+
+                if (initialiseTask.Result.Status is not DeploymentStatus.Ok)
+                {
+                    Log.Error("Failed to ensure a deployment status of the Windows App SDK runtime.");
+                    Log.CloseAndFlush();
+                    _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
+                    Exit();
+                } // end if
+            } // end if
+
+            SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
+            HttpClientH =
+                new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
+            AccountsH = new AccountsHelper();
+            UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersionTag}";
+            WindowsH = new WindowsHelper();
+            CommandsVm =
+                new CommandsViewModel(
+                    WindowsH.GetExistingMainWindow()
+                        ?.Win as MainWindow); // Need to initialise the commands view model at last.
+
             base.OnLaunched(e);
         } // end method OnLaunched
 
@@ -94,7 +117,7 @@ namespace PaimonTray
         /// <summary>
         /// The accounts helper.
         /// </summary>
-        public AccountsHelper AccountsH { get; }
+        public AccountsHelper AccountsH { get; private set; }
 
         /// <summary>
         /// The app version.
@@ -114,7 +137,7 @@ namespace PaimonTray
         /// <summary>
         /// The HTTP client helper.
         /// </summary>
-        public HttpClientHelper HttpClientH { get; }
+        public HttpClientHelper HttpClientH { get; private set; }
 
         /// <summary>
         /// The logs directory.
@@ -124,17 +147,17 @@ namespace PaimonTray
         /// <summary>
         /// The settings helper.
         /// </summary>
-        public SettingsHelper SettingsH { get; }
+        public SettingsHelper SettingsH { get; private set; }
 
         /// <summary>
         /// The app's GitHub repository's specific release URL.
         /// </summary>
-        public string UrlGitHubRepoRelease { get; }
+        public string UrlGitHubRepoRelease { get; private set; }
 
         /// <summary>
         /// The windows helper.
         /// </summary>
-        public WindowsHelper WindowsH { get; }
+        public WindowsHelper WindowsH { get; private set; }
 
         #endregion Properties
     } // end class App
