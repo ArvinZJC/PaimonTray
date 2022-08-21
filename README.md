@@ -113,10 +113,10 @@ You can get PaimonTray from:
 
    | Name                                |   Version    |
    | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.59    |
+   | H.NotifyIcon.WinUI                  |    2.0.63    |
    | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
    | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
-   | Microsoft.WindowsAppSDK             |    1.1.3     |
+   | Microsoft.WindowsAppSDK             |    1.1.4     |
    | Serilog.Sinks.Async                 |    1.5.0     |
    | Serilog.Sinks.File                  |    5.0.0     |
 
