@@ -67,7 +67,7 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new()
                 {
-                    IconSource = new SymbolIconSource { Symbol = Symbol.AddFriend },
+                    IconSource = new FontIconSource { Glyph = AppFieldsHelper.GlyphAddFriend },
                     Label = _app.SettingsH.ResLoader.GetString("AccountAddUpdate")
                 };
 
@@ -138,7 +138,7 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new()
                 {
-                    IconSource = new SymbolIconSource { Symbol = Symbol.Setting },
+                    IconSource = new FontIconSource { Glyph = AppFieldsHelper.GlyphSettings },
                     Label = _app.SettingsH.ResLoader.GetString("Settings")
                 };
 

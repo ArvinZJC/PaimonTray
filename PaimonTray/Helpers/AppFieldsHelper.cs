@@ -28,6 +28,16 @@
         public static readonly string GlyphAccept = "\xE8FB";
 
         /// <summary>
+        /// The code of the glyph AddFriend.
+        /// </summary>
+        public static readonly string GlyphAddFriend = "\xE8FA";
+
+        /// <summary>
+        /// The code of the glyph Delete.
+        /// </summary>
+        public static readonly string GlyphDelete = "\xE74D";
+
+        /// <summary>
         /// The code of the glyph Diagnostic.
         /// </summary>
         public static readonly string GlyphDiagnostic = "\xE9D9";
@@ -43,6 +53,11 @@
         public static readonly string GlyphHelp = "\xE897";
 
         /// <summary>
+        /// The code of the glyph Home.
+        /// </summary>
+        public static readonly string GlyphHome = "\xE80F";
+
+        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public static readonly string GlyphInfo = "\xE946";
@@ -53,9 +68,29 @@
         public static readonly string GlyphKnowledgeArticle = "\xF000";
 
         /// <summary>
+        /// The code of the glyph More.
+        /// </summary>
+        public static readonly string GlyphMore = "\xE712";
+
+        /// <summary>
+        /// The code of the glyph People.
+        /// </summary>
+        public static readonly string GlyphPeople = "\xE716";
+
+        /// <summary>
         /// The code of the glyph Processing.
         /// </summary>
         public static readonly string GlyphProcessing = "\xE9F5";
+
+        /// <summary>
+        /// The code of the glyph Refresh.
+        /// </summary>
+        public static readonly string GlyphRefresh = "\xE72C";
+
+        /// <summary>
+        /// The code of the glyph Settings.
+        /// </summary>
+        public static readonly string GlyphSettings = "\xE713";
 
         /// <summary>
         /// The code of the glyph SwitchUser.
@@ -71,6 +106,11 @@
         /// The code of the glyph UpdateRestore.
         /// </summary>
         public static readonly string GlyphUpdateRestore = "\xE777";
+
+        /// <summary>
+        /// The code of the glyph View.
+        /// </summary>
+        public static readonly string GlyphView = "\xE890";
 
         /// <summary>
         /// The code of the glyph Website.

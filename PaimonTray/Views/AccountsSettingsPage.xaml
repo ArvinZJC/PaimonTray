@@ -175,7 +175,6 @@
                                                     <AppBarButton
                                                         x:Phase="2"
                                                         AllowFocusOnInteraction="True"
-                                                        Icon="View"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=cookiesView}"
                                                         Width="40">
                                                         <AppBarButton.Flyout>
@@ -187,21 +186,30 @@
                                                                     TextWrapping="Wrap" />
                                                             </Flyout>
                                                         </AppBarButton.Flyout>
+                                                        <AppBarButton.Icon>
+                                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphView}" />
+                                                        </AppBarButton.Icon>
                                                     </AppBarButton>
                                                     <AppBarButton
                                                         x:Phase="2"
                                                         Click="AppBarButtonAccountGroupsCheckRefresh_OnClick"
-                                                        Icon="Refresh"
                                                         Tag="{x:Bind Key}"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=accountGroupCheckRefresh}"
-                                                        Width="40" />
+                                                        Width="40">
+                                                        <AppBarButton.Icon>
+                                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphRefresh}" />
+                                                        </AppBarButton.Icon>
+                                                    </AppBarButton>
                                                     <AppBarButton
                                                         x:Phase="2"
                                                         Click="AppBarButtonAccountGroupsRemove_OnClick"
-                                                        Icon="Delete"
                                                         Tag="{x:Bind Key}"
                                                         ToolTipService.ToolTip="{x:Bind Converter={StaticResource AccountGroupInfoListConverter}, ConverterParameter=accountGroupRemove}"
-                                                        Width="40" />
+                                                        Width="40">
+                                                        <AppBarButton.Icon>
+                                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDelete}" />
+                                                        </AppBarButton.Icon>
+                                                    </AppBarButton>
                                                 </CommandBar>
                                             </Grid>
                                         </DataTemplate>
@@ -258,12 +266,18 @@
                             </CommandBarFlyoutCommandBar.Style>
                             <AppBarButton
                                 x:Name="AppBarButtonAccountGroupsCheckRefresh"
-                                Click="AppBarButtonAccountGroupsCheckRefresh_OnClick"
-                                Icon="Refresh" />
+                                Click="AppBarButtonAccountGroupsCheckRefresh_OnClick">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphRefresh}" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
                             <AppBarButton
                                 x:Name="AppBarButtonAccountGroupsRemove"
-                                Click="AppBarButtonAccountGroupsRemove_OnClick"
-                                Icon="Delete" />
+                                Click="AppBarButtonAccountGroupsRemove_OnClick">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDelete}" />
+                                </AppBarButton.Icon>
+                            </AppBarButton>
                         </CommandBarFlyoutCommandBar>
                         <!-- The status grid. -->
                         <Grid
