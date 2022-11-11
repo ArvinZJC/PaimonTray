@@ -79,6 +79,7 @@ namespace PaimonTray
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            /*
             if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
             {
                 Log.Warning("The Windows App SDK runtime not in a good deployment status.");
@@ -95,6 +96,7 @@ namespace PaimonTray
                     Exit();
                 } // end if
             } // end if
+            */
 
             SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
             HttpClientH =
