@@ -45,6 +45,11 @@ namespace PaimonTray.Helpers
         private const string HeaderNameDynamicSecret = "DS";
 
         /// <summary>
+        /// The referer header name.
+        /// </summary>
+        private const string HeaderNameReferer = "Referer";
+
+        /// <summary>
         /// The app version header value for the CN server.
         /// </summary>
         private const string HeaderValueAppVersionServerCn = "2.38.1";
@@ -63,6 +68,16 @@ namespace PaimonTray.Helpers
         /// The client type header value for the global server.
         /// </summary>
         private const string HeaderValueClientTypeServerGlobal = "2";
+
+        /// <summary>
+        /// The referer header value for the CN server.
+        /// </summary>
+        private const string HeaderValueRefererServerCn = "https://webstatic.mihoyo.com/";
+
+        /// <summary>
+        /// The referer header value for the global server.
+        /// </summary>
+        private const string HeaderValueRefererServerGlobal = "https://webstatic-sea.hoyolab.com";
 
         #endregion Constants
 
@@ -168,6 +183,14 @@ namespace PaimonTray.Helpers
             if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameCookie, cookies))
             {
                 Log.Warning($"Failed to add the cookie header (cookies: {cookies}).");
+                return null;
+            } // end if
+
+            var headerValueReferer = isServerCn ? HeaderValueRefererServerCn : HeaderValueRefererServerGlobal;
+
+            if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameReferer, headerValueReferer))
+            {
+                Log.Warning($"Failed to add the referer header (referer: {headerValueReferer}).");
                 return null;
             } // end if
 
