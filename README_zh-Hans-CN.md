@@ -65,7 +65,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
   请尽可能通过微软应用商店来获取此应用。它能对处理前提要求（如：应用所需依赖）提供更稳定的支持。
 
-  从[发行](../../releases)下载 `PaimonTray_<version>.msixbundle` 文件是一个替代的选择。若您属于下列情况，您可能更适合从此渠道来获取此应用。
+  从[发行](../../releases)下载 `PaimonTray_<version>.msixbundle` 文件是一个替代的选择。若您属于下列情况，则您可能更适合从此渠道来获取此应用。
 
   - 您不能/讨厌使用微软应用商店。
   - 您不在乎是否能自动更新。
@@ -99,27 +99,32 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 9 月 25 日，使用 Visual Studio 2022（版本：17.3.4）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 11 月 11 日，使用 Visual Studio 2022（版本：17.4.0）+ .NET 6.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
+
+     > 我们甚至使用一样的应用图标。但是，您不要将 PaimonTray 当作 “PaimonMenuBar 的 Windows 版”，反之亦然。我们针对目标平台有不同的设计意图和模式，以及互相独立的开发计划。
+
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
+
    - 应用图标来源于 [Chawong](https://www.pixiv.net/en/artworks/92415888)。
+
    - README 横幅背景来源于 [void_0](https://www.pixiv.net/en/artworks/85543107)。
 
 2. 受 [Windows 应用 SDK 的影响](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk) ，PaimonTray 应能支持 Windows 10 版本 1809（内部版本 17763）及更高版本（arm64、x64 和 x86）。**在安装、使用和卸载此应用的过程中，任何来自系统的安全提示都可授权允许。此应用已签名，无恶意行为，亦不会收集并上传任何用户隐私。** 若遇问题，可移步[议题](https://github.com/ArvinZJC/PaimonTray/issues)。
-3. 项目 NuGet 包参见下面的表格。
 
-   | 名称                                |     版本     |
-   | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.67    |
-   | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
-   | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
-   | Microsoft.WindowsAppSDK             |    1.1.5     |
-   | Serilog.Sinks.Async                 |    1.5.0     |
-   | Serilog.Sinks.File                  |    5.0.0     |
+3. PaimonTray 要作为一个轻量的工具应用，**仅关注原神的实时便笺**。性能是绝对的第一要务。优化将持续不断 ~~（但愿吧，至少先画个饼）~~。当前没有成为一个“全家桶”应用的计划。不管怎样，欢迎您说出您的想法。
 
-4. 如上所述，PaimonTray 受启发于 PaimonMenuBar。我们甚至使用一样的应用图标。但是，您不要将 PaimonTray 当作 “PaimonMenuBar 的 Windows 版”，反之亦然。我们针对目标平台有不同的设计意图和模式，以及互相独立的开发计划。
-5. PaimonTray 要作为一个轻量的工具应用，仅关注原神的实时便笺。性能是绝对的第一要务。优化将持续不断 ~~（但愿吧，至少先画个饼）~~。当前没有成为一个“全家桶”应用的计划。不管怎样，欢迎您说出您的想法。
+4. 项目 NuGet 包参见下面的表格。
+
+   | 名称                                |      版本      |
+   | :---------------------------------- | :------------: |
+   | H.NotifyIcon.WinUI                  |     2.0.74     |
+   | Microsoft.Toolkit.Uwp.Notifications |     7.1.3      |
+   | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.755 |
+   | Microsoft.WindowsAppSDK             |  1.2.221109.1  |
+   | Serilog.Sinks.Async                 |     1.5.0      |
+   | Serilog.Sinks.File                  |     5.0.0      |
 
 好运哦! 💖
 
