@@ -96,55 +96,53 @@
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphHelp}" />
                                 </MenuFlyoutSubItem.Icon>
-                                <MenuFlyoutSubItem.Items>
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpAppSite"
-                                        IsEnabled="False">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphWebsite}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpUserManual"
-                                        IsEnabled="False">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDictionary}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpGitHubRepo"
-                                        Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                        CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepo}" />
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpIssues"
-                                        Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                        CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoIssues}">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphTrackers}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpReleaseNotes"
-                                        Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphKnowledgeArticle}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpGiteeRepo"
-                                        Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
-                                        CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGiteeRepo}" />
-                                    <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem
-                                        x:Name="MenuFlyoutItemMainMenuHelpLogsShow"
-                                        Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDiagnostic}" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                </MenuFlyoutSubItem.Items>
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpAppSite"
+                                    IsEnabled="False">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphWebsite}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpUserManual"
+                                    IsEnabled="False">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDictionary}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpGitHubRepo"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
+                                    CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepo}" />
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpIssues"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
+                                    CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGitHubRepoIssues}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphTrackers}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpReleaseNotes"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphKnowledgeArticle}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpGiteeRepo"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}"
+                                    CommandParameter="{x:Bind helpers:AppFieldsHelper.UrlGiteeRepo}" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    x:Name="MenuFlyoutItemMainMenuHelpLogsShow"
+                                    Command="{x:Bind _app.CommandsVm.OpenLinkInDefaultCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphDiagnostic}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
