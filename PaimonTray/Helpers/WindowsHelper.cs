@@ -164,19 +164,19 @@ namespace PaimonTray.Helpers
         /// Get the main window's page's max size.
         /// </summary>
         /// <returns>The max size.</returns>
-        public SizeInt32 GetMainWindowPageMaxSize()
+        public SizeInt32 GetMainWindowPageMaxSize(double rasterisationScale)
         {
             var isMainWindowTopNavigationPane =
                 _app.SettingsH.DecideMainWindowNavigationViewPaneDisplayMode() is NavigationViewPaneDisplayMode.Top;
             var mainExistingWindow = GetExistingMainWindow();
             var workArea =
                 GetWorkArea(mainExistingWindow is null ? new WindowId() : GetWindowId(mainExistingWindow.Win));
-            var workAreaOffset = 2 * MainWindowPositionOffset;
-            var workAreaAdditionalOffset = 4 * MainWindowPositionOffset; // Reserved for the navigation pane.
+            var workAreaOffset = 2 * MainWindowPositionOffset * rasterisationScale;
+            var workAreaAdditionalOffset = 4 * MainWindowPositionOffset * rasterisationScale; // Reserved for the navigation pane.
 
             return new SizeInt32(
-                workArea.Width - workAreaOffset - (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset),
-                workArea.Height - workAreaOffset - (isMainWindowTopNavigationPane ? workAreaAdditionalOffset : 0));
+                (int)Math.Floor((workArea.Width - workAreaOffset - (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset)) / rasterisationScale),
+                (int)Math.Floor((workArea.Height - workAreaOffset - (isMainWindowTopNavigationPane ? workAreaAdditionalOffset : 0)) / rasterisationScale));
         } // end method GetMainWindowPageMaxSize
 
         /// <summary>

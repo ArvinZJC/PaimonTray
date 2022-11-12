@@ -241,7 +241,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void SetPageSize()
         {
-            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
+            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize(XamlRoot.RasterizationScale);
 
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
             ListViewAccountGroups.MaxHeight = Height * 2 / 3;

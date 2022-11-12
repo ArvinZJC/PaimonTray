@@ -497,7 +497,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void SetPageSize()
         {
-            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
+            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize(XamlRoot.RasterizationScale);
 
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
             Width = pageMaxSize.Width < GridBody.ActualWidth ? pageMaxSize.Width : GridBody.ActualWidth;

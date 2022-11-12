@@ -57,29 +57,30 @@ namespace PaimonTray.Views
         private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var frameBodyContent = (FrameworkElement)FrameBody.Content;
-            int winHeight;
-            int winWidth;
+            var mainWindowPositionOffset = (int)Math.Ceiling(WindowsHelper.MainWindowPositionOffset * GridRoot.XamlRoot.RasterizationScale);
+            double winHeightExpected;
+            double winWidthExpected;
             var workArea = WindowsHelper.GetWorkArea(WinId);
 
             // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode is NavigationViewPaneDisplayMode.Top)
             {
-                winHeight = (int)(Math.Ceiling(frameBodyContent.ActualHeight) + NavigationViewBody.CompactPaneLength) +
-                            WindowsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)Math.Ceiling(frameBodyContent.ActualWidth) + WindowsHelper.MainWindowSideLengthOffset;
+                winHeightExpected = frameBodyContent.ActualHeight + NavigationViewBody.CompactPaneLength + WindowsHelper.MainWindowSideLengthOffset;
+                winWidthExpected = frameBodyContent.ActualWidth + WindowsHelper.MainWindowSideLengthOffset;
             }
             else
             {
-                winHeight = (int)Math.Ceiling(frameBodyContent.ActualHeight) + WindowsHelper.MainWindowSideLengthOffset;
-                winWidth = (int)(Math.Ceiling(frameBodyContent.ActualWidth) + NavigationViewBody.CompactPaneLength) +
-                           WindowsHelper.MainWindowSideLengthOffset;
+                winHeightExpected = frameBodyContent.ActualHeight + WindowsHelper.MainWindowSideLengthOffset;
+                winWidthExpected = frameBodyContent.ActualWidth + NavigationViewBody.CompactPaneLength + WindowsHelper.MainWindowSideLengthOffset;
             } // end if...else
 
+            var winHeight = (int)Math.Ceiling(winHeightExpected * GridRoot.XamlRoot.RasterizationScale);
+            var winWidth = (int)Math.Ceiling(winWidthExpected * GridRoot.XamlRoot.RasterizationScale);
             _appWindow.MoveAndResize(new RectInt32
             {
                 Height = winHeight, Width = winWidth,
-                X = workArea.Width - winWidth - WindowsHelper.MainWindowPositionOffset,
-                Y = workArea.Height - winHeight - WindowsHelper.MainWindowPositionOffset
+                X = workArea.Width - winWidth - mainWindowPositionOffset,
+                Y = workArea.Height - winHeight - mainWindowPositionOffset
             });
 
             if (!_isFirstLoad) return;
