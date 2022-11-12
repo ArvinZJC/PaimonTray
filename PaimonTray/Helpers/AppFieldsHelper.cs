@@ -33,6 +33,11 @@
         public static readonly string GlyphAddFriend = "\xE8FA";
 
         /// <summary>
+        /// The code of the glyph Cancel.
+        /// </summary>
+        public static readonly string GlyphCancel = "\xE711";
+
+        /// <summary>
         /// The code of the glyph Delete.
         /// </summary>
         public static readonly string GlyphDelete = "\xE74D";
