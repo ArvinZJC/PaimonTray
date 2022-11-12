@@ -313,7 +313,7 @@ namespace PaimonTray.Views
             {
                 _webView2LoginWebPage.Height = isServerCn ? 488 : 608;
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                GridServer.Width = isServerCn ? 1220 : 740;
+                GridServer.Width = isServerCn ? 1220 : 964;
             }
             else
             {
