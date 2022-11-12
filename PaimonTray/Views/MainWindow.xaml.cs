@@ -76,6 +76,7 @@ namespace PaimonTray.Views
 
             var winHeight = (int)Math.Ceiling(winHeightExpected * GridRoot.XamlRoot.RasterizationScale);
             var winWidth = (int)Math.Ceiling(winWidthExpected * GridRoot.XamlRoot.RasterizationScale);
+
             _appWindow.MoveAndResize(new RectInt32
             {
                 Height = winHeight, Width = winWidth,
@@ -121,6 +122,7 @@ namespace PaimonTray.Views
         {
             if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
 
+            NavigationViewBody.IsPaneOpen = false; // A workaround to make sure the navigation view items are visible to the user.
             FrameBody.Navigate(
                 navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate
                     ? typeof(AddUpdateAccountPage)

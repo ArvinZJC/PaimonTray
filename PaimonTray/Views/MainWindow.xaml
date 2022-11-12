@@ -57,6 +57,7 @@
             IsBackButtonVisible="Collapsed"
             IsBackEnabled="False"
             IsPaneToggleButtonVisible="False"
+            IsPaneOpen="True"
             IsSettingsVisible="False"
             IsTabStop="False"
             PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
