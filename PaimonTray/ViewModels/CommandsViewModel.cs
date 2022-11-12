@@ -5,8 +5,9 @@ using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using PaimonTray.Views;
 using Serilog;
-using System.Diagnostics;
+using System;
 using System.Windows.Input;
+using Windows.System;
 using Windows.UI.Notifications;
 
 namespace PaimonTray.ViewModels
@@ -120,10 +121,10 @@ namespace PaimonTray.ViewModels
             {
                 XamlUICommand xamlUiCommand = new();
 
-                xamlUiCommand.ExecuteRequested += (_, e) =>
+                xamlUiCommand.ExecuteRequested += async (_, e) =>
                 {
                     if (e.Parameter is string link)
-                        Process.Start(new ProcessStartInfo { FileName = link, UseShellExecute = true });
+                        await Launcher.LaunchUriAsync(new Uri(link));
                 };
                 return xamlUiCommand;
             } // end get
