@@ -10,6 +10,7 @@
     Loaded="AddUpdateAccountPage_OnLoaded"
     Unloaded="AddUpdateAccountPage_OnUnloaded">
     <Page.Resources>
+        <!-- ReSharper disable Xaml.ConstructorWarning, Xaml.StaticResourceNotResolved -->
         <ControlTemplate
             x:Key="ControlTemplateInfoBar"
             TargetType="InfoBar">
@@ -150,6 +151,7 @@
                     </Grid.RowDefinitions>
                     <Grid
                         x:Name="StandardIconArea"
+                        Grid.Row="0"
                         Visibility="Collapsed">
                         <TextBlock
                             x:Name="IconBackground"
@@ -175,6 +177,7 @@
                         x:Name="UserIconBox"
                         Child="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.IconElement}"
                         Grid.Column="0"
+                        Grid.Row="0"
                         Margin="{ThemeResource InfoBarIconMargin}"
                         MaxHeight="{ThemeResource InfoBarIconFontSize}"
                         MaxWidth="{ThemeResource InfoBarIconFontSize}"
@@ -182,6 +185,7 @@
                         Visibility="Collapsed" />
                     <InfoBarPanel
                         Grid.Column="1"
+                        Grid.Row="0"
                         HorizontalOrientationPadding="{StaticResource InfoBarPanelHorizontalOrientationPadding}"
                         Margin="{StaticResource InfoBarPanelMargin}"
                         VerticalOrientationPadding="{StaticResource InfoBarPanelVerticalOrientationPadding}">
@@ -234,6 +238,7 @@
                         Command="{TemplateBinding CloseButtonCommand}"
                         CommandParameter="{TemplateBinding CloseButtonCommandParameter}"
                         Grid.Column="2"
+                        Grid.Row="0"
                         Name="CloseButton"
                         Style="{TemplateBinding CloseButtonStyle}">
                         <Button.Resources>
@@ -367,6 +372,7 @@
                 </Grid>
             </Border>
         </ControlTemplate>
+        <!-- ReSharper restore Xaml.ConstructorWarning, Xaml.StaticResourceNotResolved -->
     </Page.Resources>
     <!-- The root grid. -->
     <Grid>
