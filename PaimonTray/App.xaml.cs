@@ -27,6 +27,14 @@ namespace PaimonTray
             GenerateAppVersion();
             Log.Information($"{Package.Current.DisplayName} v{AppVersionTag} started.");
             InitializeComponent();
+            UnhandledException += (_, args) =>
+            {
+                Log.Error($"Unhandled exception: {args.Message}");
+                Log.Error($"  - Inner exception: {args.Exception.InnerException}");
+                Log.Error($"  - Stack trace: {args.Exception.StackTrace}");
+                Log.Error($"  - HRESULT: {args.Exception.HResult}");
+                Log.Error($"  - Help link: {args.Exception.HelpLink}");
+            };
         } // end constructor App
 
         #endregion Constructors
