@@ -57,7 +57,8 @@ namespace PaimonTray.Views
         private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var frameBodyContent = (FrameworkElement)FrameBody.Content;
-            var mainWindowPositionOffset = (int)Math.Ceiling(WindowsHelper.MainWindowPositionOffset * GridRoot.XamlRoot.RasterizationScale);
+            var mainWindowPositionOffset =
+                (int)Math.Ceiling(WindowsHelper.MainWindowPositionOffset * GridRoot.XamlRoot.RasterizationScale);
             double winHeightExpected;
             double winWidthExpected;
             var workArea = WindowsHelper.GetWorkArea(WinId);
@@ -65,13 +66,15 @@ namespace PaimonTray.Views
             // Avoid using "e.NewSize" to prevent window resizing delay.
             if (NavigationViewBody.PaneDisplayMode is NavigationViewPaneDisplayMode.Top)
             {
-                winHeightExpected = frameBodyContent.ActualHeight + NavigationViewBody.CompactPaneLength + WindowsHelper.MainWindowSideLengthOffset;
+                winHeightExpected = frameBodyContent.ActualHeight + NavigationViewBody.CompactPaneLength +
+                                    WindowsHelper.MainWindowSideLengthOffset;
                 winWidthExpected = frameBodyContent.ActualWidth + WindowsHelper.MainWindowSideLengthOffset;
             }
             else
             {
                 winHeightExpected = frameBodyContent.ActualHeight + WindowsHelper.MainWindowSideLengthOffset;
-                winWidthExpected = frameBodyContent.ActualWidth + NavigationViewBody.CompactPaneLength + WindowsHelper.MainWindowSideLengthOffset;
+                winWidthExpected = frameBodyContent.ActualWidth + NavigationViewBody.CompactPaneLength +
+                                   WindowsHelper.MainWindowSideLengthOffset;
             } // end if...else
 
             var winHeight = (int)Math.Ceiling(winHeightExpected * GridRoot.XamlRoot.RasterizationScale);
@@ -122,7 +125,8 @@ namespace PaimonTray.Views
         {
             if (NavigationViewBody.SelectedItem is not NavigationViewItem navigationViewBodySelectedItem) return;
 
-            NavigationViewBody.IsPaneOpen = false; // A workaround to make sure the navigation view items are visible to the user.
+            NavigationViewBody.IsPaneOpen =
+                false; // A workaround to make sure the navigation view items are visible to the user.
             FrameBody.Navigate(
                 navigationViewBodySelectedItem == NavigationViewItemBodyAccountAddUpdate
                     ? typeof(AddUpdateAccountPage)

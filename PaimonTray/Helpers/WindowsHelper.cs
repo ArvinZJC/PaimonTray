@@ -172,11 +172,14 @@ namespace PaimonTray.Helpers
             var workArea =
                 GetWorkArea(mainExistingWindow is null ? new WindowId() : GetWindowId(mainExistingWindow.Win));
             var workAreaOffset = 2 * MainWindowPositionOffset * rasterisationScale;
-            var workAreaAdditionalOffset = 4 * MainWindowPositionOffset * rasterisationScale; // Reserved for the navigation pane.
+            var workAreaAdditionalOffset =
+                4 * MainWindowPositionOffset * rasterisationScale; // Reserved for the navigation pane.
 
             return new SizeInt32(
-                (int)Math.Floor((workArea.Width - workAreaOffset - (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset)) / rasterisationScale),
-                (int)Math.Floor((workArea.Height - workAreaOffset - (isMainWindowTopNavigationPane ? workAreaAdditionalOffset : 0)) / rasterisationScale));
+                (int)Math.Floor((workArea.Width - workAreaOffset -
+                                 (isMainWindowTopNavigationPane ? 0 : workAreaAdditionalOffset)) / rasterisationScale),
+                (int)Math.Floor((workArea.Height - workAreaOffset -
+                                 (isMainWindowTopNavigationPane ? workAreaAdditionalOffset : 0)) / rasterisationScale));
         } // end method GetMainWindowPageMaxSize
 
         /// <summary>
