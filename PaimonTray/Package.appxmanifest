@@ -9,7 +9,7 @@
   <Identity
     Name="com.isarvin.PaimonTray"
     Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6"
-    Version="1.1.0.0" />
+    Version="1.1.100.0" />
   <Properties>
     <DisplayName>PaimonTray</DisplayName>
     <PublisherDisplayName>ArvinZJC</PublisherDisplayName>
