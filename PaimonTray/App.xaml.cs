@@ -92,14 +92,14 @@ namespace PaimonTray
         {
             if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
             {
-                Log.Warning("The Windows App SDK runtime is not in a good deployment status.");
+                Log.Warning("The Windows App SDK runtime not in a good deployment status.");
 
-                var initialiseTask = Task.Run(() => DeploymentManager.Initialize(new DeploymentInitializeOptions
-                    { ForceDeployment = true, OnErrorShowUI = true }));
+                var initialiseTask = Task.Run(() =>
+                    DeploymentManager.Initialize(new DeploymentInitializeOptions { ForceDeployment = true }));
 
                 initialiseTask.Wait();
 
-                if (initialiseTask.Result.Status is DeploymentStatus.Ok) // TODO: is not
+                if (initialiseTask.Result.Status is not DeploymentStatus.Ok)
                 {
                     Log.Error(
                         $"Failed to ensure a good deployment status of the Windows App SDK runtime: {initialiseTask.Result.ExtendedError.Message}");
@@ -108,17 +108,26 @@ namespace PaimonTray
                     Log.Error($"  - HRESULT: {initialiseTask.Result.ExtendedError.HResult}");
                     Log.Error($"  - Help link: {initialiseTask.Result.ExtendedError.HelpLink}");
 
-                    // TODO: no need to exit? framework package always installed, what we required is singleton and main? https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/deploy-packaged-apps
+                    if (initialiseTask.Result.ExtendedError.HResult is 1) // TODO:
+                    {
+                        Log.Information("Restarting the app elevated to try fixing the deployment failure.");
+                        AppInstance.GetCurrent().UnregisterKey();
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "PaimonTray.exe",
+                            UseShellExecute = true,
+                            Verb = "runas"
+                        });
+                    }
+                    else
+                    {
+                        Log.Information("The app cannot solve the deployment failure and will be exited.");
+                        // TODO: consider what to do: https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/downloads
+                    } // end if...else
+
                     Log.CloseAndFlush();
                     _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
-                    AppInstance.GetCurrent().UnregisterKey();
-                    Exit(); // Not graceful
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = "PaimonTray.exe",
-                        UseShellExecute = true,
-                        Verb = "runas"
-                    });
+                    Exit();
                 } // end if
             } // end if
 
