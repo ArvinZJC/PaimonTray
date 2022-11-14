@@ -95,7 +95,7 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
-                    Log.Information("Exit the app requested.");
+                    Log.Information("Exiting the app requested.");
 
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
