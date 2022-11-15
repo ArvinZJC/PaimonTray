@@ -9,8 +9,8 @@
   xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
   IgnorableNamespaces="desktop rescap uap uap3 uap5">
   <Identity
-    Name="com.isarvin.PaimonTray"
-    Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6_dev"
+    Name="12436ArvinZJC.40085CBC45AEE"
+    Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6"
     Version="1.1.100.0" />
   <Properties>
     <DisplayName>PaimonTray</DisplayName>
