@@ -129,7 +129,7 @@ namespace PaimonTray
                         Process.Start(new ProcessStartInfo
                         {
                             Arguments = AppFieldsHelper.TaskIdElevatedAppRestart,
-                            FileName = "PaimonTray.exe",
+                            FileName = $"shell:appsFolder\\{Package.Current.Id.FamilyName}!App",
                             UseShellExecute = true,
                             Verb = "runas"
                         });
