@@ -88,9 +88,7 @@
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem x:Name="NavigationViewItemBodyAbout">
                     <NavigationViewItem.Icon>
-                        <FontIcon
-                            FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:AppFieldsHelper.GlyphInfo}" />
+                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphInfo}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.FooterMenuItems>
@@ -99,14 +97,14 @@
                     x:Name="NavigationViewItemBodyGeneral"
                     IsSelected="True">
                     <NavigationViewItem.Icon>
-                        <FontIcon
-                            FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:AppFieldsHelper.GlyphProcessing}" />
+                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphProcessing}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem
-                    x:Name="NavigationViewItemBodyAccounts"
-                    Icon="People" />
+                <NavigationViewItem x:Name="NavigationViewItemBodyAccounts">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphPeople}" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <!-- The body scroll viewer. -->
             <ScrollViewer

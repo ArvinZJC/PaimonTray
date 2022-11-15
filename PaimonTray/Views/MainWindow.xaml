@@ -57,6 +57,7 @@
             IsBackButtonVisible="Collapsed"
             IsBackEnabled="False"
             IsPaneToggleButtonVisible="False"
+            IsPaneOpen="True"
             IsSettingsVisible="False"
             IsTabStop="False"
             PaneDisplayMode="{x:Bind MainWinViewModel.NavViewPaneDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -65,12 +66,18 @@
                 <NavigationViewItem
                     x:FieldModifier="public"
                     x:Name="NavigationViewItemBodyRealTimeNotes"
-                    Icon="Home"
-                    IsSelected="True" />
+                    IsSelected="True">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphHome}" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem
                     x:FieldModifier="public"
-                    x:Name="NavigationViewItemBodyAccountAddUpdate"
-                    Icon="AddFriend" />
+                    x:Name="NavigationViewItemBodyAccountAddUpdate">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphAddFriend}" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <!-- The main menu button. -->
@@ -86,9 +93,10 @@
                             <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.AddUpdateAccountCommand}" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Command="{x:Bind _app.CommandsVm.ShowSettingsWindowCommand}" />
-                            <MenuFlyoutSubItem
-                                x:Name="MenuFlyoutSubItemMainMenuHelp"
-                                Icon="Help">
+                            <MenuFlyoutSubItem x:Name="MenuFlyoutSubItemMainMenuHelp">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphHelp}" />
+                                </MenuFlyoutSubItem.Icon>
                                 <MenuFlyoutItem
                                     x:Name="MenuFlyoutItemMainMenuHelpAppSite"
                                     IsEnabled="False">
@@ -146,7 +154,7 @@
                                 CommandParameter="{x:Bind TaskbarIconApp}" />
                         </MenuFlyout>
                     </Button.Flyout>
-                    <SymbolIcon Symbol="More" />
+                    <FontIcon Glyph="{x:Bind helpers:AppFieldsHelper.GlyphMore}" />
                 </Button>
             </NavigationView.PaneFooter>
             <!-- The body frame. -->

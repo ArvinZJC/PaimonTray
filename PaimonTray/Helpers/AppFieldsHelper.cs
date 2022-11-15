@@ -28,6 +28,21 @@
         public static readonly string GlyphAccept = "\xE8FB";
 
         /// <summary>
+        /// The code of the glyph AddFriend.
+        /// </summary>
+        public static readonly string GlyphAddFriend = "\xE8FA";
+
+        /// <summary>
+        /// The code of the glyph Cancel.
+        /// </summary>
+        public static readonly string GlyphCancel = "\xE711";
+
+        /// <summary>
+        /// The code of the glyph Delete.
+        /// </summary>
+        public static readonly string GlyphDelete = "\xE74D";
+
+        /// <summary>
         /// The code of the glyph Diagnostic.
         /// </summary>
         public static readonly string GlyphDiagnostic = "\xE9D9";
@@ -43,6 +58,11 @@
         public static readonly string GlyphHelp = "\xE897";
 
         /// <summary>
+        /// The code of the glyph Home.
+        /// </summary>
+        public static readonly string GlyphHome = "\xE80F";
+
+        /// <summary>
         /// The code of the glyph Info.
         /// </summary>
         public static readonly string GlyphInfo = "\xE946";
@@ -53,9 +73,29 @@
         public static readonly string GlyphKnowledgeArticle = "\xF000";
 
         /// <summary>
+        /// The code of the glyph More.
+        /// </summary>
+        public static readonly string GlyphMore = "\xE712";
+
+        /// <summary>
+        /// The code of the glyph People.
+        /// </summary>
+        public static readonly string GlyphPeople = "\xE716";
+
+        /// <summary>
         /// The code of the glyph Processing.
         /// </summary>
         public static readonly string GlyphProcessing = "\xE9F5";
+
+        /// <summary>
+        /// The code of the glyph Refresh.
+        /// </summary>
+        public static readonly string GlyphRefresh = "\xE72C";
+
+        /// <summary>
+        /// The code of the glyph Settings.
+        /// </summary>
+        public static readonly string GlyphSettings = "\xE713";
 
         /// <summary>
         /// The code of the glyph SwitchUser.
@@ -73,9 +113,19 @@
         public static readonly string GlyphUpdateRestore = "\xE777";
 
         /// <summary>
+        /// The code of the glyph View.
+        /// </summary>
+        public static readonly string GlyphView = "\xE890";
+
+        /// <summary>
         /// The code of the glyph Website.
         /// </summary>
         public static readonly string GlyphWebsite = "\xEB41";
+
+        /// <summary>
+        /// General access denied error. (Reference: https://learn.microsoft.com/en-us/windows/win32/seccrypto/common-hresult-values)
+        /// </summary>
+        public static readonly int HResultAccessDenied = unchecked((int)0x80070005);
 
         /// <summary>
         /// The info bar's bottom margin.
@@ -86,6 +136,11 @@
         /// The greeting notification tag.
         /// </summary>
         public static readonly string TagNotificationGreeting = "NotificationGreeting";
+
+        /// <summary>
+        /// The elevated app restart's task ID.
+        /// </summary>
+        public static readonly string TaskIdElevatedAppRestart = "PaimonTrayElevatedAppRestart";
 
         /// <summary>
         /// The representation of the unknown value.
@@ -146,6 +201,11 @@
         /// The app icon source URL.
         /// </summary>
         public static readonly string UrlAppIconSource = "https://www.pixiv.net/en/artworks/92415888";
+
+        /// <summary>
+        /// The base URL for the Windows App SDK runtime download.
+        /// </summary>
+        public static readonly string UrlBaseWindowsAppSdkRuntimeDownload = "https://aka.ms/windowsappsdk/";
 
         /// <summary>
         /// The URL of the user manual section instructing how to get your cookies.
@@ -212,6 +272,26 @@
         /// The min stable build version.
         /// </summary>
         public static readonly int VersionBuildStableMin = 200;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's build version.
+        /// </summary>
+        public static readonly int VersionBuildNuGetWindowsAppSdk = 221109;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's major version.
+        /// </summary>
+        public static readonly int VersionMajorNuGetWindowsAppSdk = 1;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's minor version.
+        /// </summary>
+        public static readonly int VersionMinorNuGetWindowsAppSdk = 2;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's revision version.
+        /// </summary>
+        public static readonly int VersionRevisionNuGetWindowsAppSdk = 1;
 
         #endregion Fields
     } // end class AppFieldsHelper

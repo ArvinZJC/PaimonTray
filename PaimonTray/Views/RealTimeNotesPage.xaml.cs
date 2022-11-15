@@ -241,7 +241,7 @@ namespace PaimonTray.Views
         /// </summary>
         private void SetPageSize()
         {
-            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize();
+            var pageMaxSize = _app.WindowsH.GetMainWindowPageMaxSize(XamlRoot.RasterizationScale);
 
             Height = pageMaxSize.Height < GridBody.ActualHeight ? pageMaxSize.Height : GridBody.ActualHeight;
             ListViewAccountGroups.MaxHeight = Height * 2 / 3;
@@ -298,15 +298,13 @@ namespace PaimonTray.Views
 
                     if (hasCharacterEnabled)
                     {
-                        var uidCharacterSelected =
-                            _app.AccountsH.ApplicationDataContainerAccounts.Values[
-                                AccountsHelper.KeyUidCharacterSelected] as string;
                         AccountCharacter accountCharacterSelected = null;
 
                         foreach (var accountCharacters in accountGroupInfoLists.Select(accountGroupInfoList =>
                                      accountGroupInfoList.Cast<AccountCharacter>()))
                         {
-                            accountCharacterSelected = uidCharacterSelected is null
+                            accountCharacterSelected = _app.AccountsH.ApplicationDataContainerAccounts.Values[
+                                AccountsHelper.KeyUidCharacterSelected] is not string uidCharacterSelected
                                 ? accountCharacters.FirstOrDefault(
                                     accountCharacter =>
                                         accountCharacter.UidCharacter is not null && accountCharacter.IsEnabled, null)

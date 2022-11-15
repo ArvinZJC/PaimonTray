@@ -32,7 +32,7 @@ PaimonTray also has some other highlights that may interest you. These include b
   <summary>Click to expand/collapse</summary>
 
 - Web page login method: log into your account on the specific web page just like in a browser<sup id="source1">[1](#footnote1)</sup> to add/update an account.
-- Alternative login method: logging into your account by entering cookies manually is another way to add/update an account.-
+- Alternative login method: logging into your account by entering cookies manually is another way to add/update an account.
 - Not only the CN server (aka a miHoYo account) but also the global (aka a HoYoLAB account).
 - Multiple accounts<sup id="source2">[2](#footnote2)</sup> with nifty management: all your added accounts can be updated, checked and refreshed, or removed.
 - Only your selected characters: all characters (aka Genshin Impact accounts) linked with a miHoYo/HoYoLAB account are there for you to select whether to allow retrieving real-time notes.
@@ -63,7 +63,7 @@ You can get PaimonTray from:
 
 - **Which channel should I select to get the app?**
 
-  Please always get the app from Microsoft Store if possible. It can provide a stabler support to handle prerequisites (e.g. the app's dependencies) automatically.
+  Please always get the app from Microsoft Store if possible. It may provide a stabler support to handle prerequisites (e.g. the app's framework dependency).
 
   Downloading the `PaimonTray_<version>.msixbundle` file from the [releases](../../releases) is an alternative option. You may select this channel if:
 
@@ -72,7 +72,7 @@ You can get PaimonTray from:
   - You desire to try pre-releases.
   - You can handle prerequisites yourself when necessary.
 
-  You can have the app from both channels installed at the same time, since they use different package family names.
+  You may have the app from both channels installed at the same time depending on your Windows version and some system settings. However, it is not recommended, even though I would not to point out any significant downside.
 
 - **I cannot get the latest version as stated above from Microsoft Store.**
 
@@ -91,7 +91,7 @@ You can get PaimonTray from:
 
 - **Why does the provided `.msixbundle` file a little large?**
 
-  The framework-dependent deployment has already reduced the file size significantly. However, first, the file bundles the multiple architecture versions of the installer into one entity. Second, it is [a C#/WinRT issue that IL trimming is currently unsupported](https://github.com/microsoft/CsWinRT/issues/373).
+  The framework-dependent deployment has already reduced the file size significantly. The file bundles the multiple architecture versions of the installer into one entity.
 
 </details>
 
@@ -99,7 +99,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 25 September 2022, everything looks good with Visual Studio 2022 (Version: 17.3.4) + .NET 6.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 15 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.0) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
@@ -111,14 +111,14 @@ You can get PaimonTray from:
 3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
 4. The NuGet packages of the project are listed in the following table.
 
-   | Name                                |   Version    |
-   | :---------------------------------- | :----------: |
-   | H.NotifyIcon.WinUI                  |    2.0.67    |
-   | Microsoft.Toolkit.Uwp.Notifications |    7.1.2     |
-   | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.1 |
-   | Microsoft.WindowsAppSDK             |    1.1.5     |
-   | Serilog.Sinks.Async                 |    1.5.0     |
-   | Serilog.Sinks.File                  |    5.0.0     |
+   | Name                                |    Version     |
+   | :---------------------------------- | :------------: |
+   | H.NotifyIcon.WinUI                  |     2.0.74     |
+   | Microsoft.Toolkit.Uwp.Notifications |     7.1.3      |
+   | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.755 |
+   | Microsoft.WindowsAppSDK             |  1.2.221109.1  |
+   | Serilog.Sinks.Async                 |     1.5.0      |
+   | Serilog.Sinks.File                  |     5.0.0      |
 
 Good luck! 💖
 

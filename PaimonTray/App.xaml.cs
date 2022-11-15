@@ -4,10 +4,14 @@ using PaimonTray.Helpers;
 using PaimonTray.Views;
 using PaimonTray.ViewModels;
 using Serilog;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.System;
+using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
 {
@@ -25,8 +29,18 @@ namespace PaimonTray
         {
             ConfigLogger();
             GenerateAppVersion();
-            Log.Information($"{Package.Current.DisplayName} v{AppVersionTag} started.");
+            Log.Information(
+                $"{Package.Current.DisplayName} v{AppVersionTag} ({Package.Current.Id.FamilyName}) started.");
             InitializeComponent();
+            UnhandledException += (_, args) =>
+            {
+                Log.Error($"Unhandled exception: {args.Message}");
+                Log.Error($"  - Inner exception: {args.Exception.InnerException}");
+                Log.Error($"  - Stack trace: {args.Exception.StackTrace}");
+                Log.Error($"  - HRESULT: {args.Exception.HResult}");
+                Log.Error($"  - Help link: {args.Exception.HelpLink}");
+                Log.CloseAndFlush();
+            };
         } // end constructor App
 
         #endregion Constructors
@@ -49,6 +63,16 @@ namespace PaimonTray
                         "log_" + (Package.Current.IsDevelopmentMode ? "dev_" : string.Empty) + ".log"),
                     rollingInterval: RollingInterval.Day)).CreateLogger();
         } // end method ConfigLogger
+
+        /// <summary>
+        /// Exit the app with no window.
+        /// </summary>
+        private void ExitAppWithNoWindow()
+        {
+            Log.CloseAndFlush();
+            _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
+            Exit();
+        } // end method ExitAppWithNoWindow
 
         /// <summary>
         /// Generate the app version from the package version.
@@ -77,22 +101,53 @@ namespace PaimonTray
         /// Other entry points will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
             {
                 Log.Warning("The Windows App SDK runtime not in a good deployment status.");
 
-                var initialiseTask = Task.Run(DeploymentManager.Initialize);
+                var initialiseTask = Task.Run(() =>
+                    DeploymentManager.Initialize(new DeploymentInitializeOptions { ForceDeployment = true }));
 
                 initialiseTask.Wait();
 
                 if (initialiseTask.Result.Status is not DeploymentStatus.Ok)
                 {
-                    Log.Error("Failed to ensure a deployment status of the Windows App SDK runtime.");
-                    Log.CloseAndFlush();
-                    _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
-                    Exit();
+                    Log.Error(
+                        $"Failed to ensure a good deployment status of the Windows App SDK runtime: {initialiseTask.Result.ExtendedError.Message}");
+                    Log.Error($"  - Inner exception: {initialiseTask.Result.ExtendedError.InnerException}");
+                    Log.Error($"  - Stack trace: {initialiseTask.Result.ExtendedError.StackTrace}");
+                    Log.Error($"  - HRESULT: {initialiseTask.Result.ExtendedError.HResult}");
+                    Log.Error($"  - Help link: {initialiseTask.Result.ExtendedError.HelpLink}");
+
+                    if (initialiseTask.Result.ExtendedError.HResult == AppFieldsHelper.HResultAccessDenied &&
+                        !Environment.CommandLine.Contains(AppFieldsHelper.TaskIdElevatedAppRestart))
+                    {
+                        Log.Information("Restarting the app elevated to try fixing the deployment failure.");
+                        AppInstance.GetCurrent().UnregisterKey();
+                        ExitAppWithNoWindow(); // Need to exit the app before starting a new app instance elevated.
+                        Process.Start(new ProcessStartInfo
+                        {
+                            Arguments = AppFieldsHelper.TaskIdElevatedAppRestart,
+                            FileName = $"shell:appsFolder\\{Package.Current.Id.FamilyName}!App",
+                            UseShellExecute = true,
+                            Verb = "runas"
+                        });
+                    }
+                    else
+                    {
+                        Log.Information(
+                            "The app cannot solve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
+                        await Launcher.LaunchUriAsync(new Uri(
+                            $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
+                            $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +
+                            $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionBuildNuGetWindowsAppSdk}.{AppFieldsHelper.VersionRevisionNuGetWindowsAppSdk}/" +
+                            $"windowsappruntimeinstall-{Package.Current.Id.Architecture.ToString().ToLower()}.exe"));
+                        ExitAppWithNoWindow();
+                    } // end if...else
+
+                    return;
                 } // end if
             } // end if
 
