@@ -63,7 +63,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 - **我应该选择哪个渠道来获取此应用？**
 
-  请尽可能通过微软应用商店来获取此应用。它能对处理前提要求（如：应用所需依赖）提供更稳定的支持。
+  请尽可能通过微软应用商店来获取此应用。它也许能对处理前提要求（如：应用的框架依赖）提供更稳定的支持。
 
   从[发行](../../releases)下载 `PaimonTray_<version>.msixbundle` 文件是一个替代的选择。若您属于下列情况，则您可能更适合从此渠道来获取此应用。
 
@@ -72,7 +72,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
   - 您希望体验预发布。
   - 您能在必要时自行处理前提要求。
 
-  由于这两个渠道使用不用的包名，您可同时安装来自两个渠道的此应用。
+  您也许能同时安装来自两个渠道的此应用，这取决于您的 Windows 版本和一些系统设置。虽然我并不会指出这样做的任何坏处，但是依然不推荐。
 
 - **我无法从微软应用商店获取如上所示的最新版本。**
 
@@ -91,7 +91,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 - **为什么提供的 `.msixbundle` 文件有点儿大？**
 
-  依赖于框架式的部署已经大幅减小文件大小。不过呢，首先，这个文件将安装程序的多个体系结构版本捆绑成一个实体。其次，[C#/WinRT 目前暂不支持 IL 剪裁](https://github.com/microsoft/CsWinRT/issues/373)。
+  依赖于框架式的部署已经大幅减小文件大小。这个文件将安装程序的多个体系结构版本捆绑成一个实体。
 
 </details>
 
@@ -99,7 +99,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 11 月 14 日，使用 Visual Studio 2022（版本：17.4.0）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 11 月 15 日，使用 Visual Studio 2022（版本：17.4.0）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
 
