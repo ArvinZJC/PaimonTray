@@ -4,11 +4,13 @@ using PaimonTray.Helpers;
 using PaimonTray.Views;
 using PaimonTray.ViewModels;
 using Serilog;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.System;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
@@ -62,6 +64,16 @@ namespace PaimonTray
         } // end method ConfigLogger
 
         /// <summary>
+        /// Exit the app with no window.
+        /// </summary>
+        private void ExitAppWithNoWindow()
+        {
+            Log.CloseAndFlush();
+            _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
+            Exit();
+        } // end method ExitAppWithNoWindow
+
+        /// <summary>
         /// Generate the app version from the package version.
         /// </summary>
         private void GenerateAppVersion()
@@ -88,7 +100,7 @@ namespace PaimonTray
         /// Other entry points will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
             {
@@ -108,12 +120,15 @@ namespace PaimonTray
                     Log.Error($"  - HRESULT: {initialiseTask.Result.ExtendedError.HResult}");
                     Log.Error($"  - Help link: {initialiseTask.Result.ExtendedError.HelpLink}");
 
-                    if (initialiseTask.Result.ExtendedError.HResult is 1) // TODO:
+                    if (initialiseTask.Result.ExtendedError.HResult == AppFieldsHelper.HResultAccessDenied &&
+                        !Environment.CommandLine.Contains(AppFieldsHelper.TaskIdElevatedAppRestart))
                     {
                         Log.Information("Restarting the app elevated to try fixing the deployment failure.");
                         AppInstance.GetCurrent().UnregisterKey();
+                        ExitAppWithNoWindow(); // Need to exit the app before starting a new app instance elevated.
                         Process.Start(new ProcessStartInfo
                         {
+                            Arguments = AppFieldsHelper.TaskIdElevatedAppRestart,
                             FileName = "PaimonTray.exe",
                             UseShellExecute = true,
                             Verb = "runas"
@@ -121,13 +136,17 @@ namespace PaimonTray
                     }
                     else
                     {
-                        Log.Information("The app cannot solve the deployment failure and will be exited.");
-                        // TODO: consider what to do: https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/downloads
+                        Log.Information(
+                            "The app cannot solve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
+                        await Launcher.LaunchUriAsync(new Uri(
+                            $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
+                            $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +
+                            $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionBuildNuGetWindowsAppSdk}.{AppFieldsHelper.VersionRevisionNuGetWindowsAppSdk}/" +
+                            $"windowsappruntimeinstall-{Package.Current.Id.Architecture.ToString().ToLower()}.exe"));
+                        ExitAppWithNoWindow();
                     } // end if...else
 
-                    Log.CloseAndFlush();
-                    _ = new Window(); // Exiting the app takes no effect if no window instances. (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931)
-                    Exit();
+                    return;
                 } // end if
             } // end if
 

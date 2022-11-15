@@ -123,6 +123,11 @@
         public static readonly string GlyphWebsite = "\xEB41";
 
         /// <summary>
+        /// General access denied error. (Reference: https://learn.microsoft.com/en-us/windows/win32/seccrypto/common-hresult-values)
+        /// </summary>
+        public static readonly int HResultAccessDenied = unchecked((int)0x80070005);
+
+        /// <summary>
         /// The info bar's bottom margin.
         /// </summary>
         public static readonly int InfoBarMarginBottom = 4;
@@ -131,6 +136,11 @@
         /// The greeting notification tag.
         /// </summary>
         public static readonly string TagNotificationGreeting = "NotificationGreeting";
+
+        /// <summary>
+        /// The elevated app restart's task ID.
+        /// </summary>
+        public static readonly string TaskIdElevatedAppRestart = "PaimonTrayElevatedAppRestart";
 
         /// <summary>
         /// The representation of the unknown value.
@@ -191,6 +201,11 @@
         /// The app icon source URL.
         /// </summary>
         public static readonly string UrlAppIconSource = "https://www.pixiv.net/en/artworks/92415888";
+
+        /// <summary>
+        /// The base URL for the Windows App SDK runtime download.
+        /// </summary>
+        public static readonly string UrlBaseWindowsAppSdkRuntimeDownload = "https://aka.ms/windowsappsdk/";
 
         /// <summary>
         /// The URL of the user manual section instructing how to get your cookies.
@@ -257,6 +272,26 @@
         /// The min stable build version.
         /// </summary>
         public static readonly int VersionBuildStableMin = 200;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's build version.
+        /// </summary>
+        public static readonly int VersionBuildNuGetWindowsAppSdk = 221109;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's major version.
+        /// </summary>
+        public static readonly int VersionMajorNuGetWindowsAppSdk = 1;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's minor version.
+        /// </summary>
+        public static readonly int VersionMinorNuGetWindowsAppSdk = 2;
+
+        /// <summary>
+        /// The Windows App SDK NuGet package's revision version.
+        /// </summary>
+        public static readonly int VersionRevisionNuGetWindowsAppSdk = 1;
 
         #endregion Fields
     } // end class AppFieldsHelper
