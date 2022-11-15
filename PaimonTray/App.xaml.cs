@@ -29,7 +29,8 @@ namespace PaimonTray
         {
             ConfigLogger();
             GenerateAppVersion();
-            Log.Information($"{Package.Current.DisplayName} v{AppVersionTag} started.");
+            Log.Information(
+                $"{Package.Current.DisplayName} v{AppVersionTag} ({Package.Current.Id.FamilyName}) started.");
             InitializeComponent();
             UnhandledException += (_, args) =>
             {
