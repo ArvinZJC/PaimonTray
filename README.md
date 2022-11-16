@@ -91,7 +91,7 @@ You can get PaimonTray from:
 
 - **Why does the provided `.msixbundle` file a little large?**
 
-  The framework-dependent deployment has already reduced the file size significantly. The file bundles the multiple architecture versions of the installer into one entity.
+  Framework-dependent deployment has already reduced the file size significantly. The file bundles the multiple architecture versions of the installer into one entity.
 
 </details>
 
@@ -99,7 +99,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 15 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.0) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 16 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.1) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
@@ -108,7 +108,16 @@ You can get PaimonTray from:
    - README banner background credited to [void_0](https://www.pixiv.net/en/artworks/85543107).
 
 2. Due to [the use of the Windows App SDK](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk), PaimonTray is expected to work well on Windows 10, version 1809 (build 17763) and later (arm64, x64, and x86). **It is awfully safe to permit the app behaviour for any system prompt regarding safety confirmation. The app is signed, is not malware, and will never ever collect and upload any user privacy.** Should you report a problem encountered, you may find [issues](https://github.com/ArvinZJC/PaimonTray/issues) useful.
+
+   > **Warning**
+   >
+   > Due to [the limitation of the Windows App SDK](https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/stable-channel#elevation), when PaimonTray attempts to run with elevated privilege (e.g., running as an administrator to try fixing the deployment failure to ensure a good deployment status of the Windows App SDK runtime), the following OS servicing update is required:
+   >
+   > - Windows 11 - [10 May, 2022—KB5013943 (OS Build 22000.675)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013943-os-build-22000-675-14aa767a-aa87-414e-8491-b6e845541755)
+   > - Windows 10 - [10 May, 2022—KB5013942 (OS Builds 19042.1706, 19043.1706, and 19044.1706)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013942-os-builds-19042-1706-19043-1706-and-19044-1706-60b51119-85be-4a34-9e21-8954f6749504)
+
 3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
+
 4. The NuGet packages of the project are listed in the following table.
 
    | Name                                |    Version     |

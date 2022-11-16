@@ -99,7 +99,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 11 月 15 日，使用 Visual Studio 2022（版本：17.4.0）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 11 月 16 日，使用 Visual Studio 2022（版本：17.4.1）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
 
@@ -112,6 +112,13 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
    - README 横幅背景来源于 [void_0](https://www.pixiv.net/en/artworks/85543107)。
 
 2. 受 [Windows 应用 SDK 的影响](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk) ，PaimonTray 应能支持 Windows 10 版本 1809（内部版本 17763）及更高版本（arm64、x64 和 x86）。**在安装、使用和卸载此应用的过程中，任何来自系统的安全提示都可授权允许。此应用已签名，无恶意行为，亦不会收集并上传任何用户隐私。** 若遇问题，可移步[议题](https://github.com/ArvinZJC/PaimonTray/issues)。
+
+   > **Warning**（警告）
+   >
+   > 受 [Windows 应用 SDK 限制的影响](https://learn.microsoft.com/zh-cn/windows/apps/windows-app-sdk/stable-channel#elevation)，当 PaimonTray 尝试使用提升的权限运行时（例如，以管理员身份运行，从而尝试修复部署错误来保证 Windows 应用 SDK 运行环境的良好部署状态），需要以下 OS 服务更新：
+   >
+   > - Windows 11 - [2022 年 5 月 10 日 - KB5013943 (OS 内部版本 22000.675)](https://support.microsoft.com/zh-cn/topic/2022-年-5-月-10-日-kb5013943-os-内部版本-22000-675-14aa767a-aa87-414e-8491-b6e845541755)
+   > - Windows 10 - [2022 年 5 月 10 日 - KB5013942 (OS 内部版本 19042.1706、19043.1706 和 19044.1706)](https://support.microsoft.com/zh-cn/topic/2022-年-5-月-10-日-kb5013942-os-内部版本-19042-1706-19043-1706-和-19044-1706-60b51119-85be-4a34-9e21-8954f6749504)
 
 3. PaimonTray 要作为一个轻量的工具应用，**仅关注原神的实时便笺**。性能是绝对的第一要务。优化将持续不断 ~~（但愿吧，至少先画个饼）~~。当前没有成为一个“全家桶”应用的计划。不管怎样，欢迎您说出您的想法。
 
