@@ -260,7 +260,7 @@
     <value>Copy the cookies</value>
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
-    <value>View the [temp] guide on how to get your cookies</value>
+    <value>View the guide on how to get your cookies</value>
   </data>
   <data name="CookiesStatusProcessing" xml:space="preserve">
     <value>Processing cookies</value>

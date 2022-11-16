@@ -260,7 +260,7 @@
     <value>复制 cookie</value>
   </data>
   <data name="CookiesHowToGet" xml:space="preserve">
-    <value>查看关于如何获取 cookie 的 [临时] 指南</value>
+    <value>查看关于如何获取 cookie 的指南</value>
   </data>
   <data name="CookiesStatusProcessing" xml:space="preserve">
     <value>处理 cookie 中</value>
