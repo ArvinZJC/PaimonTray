@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Controls;
 using PaimonTray.Helpers;
 using PaimonTray.Views;
-using Serilog;
 using System;
 using System.Windows.Input;
 using Windows.System;
@@ -95,15 +94,12 @@ namespace PaimonTray.ViewModels
 
                 xamlUiCommand.ExecuteRequested += (_, e) =>
                 {
-                    Log.Information("Exiting the app requested.");
-
                     if (e.Parameter is TaskbarIcon taskBarIconApp)
                         taskBarIconApp.Dispose(); // Ensure the tray icon is removed.
 
                     if (_app.SettingsH.PropertySetSettings[SettingsHelper.KeyNotificationClear] is true)
                         ToastNotificationManager.History.Clear();
 
-                    Log.CloseAndFlush();
                     Application.Current.Exit();
                 };
                 return xamlUiCommand;
