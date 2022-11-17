@@ -99,7 +99,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 16 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.1) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 17 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.1) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
@@ -111,10 +111,14 @@ You can get PaimonTray from:
 
    > **Warning**
    >
-   > Due to [the limitation of the Windows App SDK](https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/stable-channel#elevation), when PaimonTray attempts to run with elevated privilege (e.g., running as an administrator to try fixing the deployment failure to ensure a good deployment status of the Windows App SDK runtime), the following OS servicing update is required:
+   > Due to [the limitation of the Windows App SDK](https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/stable-channel#elevation), the following OS servicing update is required to run PaimonTray with elevated privilege:
    >
    > - Windows 11 - [10 May, 2022—KB5013943 (OS Build 22000.675)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013943-os-build-22000-675-14aa767a-aa87-414e-8491-b6e845541755)
    > - Windows 10 - [10 May, 2022—KB5013942 (OS Builds 19042.1706, 19043.1706, and 19044.1706)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013942-os-builds-19042-1706-19043-1706-and-19044-1706-60b51119-85be-4a34-9e21-8954f6749504)
+
+   > **Note**
+   >
+   > There may be prompts for asking you to download runtime, including but not limited to .NET Desktop Runtime and Windows App SDK runtime. Please download and install the runtime because PaimonTray applies framework-dependent deployment to reduce the installer file size.
 
 3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
 
