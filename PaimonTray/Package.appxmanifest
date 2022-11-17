@@ -9,7 +9,7 @@
   IgnorableNamespaces="desktop rescap uap uap5">
   <Identity
     Name="12436ArvinZJC.40085CBC45AEE"
-    Publisher="CN=E90C2C37-436F-4061-9936-3EA91C959CF6"
+    Publisher="CN=ArvinZJC-dev"
     Version="1.1.100.0" />
   <Properties>
     <DisplayName>PaimonTray</DisplayName>
