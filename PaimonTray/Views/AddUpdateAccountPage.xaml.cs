@@ -362,7 +362,7 @@ namespace PaimonTray.Views
                 catch (Exception exception)
                 {
                     Log.Error("Failed to detect WebView2 Runtime.");
-                    Log.Error(exception.ToString());
+                    App.LogException(exception);
                     UseAlternativeLoginMethod();
                 } // end try...catch
 

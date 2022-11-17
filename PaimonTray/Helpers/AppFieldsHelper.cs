@@ -133,6 +133,16 @@
         public static readonly int InfoBarMarginBottom = 4;
 
         /// <summary>
+        /// The Windows version registry key.
+        /// </summary>
+        public static readonly string RegistryKeyVersionWindows = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+
+        /// <summary>
+        /// The Windows build version registry name.
+        /// </summary>
+        public static readonly string RegistryNameVersionBuildWindows = "UBR";
+
+        /// <summary>
         /// The greeting notification tag.
         /// </summary>
         public static readonly string TagNotificationGreeting = "NotificationGreeting";

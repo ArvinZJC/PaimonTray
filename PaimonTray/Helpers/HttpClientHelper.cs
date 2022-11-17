@@ -234,7 +234,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error($"The HTTP GET request was unsuccessful (URL: {url}).");
-                Log.Error(exception.ToString());
+                App.LogException(exception);
                 return null;
             } // end try...catch
 

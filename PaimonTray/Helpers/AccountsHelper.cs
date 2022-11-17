@@ -1088,8 +1088,7 @@ namespace PaimonTray.Helpers
             {
                 Log.Error(
                     $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
-                Log.Information(httpResponseBody);
-                Log.Error(exception.ToString());
+                LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
             } // end try...catch
 
@@ -1177,8 +1176,7 @@ namespace PaimonTray.Helpers
             {
                 Log.Error(
                     $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
-                Log.Information(httpResponseBody);
-                Log.Error(exception.ToString());
+                LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
             } // end try...catch
@@ -1890,8 +1888,7 @@ namespace PaimonTray.Helpers
             {
                 Log.Error(
                     $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
-                Log.Information(httpResponseBody);
-                Log.Error(exception.ToString());
+                LogException(exception, httpResponseBody);
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
             } // end try...catch
 
@@ -1947,6 +1944,17 @@ namespace PaimonTray.Helpers
                 ? AppFieldsHelper.Unknown
                 : region;
         } // end method GetRegion
+
+        /// <summary>
+        /// Log the exception.
+        /// </summary>
+        /// <param name="exception">The exception to log.</param>
+        /// <param name="httpResponseBody">The HTTP response body.</param>
+        private void LogException(Exception exception, string httpResponseBody)
+        {
+            App.LogException(exception);
+            Log.Error($"  - Extra info: {httpResponseBody}");
+        } // end method LogException
 
         /// <summary>
         /// Occur when the specific property is changed.
