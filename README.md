@@ -67,6 +67,7 @@ You can get PaimonTray from:
 
   Downloading the `PaimonTray_<version>.msixbundle` file from the [releases](../../releases) is an alternative option. You may select this channel if:
 
+  - You do not use Windows 10/11 in S mode.
   - You cannot/hate to use Microsoft Store.
   - You do not care auto-updating.
   - You desire to try pre-releases.
