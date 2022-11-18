@@ -286,7 +286,7 @@
         /// <summary>
         /// The Windows App SDK NuGet package's build version.
         /// </summary>
-        public static readonly int VersionBuildNuGetWindowsAppSdk = 221109;
+        public static readonly int VersionBuildNuGetWindowsAppSdk = 221116;
 
         /// <summary>
         /// The Windows App SDK NuGet package's major version.
