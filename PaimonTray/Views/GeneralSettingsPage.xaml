@@ -53,11 +53,11 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock
-                        x:Name="TextBlockLaunchOnWindowsStartup"
+                        x:Name="TextBlockLaunchAtWindowsStartup"
                         Grid.Row="0"
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
-                        x:Name="TextBlockLaunchOnWindowsStartupExplanation"
+                        x:Name="TextBlockLaunchAtWindowsStartupExplanation"
                         Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
                         Grid.Row="1"
                         Style="{ThemeResource CaptionTextBlockStyle}"
@@ -66,8 +66,8 @@
                 <TextBlock
                     Grid.Column="1"
                     VerticalAlignment="Center">
-                    <Hyperlink Click="HyperlinkLaunchOnWindowsStartupLink_OnClick">
-                        <Run x:Name="RunLaunchOnWindowsStartupLinkText" />
+                    <Hyperlink Click="HyperlinkLaunchAtWindowsStartupLink_OnClick">
+                        <Run x:Name="RunLaunchAtWindowsStartupLinkText" />
                     </Hyperlink>
                 </TextBlock>
             </Grid>

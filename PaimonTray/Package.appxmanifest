@@ -52,7 +52,7 @@
           <uap5:StartupTask
             DisplayName="PaimonTray"
             Enabled="false"
-            TaskId="PaimonTrayLaunchOnWindowsStartup"/>
+            TaskId="PaimonTrayLaunchAtWindowsStartup"/>
         </uap5:Extension>
       </Extensions>
     </Application>

@@ -151,10 +151,10 @@ namespace PaimonTray.Views
         } // end method GeneralSettingsPage_OnUnloaded
 
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
-        private void HyperlinkLaunchOnWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+        private void HyperlinkLaunchAtWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
         {
             _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
-        } // end method HyperlinkLaunchOnWindowsStartupLink_OnClick
+        } // end method HyperlinkLaunchAtWindowsStartupLink_OnClick
 
         // Handle the click event of the link of the notifications setting.
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
@@ -215,13 +215,13 @@ namespace PaimonTray.Views
             ComboBoxItemThemeLight.Content = resourceLoader.GetString("ThemeLight");
             ComboBoxItemThemeSystem.Content = resourceLoader.GetString("SystemDefault");
             InfoBarLanguageAppliedLater.Title = resourceLoader.GetString("LanguageAppliedLater");
-            RunLaunchOnWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchOnWindowsStartupLinkText");
+            RunLaunchAtWindowsStartupLinkText.Text = resourceLoader.GetString("LaunchAtWindowsStartupLinkText");
             RunNotificationsLinkText.Text = resourceLoader.GetString("NotificationsLinkText");
             TextBlockLanguage.Text = resourceLoader.GetString("Language");
             TextBlockLanguageExplanation.Text = resourceLoader.GetString("LanguageExplanation");
-            TextBlockLaunchOnWindowsStartup.Text = resourceLoader.GetString("LaunchOnWindowsStartup");
-            TextBlockLaunchOnWindowsStartupExplanation.Text =
-                resourceLoader.GetString("LaunchOnWindowsStartupExplanation");
+            TextBlockLaunchAtWindowsStartup.Text = resourceLoader.GetString("LaunchAtWindowsStartup");
+            TextBlockLaunchAtWindowsStartupExplanation.Text =
+                resourceLoader.GetString("LaunchAtWindowsStartupExplanation");
             TextBlockMainWindowShowWhenAppStarts.Text = resourceLoader.GetString("MainWindowShowWhenAppStarts");
             TextBlockMainWindowTopNavigationPane.Text = resourceLoader.GetString("MainWindowTopNavigationPane");
             TextBlockMainWindowTopNavigationPaneExplanation.Text =

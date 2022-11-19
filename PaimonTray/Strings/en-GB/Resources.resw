@@ -134,7 +134,7 @@
     <value>The number of your accounts added has already reached the limit.</value>
   </data>
   <data name="AccountAddReachLimitExtraInfo" xml:space="preserve">
-    <value>You can still log into your added account to update it.</value>
+    <value>You can still log in to your added account to update it.</value>
   </data>
   <data name="AccountAddUpdate" xml:space="preserve">
     <value>Add/Update an account</value>
@@ -152,7 +152,7 @@
     <value>Remove the account and its linked character(s)</value>
   </data>
   <data name="AccountGroupRemoveExplanation" xml:space="preserve">
-    <value>Once the account and its linked character(s) are removed, you can only add them back by logging into the account again.</value>
+    <value>Once the account and its linked character(s) are removed, you can only add them back by logging in to the account again.</value>
   </data>
   <data name="AccountGroupsCheckRefresh" xml:space="preserve">
     <value>Check and refresh all accounts and characters</value>
@@ -164,7 +164,7 @@
     <value>Remove all accounts and characters</value>
   </data>
   <data name="AccountGroupsRemoveExplanation" xml:space="preserve">
-    <value>Once all accounts and characters are removed, you can only add them back by logging into the account(s) again.</value>
+    <value>Once all accounts and characters are removed, you can only add them back by logging in to the account(s) again.</value>
   </data>
   <data name="AccountNoCharacter" xml:space="preserve">
     <value>No character is linked with the account.</value>
@@ -179,7 +179,7 @@
     <value>Your account(s)</value>
   </data>
   <data name="AccountsManagementExplanation" xml:space="preserve">
-    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's abnormal status cannot be resolved by checking and refreshing the account, you can log into the account again)</value>
+    <value>Manage your account(s) added and select the character(s) to allow retrieving real-time notes (if any account's abnormal status cannot be resolved by checking and refreshing the account, you can log in to the account again)</value>
   </data>
   <data name="AccountsRemoveConfirmation" xml:space="preserve">
     <value>Remove all accounts?</value>
@@ -335,15 +335,15 @@
     <value>The change to the language will be applied the next time the app is started.</value>
   </data>
   <data name="LanguageExplanation" xml:space="preserve">
-    <value>Change the app language.</value>
+    <value>Change the app language</value>
   </data>
-  <data name="LaunchOnWindowsStartup" xml:space="preserve">
-    <value>Launch on Windows startup</value>
+  <data name="LaunchAtWindowsStartup" xml:space="preserve">
+    <value>Launch at Windows startup</value>
   </data>
-  <data name="LaunchOnWindowsStartupExplanation" xml:space="preserve">
-    <value>Modify your startup settings to configure whether to start the app when you log into Windows</value>
+  <data name="LaunchAtWindowsStartupExplanation" xml:space="preserve">
+    <value>Modify your startup settings to configure whether to start the app when you log in to Windows</value>
   </data>
-  <data name="LaunchOnWindowsStartupLinkText" xml:space="preserve">
+  <data name="LaunchAtWindowsStartupLinkText" xml:space="preserve">
     <value>Change startup settings</value>
   </data>
   <data name="Licence" xml:space="preserve">
@@ -368,16 +368,16 @@
     <value>Microsoft Edge WebView2 Runtime cannot be detected. You can either download and install the runtime or change the setting to always use this method to never show this message again the next time the page is loaded.</value>
   </data>
   <data name="LoginCompleteConfirm" xml:space="preserve">
-    <value>Confirm completing login after you log into your account on the web page</value>
+    <value>Confirm completing login after you log in to your account on the web page</value>
   </data>
   <data name="LoginFail" xml:space="preserve">
-    <value>Failed to log into your account.</value>
+    <value>Failed to log in to your account.</value>
   </data>
   <data name="LoginFailExtraInfo" xml:space="preserve">
     <value>You may try again.</value>
   </data>
   <data name="LoginHeaderWebPage" xml:space="preserve">
-    <value>Log into your account on the web page</value>
+    <value>Log in to your account on the web page</value>
   </data>
   <data name="LoginWebPageReturn" xml:space="preserve">
     <value>Return to the login web page</value>
