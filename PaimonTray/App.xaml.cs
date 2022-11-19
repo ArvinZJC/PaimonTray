@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.System;
-using Windows.System.Profile;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
@@ -73,8 +72,6 @@ namespace PaimonTray
         /// <returns>A flag indicating if the elevated app restart can be processed.</returns>
         private static bool DetermineElevatedAppRestart()
         {
-            if (WindowsIntegrityPolicy.IsEnabled) return false;
-
             if (Environment.CommandLine.Contains(AppFieldsHelper.TaskIdElevatedAppRestart)) return false;
 
             if (Environment.OSVersion.Version.Major > 11) return true; // Reserved for future Windows versions.
@@ -194,7 +191,7 @@ namespace PaimonTray
                     } // end if
 
                     Log.Information(
-                        "The app cannot solve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
+                        "The app cannot resolve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
                     await Launcher.LaunchUriAsync(new Uri(
                         $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
                         $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +
