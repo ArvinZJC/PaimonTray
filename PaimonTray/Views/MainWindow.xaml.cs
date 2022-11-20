@@ -214,8 +214,8 @@ namespace PaimonTray.Views
 
             if (_appWindow.Presenter is not OverlappedPresenter appWindowOverlappedPresenter)
             {
-                Log.Warning("The main window's AppWindow's presenter is null.");
-                return;
+                appWindowOverlappedPresenter = OverlappedPresenter.Create();
+                _appWindow.SetPresenter(appWindowOverlappedPresenter);
             } // end if
 
             appWindowOverlappedPresenter.IsAlwaysOnTop = true;
