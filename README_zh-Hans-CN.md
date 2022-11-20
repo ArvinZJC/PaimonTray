@@ -100,7 +100,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2022 年 11 月 17 日，使用 Visual Studio 2022（版本：17.4.1）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2022 年 11 月 18 日，使用 Visual Studio 2022（版本：17.4.1）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
 
    - 受启发于 [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)。
 
@@ -134,7 +134,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
    | H.NotifyIcon.WinUI                  |     2.0.74     |
    | Microsoft.Toolkit.Uwp.Notifications |     7.1.3      |
    | Microsoft.Windows.SDK.BuildTools    | 10.0.22621.755 |
-   | Microsoft.WindowsAppSDK             |  1.2.221109.1  |
+   | Microsoft.WindowsAppSDK             |  1.2.221116.1  |
    | Serilog.Sinks.Async                 |     1.5.0      |
    | Serilog.Sinks.File                  |     5.0.0      |
 

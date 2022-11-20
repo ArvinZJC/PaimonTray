@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -53,6 +54,16 @@ namespace PaimonTray.Views
                 NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
         } // end method AccountsHelper_OnPropertyChanged
 
+        // Handle the dispatcher queue timer's tick event.
+        private void DispatcherQueueTimer_OnTick(object sender, object e)
+        {
+            var workArea = WindowsHelper.GetWorkArea(WinId);
+
+            if (workArea.Height == _workAreaHeightLast && workArea.Width == _workAreaWidthLast) return;
+
+            FrameBody_OnSizeChanged(FrameBody, null);
+        } // end method DispatcherQueueTimer_OnTick
+
         // Handle the body frame's size changed event.
         private void FrameBody_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -86,6 +97,8 @@ namespace PaimonTray.Views
                 X = workArea.Width - winWidth - mainWindowPositionOffset,
                 Y = workArea.Height - winHeight - mainWindowPositionOffset
             });
+            _workAreaHeightLast = workArea.Height;
+            _workAreaWidthLast = workArea.Width;
 
             if (!_isFirstLoad) return;
 
@@ -106,8 +119,12 @@ namespace PaimonTray.Views
         private void GridRoot_OnLoaded(object sender, RoutedEventArgs e)
         {
             _app.AccountsH.PropertyChanged += AccountsHelper_OnPropertyChanged;
+            _dispatcherQueueTimer = DispatcherQueue.CreateTimer();
+            _dispatcherQueueTimer.Interval = TimeSpan.FromSeconds(1);
+            _dispatcherQueueTimer.Tick += DispatcherQueueTimer_OnTick;
             _existingWindow = _app.WindowsH.GetExistingMainWindow();
             SetRootGridBackground();
+            _dispatcherQueueTimer.Start(); // Start the dispatcher queue timer when ready.
         } // end method GridRoot_OnLoaded
 
         // Handle the main window's closed event.
@@ -116,6 +133,8 @@ namespace PaimonTray.Views
             _app.AccountsH.PropertyChanged -= AccountsHelper_OnPropertyChanged;
             _app = null;
             _appWindow = null;
+            _dispatcherQueueTimer.Stop();
+            _dispatcherQueueTimer.Tick -= DispatcherQueueTimer_OnTick;
             _existingWindow = null;
         } // end method MainWindow_OnClosed
 
@@ -148,14 +167,29 @@ namespace PaimonTray.Views
         private AppWindow _appWindow;
 
         /// <summary>
-        /// A flag indicating if it is the 1st time the window is loaded.
+        /// The dispatcher queue timer.
         /// </summary>
-        private bool _isFirstLoad;
+        private DispatcherQueueTimer _dispatcherQueueTimer;
 
         /// <summary>
         /// The existing window.
         /// </summary>
         private ExistingWindow _existingWindow;
+
+        /// <summary>
+        /// The work area's last height.
+        /// </summary>
+        private int _workAreaHeightLast;
+
+        /// <summary>
+        /// The work area's last width.
+        /// </summary>
+        private int _workAreaWidthLast;
+
+        /// <summary>
+        /// A flag indicating if it is the 1st time the window is loaded.
+        /// </summary>
+        private bool _isFirstLoad;
 
         #endregion Fields
 
@@ -180,8 +214,8 @@ namespace PaimonTray.Views
 
             if (_appWindow.Presenter is not OverlappedPresenter appWindowOverlappedPresenter)
             {
-                Log.Warning("The main window's AppWindow's presenter is null.");
-                return;
+                appWindowOverlappedPresenter = OverlappedPresenter.Create();
+                _appWindow.SetPresenter(appWindowOverlappedPresenter);
             } // end if
 
             appWindowOverlappedPresenter.IsAlwaysOnTop = true;

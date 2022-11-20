@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.System;
-using Windows.System.Profile;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
@@ -73,11 +72,10 @@ namespace PaimonTray
         /// <returns>A flag indicating if the elevated app restart can be processed.</returns>
         private static bool DetermineElevatedAppRestart()
         {
-            if (WindowsIntegrityPolicy.IsEnabled) return false;
-
             if (Environment.CommandLine.Contains(AppFieldsHelper.TaskIdElevatedAppRestart)) return false;
 
-            if (Environment.OSVersion.Version.Major > 11) return true; // Reserved for future Windows versions.
+            if (Environment.OSVersion.Version.Major > AppFieldsHelper.VersionMajorWindows10Or11)
+                return true; // Reserved for future Windows versions.
 
             try
             {
@@ -92,13 +90,16 @@ namespace PaimonTray
 
                 // Reference: https://learn.microsoft.com/windows/apps/windows-app-sdk/stable-channel#elevation
                 if (int.TryParse(
-                        registryKeyVersionWindows.GetValue(AppFieldsHelper.RegistryNameVersionBuildWindows)?.ToString(),
-                        out var versionBuildWindows))
-                    return (Environment.OSVersion.Version.Major is 10 &&
-                            Environment.OSVersion.Version.Revision >= 19042 && versionBuildWindows >= 1706) ||
-                           (Environment.OSVersion.Version.Major is 11 &&
-                            Environment.OSVersion.Version.Revision >= 22000 &&
-                            versionBuildWindows >= 675);
+                        registryKeyVersionWindows.GetValue(AppFieldsHelper.RegistryNameVersionRevisionWindows)
+                            ?.ToString(), out var versionRevisionWindows))
+                    return Environment.OSVersion.Version.Major == AppFieldsHelper.VersionMajorWindows10Or11 &&
+                           ((Environment.OSVersion.Version.Build >= AppFieldsHelper.VersionBuildMinWindows10Elevation &&
+                             Environment.OSVersion.Version.Build < AppFieldsHelper.VersionBuildMinWindows11 &&
+                             versionRevisionWindows >= AppFieldsHelper.VersionRevisionMinWindows10Elevation) ||
+                            (Environment.OSVersion.Version.Build >= AppFieldsHelper.VersionBuildMinWindows11 &&
+                             versionRevisionWindows >=
+                             AppFieldsHelper
+                                 .VersionRevisionMinWindows11Elevation)); // Currently, the way to distinguish Windows 10 and 11 is by build version. Reference: https://stackoverflow.com/a/69922526
 
                 return false;
             }
@@ -194,7 +195,7 @@ namespace PaimonTray
                     } // end if
 
                     Log.Information(
-                        "The app cannot solve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
+                        "The app cannot resolve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
                     await Launcher.LaunchUriAsync(new Uri(
                         $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
                         $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +

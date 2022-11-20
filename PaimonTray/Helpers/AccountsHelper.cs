@@ -654,12 +654,12 @@ namespace PaimonTray.Helpers
         public static readonly string UrlCookiesMiHoYo = "https://www.mihoyo.com";
 
         /// <summary>
-        /// The URL for logging into HoYoLAB.
+        /// The URL for logging in to HoYoLAB.
         /// </summary>
         public static readonly string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
 
         /// <summary>
-        /// The URL for logging into miHoYo.
+        /// The URL for logging in to miHoYo.
         /// </summary>
         public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys";
 
