@@ -5,6 +5,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ArvinZJC/PaimonTray&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
 [![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)](./LICENCE)
+[![Crowdin](https://badges.crowdin.net/paimontray/localized.svg)](https://crowdin.com/project/paimontray)
 
 **English (United Kingdom)** | [中文（简体，中国）](./README_zh-Hans-CN.md)
 
@@ -49,7 +50,7 @@ PaimonTray also has some other highlights that may interest you. These include b
 
 </details>
 
-## 💡 Why not give it a try?
+## 🍳 Why not give it a try?
 
 You can get PaimonTray from:
 
@@ -121,7 +122,7 @@ You can get PaimonTray from:
    >
    > There may be prompts for asking you to download runtime, including but not limited to .NET Desktop Runtime and Windows App SDK runtime. Please download and install the runtime because PaimonTray applies framework-dependent deployment to reduce the installer file size.
 
-3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to shout out your ideas.
+3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to [shout out your ideas](https://github.com/ArvinZJC/PaimonTray/discussions).
 
 4. The NuGet packages of the project are listed in the following table.
 
@@ -133,6 +134,11 @@ You can get PaimonTray from:
    | Microsoft.WindowsAppSDK             |  1.2.221116.1  |
    | Serilog.Sinks.Async                 |     1.5.0      |
    | Serilog.Sinks.File                  |     5.0.0      |
+
+## 💡 Contributors, my pleasure!
+
+1. Code: create a branch named `dev` or whatever from `main` → coding → make a pull request (PR) for reviewers to peruse. 😘
+2. Internationalisation: thanks much for your translations on [Crowdin](https://crowdin.com/project/paimontray)! 😘
 
 Good luck! 💖
 

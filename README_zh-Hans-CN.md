@@ -5,6 +5,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b83aab262d444585b7df8f0c8a55ed3a)](https://www.codacy.com/gh/ArvinZJC/PaimonTray/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ArvinZJC/PaimonTray&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ArvinZJC/PaimonTray)
 [![GitHub](https://img.shields.io/github/license/ArvinZJC/PaimonTray)](./LICENCE)
+[![Crowdin](https://badges.crowdin.net/paimontray/localized.svg)](https://crowdin.com/project/paimontray)
 
 [English (United Kingdom)](./README.md) | **中文（简体，中国）**
 
@@ -49,7 +50,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 </details>
 
-## 💡 要不用用试试？
+## 🍳 要不用用试试？
 
 您可用如下方式获取 PaimonTray：
 
@@ -125,7 +126,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
    >
    > 若遇到需要您下载运行环境的弹窗，包括但不限于 .NET 桌面运行环境和 Windows 应用 SDK 运行环境，则请下载并安装运行环境，因为 PaimonTray 使用依赖于框架式的部署来减小安装程序的文件大小。
 
-3. PaimonTray 要作为一个轻量的工具应用，**仅关注原神的实时便笺**。性能是绝对的第一要务。优化将持续不断 ~~（但愿吧，至少先画个饼）~~。当前没有成为一个“全家桶”应用的计划。不管怎样，欢迎您说出您的想法。
+3. PaimonTray 要作为一个轻量的工具应用，**仅关注原神的实时便笺**。性能是绝对的第一要务。优化将持续不断 ~~（但愿吧，至少先画个饼）~~。当前没有成为一个“全家桶”应用的计划。不管怎样，欢迎您[说出您的想法](https://github.com/ArvinZJC/PaimonTray/discussions)。
 
 4. 项目 NuGet 包参见下面的表格。
 
@@ -137,6 +138,11 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
    | Microsoft.WindowsAppSDK             |  1.2.221116.1  |
    | Serilog.Sinks.Async                 |     1.5.0      |
    | Serilog.Sinks.File                  |     5.0.0      |
+
+## 💡 贡献者，感谢有你！
+
+1. 代码：从 `main` 分支创建一个叫做 `dev` 或者随便啥名字的分支 → 疯狂打码 → 提交合并请求（PR）让审阅人拜读。😘
+2. 国际化：非常感谢您在 [Crowdin](https://crowdin.com/project/paimontray) 上的翻译！😘
 
 好运哦! 💖
 
