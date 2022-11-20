@@ -140,7 +140,7 @@
         /// <summary>
         /// The Windows build version registry name.
         /// </summary>
-        public static readonly string RegistryNameVersionBuildWindows = "UBR";
+        public static readonly string RegistryNameVersionRevisionWindows = "UBR";
 
         /// <summary>
         /// The greeting notification tag.
@@ -279,9 +279,14 @@
         public static readonly int VersionBuildBetaMin = 100;
 
         /// <summary>
-        /// The min stable build version.
+        /// The Windows 10's min build version for the app's elevation support.
         /// </summary>
-        public static readonly int VersionBuildStableMin = 200;
+        public static readonly int VersionBuildMinWindows10Elevation = 19042;
+
+        /// <summary>
+        /// The Windows 11's min build version.
+        /// </summary>
+        public static readonly int VersionBuildMinWindows11 = 22000;
 
         /// <summary>
         /// The Windows App SDK NuGet package's build version.
@@ -289,14 +294,34 @@
         public static readonly int VersionBuildNuGetWindowsAppSdk = 221116;
 
         /// <summary>
+        /// The min stable build version.
+        /// </summary>
+        public static readonly int VersionBuildStableMin = 200;
+
+        /// <summary>
         /// The Windows App SDK NuGet package's major version.
         /// </summary>
         public static readonly int VersionMajorNuGetWindowsAppSdk = 1;
 
         /// <summary>
+        /// The Windows 10/11's major version.
+        /// </summary>
+        public static readonly int VersionMajorWindows10Or11 = 10;
+
+        /// <summary>
         /// The Windows App SDK NuGet package's minor version.
         /// </summary>
         public static readonly int VersionMinorNuGetWindowsAppSdk = 2;
+
+        /// <summary>
+        /// The Windows 10's min revision version for the app's elevation support.
+        /// </summary>
+        public static readonly int VersionRevisionMinWindows10Elevation = 1706;
+
+        /// <summary>
+        /// The Windows 11's min revision version for the app's elevation support.
+        /// </summary>
+        public static readonly int VersionRevisionMinWindows11Elevation = 675;
 
         /// <summary>
         /// The Windows App SDK NuGet package's revision version.
