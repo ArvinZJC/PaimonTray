@@ -74,7 +74,7 @@ You can get PaimonTray from:
   - You desire to try pre-releases.
   - You can handle prerequisites yourself when necessary.
 
-  You may have the app from both channels installed at the same time depending on your Windows version and some system settings. However, it is not recommended, even though I would not to point out any significant downside.
+  You may have the app from both channels installed at the same time depending on your Windows version and some system settings. However, it is not recommended, even though I would not point out any significant downside.
 
 - **I cannot get the latest version as stated above from Microsoft Store.**
 
@@ -101,7 +101,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 18 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.1) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 24 November 2022, everything looks good with Visual Studio 2022 (Version: 17.4.1) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
      > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
