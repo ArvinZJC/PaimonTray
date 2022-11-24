@@ -137,7 +137,7 @@ You can get PaimonTray from:
 
 ## 💡 Contributors, my pleasure!
 
-1. Code: create a branch named `dev` or whatever from `main` → coding → make a pull request (PR) for reviewers to peruse. 😘
+1. Code: create a branch named `dev` or whatever based on the `main` branch → coding → make a pull request (PR) for reviewers to peruse. 😘
 2. Internationalisation: thanks much for your translations in [Crowdin](https://crowdin.com/project/paimontray)! 😘
 
 Good luck! 💖
