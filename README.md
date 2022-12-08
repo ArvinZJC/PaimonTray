@@ -113,7 +113,7 @@ You can get PaimonTray from:
 
    > **Warning**
    >
-   > Due to [the limitation of the Windows App SDK](https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/stable-channel#elevation), the following OS servicing update is required to run PaimonTray with elevated privilege:
+   > Due to [the limitation of the Windows App SDK](https://learn.microsoft.com/en-gb/windows/apps/windows-app-sdk/stable-channel#elevation), the following OS servicing update is required if PaimonTray is started with elevated privilege:
    >
    > - Windows 11 - [10 May, 2022—KB5013943 (OS Build 22000.675)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013943-os-build-22000-675-14aa767a-aa87-414e-8491-b6e845541755)
    > - Windows 10 - [10 May, 2022—KB5013942 (OS Builds 19042.1706, 19043.1706, and 19044.1706)](https://support.microsoft.com/en-gb/topic/may-10-2022-kb5013942-os-builds-19042-1706-19043-1706-and-19044-1706-60b51119-85be-4a34-9e21-8954f6749504)

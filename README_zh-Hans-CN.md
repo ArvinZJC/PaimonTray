@@ -117,7 +117,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
    > **Warning**（警告）
    >
-   > 受 [Windows 应用 SDK 限制的影响](https://learn.microsoft.com/zh-cn/windows/apps/windows-app-sdk/stable-channel#elevation)，使用提升的权限运行 PaimonTray 需要以下 OS 服务更新：
+   > 受 [Windows 应用 SDK 限制的影响](https://learn.microsoft.com/zh-cn/windows/apps/windows-app-sdk/stable-channel#elevation)，在使用提升的权限运行 PaimonTray 时，需要已安装以下 OS 服务更新：
    >
    > - Windows 11 - [2022 年 5 月 10 日 - KB5013943 (OS 内部版本 22000.675)](https://support.microsoft.com/zh-cn/topic/2022-年-5-月-10-日-kb5013943-os-内部版本-22000-675-14aa767a-aa87-414e-8491-b6e845541755)
    > - Windows 10 - [2022 年 5 月 10 日 - KB5013942 (OS 内部版本 19042.1706、19043.1706 和 19044.1706)](https://support.microsoft.com/zh-cn/topic/2022-年-5-月-10-日-kb5013942-os-内部版本-19042-1706-19043-1706-和-19044-1706-60b51119-85be-4a34-9e21-8954f6749504)
