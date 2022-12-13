@@ -11,7 +11,7 @@ using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
 {
-    internal static class Program
+    internal static partial class Program
     {
         /// <summary>
         /// The main entry point for the app.
@@ -34,18 +34,18 @@ namespace PaimonTray
         #region Methods
 
         /// <summary>
-        /// Wait for specified objects to be signaled or for a specified timeout period to elapse.
+        /// Wait for specified objects to be signalled or for a specified timeout period to elapse.
         /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cowaitformultipleobjects
         /// </summary>
         /// <param name="dwFlags">A flag controlling whether call/window message re-entrance is enabled from this wait.</param>
         /// <param name="dwTimeout">The timeout in milliseconds of the wait.</param>
         /// <param name="cHandles">The length of the <see cref="pHandles"/> array.</param>
-        /// <param name="pHandles">An array of handles to awaitable kernel objects.</param>
+        /// <param name="pHandles">An array of handles to await-able kernel objects.</param>
         /// <param name="lpdwindex">The index of the handle that satisfied the wait.</param>
         /// <returns>The return code.</returns>
-        [DllImport("ole32.dll")]
-        private static extern uint CoWaitForMultipleObjects(uint dwFlags, uint dwTimeout, ulong cHandles,
-            IntPtr[] pHandles, out uint lpdwindex);
+        [LibraryImport("ole32.dll")]
+        private static partial uint CoWaitForMultipleObjects(uint dwFlags, uint dwTimeout, ulong cHandles,
+            nint[] pHandles, out uint lpdwindex);
 
         /// <summary>
         /// Create/Open a named or unnamed event object.
@@ -53,11 +53,12 @@ namespace PaimonTray
         /// </summary>
         /// <param name="lpEventAttributes">A pointer to a SECURITY_ATTRIBUTES structure.</param>
         /// <param name="bManualReset">A flag indicating if the function creates a manual-reset event object.</param>
-        /// <param name="bInitialState">A flag indicating if the initial state of the event object is signaled.</param>
+        /// <param name="bInitialState">A flag indicating if the initial state of the event object is signalled.</param>
         /// <param name="lpName">The name of the event object.</param>
         /// <returns>A handle to the event object, or <c>null</c> if the function fails.</returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateEventA(IntPtr lpEventAttributes, bool bManualReset, bool bInitialState,
+        [LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial nint CreateEventA(nint lpEventAttributes,
+            [MarshalAs(UnmanagedType.Bool)] bool bManualReset, [MarshalAs(UnmanagedType.Bool)] bool bInitialState,
             string lpName);
 
         /// <summary>
@@ -81,24 +82,25 @@ namespace PaimonTray
         /// <param name="appInstance">The app instance.</param>
         private static void RedirectActivation(AppActivationArguments args, AppInstance appInstance)
         {
-            var redirectEventHandle = CreateEventA(IntPtr.Zero, true, false, null);
+            var redirectEventHandle = CreateEventA(nint.Zero, true, false, null);
 
             Task.Run(() =>
             {
                 appInstance.RedirectActivationToAsync(args).AsTask().Wait();
-                SetEvent(redirectEventHandle);
+                _ = SetEvent(redirectEventHandle);
             });
             _ = CoWaitForMultipleObjects(0, 0xFFFFFFFF, 1, new[] { redirectEventHandle }, out _);
         } // end method RedirectActivation
 
         /// <summary>
-        /// Set the specified event object to the signaled state.
+        /// Set the specified event object to the signalled state.
         /// Reference: https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent
         /// </summary>
         /// <param name="hEvent">A handle to the event object.</param>
         /// <returns>A flag indicating if the function succeeds.</returns>
-        [DllImport("kernel32.dll")]
-        private static extern bool SetEvent(IntPtr hEvent);
+        [LibraryImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetEvent(nint hEvent);
 
         #endregion Methods
     } // end class Program
