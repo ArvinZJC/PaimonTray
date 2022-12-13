@@ -52,12 +52,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.40.1";
+        private const string HeaderValueAppVersionServerCn = "2.41.2";
 
         /// <summary>
         /// The app version header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.22.0";
+        private const string HeaderValueAppVersionServerGlobal = "2.24.1";
 
         /// <summary>
         /// The client type header value for the CN server.
@@ -90,7 +90,6 @@ namespace PaimonTray.Helpers
         public HttpClientHelper()
         {
             _lazyHttpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
-            _random = new Random();
         } // end constructor HttpClientHelper
 
         #endregion Constructors
@@ -117,11 +116,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private Lazy<HttpClient> _lazyHttpClient;
 
-        /// <summary>
-        /// The pseudo-random number generator.
-        /// </summary>
-        private Random _random;
-
         #endregion Fields
 
         #region Methods
@@ -132,17 +126,16 @@ namespace PaimonTray.Helpers
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="query">The query.</param>
         /// <returns>The dynamic secret.</returns>
-        private string GenerateDynamicSecret(bool isServerCn, string query)
+        private static string GenerateDynamicSecret(bool isServerCn, string query)
         {
             var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
-            using var md5 = MD5.Create();
-            var randomInt = _random.Next(100000, 200000);
+            var randomInt = Random.Shared.Next(100000, 200000);
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             if (string.IsNullOrWhiteSpace(query) || !query.Contains('=')) Log.Warning($"Invalid query ({query}).");
 
             return
-                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+                $"{timestamp},{randomInt},{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
         } // end method GenerateDynamicSecret
 
         /// <summary>
