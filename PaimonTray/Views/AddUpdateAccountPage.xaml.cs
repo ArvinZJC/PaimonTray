@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -216,43 +217,64 @@ namespace PaimonTray.Views
         /// <summary>
         /// Add/Update an account.
         /// </summary>
-        /// <param name="aUid">The account's UID.</param>
         /// <param name="cookies">The cookies.</param>
         /// <returns>Void.</returns>
-        private async Task AddUpdateAccountAsync(string aUid, string cookies)
+        private async Task AddUpdateAccountAsync(string cookies)
         {
+            var isServerCn = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn;
+            var resourceLoader = _app.SettingsH.ResLoader;
+            var (aUid, avatar, nickname, returnCode) = await _app.AccountsH.GetAccountFromApiAsync(cookies, isServerCn);
+
+            InitialiseLogin();
+
+            if (string.IsNullOrWhiteSpace(aUid))
+            {
+                Log.Warning("Login failed due to invalid UID.");
+                ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
+                    InfoBarSeverity.Error);
+                return;
+            } // end if
+
             var applicationDataContainerAccounts = _app.AccountsH.ApplicationDataContainerAccounts;
-            var server = ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
-                ? AccountsHelper.TagServerCn
-                : AccountsHelper.TagServerGlobal;
+            var server = isServerCn ? AccountsHelper.TagServerCn : AccountsHelper.TagServerGlobal;
             var containerKeyAccount = $"{server}{aUid}";
             var shouldUpdateAccount =
                 applicationDataContainerAccounts.Containers
                     .ContainsKey(
-                        containerKeyAccount); // A flag indicating whether the account should be updated or added.
+                        containerKeyAccount); // A flag indicating whether the account should be added or updated.
             var propertySetAccount = applicationDataContainerAccounts
                 .CreateContainer(containerKeyAccount, ApplicationDataCreateDisposition.Always)
-                .Values; // Need to declare after the flag indicating whether the account should be updated or added.
-            var resourceLoader = _app.SettingsH.ResLoader;
+                .Values; // Need to declare after the flag indicating whether the account should be added or updated.
 
             TextBlockStatus.Text =
                 resourceLoader.GetString(shouldUpdateAccount ? "AccountStatusUpdating" : "AccountStatusAdding");
             propertySetAccount[AccountsHelper.KeyCookies] = cookies;
             propertySetAccount[AccountsHelper.KeyServer] = server;
-            propertySetAccount[AccountsHelper.KeyStatus] = shouldUpdateAccount
-                ? AccountsHelper.TagStatusUpdating
-                : AccountsHelper.TagStatusAdding;
+            propertySetAccount[AccountsHelper.KeyStatus] = returnCode switch
+            {
+                AccountsHelper.ReturnCodeLoginFail => AccountsHelper.TagStatusExpired,
+                AccountsHelper.ReturnCodeSuccess => shouldUpdateAccount
+                    ? AccountsHelper.TagStatusUpdating
+                    : AccountsHelper.TagStatusAdding,
+                _ => AccountsHelper.TagStatusFail
+            };
+            propertySetAccount[AccountsHelper.KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
             propertySetAccount[AccountsHelper.KeyUid] = aUid;
-            InitialiseLogin();
 
-            var characters = await _app.AccountsH.GetAccountCharactersFromApiAsync(containerKeyAccount);
+            if (string.IsNullOrWhiteSpace(avatar))
+                propertySetAccount[AccountsHelper.KeyStatus] = AccountsHelper.TagStatusFail;
+            else propertySetAccount[AccountsHelper.KeyAvatar] = avatar;
+
+            if (string.IsNullOrWhiteSpace(nickname))
+                propertySetAccount[AccountsHelper.KeyStatus] = AccountsHelper.TagStatusFail;
+            else propertySetAccount[AccountsHelper.KeyNickname] = nickname;
+
+            var characters = await _app.AccountsH.GetAccountCharactersFromApiAsync(containerKeyAccount, false);
 
             if (characters is null)
             {
-                var action = shouldUpdateAccount ? "update" : "add";
-
                 Log.Warning(
-                    $"Failed to {action} the account due to null characters (account container key: {containerKeyAccount}).");
+                    $"Failed to {(shouldUpdateAccount ? "update" : "add")} the account due to null characters (account container key: {containerKeyAccount}).");
                 ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
                     InfoBarSeverity.Error);
 
@@ -339,6 +361,7 @@ namespace PaimonTray.Views
             else
                 try
                 {
+                    Log.Information("Web page login method used.");
                     Log.Information(
                         $"WebView2 Runtime V{CoreWebView2Environment.GetAvailableBrowserVersionString()} detected.");
                     _isWebView2Available = true;
@@ -407,42 +430,39 @@ namespace PaimonTray.Views
         /// <returns>Void.</returns>
         private async Task LogInAsync()
         {
-            _app.AccountsH.IsAddingUpdating = true;
-
-            string aUid;
-            string cookies;
             var resourceLoader = _app.SettingsH.ResLoader;
 
+            // Change relevant UI elements' status to indicate logging in.
+            _app.AccountsH.IsAddingUpdating = true;
             TextBlockStatus.Text = resourceLoader.GetString("CookiesStatusProcessing");
 
-            if (_isWebView2Available)
-            {
-                var rawCookies = (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
+            var rawCookies = _isWebView2Available
+                ? (await _webView2LoginWebPage.CoreWebView2.CookieManager.GetCookiesAsync(
                     ComboBoxServer.SelectedItem as ComboBoxItem == ComboBoxItemServerCn
                         ? AccountsHelper.UrlCookiesMiHoYo
-                        : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList();
+                        : AccountsHelper.UrlCookiesHoYoLab)).ToImmutableList()
+                .ConvertAll(coreWebView2Cookie => $"{coreWebView2Cookie.Name}={coreWebView2Cookie.Value}")
+                : TextBoxLoginAlternative.Text.Trim().Split(';', StringSplitOptions.RemoveEmptyEntries)
+                    .ToImmutableList().ConvertAll(
+                        stringCookie =>
+                        {
+                            var stringCookieParts = stringCookie.Split('=', 2,
+                                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                (aUid, cookies) = ProcessCookies(ref rawCookies);
-            }
-            else
+                            return stringCookieParts.Length is 2
+                                ? $"{stringCookieParts[0]}={stringCookieParts[1]}"
+                                : string.Empty;
+                        });
+            var cookies = ProcessCookies(rawCookies);
+
+            if (string.IsNullOrWhiteSpace(cookies))
             {
-                var rawCookies = TextBoxLoginAlternative.Text.Trim().Split(';',
-                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToImmutableList();
-
-                (aUid, cookies) = ProcessCookies(ref rawCookies);
-            } // end if...else
-
-            // Execute if the account's UID and cookies are valid.
-            if (aUid != string.Empty && cookies.Contains(AccountsHelper.CookieKeyUid) &&
-                cookies.Contains(AccountsHelper.CookieKeyToken)) await AddUpdateAccountAsync(aUid, cookies);
-            else
-            {
-                Log.Warning((_isWebView2Available ? "Web page" : "Alternative") +
-                            $" login failed due to invalid cookies ({cookies}).");
+                Log.Warning("Login failed due to invalid processed cookies.");
                 InitialiseLogin();
                 ShowLoginInfoBar(resourceLoader.GetString("LoginFailExtraInfo"), resourceLoader.GetString("LoginFail"),
                     InfoBarSeverity.Error);
-            } // end if...else
+            }
+            else await AddUpdateAccountAsync(cookies);
 
             _app.AccountsH.IsAddingUpdating = false;
         } // end method LogInAsync
@@ -450,47 +470,28 @@ namespace PaimonTray.Views
         /// <summary>
         /// Process the raw cookies.
         /// </summary>
-        /// <typeparam name="T">Should be a <see cref="string"/> or <see cref="CoreWebView2Cookie"/> type.</typeparam>
         /// <param name="rawCookies">The raw cookies.</param>
-        /// <returns>A tuple. 1st item: the account's UID; 2nd item: the processed cookies.</returns>
-        private static (string, string) ProcessCookies<T>(ref ImmutableList<T> rawCookies)
+        /// <returns>The processed cookies, or <see cref="F:System.String.Empty" /> if no valid cookies.</returns>
+        private static string ProcessCookies(ImmutableList<string> rawCookies)
         {
-            var aUid = string.Empty;
-            var cookieName = string.Empty;
-            var cookies = new List<string>();
-            var cookieValue = string.Empty;
+            foreach (var processedCookies in from keywords in new List<string[]>
+                     {
+                         new[] { AccountsHelper.CookieKeyIdOption1, AccountsHelper.CookieKeyTokenOption1 },
+                         new[] { AccountsHelper.CookieKeyIdOption2, AccountsHelper.CookieKeyTokenOption2 },
+                         new[] { AccountsHelper.CookieKeyIdOption3, AccountsHelper.CookieKeyTokenOption3 },
+                         new[] { AccountsHelper.CookieKeyIdOption4, AccountsHelper.CookieKeyTokenOption4 }
+                     }
+                     let cookies = rawCookies
+                         .FindAll(rawCookie => rawCookie.StartsWith(keywords[0]) || rawCookie.StartsWith(keywords[1]))
+                         .Distinct().ToImmutableList()
+                     where cookies.Count is 2
+                     let processedCookies = string.Join(';', cookies)
+                     where processedCookies.Contains(keywords[0]) && processedCookies.Contains(keywords[1])
+                     select processedCookies)
+                return processedCookies;
 
-            foreach (var cookie in rawCookies)
-            {
-                switch (cookie)
-                {
-                    case CoreWebView2Cookie coreWebView2Cookie:
-                        cookieName = coreWebView2Cookie.Name;
-                        cookieValue = coreWebView2Cookie.Value;
-                        break;
-
-                    case string stringCookie:
-                        var cookieParts = stringCookie.Split('=',
-                            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-                        if (cookieParts.Length is not 2) continue; // The key and value.
-
-                        cookieName = cookieParts[0];
-                        cookieValue = cookieParts[1];
-                        break;
-                } // end switch-case
-
-                if (cookieName != AccountsHelper.CookieKeyUid && cookieName != AccountsHelper.CookieKeyToken) continue;
-
-                cookies.Add($"{cookieName}={cookieValue};");
-
-                if (cookieName == AccountsHelper.CookieKeyUid) aUid = cookieValue;
-
-                if (cookies.Count is 2) break; // The UID and token cookies.
-            } // end foreach
-
-            return (aUid, string.Concat(cookies));
-        } // end generic method ProcessCookies
+            return string.Empty;
+        } // end method ProcessCookies
 
         /// <summary>
         /// Set the page size.
@@ -559,6 +560,7 @@ namespace PaimonTray.Views
         /// <param name="isAlways">A flag indicating if the alternative login method is always used.</param>
         private void UseAlternativeLoginMethod(bool isAlways = false)
         {
+            Log.Information("Alternative login method used.");
             _isWebView2Available = false;
 
             var resourceLoader = _app.SettingsH.ResLoader;

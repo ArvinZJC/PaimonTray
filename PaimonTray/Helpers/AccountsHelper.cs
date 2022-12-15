@@ -62,7 +62,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The avatar key.
         /// </summary>
-        private const string KeyAvatar = "avatar";
+        public const string KeyAvatar = "avatar";
 
         /// <summary>
         /// The avatar side icon key.
@@ -243,7 +243,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The nickname key.
         /// </summary>
-        private const string KeyNickname = "nickname";
+        public const string KeyNickname = "nickname";
 
         /// <summary>
         /// The region key.
@@ -328,7 +328,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The last update time key.
         /// </summary>
-        private const string KeyTimeUpdateLast = "timeUpdateLast";
+        public const string KeyTimeUpdateLast = "timeUpdateLast";
 
         /// <summary>
         /// The Parametric Transformer key for processing JSON data.
@@ -363,12 +363,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The login fail return code.
         /// </summary>
-        private const int ReturnCodeLoginFail = -100;
+        public const int ReturnCodeLoginFail = -100;
 
         /// <summary>
         /// The success return code.
         /// </summary>
-        private const int ReturnCodeSuccess = 0;
+        public const int ReturnCodeSuccess = 0;
 
         /// <summary>
         /// The URL for the CN server to get an account.
@@ -542,14 +542,44 @@ namespace PaimonTray.Helpers
         private string _uidCharacterRealTimeNotesUpdated;
 
         /// <summary>
-        /// The token cookie key.
+        /// The MID/UID cookie key (Option 1).
         /// </summary>
-        public static readonly string CookieKeyToken = "ltoken";
+        public static readonly string CookieKeyIdOption1 = "ltuid";
 
         /// <summary>
-        /// The UID cookie key.
+        /// The MID/UID cookie key (Option 2).
         /// </summary>
-        public static readonly string CookieKeyUid = "ltuid";
+        public static readonly string CookieKeyIdOption2 = "account_id";
+
+        /// <summary>
+        /// The MID/UID cookie key (Option 3).
+        /// </summary>
+        public static readonly string CookieKeyIdOption3 = "ltmid_v2";
+
+        /// <summary>
+        /// The MID/UID cookie key (Option 4).
+        /// </summary>
+        public static readonly string CookieKeyIdOption4 = "account_mid_v2";
+
+        /// <summary>
+        /// The token cookie key (Option 1).
+        /// </summary>
+        public static readonly string CookieKeyTokenOption1 = "ltoken";
+
+        /// <summary>
+        /// The token cookie key (Option 2).
+        /// </summary>
+        public static readonly string CookieKeyTokenOption2 = "cookie_token";
+
+        /// <summary>
+        /// The token cookie key (Option 3).
+        /// </summary>
+        public static readonly string CookieKeyTokenOption3 = $"{CookieKeyTokenOption1}_v2";
+
+        /// <summary>
+        /// The token cookie key (Option 4).
+        /// </summary>
+        public static readonly string CookieKeyTokenOption4 = $"{CookieKeyTokenOption2}_v2";
 
         /// <summary>
         /// The max number of accounts.
@@ -651,17 +681,17 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The miHoYo cookies URL.
         /// </summary>
-        public static readonly string UrlCookiesMiHoYo = "https://www.mihoyo.com";
+        public static readonly string UrlCookiesMiHoYo = "https://www.miyoushe.com";
 
         /// <summary>
         /// The URL for logging in to HoYoLAB.
         /// </summary>
-        public static readonly string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
+        public static readonly string UrlLoginHoYoLab = $"{UrlCookiesHoYoLab}/home";
 
         /// <summary>
         /// The URL for logging in to miHoYo.
         /// </summary>
-        public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys";
+        public static readonly string UrlLoginMiHoYo = $"{UrlCookiesMiHoYo}/ys";
 
         /// <summary>
         /// The server key.
@@ -858,19 +888,9 @@ namespace PaimonTray.Helpers
         /// Check the account.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="isStandalone">A flag indicating if the operation is standalone. Default: <c>false</c>.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount)
-        {
-            await CheckAccountAsync(containerKeyAccount, false);
-        } // end method CheckAccountAsync(String)
-
-        /// <summary>
-        /// Check the account.
-        /// </summary>
-        /// <param name="containerKeyAccount">The account container key.</param>
-        /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
-        /// <returns>Void.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone)
+        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -906,23 +926,14 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountAsync(String, Boolean)
+        } // end method CheckAccountAsync
 
         /// <summary>
         /// Check the accounts.
         /// </summary>
+        /// <param name="shouldCheckAccount">A flag indicating if an account should be checked. Default: <c>true</c>.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountsAsync()
-        {
-            await CheckAccountsAsync(true);
-        } // end method CheckAccountsAsync
-
-        /// <summary>
-        /// Check the accounts.
-        /// </summary>
-        /// <param name="shouldCheckAccount">A flag indicating if an account should be checked.</param>
-        /// <returns>Void.</returns>
-        public async Task CheckAccountsAsync(bool shouldCheckAccount)
+        public async Task CheckAccountsAsync(bool shouldCheckAccount = true)
         {
             IsManaging = true;
 
@@ -934,7 +945,7 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountsAsync(Boolean)
+        } // end method CheckAccountsAsync
 
         /// <summary>
         /// Check if the selected character's UID can be found in the account group info lists.
@@ -979,14 +990,94 @@ namespace PaimonTray.Helpers
         /// NOTE: Remember to change the account status to adding/updating.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="shouldGetAccount">A flag indicating if the specific account should be got from the API before getting the account's characters.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
-        public async Task<ImmutableList<Character>> GetAccountCharactersFromApiAsync(string containerKeyAccount)
+        public async Task<ImmutableList<Character>> GetAccountCharactersFromApiAsync(string containerKeyAccount,
+            bool shouldGetAccount = true)
         {
-            if (await GetAccountFromApiAsync(containerKeyAccount))
-                return await GetCharactersFromApiAsync(containerKeyAccount);
+            if (shouldGetAccount && !(await GetAccountFromApiAsync(containerKeyAccount))) return null;
 
-            return null;
+            return await GetCharactersFromApiAsync(containerKeyAccount);
         } // end method GetAccountCharactersFromApiAsync
+
+        /// <summary>
+        /// Get the specific account from the API. The method is used when the user adds/updates an account.
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
+        /// <returns>A tuple. 1st item: the account UID; 2nd item: the avatar; 3rd item: the nickname; 4th item: the return code.</returns>
+        public async Task<(string, string, string, int?)> GetAccountFromApiAsync(string cookies, bool isServerCn)
+        {
+            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(cookies, isServerCn,
+                isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal);
+
+            if (httpResponseBody is null)
+            {
+                Log.Warning(
+                    $"Failed to get the account from the API due to null HTTP response message content (CN server: {isServerCn}, cookies: {cookies}).");
+                return (string.Empty, string.Empty, string.Empty, null);
+            } // end if
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning(
+                        $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                    Log.Information(httpResponseBody);
+                    return (string.Empty, string.Empty, string.Empty, null);
+                } // end if
+
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode is not ReturnCodeSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to get the account from the specific API (CN server: {isServerCn}, cookies: {cookies}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    return (string.Empty, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var userInfo = jsonNodeResponse[KeyData]?[KeyUserInfo];
+
+                if (userInfo is null)
+                {
+                    Log.Warning($"Failed to get the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                    return (string.Empty, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var aUid = (string)userInfo[KeyUid];
+
+                if (string.IsNullOrWhiteSpace(aUid))
+                {
+                    Log.Warning(
+                        $"Failed to get the account UID from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                    return (null, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var avatar = (string)userInfo[KeyAvatar];
+
+                if (string.IsNullOrWhiteSpace(avatar))
+                    Log.Warning(
+                        $"Failed to get the avatar from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+
+                var nickname = (string)userInfo[KeyNickname];
+
+                if (string.IsNullOrWhiteSpace(nickname))
+                    Log.Warning(
+                        $"Failed to get the nickname from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+
+                return (aUid, avatar, nickname, returnCode);
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                LogException(exception, httpResponseBody);
+                return (string.Empty, string.Empty, string.Empty, null);
+            } // end try...catch
+        } // end method GetAccountFromApiAsync(string, string)
 
         /// <summary>
         /// Get the specific account from the API. The method is usually used before getting the account's characters from the API.
@@ -1054,19 +1145,19 @@ namespace PaimonTray.Helpers
                     return true;
                 } // end if
 
-                var uid = (string)userInfo[KeyUid];
+                var aUid = (string)userInfo[KeyUid];
 
-                if (uid != propertySetAccount[KeyUid] as string)
+                if (aUid != propertySetAccount[KeyUid] as string)
                 {
                     Log.Warning(
-                        $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {uid}).");
+                        $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {aUid}).");
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return false;
                 } // end if
 
                 var avatar = (string)userInfo[KeyAvatar];
 
-                if (avatar is null)
+                if (string.IsNullOrWhiteSpace(avatar))
                 {
                     Log.Warning(
                         $"Failed to get the avatar from the user info (account container key: {containerKeyAccount}).");
@@ -1076,7 +1167,7 @@ namespace PaimonTray.Helpers
 
                 var nickname = (string)userInfo[KeyNickname];
 
-                if (nickname is null)
+                if (string.IsNullOrWhiteSpace(nickname))
                 {
                     Log.Warning(
                         $"Failed to get the nickname from the user info (account container key: {containerKeyAccount}).");
@@ -1093,7 +1184,7 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             return true;
-        } // end method GetAccountFromApiAsync
+        } // end method GetAccountFromApiAsync(string)
 
         /// <summary>
         /// Get the avatar URI.
@@ -1540,7 +1631,7 @@ namespace PaimonTray.Helpers
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
-                isServerCn, true, query, $"{urlBaseRealTimeNotes}{query}"); // Send an HTTP GET request when ready.
+                isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
@@ -1950,7 +2041,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="exception">The exception to log.</param>
         /// <param name="httpResponseBody">The HTTP response body.</param>
-        private void LogException(Exception exception, string httpResponseBody)
+        private static void LogException(Exception exception, string httpResponseBody)
         {
             App.LogException(exception);
             Log.Error($"  - Extra info: {httpResponseBody}");
