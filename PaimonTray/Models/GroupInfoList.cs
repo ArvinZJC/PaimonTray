@@ -24,7 +24,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The group info list key.
         /// </summary>
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         #endregion Properties
     } // end class GroupInfoList

@@ -48,8 +48,8 @@ namespace PaimonTray.Views
         {
             if ((e.PropertyName == AccountsHelper.PropertyNameIsAccountGroupUpdated &&
                  _app.AccountsH.IsAccountGroupUpdated) ||
-                e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating ||
-                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+                e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+                ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the accounts settings page's loaded event.
@@ -67,29 +67,26 @@ namespace PaimonTray.Views
                 propertySetSettings[SettingsHelper.KeyRealTimeNotesIntervalRefresh] as int?;
             var serverDefault = propertySetSettings[SettingsHelper.KeyServerDefault] as string;
 
-            // Show the settings' selection.
-            if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1)
-                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1;
-            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2)
-                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2;
-            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3)
-                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3;
-            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4)
-                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4;
-            else if (realTimeNotesIntervalRefresh == SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal)
-                ComboBoxRealTimeNotesIntervalRefresh.SelectedItem =
-                    ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal;
-            else ComboBoxRealTimeNotesIntervalRefresh.SelectedItem = null;
-
-            if (serverDefault == AccountsHelper.TagServerCn) ComboBoxServerDefault.SelectedItem = ComboBoxItemServerCn;
-            else if (serverDefault == AccountsHelper.TagServerGlobal)
-                ComboBoxServerDefault.SelectedItem = ComboBoxItemServerGlobal;
-            else ComboBoxServerDefault.SelectedItem = null;
-
+            ComboBoxRealTimeNotesIntervalRefresh.SelectedItem = realTimeNotesIntervalRefresh switch
+            {
+                SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther1 =>
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther1,
+                SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther2 =>
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther2,
+                SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther3 =>
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther3,
+                SettingsHelper.TagRealTimeNotesIntervalRefreshOptionOther4 =>
+                    ComboBoxItemRealTimeNotesIntervalRefreshOptionOther4,
+                SettingsHelper.TagRealTimeNotesIntervalRefreshResinOriginal =>
+                    ComboBoxItemRealTimeNotesIntervalRefreshResinOriginal,
+                _ => null
+            }; // Show the settings' selection.
+            ComboBoxServerDefault.SelectedItem = serverDefault switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
             ToggleSwitchAccountGroupsCheckRefreshWhenAppStarts.IsOn =
                 propertySetSettings[SettingsHelper.KeyAccountGroupsCheckRefreshWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultAccountGroupsCheckRefreshWhenAppStarts;

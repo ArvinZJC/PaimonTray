@@ -11,7 +11,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Graphics;
-using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -35,7 +34,7 @@ namespace PaimonTray.Views
 
         #endregion Constructors
 
-        #region Events
+        #region Event Handlers
 
         // Handle the root grid's actual theme changed event.
         private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
@@ -142,12 +141,13 @@ namespace PaimonTray.Views
                 ElementTheme.Default => null,
                 ElementTheme.Light => Colors.Silver,
                 _ => null
-            }; // Must set the color explicitly rather than using the resource for the title bar caption's disabled foreground to make it take effect.
+            }; // Must set the colour explicitly rather than using the resource for the title bar caption's disabled foreground to make it take effect.
             titleBar.ButtonPressedBackgroundColor =
                 (GridTitleBar.Resources["TitleBarButtonBackgroundPressed"] as SolidColorBrush)?.Color;
             titleBar.ButtonPressedForegroundColor =
                 (GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush)?.Color;
-            titleBar.ExtendsContentIntoTitleBar = true;
+            titleBar.ExtendsContentIntoTitleBar =
+                true; // Need to extend the content into the title bar before getting the title bar's height.
 
             GridColumnTitleBarLeftPadding.Width = new GridLength(titleBar.LeftInset);
             GridColumnTitleBarRightPadding.Width = new GridLength(titleBar.RightInset);
@@ -162,16 +162,14 @@ namespace PaimonTray.Views
         {
             var windowId = WindowsHelper.GetWindowId(this);
 
-            _appWindow = WindowsHelper.GetAppWindow(windowId);
+            _appWindow = await _app.WindowsH.GetAppWindowWithIconAsync(windowId);
 
             if (_appWindow is null)
             {
-                Log.Warning("The settings window's AppWindow is null.");
+                Log.Warning("The settings window's app window is null.");
                 return;
             } // end if
 
-            _appWindow.SetIcon(
-                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppFieldsHelper.UriAppIcon))).Path);
             CustomiseTitleBar();
 
             var workArea = WindowsHelper.GetWorkArea(windowId);

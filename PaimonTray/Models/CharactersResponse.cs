@@ -14,6 +14,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The character data.
         /// </summary>
+        // ReSharper disable once CollectionNeverUpdated.Global
         public Dictionary<string, ImmutableList<Character>> Data { get; set; }
 
         /// <summary>

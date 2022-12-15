@@ -28,15 +28,6 @@ namespace PaimonTray.Views
 
         #endregion Constructors
 
-        #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
-
-        #endregion Fields
-
         #region Event Handlers
 
         // Handle the app introduction page's unloaded event.
@@ -46,6 +37,15 @@ namespace PaimonTray.Views
         } // end method AboutAppPage_OnUnloaded
 
         #endregion Event Handlers
+
+        #region Fields
+
+        /// <summary>
+        /// The app.
+        /// </summary>
+        private App _app;
+
+        #endregion Fields
 
         #region Methods
 

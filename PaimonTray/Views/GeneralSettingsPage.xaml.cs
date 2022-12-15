@@ -123,19 +123,21 @@ namespace PaimonTray.Views
             var language = propertySetSettings[SettingsHelper.KeyLanguage] as string;
             var theme = propertySetSettings[SettingsHelper.KeyTheme] as string;
 
-            if (language == SettingsHelper.TagLanguageEnGb) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnGb;
-            else if (language == SettingsHelper.TagLanguageEnUs)
-                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnUs;
-            else if (language == SettingsHelper.TagLanguageZhHansCn)
-                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageZhHansCn;
-            else if (language == SettingsHelper.TagSystem) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageSystem;
-            else ComboBoxLanguage.SelectedItem = null;
-
-            if (theme == SettingsHelper.TagSystem) ComboBoxTheme.SelectedItem = ComboBoxItemThemeSystem;
-            else if (theme == SettingsHelper.TagThemeDark) ComboBoxTheme.SelectedItem = ComboBoxItemThemeDark;
-            else if (theme == SettingsHelper.TagThemeLight) ComboBoxTheme.SelectedItem = ComboBoxItemThemeLight;
-            else ComboBoxTheme.SelectedItem = null;
-
+            ComboBoxLanguage.SelectedItem = language switch
+            {
+                SettingsHelper.TagLanguageEnGb => ComboBoxItemLanguageEnGb,
+                SettingsHelper.TagLanguageEnUs => ComboBoxItemLanguageEnUs,
+                SettingsHelper.TagLanguageZhHansCn => ComboBoxItemLanguageZhHansCn,
+                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
+                _ => null
+            };
+            ComboBoxTheme.SelectedItem = theme switch
+            {
+                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
+                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
+                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
+                _ => null
+            };
             ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
                 propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultMainWindowShowWhenAppStarts;

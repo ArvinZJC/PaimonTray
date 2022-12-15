@@ -337,9 +337,7 @@ namespace PaimonTray.Views
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
                 realTimeNotesStatus == AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusFail.Visibility =
-                realTimeNotesStatus is null || realTimeNotesStatus == AccountsHelper.TagStatusFail
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
+                realTimeNotesStatus is null or AccountsHelper.TagStatusFail ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus == AccountsHelper.TagStatusReady
                 ? Visibility.Visible
                 : Visibility.Collapsed;

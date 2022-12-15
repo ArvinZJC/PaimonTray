@@ -206,7 +206,7 @@ namespace PaimonTray.Views
 
             if (_appWindow is null)
             {
-                Log.Warning("The main window's AppWindow is null.");
+                Log.Warning("The main window's app window is null.");
                 return;
             } // end if
 

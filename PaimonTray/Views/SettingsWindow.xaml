@@ -33,8 +33,7 @@
         <!-- The title bar grid. -->
         <Grid
             x:Name="GridTitleBar"
-            Grid.Row="0"
-            Height="28">
+            Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     x:Name="GridColumnTitleBarLeftPadding"

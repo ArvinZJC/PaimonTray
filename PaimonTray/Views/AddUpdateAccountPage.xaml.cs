@@ -42,8 +42,8 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating ||
-                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating or AccountsHelper.PropertyNameIsManaging)
+                ToggleStatusVisibility();
         } // end method AccountsHelper_OnPropertyChanged
 
         // Handle the loaded event of the page for adding/updating an account.
