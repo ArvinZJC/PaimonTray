@@ -326,7 +326,7 @@
         /// <summary>
         /// The Windows App SDK NuGet package's revision version.
         /// </summary>
-        public static readonly int VersionRevisionNuGetWindowsAppSdk = 1;
+        public static readonly int VersionRevisionNuGetWindowsAppSdk = 2;
 
         #endregion Fields
     } // end class AppFieldsHelper
