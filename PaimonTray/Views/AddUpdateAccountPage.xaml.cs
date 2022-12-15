@@ -578,6 +578,7 @@ namespace PaimonTray.Views
 
             ButtonLoginAlternative.Content = resourceLoader.GetString("Login");
             ButtonLoginAlternativeClear.Content = resourceLoader.GetString("Clear");
+            ButtonLoginCompleteConfirm.Visibility = Visibility.Collapsed;
             FontIconLoginAssist.Glyph = AppFieldsHelper.GlyphHelp;
             GridLoginAlternative.Visibility = Visibility.Visible;
             RunLoginHeaderCookies.Text = resourceLoader.GetString("Cookies");
