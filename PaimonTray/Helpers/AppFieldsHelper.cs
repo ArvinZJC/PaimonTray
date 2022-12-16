@@ -250,7 +250,8 @@
         /// <summary>
         /// The URL of the user manual section instructing how to get your cookies.
         /// </summary>
-        public const string UrlCookiesHowToGet = "https://paimon.swo.moe/#how-to-get-my-cookie";
+        public const string UrlCookiesHowToGet =
+            "https://github.com/ArvinZJC/PaimonTray/wiki/Guide-on-how-to-get-your-cookies";
 
         /// <summary>
         /// The app's Gitee repository URL.
