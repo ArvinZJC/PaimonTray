@@ -133,6 +133,31 @@
         public const int InfoBarMarginBottom = 4;
 
         /// <summary>
+        /// The alternative login area width.
+        /// </summary>
+        public const int LoginAreaAlternativeWidth = 400;
+
+        /// <summary>
+        /// The web page login area height for the CN server.
+        /// </summary>
+        public const int LoginAreaWebPageHeightServerCn = 500;
+
+        /// <summary>
+        /// The web page login area height for the global server.
+        /// </summary>
+        public const int LoginAreaWebPageHeightServerGlobal = 608;
+
+        /// <summary>
+        /// The web page login area width for the CN server.
+        /// </summary>
+        public const int LoginAreaWebPageWidthServerCn = 1220;
+
+        /// <summary>
+        /// The web page login area width for the global server.
+        /// </summary>
+        public const int LoginAreaWebPageWidthServerGlobal = 964;
+
+        /// <summary>
         /// The Windows version registry key.
         /// </summary>
         public const string RegistryKeyVersionWindows = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";

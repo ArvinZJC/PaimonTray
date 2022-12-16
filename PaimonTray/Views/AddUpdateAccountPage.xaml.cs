@@ -333,13 +333,17 @@ namespace PaimonTray.Views
 
             if (_isWebView2Available)
             {
-                _webView2LoginWebPage.Height = isServerCn ? 488 : 608;
+                _webView2LoginWebPage.Height = isServerCn
+                    ? AppFieldsHelper.LoginAreaWebPageHeightServerCn
+                    : AppFieldsHelper.LoginAreaWebPageHeightServerGlobal;
                 _webView2LoginWebPage.Source = uriLoginMiHoYo;
-                GridServer.Width = isServerCn ? 1220 : 964;
+                GridServer.Width = isServerCn
+                    ? AppFieldsHelper.LoginAreaWebPageWidthServerCn
+                    : AppFieldsHelper.LoginAreaWebPageWidthServerGlobal;
             }
             else
             {
-                GridServer.Width = 400;
+                GridServer.Width = AppFieldsHelper.LoginAreaAlternativeWidth;
                 HyperlinkLoginHeaderPlace.NavigateUri = uriLoginMiHoYo;
                 RunLoginHeaderPlace.Text = resourceLoader.GetString(isServerCn ? "MiHoYo" : "HoYoLab");
                 TextBoxLoginAlternative.Width = GridServer.Width;
