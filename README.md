@@ -101,14 +101,12 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 15 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 16 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
-   - Inspired by [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar).
-     > We even use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
    - README banner background credited to [void_0](https://www.pixiv.net/en/artworks/85543107).
-
+   
 2. Due to [the use of the Windows App SDK](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/system-requirements#windows-app-sdk), PaimonTray is expected to work well on Windows 10, version 1809 (build 17763) and later (arm64, x64, and x86). **It is awfully safe to permit the app behaviour for any system prompt regarding safety confirmation. The app is signed, is not malware, and will never ever collect and upload any user privacy.** Should you report a problem encountered, you may find [issues](https://github.com/ArvinZJC/PaimonTray/issues) useful.
 
    > **Warning**
@@ -122,7 +120,7 @@ You can get PaimonTray from:
    >
    > There may be prompts for asking you to download runtime, including but not limited to .NET Desktop Runtime and Windows App SDK runtime. Please download and install the runtime because PaimonTray applies framework-dependent deployment to reduce the installer file size.
 
-3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority. Continuous optimisation will be provided ~~(hopefully)~~. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to [shout out your ideas](https://github.com/ArvinZJC/PaimonTray/discussions).
+3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority, and stability is also significant. Continuous optimisation will be provided ~~(hopefully)~~, but you need to be aware that PaimonTray relies on undocumented miHoYo/HoYoLAB APIs heavily. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to [shout out your ideas](https://github.com/ArvinZJC/PaimonTray/discussions).
 
 4. The NuGet packages of the project are listed in the following table.
 
@@ -139,6 +137,18 @@ You can get PaimonTray from:
 
 1. Code: create a branch named `dev` or whatever based on the `main` branch → coding → make a pull request (PR) for reviewers to peruse. 😘
 2. Internationalisation: thanks much for your translations in [Crowdin](https://crowdin.com/project/paimontray)! 😘
+
+## 💎 Useful  links
+
+- Alternative on macOS: [PaimonMenuBar](https://github.com/spencerwooo/PaimonMenuBar)
+
+  > It is the inspiration for PaimonTray, and we use the same app icon. However, you are not expected to consider PaimonTray as "PaimonMenuBar for Windows", or vice versa. We have various design ideas and patterns for the target platforms, and independent development road maps.
+
+- Alternative extension for your browsers: [paimon-webext](https://github.com/daidr/paimon-webext)
+
+- Alternative script on the serverless service, Docker, or the local machine: [Genshin Dailynote Reminder](https://github.com/Xm798/Genshin-Dailynote-Reminder)
+
+- Fully-fledged alternative on Windows: [Snap.Hutao](https://github.com/DGP-Studio/Snap.Hutao)
 
 Good luck! 💖
 
