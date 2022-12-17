@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using System.Globalization;
 
 namespace PaimonTray.Views
@@ -152,16 +153,20 @@ namespace PaimonTray.Views
             _app = null;
         } // end method GeneralSettingsPage_OnUnloaded
 
+#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
         private void HyperlinkLaunchAtWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
+            CommandsViewModel.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
         } // end method HyperlinkLaunchAtWindowsStartupLink_OnClick
 
+#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the notifications setting.
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsNotifications);
+            CommandsViewModel.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static

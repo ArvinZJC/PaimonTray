@@ -94,7 +94,7 @@ namespace PaimonTray.Views
         private void ButtonLoginAssist_OnClick(object sender, RoutedEventArgs e)
         {
             if (_isWebView2Available) _webView2LoginWebPage.Source = GetLoginWebPageUri();
-            else _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UrlCookiesHowToGet);
+            else CommandsViewModel.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UrlCookiesHowToGet);
         } // end method ButtonLoginAssist_OnClick
 
         // Handle the click event of the button for confirming completing login.
