@@ -124,7 +124,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="query">The query.</param>
-        /// <returns>The dynamic secret.</returns>
+        /// <returns>The dynamic secret, or <c>null</c> if the operation fails.</returns>
         private static string GenerateDynamicSecret(bool isServerCn, string query)
         {
             var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
@@ -133,8 +133,17 @@ namespace PaimonTray.Helpers
 
             if (string.IsNullOrWhiteSpace(query) || !query.Contains('=')) Log.Warning($"Invalid query ({query}).");
 
-            return
-                $"{timestamp},{randomInt},{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+            try
+            {
+                return
+                    $"{timestamp},{randomInt},{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+            }
+            catch (Exception exception)
+            {
+                Log.Error("Failed to generate a dynamic secret.");
+                App.LogException(exception);
+                return null;
+            } // end try...catch
         } // end method GenerateDynamicSecret
 
         /// <summary>

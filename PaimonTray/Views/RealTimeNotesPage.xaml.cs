@@ -117,7 +117,9 @@ namespace PaimonTray.Views
             }
             else
             {
-                var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+                Resources.TryGetValue("AccountCharacterConverter", out var accountCharacterConverterObject);
+
+                var accountCharacterConverter = accountCharacterConverterObject as AccountCharacterConverter;
                 var nicknameCharacter =
                     accountCharacterConverter?.Convert(accountCharacter, null,
                         AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
