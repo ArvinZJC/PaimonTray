@@ -175,8 +175,8 @@ namespace PaimonTray.Views
         // Handle the alternative login text box's text changed event.
         private void TextBoxLoginAlternative_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            ButtonLoginAlternative.IsEnabled = TextBoxLoginAlternative.Text.Trim() != string.Empty;
-            ButtonLoginAlternativeClear.IsEnabled = TextBoxLoginAlternative.Text != string.Empty;
+            ButtonLoginAlternative.IsEnabled = !string.IsNullOrWhiteSpace(TextBoxLoginAlternative.Text);
+            ButtonLoginAlternativeClear.IsEnabled = !string.IsNullOrEmpty(TextBoxLoginAlternative.Text);
         } // end method TextBoxLoginAlternative_OnTextChanged
 
         // Handle the web page login WebView2's navigation completed event.
