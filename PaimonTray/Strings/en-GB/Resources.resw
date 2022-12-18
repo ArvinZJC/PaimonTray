@@ -578,6 +578,12 @@
   <data name="WebView2RuntimeDownload" xml:space="preserve">
     <value>Download WebView2 Runtime</value>
   </data>
+  <data name="WindowsAppSdkRuntimeDownloadConfirmation" xml:space="preserve">
+    <value>Download the Windows App SDK runtime?</value>
+  </data>
+  <data name="WindowsAppSdkRuntimeDownloadExplanation" xml:space="preserve">
+    <value>PaimonTray cannot resolve the deployment failure. You must install the Windows App SDK runtime manually to run the app.</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>

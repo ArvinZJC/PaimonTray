@@ -23,6 +23,16 @@
         public const string BuildStable = "stable";
 
         /// <summary>
+        /// The deployment failure content dialogue's expected height.
+        /// </summary>
+        public const int ContentDialogueDeploymentFailureHeightExpected = 260;
+
+        /// <summary>
+        /// The deployment failure content dialogue's expected width.
+        /// </summary>
+        public const int ContentDialogueDeploymentFailureWidthExpected = 360;
+
+        /// <summary>
         /// The code of the glyph Accept.
         /// </summary>
         public const string GlyphAccept = "\xE8FB";

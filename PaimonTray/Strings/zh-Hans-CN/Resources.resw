@@ -578,6 +578,12 @@
   <data name="WebView2RuntimeDownload" xml:space="preserve">
     <value>下载 WebView2 运行环境</value>
   </data>
+  <data name="WindowsAppSdkRuntimeDownloadConfirmation" xml:space="preserve">
+    <value>下载 Windows 应用 SDK 运行环境？</value>
+  </data>
+  <data name="WindowsAppSdkRuntimeDownloadExplanation" xml:space="preserve">
+    <value>PaimonTray 无法解决部署错误。您必须手动安装 Windows 应用 SDK 运行环境来运行此应用。</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>是的</value>
   </data>

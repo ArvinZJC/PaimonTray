@@ -11,7 +11,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
-using Windows.System;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace PaimonTray
@@ -46,6 +45,15 @@ namespace PaimonTray
         } // end constructor App
 
         #endregion Constructors
+
+        #region Fields
+
+        /// <summary>
+        /// The architecture.
+        /// </summary>
+        public readonly string Architecture = Package.Current.Id.Architecture.ToString().ToLower();
+
+        #endregion Fields
 
         #region Methods
 
@@ -93,8 +101,8 @@ namespace PaimonTray
                         registryKeyVersionWindows.GetValue(AppFieldsHelper.RegistryNameVersionRevisionWindows)
                             ?.ToString(), out var versionRevisionWindows))
                     return Environment.OSVersion.Version.Major == AppFieldsHelper.VersionMajorWindows10Or11 &&
-                           ((Environment.OSVersion.Version.Build >= AppFieldsHelper.VersionBuildMinWindows10Elevation &&
-                             Environment.OSVersion.Version.Build < AppFieldsHelper.VersionBuildMinWindows11 &&
+                           ((Environment.OSVersion.Version.Build is >= AppFieldsHelper.VersionBuildMinWindows10Elevation
+                                 and < AppFieldsHelper.VersionBuildMinWindows11 &&
                              versionRevisionWindows >= AppFieldsHelper.VersionRevisionMinWindows10Elevation) ||
                             (Environment.OSVersion.Version.Build >= AppFieldsHelper.VersionBuildMinWindows11 &&
                              versionRevisionWindows >=
@@ -118,19 +126,16 @@ namespace PaimonTray
         {
             var packageVersion = Package.Current.Id.Version; // Get the package version first.
             var appVersionBase = $"{packageVersion.Major}.{packageVersion.Minor}";
-            string suffix;
-
-            if (packageVersion.Build < AppFieldsHelper.VersionBuildBetaMin)
-                suffix = $"{AppFieldsHelper.BuildAlpha}.{packageVersion.Build + 1}";
-            else if (packageVersion.Build < AppFieldsHelper.VersionBuildStableMin)
-                suffix =
-                    $"{AppFieldsHelper.BuildBeta}.{packageVersion.Build - AppFieldsHelper.VersionBuildBetaMin + 1}";
-            else
-                suffix =
-                    $"{AppFieldsHelper.BuildStable}.{packageVersion.Build - AppFieldsHelper.VersionBuildStableMin + 1}";
+            var suffix = packageVersion.Build switch
+            {
+                < AppFieldsHelper.VersionBuildBetaMin => $"{AppFieldsHelper.BuildAlpha}.{packageVersion.Build + 1}",
+                < AppFieldsHelper.VersionBuildStableMin =>
+                    $"{AppFieldsHelper.BuildBeta}.{packageVersion.Build - AppFieldsHelper.VersionBuildBetaMin + 1}",
+                _ => $"{AppFieldsHelper.BuildStable}.{packageVersion.Build - AppFieldsHelper.VersionBuildStableMin + 1}"
+            };
 
             AppVersion = $"{appVersionBase}-{suffix}";
-            AppVersionTag = $"{appVersionBase}.{packageVersion.Build}";
+            AppVersionTag = $"{appVersionBase}.{packageVersion.Build}-{Architecture}";
         } // end method GetAppVersion
 
         /// <summary>
@@ -151,8 +156,11 @@ namespace PaimonTray
         /// Other entry points will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            WindowsH =
+                new WindowsHelper(); // Need to initialise the windows helper at first for showing a deployment failure window when necessary.
+
             if (DeploymentManager.GetStatus().Status is not DeploymentStatus.Ok)
             {
                 Log.Warning("The Windows App SDK runtime not in a good deployment status.");
@@ -194,24 +202,17 @@ namespace PaimonTray
                         } // end try...catch
                     } // end if
 
-                    Log.Information(
-                        "The app cannot resolve the deployment failure, will open the Windows App SDK runtime download link, and will be exited.");
-                    await Launcher.LaunchUriAsync(new Uri(
-                        $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
-                        $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +
-                        $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionBuildNuGetWindowsAppSdk}.{AppFieldsHelper.VersionRevisionNuGetWindowsAppSdk}/" +
-                        $"windowsappruntimeinstall-{Package.Current.Id.Architecture.ToString().ToLower()}.exe"));
-                    Exit();
+                    Log.Warning("The app cannot resolve the deployment failure.");
+                    _ = WindowsH.GetExistingDeploymentFailureWindow();
                     return;
                 } // end if
             } // end if
 
-            SettingsH = new SettingsHelper(); // Need to initialise the settings helper first.
+            SettingsH = new SettingsHelper(); // Need to initialise the settings helper as early as possible.
             HttpClientH =
                 new HttpClientHelper(); // Need to initialise the HTTP client helper before any other parts requiring the HTTP client.
             AccountsH = new AccountsHelper();
             UrlGitHubRepoRelease = $"{AppFieldsHelper.UrlBaseGitHubRepoRelease}{AppVersionTag}";
-            WindowsH = new WindowsHelper();
             CommandsVm =
                 new CommandsViewModel(
                     WindowsH.GetExistingMainWindow()
