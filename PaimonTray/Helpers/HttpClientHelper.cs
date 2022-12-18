@@ -135,8 +135,9 @@ namespace PaimonTray.Helpers
 
             try
             {
-                return
-                    $"{timestamp},{randomInt},{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+                return $"{timestamp}," +
+                       $"{randomInt}," +
+                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
             }
             catch (Exception exception)
             {
