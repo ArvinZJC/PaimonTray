@@ -101,7 +101,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 16 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 18 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
