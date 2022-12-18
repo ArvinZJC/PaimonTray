@@ -117,7 +117,9 @@ namespace PaimonTray.Views
             }
             else
             {
-                var accountCharacterConverter = Resources["AccountCharacterConverter"] as AccountCharacterConverter;
+                Resources.TryGetValue("AccountCharacterConverter", out var accountCharacterConverterObject);
+
+                var accountCharacterConverter = accountCharacterConverterObject as AccountCharacterConverter;
                 var nicknameCharacter =
                     accountCharacterConverter?.Convert(accountCharacter, null,
                         AccountCharacterConverter.ParameterNicknameCharacter, null) as string ??
@@ -337,9 +339,7 @@ namespace PaimonTray.Views
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
                 realTimeNotesStatus == AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusFail.Visibility =
-                realTimeNotesStatus is null || realTimeNotesStatus == AccountsHelper.TagStatusFail
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
+                realTimeNotesStatus is null or AccountsHelper.TagStatusFail ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus == AccountsHelper.TagStatusReady
                 ? Visibility.Visible
                 : Visibility.Collapsed;

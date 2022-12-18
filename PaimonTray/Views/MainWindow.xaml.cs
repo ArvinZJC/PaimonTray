@@ -36,8 +36,6 @@ namespace PaimonTray.Views
             CustomiseWindow();
             UpdateUiText();
 
-            GridRoot.Background =
-                new SolidColorBrush(((SolidColorBrush)GridRoot.Resources["RootGridAcrylicBackground"]).Color);
             MenuFlyoutItemMainMenuHelpLogsShow.CommandParameter = _app?.LogsDirectory;
             MenuFlyoutItemMainMenuHelpReleaseNotes.CommandParameter = _app?.UrlGitHubRepoRelease;
             TaskbarIconApp.Visibility = Visibility.Visible; // Show the taskbar icon when ready.
@@ -206,7 +204,7 @@ namespace PaimonTray.Views
 
             if (_appWindow is null)
             {
-                Log.Warning("The main window's AppWindow is null.");
+                Log.Warning("The main window's app window is null.");
                 return;
             } // end if
 
@@ -232,12 +230,18 @@ namespace PaimonTray.Views
         {
             if (_existingWindow?.MicaC is null)
             {
-                GridRoot.Background = new SolidColorBrush(((SolidColorBrush)GridRoot.Resources[
-                        _existingWindow?.DesktopAcrylicC is not null
-                            ? "RootGridAcrylicBackground"
-                            : "RootGridFallbackBackground"])
-                    .Color); // Use this format for the resources to make the brush transition work properly.
-                return;
+                GridRoot.Resources.TryGetValue(
+                    _existingWindow?.DesktopAcrylicC is not null
+                        ? "RootGridAcrylicBackground"
+                        : "RootGridFallbackBackground", out var gridRootBackground);
+
+                if (gridRootBackground is SolidColorBrush solidColourBrushGridRootBackground)
+                {
+                    GridRoot.Background =
+                        new SolidColorBrush(solidColourBrushGridRootBackground
+                            .Color); // Code in this way to make the brush transition work properly.
+                    return;
+                } // end if
             } // end if
 
             GridRoot.Background = null;

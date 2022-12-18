@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using PaimonTray.Helpers;
+using PaimonTray.ViewModels;
 using System.Globalization;
 
 namespace PaimonTray.Views
@@ -123,19 +124,21 @@ namespace PaimonTray.Views
             var language = propertySetSettings[SettingsHelper.KeyLanguage] as string;
             var theme = propertySetSettings[SettingsHelper.KeyTheme] as string;
 
-            if (language == SettingsHelper.TagLanguageEnGb) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnGb;
-            else if (language == SettingsHelper.TagLanguageEnUs)
-                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageEnUs;
-            else if (language == SettingsHelper.TagLanguageZhHansCn)
-                ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageZhHansCn;
-            else if (language == SettingsHelper.TagSystem) ComboBoxLanguage.SelectedItem = ComboBoxItemLanguageSystem;
-            else ComboBoxLanguage.SelectedItem = null;
-
-            if (theme == SettingsHelper.TagSystem) ComboBoxTheme.SelectedItem = ComboBoxItemThemeSystem;
-            else if (theme == SettingsHelper.TagThemeDark) ComboBoxTheme.SelectedItem = ComboBoxItemThemeDark;
-            else if (theme == SettingsHelper.TagThemeLight) ComboBoxTheme.SelectedItem = ComboBoxItemThemeLight;
-            else ComboBoxTheme.SelectedItem = null;
-
+            ComboBoxLanguage.SelectedItem = language switch
+            {
+                SettingsHelper.TagLanguageEnGb => ComboBoxItemLanguageEnGb,
+                SettingsHelper.TagLanguageEnUs => ComboBoxItemLanguageEnUs,
+                SettingsHelper.TagLanguageZhHansCn => ComboBoxItemLanguageZhHansCn,
+                SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
+                _ => null
+            };
+            ComboBoxTheme.SelectedItem = theme switch
+            {
+                SettingsHelper.TagSystem => ComboBoxItemThemeSystem,
+                SettingsHelper.TagThemeDark => ComboBoxItemThemeDark,
+                SettingsHelper.TagThemeLight => ComboBoxItemThemeLight,
+                _ => null
+            };
             ToggleSwitchMainWindowShowWhenAppStarts.IsOn =
                 propertySetSettings[SettingsHelper.KeyMainWindowShowWhenAppStarts] as bool? ??
                 SettingsHelper.DefaultMainWindowShowWhenAppStarts;
@@ -150,16 +153,20 @@ namespace PaimonTray.Views
             _app = null;
         } // end method GeneralSettingsPage_OnUnloaded
 
+#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the setting for configuring launch on Windows startup.
         private void HyperlinkLaunchAtWindowsStartupLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
+            CommandsViewModel.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsStartupApps);
         } // end method HyperlinkLaunchAtWindowsStartupLink_OnClick
 
+#pragma warning disable CA1822 // Mark members as static
         // Handle the click event of the link of the notifications setting.
         private void HyperlinkNotificationsLink_OnClick(Hyperlink sender, HyperlinkClickEventArgs args)
+#pragma warning restore CA1822 // Mark members as static
         {
-            _app.CommandsVm.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsNotifications);
+            CommandsViewModel.OpenLinkInDefaultCommand.Execute(AppFieldsHelper.UriSystemSettingsNotifications);
         } // end method HyperlinkNotificationsLink_OnClick
 
 #pragma warning disable CA1822 // Mark members as static

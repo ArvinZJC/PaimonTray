@@ -11,7 +11,9 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Graphics;
+using Windows.Storage;
 using WinRT;
 using WinRT.Interop;
 
@@ -22,6 +24,20 @@ namespace PaimonTray.Helpers
     /// </summary>
     public class WindowsHelper
     {
+        #region Constants
+
+        /// <summary>
+        /// The main window's position offset.
+        /// </summary>
+        public const int MainWindowPositionOffset = 12;
+
+        /// <summary>
+        /// The main window's side length offset.
+        /// </summary>
+        public const int MainWindowSideLengthOffset = 2;
+
+        #endregion Constants
+
         #region Constructors
 
         /// <summary>
@@ -117,14 +133,9 @@ namespace PaimonTray.Helpers
         private App _app;
 
         /// <summary>
-        /// The main window's position offset.
+        /// The app icon path.
         /// </summary>
-        public static readonly int MainWindowPositionOffset = 12;
-
-        /// <summary>
-        /// The main window's side length offset.
-        /// </summary>
-        public static readonly int MainWindowSideLengthOffset = 2;
+        private string _appIconPath;
 
         #endregion Fields
 
@@ -139,6 +150,33 @@ namespace PaimonTray.Helpers
         {
             return AppWindow.GetFromWindowId(windowId);
         } // end method GetAppWindow
+
+        /// <summary>
+        /// Get the app window for the given window ID, and set the app window's icon to the app icon.
+        /// </summary>
+        /// <param name="windowId">The window ID.</param>
+        /// <returns>The app window whose icon has been set to the app icon.</returns>
+        public async Task<AppWindow> GetAppWindowWithIconAsync(WindowId windowId)
+        {
+            var appWindow = GetAppWindow(windowId);
+
+            if (appWindow is null) return null;
+
+            _appIconPath ??= (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppFieldsHelper.UriAppIcon)))
+                .Path;
+            appWindow.SetIcon(_appIconPath);
+            return appWindow;
+        } // end method GetAppWindowWithIconAsync
+
+        /// <summary>
+        /// Get the existing deployment failure window.
+        /// NOTE: The deployment failure window will be opened if not exists. Otherwise, it will be activated.
+        /// </summary>
+        /// <returns>The existing deployment failure window, or <c>null</c> if the operation fails.</returns>
+        public ExistingWindow GetExistingDeploymentFailureWindow()
+        {
+            return ShowWindow(typeof(DeploymentFailureWindow));
+        } // end method GetExistingDeploymentFailureWindow
 
         /// <summary>
         /// Get the existing main window.
@@ -261,7 +299,7 @@ namespace PaimonTray.Helpers
                     } // end if...else
                 } // end if
 
-                _app.SettingsH.ApplyThemeSelection();
+                _app.SettingsH?.ApplyThemeSelection();
                 window.Closed += Window_OnClosed;
                 return existingWindow;
             } // end if

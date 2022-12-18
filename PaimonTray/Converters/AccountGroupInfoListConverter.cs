@@ -132,8 +132,8 @@ namespace PaimonTray.Converters
                 ParameterNicknameAccount => accountCharacter.NicknameAccount,
                 ParameterOtherInfoAccount =>
                     $"{accountCharacter.UidAccount} | {accountCharacter.Server} | {resourceLoader?.GetString("UpdatedLast")}{resourceLoader?.GetString("Colon")}{app?.AccountsH.GetLocalDateTimeString(accountCharacter.TimeUpdateLast)}",
-                ParameterStatusAddingUpdating => accountCharacter.Status == AccountsHelper.TagStatusAdding ||
-                                                 accountCharacter.Status == AccountsHelper.TagStatusUpdating
+                ParameterStatusAddingUpdating => accountCharacter.Status is AccountsHelper.TagStatusAdding
+                    or AccountsHelper.TagStatusUpdating
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusAddingUpdatingExplanation => resourceLoader?.GetString(

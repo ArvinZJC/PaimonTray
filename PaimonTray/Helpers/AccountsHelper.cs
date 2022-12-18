@@ -20,7 +20,7 @@ namespace PaimonTray.Helpers
     /// <summary>
     /// The accounts helper.
     /// </summary>
-    public class AccountsHelper : INotifyPropertyChanged
+    public partial class AccountsHelper : INotifyPropertyChanged
     {
         #region Constants
 
@@ -45,6 +45,61 @@ namespace PaimonTray.Helpers
         private const string ContainerKeyRealTimeNotes = "realTimeNotes";
 
         /// <summary>
+        /// The MID/UID cookie key (Option 1).
+        /// </summary>
+        public const string CookieKeyIdOption1 = "ltuid";
+
+        /// <summary>
+        /// The MID/UID cookie key (Option 2).
+        /// </summary>
+        public const string CookieKeyIdOption2 = "account_id";
+
+        /// <summary>
+        /// The MID/UID cookie key (Option 3).
+        /// </summary>
+        public const string CookieKeyIdOption3 = "ltmid_v2";
+
+        /// <summary>
+        /// The MID/UID cookie key (Option 4).
+        /// </summary>
+        public const string CookieKeyIdOption4 = "account_mid_v2";
+
+        /// <summary>
+        /// The token cookie key (Option 1).
+        /// </summary>
+        public const string CookieKeyTokenOption1 = "ltoken";
+
+        /// <summary>
+        /// The token cookie key (Option 2).
+        /// </summary>
+        public const string CookieKeyTokenOption2 = "cookie_token";
+
+        /// <summary>
+        /// The token cookie key (Option 3).
+        /// </summary>
+        public const string CookieKeyTokenOption3 = $"{CookieKeyTokenOption1}_v2";
+
+        /// <summary>
+        /// The token cookie key (Option 4).
+        /// </summary>
+        public const string CookieKeyTokenOption4 = $"{CookieKeyTokenOption2}_v2";
+
+        /// <summary>
+        /// The max number of accounts.
+        /// </summary>
+        public const int CountAccountsMax = 5;
+
+        /// <summary>
+        /// The finished expedition status in JSON data.
+        /// </summary>
+        public const string ExpeditionStatusFinished = "Finished";
+
+        /// <summary>
+        /// The ongoing expedition status in JSON data.
+        /// </summary>
+        public const string ExpeditionStatusOngoing = "Ongoing";
+
+        /// <summary>
         /// The PNG file extension.
         /// </summary>
         private const string FileExtensionPng = ".png";
@@ -62,7 +117,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The avatar key.
         /// </summary>
-        private const string KeyAvatar = "avatar";
+        public const string KeyAvatar = "avatar";
 
         /// <summary>
         /// The avatar side icon key.
@@ -88,6 +143,11 @@ namespace PaimonTray.Helpers
         /// The max daily commissions key for processing JSON data.
         /// </summary>
         private const string KeyCommissionsDailyMaxRaw = "total_task_num";
+
+        /// <summary>
+        /// The cookies key.
+        /// </summary>
+        public const string KeyCookies = "cookies";
 
         /// <summary>
         /// The current Realm Currency key.
@@ -243,7 +303,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The nickname key.
         /// </summary>
-        private const string KeyNickname = "nickname";
+        public const string KeyNickname = "nickname";
 
         /// <summary>
         /// The region key.
@@ -321,6 +381,16 @@ namespace PaimonTray.Helpers
         private const string KeySecondRaw = "Second";
 
         /// <summary>
+        /// The server key.
+        /// </summary>
+        public const string KeyServer = "server";
+
+        /// <summary>
+        /// The status key.
+        /// </summary>
+        public const string KeyStatus = "status";
+
+        /// <summary>
         /// The remaining time key.
         /// </summary>
         private const string KeyTimeRemaining = "timeRemaining";
@@ -328,7 +398,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The last update time key.
         /// </summary>
-        private const string KeyTimeUpdateLast = "timeUpdateLast";
+        public const string KeyTimeUpdateLast = "timeUpdateLast";
 
         /// <summary>
         /// The Parametric Transformer key for processing JSON data.
@@ -346,6 +416,16 @@ namespace PaimonTray.Helpers
         private const string KeyTransformerParametricTimeRecoveryRaw = "recovery_time";
 
         /// <summary>
+        /// The UID key.
+        /// </summary>
+        public const string KeyUid = "uid";
+
+        /// <summary>
+        /// The selected character's UID key.
+        /// </summary>
+        public const string KeyUidCharacterSelected = "uidCharacterSelected";
+
+        /// <summary>
         /// The user info key.
         /// </summary>
         private const string KeyUserInfo = "user_info";
@@ -356,6 +436,31 @@ namespace PaimonTray.Helpers
         private const string PrefixLevel = "Lv.";
 
         /// <summary>
+        /// The property name for the flag indicating if an account's character is updated.
+        /// </summary>
+        public const string PropertyNameIsAccountCharacterUpdated = nameof(IsAccountCharacterUpdated);
+
+        /// <summary>
+        /// The property name for the flag indicating if an account group is updated.
+        /// </summary>
+        public const string PropertyNameIsAccountGroupUpdated = nameof(IsAccountGroupUpdated);
+
+        /// <summary>
+        /// The property name for the flag indicating if the program is adding/updating an account.
+        /// </summary>
+        public const string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
+
+        /// <summary>
+        /// The property name for the flag indicating if the program is managing the accounts.
+        /// </summary>
+        public const string PropertyNameIsManaging = nameof(IsManaging);
+
+        /// <summary>
+        /// The property name for the UID of the character updating the real-time notes.
+        /// </summary>
+        public const string PropertyNameUidCharacterRealTimeNotesUpdated = nameof(UidCharacterRealTimeNotesUpdated);
+
+        /// <summary>
         /// The disabled return code.
         /// </summary>
         private const int ReturnCodeDisabled = 10102;
@@ -363,12 +468,57 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The login fail return code.
         /// </summary>
-        private const int ReturnCodeLoginFail = -100;
+        public const int ReturnCodeLoginFail = -100;
 
         /// <summary>
         /// The success return code.
         /// </summary>
-        private const int ReturnCodeSuccess = 0;
+        public const int ReturnCodeSuccess = 0;
+
+        /// <summary>
+        /// The tag indicating that all enabled characters have updated the real-time notes.
+        /// </summary>
+        public const string TagRealTimeNotesUpdatedCharactersAllEnabled = "realTimeNotesUpdatedCharactersAllEnabled";
+
+        /// <summary>
+        /// The CN server tag.
+        /// </summary>
+        public const string TagServerCn = "cn";
+
+        /// <summary>
+        /// The global server tag.
+        /// </summary>
+        public const string TagServerGlobal = "global";
+
+        /// <summary>
+        /// The adding status tag.
+        /// </summary>
+        public const string TagStatusAdding = "adding";
+
+        /// <summary>
+        /// The disabled status tag.
+        /// </summary>
+        public const string TagStatusDisabled = "disabled";
+
+        /// <summary>
+        /// The expired status tag.
+        /// </summary>
+        public const string TagStatusExpired = "expired";
+
+        /// <summary>
+        /// The fail status tag.
+        /// </summary>
+        public const string TagStatusFail = "fail";
+
+        /// <summary>
+        /// The ready status tag.
+        /// </summary>
+        public const string TagStatusReady = "ready";
+
+        /// <summary>
+        /// The updating status tag.
+        /// </summary>
+        public const string TagStatusUpdating = "updating";
 
         /// <summary>
         /// The URL for the CN server to get an account.
@@ -425,6 +575,26 @@ namespace PaimonTray.Helpers
         /// </summary>
         private const string UrlCharactersServerGlobal =
             "https://api-os-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_global";
+
+        /// <summary>
+        /// The HoYoLAB cookies URL.
+        /// </summary>
+        public const string UrlCookiesHoYoLab = "https://www.hoyolab.com";
+
+        /// <summary>
+        /// The miHoYo cookies URL.
+        /// </summary>
+        public const string UrlCookiesMiHoYo = "https://www.miyoushe.com";
+
+        /// <summary>
+        /// The URL for logging in to HoYoLAB.
+        /// </summary>
+        public const string UrlLoginHoYoLab = $"{UrlCookiesHoYoLab}/home";
+
+        /// <summary>
+        /// The URL for logging in to miHoYo.
+        /// </summary>
+        public const string UrlLoginMiHoYo = $"{UrlCookiesMiHoYo}/ys";
 
         #endregion Constants
 
@@ -541,148 +711,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private string _uidCharacterRealTimeNotesUpdated;
 
-        /// <summary>
-        /// The token cookie key.
-        /// </summary>
-        public static readonly string CookieKeyToken = "ltoken";
-
-        /// <summary>
-        /// The UID cookie key.
-        /// </summary>
-        public static readonly string CookieKeyUid = "ltuid";
-
-        /// <summary>
-        /// The max number of accounts.
-        /// </summary>
-        public static readonly int CountAccountsMax = 5;
-
-        /// <summary>
-        /// The finished expedition status in JSON data.
-        /// </summary>
-        public static readonly string ExpeditionStatusFinished = "Finished";
-
-        /// <summary>
-        /// The ongoing expedition status in JSON data.
-        /// </summary>
-        public static readonly string ExpeditionStatusOngoing = "Ongoing";
-
-        /// <summary>
-        /// The cookies key.
-        /// </summary>
-        public static readonly string KeyCookies = "cookies";
-
-        /// <summary>
-        /// The property name for the flag indicating if an account's character is updated.
-        /// </summary>
-        public static readonly string PropertyNameIsAccountCharacterUpdated = nameof(IsAccountCharacterUpdated);
-
-        /// <summary>
-        /// The property name for the flag indicating if an account group is updated.
-        /// </summary>
-        public static readonly string PropertyNameIsAccountGroupUpdated = nameof(IsAccountGroupUpdated);
-
-        /// <summary>
-        /// The property name for the flag indicating if the program is adding/updating an account.
-        /// </summary>
-        public static readonly string PropertyNameIsAddingUpdating = nameof(IsAddingUpdating);
-
-        /// <summary>
-        /// The property name for the flag indicating if the program is managing the accounts.
-        /// </summary>
-        public static readonly string PropertyNameIsManaging = nameof(IsManaging);
-
-        /// <summary>
-        /// The property name for the UID of the character updating the real-time notes.
-        /// </summary>
-        public static readonly string PropertyNameUidCharacterRealTimeNotesUpdated =
-            nameof(UidCharacterRealTimeNotesUpdated);
-
-        /// <summary>
-        /// The tag indicating that all enabled characters have updated the real-time notes.
-        /// </summary>
-        public static readonly string TagRealTimeNotesUpdatedCharactersAllEnabled =
-            "realTimeNotesUpdatedCharactersAllEnabled";
-
-        /// <summary>
-        /// The CN server tag.
-        /// </summary>
-        public static readonly string TagServerCn = "cn";
-
-        /// <summary>
-        /// The global server tag.
-        /// </summary>
-        public static readonly string TagServerGlobal = "global";
-
-        /// <summary>
-        /// The adding status tag.
-        /// </summary>
-        public static readonly string TagStatusAdding = "adding";
-
-        /// <summary>
-        /// The disabled status tag.
-        /// </summary>
-        public static readonly string TagStatusDisabled = "disabled";
-
-        /// <summary>
-        /// The expired status tag.
-        /// </summary>
-        public static readonly string TagStatusExpired = "expired";
-
-        /// <summary>
-        /// The fail status tag.
-        /// </summary>
-        public static readonly string TagStatusFail = "fail";
-
-        /// <summary>
-        /// The ready status tag.
-        /// </summary>
-        public static readonly string TagStatusReady = "ready";
-
-        /// <summary>
-        /// The updating status tag.
-        /// </summary>
-        public static readonly string TagStatusUpdating = "updating";
-
-        /// <summary>
-        /// The HoYoLAB cookies URL.
-        /// </summary>
-        public static readonly string UrlCookiesHoYoLab = "https://www.hoyolab.com";
-
-        /// <summary>
-        /// The miHoYo cookies URL.
-        /// </summary>
-        public static readonly string UrlCookiesMiHoYo = "https://www.mihoyo.com";
-
-        /// <summary>
-        /// The URL for logging in to HoYoLAB.
-        /// </summary>
-        public static readonly string UrlLoginHoYoLab = "https://www.hoyolab.com/home";
-
-        /// <summary>
-        /// The URL for logging in to miHoYo.
-        /// </summary>
-        public static readonly string UrlLoginMiHoYo = "https://bbs.mihoyo.com/ys";
-
-        /// <summary>
-        /// The server key.
-        /// </summary>
-        public static readonly string KeyServer = "server";
-
-        /// <summary>
-        /// The status key.
-        /// </summary>
-        public static readonly string KeyStatus = "status";
-
-        /// <summary>
-        /// The UID key.
-        /// </summary>
-        public static readonly string KeyUid = "uid";
-
-        /// <summary>
-        /// The selected character's UID key.
-        /// </summary>
-        public static readonly string KeyUidCharacterSelected = "uidCharacterSelected";
-
         #endregion Fields
 
         #region Methods
@@ -704,11 +732,12 @@ namespace PaimonTray.Helpers
             var nicknameAccount = propertySetAccount[KeyNickname] as string;
             var resourceLoader = _app.SettingsH.ResLoader;
             var server = propertySetAccount[KeyServer] as string;
-            var serverName = AppFieldsHelper.Unknown;
-
-            if (server == TagServerCn) serverName = resourceLoader.GetString("ServerCn");
-            else if (server == TagServerGlobal) serverName = resourceLoader.GetString("ServerGlobal");
-
+            var serverName = server switch
+            {
+                TagServerCn => resourceLoader.GetString("ServerCn"),
+                TagServerGlobal => resourceLoader.GetString("ServerGlobal"),
+                _ => AppFieldsHelper.Unknown
+            };
             var status = propertySetAccount[KeyStatus] as string;
             var timeUpdateLast = propertySetAccount[KeyTimeUpdateLast] as DateTimeOffset?;
             var uidAccount = propertySetAccount[KeyUid] as string;
@@ -793,7 +822,7 @@ namespace PaimonTray.Helpers
                 foreach (var containerKeyCharacter in applicationDataContainerCharacters.Containers.Keys)
                     applicationDataContainerCharacters.DeleteContainer(containerKeyCharacter);
 
-                if (status == TagStatusAdding || status == TagStatusUpdating)
+                if (status is TagStatusAdding or TagStatusUpdating)
                     propertySetAccount[KeyStatus] = TagStatusReady;
             }
             else
@@ -818,7 +847,7 @@ namespace PaimonTray.Helpers
                     await GetRealTimeNotesFromApiAsync(containerKeyAccount, character.Uid);
                 } // end foreach
 
-                if (status == TagStatusAdding || status == TagStatusUpdating)
+                if (status is TagStatusAdding or TagStatusUpdating)
                     propertySetAccount[KeyStatus] = TagStatusReady;
             } // end if...else
 
@@ -858,19 +887,9 @@ namespace PaimonTray.Helpers
         /// Check the account.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="isStandalone">A flag indicating if the operation is standalone. Default: <c>false</c>.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount)
-        {
-            await CheckAccountAsync(containerKeyAccount, false);
-        } // end method CheckAccountAsync(String)
-
-        /// <summary>
-        /// Check the account.
-        /// </summary>
-        /// <param name="containerKeyAccount">The account container key.</param>
-        /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
-        /// <returns>Void.</returns>
-        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone)
+        public async Task CheckAccountAsync(string containerKeyAccount, bool isStandalone = false)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
 
@@ -885,18 +904,27 @@ namespace PaimonTray.Helpers
 
             var shouldAddUpdateCharacters = true;
 
-            if (status == TagStatusAdding)
+            switch (status)
             {
-                if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
-                    propertySetAccount[KeyUid] is null)
+                case TagStatusAdding:
                 {
-                    ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
+                    if (propertySetAccount[KeyCookies] is null || propertySetAccount[KeyServer] is null ||
+                        propertySetAccount[KeyUid] is null)
+                    {
+                        ApplicationDataContainerAccounts.DeleteContainer(containerKeyAccount);
+                        shouldAddUpdateCharacters = false;
+                    } // end if
+
+                    break;
+                }
+                case TagStatusExpired:
                     shouldAddUpdateCharacters = false;
-                } // end if
-            }
-            else if (status == TagStatusExpired) shouldAddUpdateCharacters = false;
-            else if (status == TagStatusFail || status == TagStatusReady)
-                propertySetAccount[KeyStatus] = TagStatusUpdating;
+                    break;
+                case TagStatusFail:
+                case TagStatusReady:
+                    propertySetAccount[KeyStatus] = TagStatusUpdating;
+                    break;
+            } // end switch-case
 
             if (shouldAddUpdateCharacters)
                 await AddUpdateCharactersAsync(await GetAccountCharactersFromApiAsync(containerKeyAccount),
@@ -906,23 +934,14 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountAsync(String, Boolean)
+        } // end method CheckAccountAsync
 
         /// <summary>
         /// Check the accounts.
         /// </summary>
+        /// <param name="shouldCheckAccount">A flag indicating if an account should be checked. Default: <c>true</c>.</param>
         /// <returns>Void.</returns>
-        public async Task CheckAccountsAsync()
-        {
-            await CheckAccountsAsync(true);
-        } // end method CheckAccountsAsync
-
-        /// <summary>
-        /// Check the accounts.
-        /// </summary>
-        /// <param name="shouldCheckAccount">A flag indicating if an account should be checked.</param>
-        /// <returns>Void.</returns>
-        public async Task CheckAccountsAsync(bool shouldCheckAccount)
+        public async Task CheckAccountsAsync(bool shouldCheckAccount = true)
         {
             IsManaging = true;
 
@@ -934,7 +953,7 @@ namespace PaimonTray.Helpers
 
             CheckSelectedCharacterUid();
             IsManaging = false;
-        } // end method CheckAccountsAsync(Boolean)
+        } // end method CheckAccountsAsync
 
         /// <summary>
         /// Check if the selected character's UID can be found in the account group info lists.
@@ -979,14 +998,94 @@ namespace PaimonTray.Helpers
         /// NOTE: Remember to change the account status to adding/updating.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
+        /// <param name="shouldGetAccount">A flag indicating if the specific account should be got from the API before getting the account's characters.</param>
         /// <returns>A list of characters, or <c>null</c> if the operation fails.</returns>
-        public async Task<ImmutableList<Character>> GetAccountCharactersFromApiAsync(string containerKeyAccount)
+        public async Task<ImmutableList<Character>> GetAccountCharactersFromApiAsync(string containerKeyAccount,
+            bool shouldGetAccount = true)
         {
-            if (await GetAccountFromApiAsync(containerKeyAccount))
-                return await GetCharactersFromApiAsync(containerKeyAccount);
+            if (shouldGetAccount && !await GetAccountFromApiAsync(containerKeyAccount)) return null;
 
-            return null;
+            return await GetCharactersFromApiAsync(containerKeyAccount);
         } // end method GetAccountCharactersFromApiAsync
+
+        /// <summary>
+        /// Get the specific account from the API. The method is used when the user adds/updates an account.
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
+        /// <returns>A tuple. 1st item: the account UID; 2nd item: the avatar; 3rd item: the nickname; 4th item: the return code.</returns>
+        public async Task<(string, string, string, int?)> GetAccountFromApiAsync(string cookies, bool isServerCn)
+        {
+            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(cookies, isServerCn,
+                isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal);
+
+            if (httpResponseBody is null)
+            {
+                Log.Warning(
+                    $"Failed to get the account from the API due to null HTTP response message content (CN server: {isServerCn}, cookies: {cookies}).");
+                return (string.Empty, string.Empty, string.Empty, null);
+            } // end if
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning(
+                        $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                    Log.Information(httpResponseBody);
+                    return (string.Empty, string.Empty, string.Empty, null);
+                } // end if
+
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode is not ReturnCodeSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to get the account from the specific API (CN server: {isServerCn}, cookies: {cookies}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    return (string.Empty, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var userInfo = jsonNodeResponse[KeyData]?[KeyUserInfo];
+
+                if (userInfo is null)
+                {
+                    Log.Warning($"Failed to get the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                    return (string.Empty, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var aUid = (string)userInfo[KeyUid];
+
+                if (string.IsNullOrWhiteSpace(aUid))
+                {
+                    Log.Warning(
+                        $"Failed to get the account UID from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                    return (null, string.Empty, string.Empty, returnCode);
+                } // end if
+
+                var avatar = (string)userInfo[KeyAvatar];
+
+                if (string.IsNullOrWhiteSpace(avatar))
+                    Log.Warning(
+                        $"Failed to get the avatar from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+
+                var nickname = (string)userInfo[KeyNickname];
+
+                if (string.IsNullOrWhiteSpace(nickname))
+                    Log.Warning(
+                        $"Failed to get the nickname from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+
+                return (aUid, avatar, nickname, returnCode);
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                LogException(exception, httpResponseBody);
+                return (string.Empty, string.Empty, string.Empty, null);
+            } // end try...catch
+        } // end method GetAccountFromApiAsync(string, string)
 
         /// <summary>
         /// Get the specific account from the API. The method is usually used before getting the account's characters from the API.
@@ -1054,19 +1153,19 @@ namespace PaimonTray.Helpers
                     return true;
                 } // end if
 
-                var uid = (string)userInfo[KeyUid];
+                var aUid = (string)userInfo[KeyUid];
 
-                if (uid != propertySetAccount[KeyUid] as string)
+                if (aUid != propertySetAccount[KeyUid] as string)
                 {
                     Log.Warning(
-                        $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {uid}).");
+                        $"The account UID does not match (account container key: {containerKeyAccount}, UID got: {aUid}).");
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return false;
                 } // end if
 
                 var avatar = (string)userInfo[KeyAvatar];
 
-                if (avatar is null)
+                if (string.IsNullOrWhiteSpace(avatar))
                 {
                     Log.Warning(
                         $"Failed to get the avatar from the user info (account container key: {containerKeyAccount}).");
@@ -1076,7 +1175,7 @@ namespace PaimonTray.Helpers
 
                 var nickname = (string)userInfo[KeyNickname];
 
-                if (nickname is null)
+                if (string.IsNullOrWhiteSpace(nickname))
                 {
                     Log.Warning(
                         $"Failed to get the nickname from the user info (account container key: {containerKeyAccount}).");
@@ -1093,7 +1192,7 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             return true;
-        } // end method GetAccountFromApiAsync
+        } // end method GetAccountFromApiAsync(string)
 
         /// <summary>
         /// Get the avatar URI.
@@ -1267,7 +1366,7 @@ namespace PaimonTray.Helpers
                         realTimeNotesTimeLocalUpdateLast =
                             GetLocalDateTimeString(propertySetRealTimeNotes[KeyTimeUpdateLast] as DateTimeOffset?);
 
-                        if (realTimeNotesStatus is null || realTimeNotesStatus == TagStatusDisabled)
+                        if (realTimeNotesStatus is null or TagStatusDisabled)
                         {
                             realTimeNotesStatus ??= TagStatusFail; // Ensure the local variable first.
                             propertySetRealTimeNotes[KeyStatus] = realTimeNotesStatus;
@@ -1340,15 +1439,15 @@ namespace PaimonTray.Helpers
                                     var propertySetExpedition = applicationDataContainerExpeditions
                                         .CreateContainer(i.ToString(), ApplicationDataCreateDisposition.Always)
                                         .Values; // Get the expedition property set first.
-                                    var expeditionAvatarSideIcon = propertySetExpedition[KeyAvatarSideIcon] as string;
                                     var expeditionExplanation = resourceLoader.GetString("ExpeditionComplete");
                                     var expeditionStatus = propertySetExpedition[KeyStatus] as string;
-                                    var server = applicationDataContainerAccount.Values[KeyServer] as string;
-                                    string urlBaseAvatarSideIcon = null;
-
-                                    if (server == TagServerCn) urlBaseAvatarSideIcon = UrlBaseAvatarSideIconServerCn;
-                                    else if (server == TagServerGlobal)
-                                        urlBaseAvatarSideIcon = UrlBaseAvatarSideIconServerGlobal;
+                                    var urlBaseAvatarSideIcon =
+                                        (string)applicationDataContainerAccount.Values[KeyServer] switch
+                                        {
+                                            TagServerCn => UrlBaseAvatarSideIconServerCn,
+                                            TagServerGlobal => UrlBaseAvatarSideIconServerGlobal,
+                                            _ => null
+                                        };
 
                                     if (expeditionStatus != ExpeditionStatusFinished)
                                         expeditionExplanation +=
@@ -1358,10 +1457,12 @@ namespace PaimonTray.Helpers
                                     {
                                         Explanation = expeditionExplanation,
                                         Status = expeditionStatus,
-                                        UriImage = expeditionAvatarSideIcon is null || urlBaseAvatarSideIcon is null
-                                            ? null
-                                            : new Uri(
-                                                $"{urlBaseAvatarSideIcon}{expeditionAvatarSideIcon}{FileExtensionPng}")
+                                        UriImage =
+                                            propertySetExpedition[KeyAvatarSideIcon] is not string
+                                                expeditionAvatarSideIcon || urlBaseAvatarSideIcon is null
+                                                ? null
+                                                : new Uri(
+                                                    $"{urlBaseAvatarSideIcon}{expeditionAvatarSideIcon}{FileExtensionPng}")
                                     });
                                 } // end for
                             } // end nested if...else
@@ -1540,7 +1641,7 @@ namespace PaimonTray.Helpers
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
-                isServerCn, true, query, $"{urlBaseRealTimeNotes}{query}"); // Send an HTTP GET request when ready.
+                isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
@@ -1715,8 +1816,8 @@ namespace PaimonTray.Helpers
                         }
                         else
                         {
-                            foreach (Match match in new Regex(@"(?<=(UI_AvatarIcon_Side_)).*(?=.png)").Matches(
-                                         expeditionAvatarSideIconRaw))
+                            foreach (var match in GenerateAvatarSideIconRegex().Matches(expeditionAvatarSideIconRaw)
+                                         .Cast<Match>())
                             {
                                 propertySetExpedition[KeyAvatarSideIcon] = match.Value;
                                 break;
@@ -1896,6 +1997,13 @@ namespace PaimonTray.Helpers
         } // end method GetRealTimeNotesFromApiAsync
 
         /// <summary>
+        /// Generate the regular expression for the avatar side icon.
+        /// </summary>
+        /// <returns>The regular expression for the avatar side icon.</returns>
+        [GeneratedRegex("(?<=(UI_AvatarIcon_Side_)).*(?=.png)")]
+        private static partial Regex GenerateAvatarSideIconRegex(); // end method GenerateAvatarSideIconRegex
+
+        /// <summary>
         /// Get the real-time notes from the API for all enabled characters.
         /// </summary>
         /// <returns>Void.</returns>
@@ -1950,7 +2058,7 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="exception">The exception to log.</param>
         /// <param name="httpResponseBody">The HTTP response body.</param>
-        private void LogException(Exception exception, string httpResponseBody)
+        private static void LogException(Exception exception, string httpResponseBody)
         {
             App.LogException(exception);
             Log.Error($"  - Extra info: {httpResponseBody}");

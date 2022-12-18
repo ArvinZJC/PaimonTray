@@ -106,12 +106,10 @@ namespace PaimonTray.ViewModels
             } // end get
         } // end property ExitAppCommand
 
-#pragma warning disable CA1822 // Mark members as static
         /// <summary>
         /// The command to open a specific link in the default program.
         /// </summary>
-        public ICommand OpenLinkInDefaultCommand
-#pragma warning restore CA1822 // Mark members as static
+        public static ICommand OpenLinkInDefaultCommand
         {
             get
             {

@@ -52,12 +52,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.40.1";
+        private const string HeaderValueAppVersionServerCn = "2.42.1";
 
         /// <summary>
         /// The app version header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.22.0";
+        private const string HeaderValueAppVersionServerGlobal = "2.24.1";
 
         /// <summary>
         /// The client type header value for the CN server.
@@ -90,7 +90,6 @@ namespace PaimonTray.Helpers
         public HttpClientHelper()
         {
             _lazyHttpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { UseCookies = false }));
-            _random = new Random();
         } // end constructor HttpClientHelper
 
         #endregion Constructors
@@ -104,7 +103,6 @@ namespace PaimonTray.Helpers
         {
             _lazyHttpClient.Value.Dispose();
             _lazyHttpClient = null;
-            _random = null;
         } // end destructor
 
         #endregion Destructor
@@ -117,11 +115,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private Lazy<HttpClient> _lazyHttpClient;
 
-        /// <summary>
-        /// The pseudo-random number generator.
-        /// </summary>
-        private Random _random;
-
         #endregion Fields
 
         #region Methods
@@ -131,18 +124,27 @@ namespace PaimonTray.Helpers
         /// </summary>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="query">The query.</param>
-        /// <returns>The dynamic secret.</returns>
-        private string GenerateDynamicSecret(bool isServerCn, string query)
+        /// <returns>The dynamic secret, or <c>null</c> if the operation fails.</returns>
+        private static string GenerateDynamicSecret(bool isServerCn, string query)
         {
             var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
-            using var md5 = MD5.Create();
-            var randomInt = _random.Next(100000, 200000);
+            var randomInt = Random.Shared.Next(100000, 200000);
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             if (string.IsNullOrWhiteSpace(query) || !query.Contains('=')) Log.Warning($"Invalid query ({query}).");
 
-            return
-                $"{timestamp},{randomInt},{Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+            try
+            {
+                return $"{timestamp}," +
+                       $"{randomInt}," +
+                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+            }
+            catch (Exception exception)
+            {
+                Log.Error("Failed to generate a dynamic secret.");
+                App.LogException(exception);
+                return null;
+            } // end try...catch
         } // end method GenerateDynamicSecret
 
         /// <summary>
@@ -151,23 +153,11 @@ namespace PaimonTray.Helpers
         /// <param name="cookies">The cookies.</param>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
         /// <param name="url">The URL.</param>
+        /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret. Default: <c>false</c>.</param>
+        /// <param name="query">The query. Default: <c>null</c>.</param>
         /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
-        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url)
-        {
-            return await SendGetRequestAsync(cookies, isServerCn, false, null, url);
-        } // end method SendGetRequestAsync(String, Boolean, String)
-
-        /// <summary>
-        /// Send an HTTP GET request.
-        /// </summary>
-        /// <param name="cookies">The cookies.</param>
-        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
-        /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
-        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, bool needDynamicSecret,
-            string query, string url)
+        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url,
+            bool needDynamicSecret = false, string query = null)
         {
             if (string.IsNullOrWhiteSpace(url) || !url.StartsWith("http"))
             {
@@ -239,7 +229,7 @@ namespace PaimonTray.Helpers
             } // end try...catch
 
             return await httpResponseMessage.Content.ReadAsStringAsync();
-        } // end method SendGetRequestAsync(String, Boolean, Boolean, String, String)
+        } // end method SendGetRequestAsync
 
         #endregion Methods
     } // end class HttpClientHelper

@@ -11,7 +11,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Graphics;
-using Windows.Storage;
 
 namespace PaimonTray.Views
 {
@@ -35,7 +34,7 @@ namespace PaimonTray.Views
 
         #endregion Constructors
 
-        #region Events
+        #region Event Handlers
 
         // Handle the root grid's actual theme changed event.
         private void GridRoot_OnActualThemeChanged(FrameworkElement sender, object args)
@@ -83,11 +82,16 @@ namespace PaimonTray.Views
         private void SettingsWindow_OnActivated(object sender, WindowActivatedEventArgs args)
         {
             if (args.WindowActivationState is WindowActivationState.Deactivated)
-                TextBlockWindowTitle.Foreground =
-                    GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush;
+            {
+                GridTitleBar.Resources.TryGetValue("TitleBarCaptionForegroundDisabled",
+                    out var titleBarCaptionForegroundDisabled);
+                TextBlockWindowTitle.Foreground = titleBarCaptionForegroundDisabled as SolidColorBrush;
+            }
             else
-                TextBlockWindowTitle.Foreground =
-                    GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush;
+            {
+                GridTitleBar.Resources.TryGetValue("TitleBarCaptionForeground", out var titleBarCaptionForeground);
+                TextBlockWindowTitle.Foreground = titleBarCaptionForeground as SolidColorBrush;
+            } // end if...else
         } // end method SettingsWindow_OnActivated
 
         // Handle the settings window's closed event.
@@ -126,15 +130,20 @@ namespace PaimonTray.Views
         /// </summary>
         private void CustomiseTitleBar()
         {
+            GridTitleBar.Resources.TryGetValue("TitleBarCaptionForeground", out var titleBarCaptionForegroundObject);
+            GridTitleBar.Resources.TryGetValue("TitleBarButtonBackgroundHover", out var titleBarButtonBackgroundHover);
+            GridTitleBar.Resources.TryGetValue("TitleBarButtonBackgroundPressed",
+                out var titleBarButtonBackgroundPressed);
+            GridTitleBar.Resources.TryGetValue("TitleBarCaptionForegroundDisabled",
+                out var titleBarCaptionForegroundDisabled);
+
             var titleBar = _appWindow.TitleBar;
+            var titleBarCaptionForeground = titleBarCaptionForegroundObject as SolidColorBrush;
 
             titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonForegroundColor =
-                (GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush)?.Color;
-            titleBar.ButtonHoverBackgroundColor =
-                (GridTitleBar.Resources["TitleBarButtonBackgroundHover"] as SolidColorBrush)?.Color;
-            titleBar.ButtonHoverForegroundColor =
-                (GridTitleBar.Resources["TitleBarCaptionForeground"] as SolidColorBrush)?.Color;
+            titleBar.ButtonForegroundColor = titleBarCaptionForeground?.Color;
+            titleBar.ButtonHoverBackgroundColor = (titleBarButtonBackgroundHover as SolidColorBrush)?.Color;
+            titleBar.ButtonHoverForegroundColor = titleBarCaptionForeground?.Color;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveForegroundColor = GridTitleBar.ActualTheme switch
             {
@@ -142,12 +151,11 @@ namespace PaimonTray.Views
                 ElementTheme.Default => null,
                 ElementTheme.Light => Colors.Silver,
                 _ => null
-            }; // Must set the color explicitly rather than using the resource for the title bar caption's disabled foreground to make it take effect.
-            titleBar.ButtonPressedBackgroundColor =
-                (GridTitleBar.Resources["TitleBarButtonBackgroundPressed"] as SolidColorBrush)?.Color;
-            titleBar.ButtonPressedForegroundColor =
-                (GridTitleBar.Resources["TitleBarCaptionForegroundDisabled"] as SolidColorBrush)?.Color;
-            titleBar.ExtendsContentIntoTitleBar = true;
+            }; // Must set the colour explicitly rather than using the resource for the title bar caption's disabled foreground to make it take effect.
+            titleBar.ButtonPressedBackgroundColor = (titleBarButtonBackgroundPressed as SolidColorBrush)?.Color;
+            titleBar.ButtonPressedForegroundColor = (titleBarCaptionForegroundDisabled as SolidColorBrush)?.Color;
+            titleBar.ExtendsContentIntoTitleBar =
+                true; // Need to extend the content into the title bar before getting the title bar's height.
 
             GridColumnTitleBarLeftPadding.Width = new GridLength(titleBar.LeftInset);
             GridColumnTitleBarRightPadding.Width = new GridLength(titleBar.RightInset);
@@ -162,16 +170,14 @@ namespace PaimonTray.Views
         {
             var windowId = WindowsHelper.GetWindowId(this);
 
-            _appWindow = WindowsHelper.GetAppWindow(windowId);
+            _appWindow = await _app.WindowsH.GetAppWindowWithIconAsync(windowId);
 
             if (_appWindow is null)
             {
-                Log.Warning("The settings window's AppWindow is null.");
+                Log.Warning("The settings window's app window is null.");
                 return;
             } // end if
 
-            _appWindow.SetIcon(
-                (await StorageFile.GetFileFromApplicationUriAsync(new Uri(AppFieldsHelper.UriAppIcon))).Path);
             CustomiseTitleBar();
 
             var workArea = WindowsHelper.GetWorkArea(windowId);
@@ -187,12 +193,18 @@ namespace PaimonTray.Views
         {
             if (_existingWindow?.MicaC is null)
             {
-                GridRoot.Background = new SolidColorBrush(((SolidColorBrush)GridRoot.Resources[
-                        _existingWindow?.DesktopAcrylicC is not null
-                            ? "RootGridAcrylicBackground"
-                            : "RootGridFallbackBackground"])
-                    .Color); // Use this format for the resources to make the brush transition work properly.
-                return;
+                GridRoot.Resources.TryGetValue(
+                    _existingWindow?.DesktopAcrylicC is not null
+                        ? "RootGridAcrylicBackground"
+                        : "RootGridFallbackBackground", out var gridRootBackground);
+
+                if (gridRootBackground is SolidColorBrush solidColourBrushGridRootBackground)
+                {
+                    GridRoot.Background =
+                        new SolidColorBrush(solidColourBrushGridRootBackground
+                            .Color); // Code in this way to make the brush transition work properly.
+                    return;
+                } // end if
             } // end if
 
             GridRoot.Background = null;

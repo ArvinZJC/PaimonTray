@@ -5,6 +5,7 @@ namespace PaimonTray.Models
     /// <summary>
     /// The character model.
     /// </summary>
+    // ReSharper disable ClassNeverInstantiated.Global, UnusedAutoPropertyAccessor.Global
     public class Character
     {
         #region Properties
@@ -12,23 +13,23 @@ namespace PaimonTray.Models
         /// <summary>
         /// The level.
         /// </summary>
-        public int? Level { get; set; }
+        public int? Level { get; init; }
 
         /// <summary>
         /// The nickname.
         /// </summary>
-        public string Nickname { get; set; }
+        public string Nickname { get; init; }
 
         /// <summary>
         /// The region.
         /// </summary>
-        public string Region { get; set; }
+        public string Region { get; init; }
 
         /// <summary>
-        /// The UID.
+        /// The character UID.
         /// </summary>
         [JsonPropertyName("game_uid")]
-        public string Uid { get; set; }
+        public string Uid { get; init; }
 
         #endregion Properties
     } // end class Character

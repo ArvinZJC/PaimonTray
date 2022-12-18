@@ -16,6 +16,156 @@ namespace PaimonTray.Helpers
     /// </summary>
     public class SettingsHelper
     {
+        #region Constants
+
+        /// <summary>
+        /// The settings container key.
+        /// </summary>
+        private const string ContainerKeySettings = "settings";
+
+        /// <summary>
+        /// The default of the setting for checking and refreshing all accounts when the app starts.
+        /// </summary>
+        public const bool DefaultAccountGroupsCheckRefreshWhenAppStarts = true;
+
+        /// <summary>
+        /// The default of the setting for always using the alternative login method.
+        /// </summary>
+        public const bool DefaultLoginAlternativeAlways = false;
+
+        /// <summary>
+        /// The default of the main window's navigation view's pane display mode.
+        /// </summary>
+        public const NavigationViewPaneDisplayMode DefaultMainWindowNavigationViewPaneDisplayMode =
+            NavigationViewPaneDisplayMode.LeftCompact;
+
+        /// <summary>
+        /// The default of the setting for showing the main window when the app starts.
+        /// </summary>
+        public const bool DefaultMainWindowShowWhenAppStarts = false;
+
+        /// <summary>
+        /// The default of the setting for the main window's top navigation pane.
+        /// </summary>
+        public const bool DefaultMainWindowTopNavigationPane = false;
+
+        /// <summary>
+        /// The default of the setting for clearing notifications when the app exits.
+        /// </summary>
+        public const bool DefaultNotificationClear = true;
+
+        /// <summary>
+        /// The default of the greeting notification setting.
+        /// </summary>
+        public const bool DefaultNotificationGreeting = true;
+
+        /// <summary>
+        /// The key for checking and refreshing all accounts when the app starts.
+        /// </summary>
+        public const string KeyAccountGroupsCheckRefreshWhenAppStarts = "accountGroupsCheckRefreshWhenAppStarts";
+
+        /// <summary>
+        /// The language key.
+        /// </summary>
+        public const string KeyLanguage = "language";
+
+        /// <summary>
+        /// The key for always using the alternative login method.
+        /// </summary>
+        public const string KeyLoginAlternativeAlways = "loginAlternativeAlways";
+
+        /// <summary>
+        /// The key for showing the main window when the app starts.
+        /// </summary>
+        public const string KeyMainWindowShowWhenAppStarts = "mainWindowShowWhenAppStarts";
+
+        /// <summary>
+        /// The key for the main window's top navigation pane.
+        /// </summary>
+        public const string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
+
+        /// <summary>
+        /// The key for clearing notifications when the app exits.
+        /// </summary>
+        public const string KeyNotificationClear = "notificationClear";
+
+        /// <summary>
+        /// The greeting notification key.
+        /// </summary>
+        public const string KeyNotificationGreeting = "notificationGreeting";
+
+        /// <summary>
+        /// The real-time notes refresh interval key.
+        /// </summary>
+        public const string KeyRealTimeNotesIntervalRefresh = "realTimeNotesIntervalRefresh";
+
+        /// <summary>
+        /// The key for the default server.
+        /// </summary>
+        public const string KeyServerDefault = "serverDefault";
+
+        /// <summary>
+        /// The theme key.
+        /// </summary>
+        public const string KeyTheme = "theme";
+
+        /// <summary>
+        /// The English (United Kingdom) language tag.
+        /// </summary>
+        public const string TagLanguageEnGb = "en-GB";
+
+        /// <summary>
+        /// The English (United States) language tag.
+        /// </summary>
+        public const string TagLanguageEnUs = "en-US";
+
+        /// <summary>
+        /// The Chinese (Simplified, China) language tag.
+        /// </summary>
+        public const string TagLanguageZhHansCn = "zh-Hans-CN";
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 1 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther1 = 20; // 8 × 2.5
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 2 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther2 = 30; // 8 × 3.75
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 3 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther3 = 40; // 8 × 5
+
+        /// <summary>
+        /// The real-time notes refresh interval Other Option 4 tag.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshOptionOther4 = 60; // 8 × 7.5
+
+        /// <summary>
+        /// The tag for the real-time notes refresh interval which is equal to the Original Resin replenishment time.
+        /// </summary>
+        public const int TagRealTimeNotesIntervalRefreshResinOriginal = 8;
+
+        /// <summary>
+        /// The system default tag.
+        /// </summary>
+        public const string TagSystem = "system";
+
+        /// <summary>
+        /// The dark theme tag.
+        /// </summary>
+        public const string TagThemeDark = "dark";
+
+        /// <summary>
+        /// The light theme tag.
+        /// </summary>
+        public const string TagThemeLight = "light";
+
+        #endregion Constants
+
         #region Constructors
 
         /// <summary>
@@ -30,7 +180,7 @@ namespace PaimonTray.Helpers
 
             InitialiseSettings(); // Initialise the settings first.
             ApplyLanguageSelection();
-        } // end static readonlyructor SettingsHelper
+        } // end constructor SettingsHelper
 
         #endregion Constructors
 
@@ -53,153 +203,6 @@ namespace PaimonTray.Helpers
         /// </summary>
         private App _app;
 
-        /// <summary>
-        /// The settings container key.
-        /// </summary>
-        public static readonly string ContainerKeySettings = "settings";
-
-        /// <summary>
-        /// The default of the setting for checking and refreshing all accounts when the app starts.
-        /// </summary>
-        public static readonly bool DefaultAccountGroupsCheckRefreshWhenAppStarts = true;
-
-        /// <summary>
-        /// The default of the setting for always using the alternative login method.
-        /// </summary>
-        public static readonly bool DefaultLoginAlternativeAlways = false;
-
-        /// <summary>
-        /// The default of the main window's navigation view's pane display mode.
-        /// </summary>
-        public static readonly NavigationViewPaneDisplayMode DefaultMainWindowNavigationViewPaneDisplayMode =
-            NavigationViewPaneDisplayMode.LeftCompact;
-
-        /// <summary>
-        /// The default of the setting for showing the main window when the app starts.
-        /// </summary>
-        public static readonly bool DefaultMainWindowShowWhenAppStarts = false;
-
-        /// <summary>
-        /// The default of the setting for the main window's top navigation pane.
-        /// </summary>
-        public static readonly bool DefaultMainWindowTopNavigationPane = false;
-
-        /// <summary>
-        /// The default of the setting for clearing notifications when the app exits.
-        /// </summary>
-        public static readonly bool DefaultNotificationClear = true;
-
-        /// <summary>
-        /// The default of the greeting notification setting.
-        /// </summary>
-        public static readonly bool DefaultNotificationGreeting = true;
-
-        /// <summary>
-        /// The key for checking and refreshing all accounts when the app starts.
-        /// </summary>
-        public static readonly string KeyAccountGroupsCheckRefreshWhenAppStarts =
-            "accountGroupsCheckRefreshWhenAppStarts";
-
-        /// <summary>
-        /// The language key.
-        /// </summary>
-        public static readonly string KeyLanguage = "language";
-
-        /// <summary>
-        /// The key for always using the alternative login method.
-        /// </summary>
-        public static readonly string KeyLoginAlternativeAlways = "loginAlternativeAlways";
-
-        /// <summary>
-        /// The key for showing the main window when the app starts.
-        /// </summary>
-        public static readonly string KeyMainWindowShowWhenAppStarts = "mainWindowShowWhenAppStarts";
-
-        /// <summary>
-        /// The key for the main window's top navigation pane.
-        /// </summary>
-        public static readonly string KeyMainWindowTopNavigationPane = "mainWindowTopNavigationPane";
-
-        /// <summary>
-        /// The key for clearing notifications when the app exits.
-        /// </summary>
-        public static readonly string KeyNotificationClear = "notificationClear";
-
-        /// <summary>
-        /// The greeting notification key.
-        /// </summary>
-        public static readonly string KeyNotificationGreeting = "notificationGreeting";
-
-        /// <summary>
-        /// The real-time notes refresh interval key.
-        /// </summary>
-        public static readonly string KeyRealTimeNotesIntervalRefresh = "realTimeNotesIntervalRefresh";
-
-        /// <summary>
-        /// The key for the default server.
-        /// </summary>
-        public static readonly string KeyServerDefault = "serverDefault";
-
-        /// <summary>
-        /// The theme key.
-        /// </summary>
-        public static readonly string KeyTheme = "theme";
-
-        /// <summary>
-        /// The English (United Kingdom) language tag.
-        /// </summary>
-        public static readonly string TagLanguageEnGb = "en-GB";
-
-        /// <summary>
-        /// The English (United States) language tag.
-        /// </summary>
-        public static readonly string TagLanguageEnUs = "en-US";
-
-        /// <summary>
-        /// The Chinese (Simplified, China) language tag.
-        /// </summary>
-        public static readonly string TagLanguageZhHansCn = "zh-Hans-CN";
-
-        /// <summary>
-        /// The real-time notes refresh interval Other Option 1 tag.
-        /// </summary>
-        public static readonly int TagRealTimeNotesIntervalRefreshOptionOther1 = 20; // 8 × 2.5
-
-        /// <summary>
-        /// The real-time notes refresh interval Other Option 2 tag.
-        /// </summary>
-        public static readonly int TagRealTimeNotesIntervalRefreshOptionOther2 = 30; // 8 × 3.75
-
-        /// <summary>
-        /// The real-time notes refresh interval Other Option 3 tag.
-        /// </summary>
-        public static readonly int TagRealTimeNotesIntervalRefreshOptionOther3 = 40; // 8 × 5
-
-        /// <summary>
-        /// The real-time notes refresh interval Other Option 4 tag.
-        /// </summary>
-        public static readonly int TagRealTimeNotesIntervalRefreshOptionOther4 = 60; // 8 × 7.5
-
-        /// <summary>
-        /// The tag for the real-time notes refresh interval which is equal to the Original Resin replenishment time.
-        /// </summary>
-        public static readonly int TagRealTimeNotesIntervalRefreshResinOriginal = 8;
-
-        /// <summary>
-        /// The system default tag.
-        /// </summary>
-        public static readonly string TagSystem = "system";
-
-        /// <summary>
-        /// The dark theme tag.
-        /// </summary>
-        public static readonly string TagThemeDark = "dark";
-
-        /// <summary>
-        /// The light theme tag.
-        /// </summary>
-        public static readonly string TagThemeLight = "light";
-
         #endregion Fields
 
         #region Methods
@@ -218,10 +221,12 @@ namespace PaimonTray.Helpers
 
             var languageApplied = ResLoader.GetString("LanguageApplied");
 
-            CultureApplied = new CultureInfo(
-                languageApplied == TagLanguageEnGb || languageApplied == TagLanguageEnUs ||
-                languageApplied == TagLanguageZhHansCn ? languageApplied :
-                languagePrimary == string.Empty ? TagLanguageEnUs : languagePrimary ?? TagLanguageEnUs);
+            CultureApplied =
+                new CultureInfo(languageApplied is TagLanguageEnGb or TagLanguageEnUs or TagLanguageZhHansCn
+                    ? languageApplied
+                    : languagePrimary == string.Empty
+                        ? TagLanguageEnUs
+                        : languagePrimary ?? TagLanguageEnUs);
         } // end method ApplyLanguageSelection
 
         /// <summary>
@@ -275,14 +280,18 @@ namespace PaimonTray.Helpers
         {
             var themeSelection = PropertySetSettings[KeyTheme] as string;
 
-            if (themeSelection == TagSystem) return ElementTheme.Default;
-
-            if (themeSelection == TagThemeDark) return ElementTheme.Dark;
-
-            if (themeSelection == TagThemeLight) return ElementTheme.Light;
-
-            Log.Warning($"Invalid theme selection ({themeSelection}).");
-            return ElementTheme.Default;
+            switch (themeSelection)
+            {
+                case TagSystem:
+                    return ElementTheme.Default;
+                case TagThemeDark:
+                    return ElementTheme.Dark;
+                case TagThemeLight:
+                    return ElementTheme.Light;
+                default:
+                    Log.Warning($"Invalid theme selection ({themeSelection}).");
+                    return ElementTheme.Default;
+            } // end switch-case
         } // end method GetTheme
 
         /// <summary>
