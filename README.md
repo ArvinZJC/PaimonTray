@@ -118,7 +118,7 @@ You can get PaimonTray from:
 
    > **Note**
    >
-   > There may be prompts for asking you to download runtime, including but not limited to .NET Desktop Runtime and Windows App SDK runtime. Please download and install the runtime because PaimonTray applies framework-dependent deployment to reduce the installer file size.
+   > There may be prompts asking you to download runtime, including but not limited to .NET Desktop Runtime and Windows App SDK runtime. Please download and install the runtime because PaimonTray applies framework-dependent deployment to reduce the installer file size.
 
 3. PaimonTray is designed to be a lightweight tool app focusing on **Genshin Impact's real-time notes only**. Performance is the very 1st priority, and stability is also significant. Continuous optimisation will be provided ~~(hopefully)~~, but you need to be aware that PaimonTray relies on undocumented miHoYo/HoYoLAB APIs heavily. Currently, there is no plan to make it a fully-fledged app. Anyway, you are welcome to [shout out your ideas](https://github.com/ArvinZJC/PaimonTray/discussions).
 
