@@ -27,7 +27,6 @@ namespace PaimonTray.Views
         /// </summary>
         public DeploymentFailureWindow()
         {
-            _app = Application.Current as App;
             InitializeComponent();
             _ = CustomiseWindowAsync();
             UpdateUiText();
@@ -80,7 +79,7 @@ namespace PaimonTray.Views
                 var urlWindowsAppSdkRuntimeDownload = $"{AppFieldsHelper.UrlBaseWindowsAppSdkRuntimeDownload}" +
                                                       $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}/" +
                                                       $"{AppFieldsHelper.VersionMajorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionMinorNuGetWindowsAppSdk}.{AppFieldsHelper.VersionBuildNuGetWindowsAppSdk}.{AppFieldsHelper.VersionRevisionNuGetWindowsAppSdk}/" +
-                                                      $"windowsappruntimeinstall-{_app.Architecture}.exe";
+                                                      $"windowsappruntimeinstall-{App.Architecture}.exe";
 
                 _appWindow.Hide(); // Hide the window first to improve usability.
                 Log.Information($"Open the Windows App SDK download link: {urlWindowsAppSdkRuntimeDownload}");
@@ -95,11 +94,6 @@ namespace PaimonTray.Views
         #endregion Event Handlers
 
         #region Fields
-
-        /// <summary>
-        /// The app.
-        /// </summary>
-        private App _app;
 
         /// <summary>
         /// The app window.
@@ -137,13 +131,12 @@ namespace PaimonTray.Views
 
         /// <summary>
         /// Customise the window.
-        /// NOTE: Must be done after the root grid is loaded.
         /// </summary>
         /// <returns>Void.</returns>
         private async Task CustomiseWindowAsync()
         {
             _windowId = WindowsHelper.GetWindowId(this); // Get the window ID first.
-            _appWindow = await _app.WindowsH.GetAppWindowWithIconAsync(_windowId);
+            _appWindow = await (Application.Current as App)?.WindowsH.GetAppWindowWithIconAsync(_windowId)!;
 
             if (_appWindow is null)
             {
