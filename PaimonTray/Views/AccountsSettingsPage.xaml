@@ -12,6 +12,7 @@
     Unloaded="AccountsSettingsPage_OnUnloaded">
     <Page.Resources>
         <!-- ReSharper disable Xaml.ConstructorWarning, Xaml.StaticResourceNotResolved -->
+        <!-- Modified from generic.xaml as a part of the bug fix: https://github.com/ArvinZJC/PaimonTray/issues/12 -->
         <ControlTemplate
             x:Key="ControlTemplateInfoBar"
             TargetType="InfoBar">
@@ -131,7 +132,7 @@
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
-                <!-- Background is used here so that it overrides the severity status color if set. -->
+                <!-- Background is used here so that it overrides the severity status colour if set. -->
                 <Grid
                     Background="{TemplateBinding Background}"
                     CornerRadius="{TemplateBinding CornerRadius}"
