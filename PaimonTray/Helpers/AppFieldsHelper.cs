@@ -316,7 +316,7 @@
         /// <summary>
         /// The Windows App SDK NuGet package's build version.
         /// </summary>
-        public const int VersionBuildNuGetWindowsAppSdk = 221116;
+        public const int VersionBuildNuGetWindowsAppSdk = 221209;
 
         /// <summary>
         /// The min stable build version.
@@ -351,7 +351,7 @@
         /// <summary>
         /// The Windows App SDK NuGet package's revision version.
         /// </summary>
-        public const int VersionRevisionNuGetWindowsAppSdk = 2;
+        public const int VersionRevisionNuGetWindowsAppSdk = 1;
 
         #endregion Constants
     } // end class AppFieldsHelper
