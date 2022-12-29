@@ -1016,7 +1016,7 @@ namespace PaimonTray.Helpers
         /// <returns>A tuple. 1st item: the account UID; 2nd item: the avatar; 3rd item: the nickname; 4th item: the return code.</returns>
         public async Task<(string, string, string, int?)> GetAccountFromApiAsync(string cookies, bool isServerCn)
         {
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(cookies, isServerCn,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(cookies, isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal);
 
             if (httpResponseBody is null)
@@ -1033,7 +1033,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                        $"Failed to parse the account response body (CN server: {isServerCn}, cookies: {cookies}):");
                     Log.Information(httpResponseBody);
                     return (string.Empty, string.Empty, string.Empty, null);
                 } // end if
@@ -1081,7 +1081,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                    $"Failed to parse the account response body (CN server: {isServerCn}, cookies: {cookies}):");
                 LogException(exception, httpResponseBody);
                 return (string.Empty, string.Empty, string.Empty, null);
             } // end try...catch
@@ -1108,7 +1108,7 @@ namespace PaimonTray.Helpers
             propertySetAccount[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal); // Send an HTTP GET request when ready.
 
@@ -1127,7 +1127,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
+                        $"Failed to parse the account response body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return true;
@@ -1186,7 +1186,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
+                    $"Failed to parse the account response body (account container key: {containerKeyAccount}):");
                 LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
             } // end try...catch
@@ -1230,7 +1230,7 @@ namespace PaimonTray.Helpers
             } // end if
 
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal); // Send an HTTP GET request when ready.
 
@@ -1250,7 +1250,7 @@ namespace PaimonTray.Helpers
                 if (charactersRaw is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
+                        $"Failed to parse the characters response body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return null;
@@ -1274,7 +1274,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
+                    $"Failed to parse the characters response body (account container key: {containerKeyAccount}):");
                 LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
@@ -1640,7 +1640,7 @@ namespace PaimonTray.Helpers
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
@@ -1661,7 +1661,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                        $"Failed to parse the real-time notes response body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
                     Log.Information(httpResponseBody);
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
 
@@ -1988,7 +1988,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                    $"Failed to parse the real-time notes response body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
                 LogException(exception, httpResponseBody);
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
             } // end try...catch

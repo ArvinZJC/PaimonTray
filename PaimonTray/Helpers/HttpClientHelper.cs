@@ -127,7 +127,6 @@ namespace PaimonTray.Helpers
         /// <returns>The dynamic secret, or <c>null</c> if the operation fails.</returns>
         private static string GenerateDynamicSecret(bool isServerCn, string query)
         {
-            var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
             var randomInt = Random.Shared.Next(100000, 200000);
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
@@ -137,7 +136,9 @@ namespace PaimonTray.Helpers
             {
                 return $"{timestamp}," +
                        $"{randomInt}," +
-                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(
+                           $"salt={(isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal)}&t={timestamp}&r={randomInt}&b=&q={query}"
+                       ))).ToLowerInvariant()}";
             }
             catch (Exception exception)
             {
@@ -148,15 +149,15 @@ namespace PaimonTray.Helpers
         } // end method GenerateDynamicSecret
 
         /// <summary>
-        /// Send an HTTP GET request.
+        /// Send a GET request.
         /// </summary>
         /// <param name="cookies">The cookies.</param>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The full URL.</param>
         /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret. Default: <c>false</c>.</param>
-        /// <param name="query">The query. Default: <c>null</c>.</param>
+        /// <param name="query">The query for generating a dynamic secret. Default: <c>null</c>.</param>
         /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
-        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url,
+        public async Task<string> GetAsync(string cookies, bool isServerCn, string url,
             bool needDynamicSecret = false, string query = null)
         {
             if (string.IsNullOrWhiteSpace(url) || !url.StartsWith("http"))
@@ -214,22 +215,20 @@ namespace PaimonTray.Helpers
                 } // end if
             } // end if
 
-            HttpResponseMessage httpResponseMessage;
-
             try
             {
-                httpResponseMessage = await httpClient.GetAsync(new Uri(url));
+                var httpResponseMessage = await httpClient.GetAsync(new Uri(url));
+
                 httpResponseMessage.EnsureSuccessStatusCode();
+                return await httpResponseMessage.Content.ReadAsStringAsync();
             }
             catch (Exception exception)
             {
-                Log.Error($"The HTTP GET request was unsuccessful (URL: {url}).");
+                Log.Error($"The GET request was unsuccessful (URL: {url}).");
                 App.LogException(exception);
                 return null;
             } // end try...catch
-
-            return await httpResponseMessage.Content.ReadAsStringAsync();
-        } // end method SendGetRequestAsync
+        } // end method GetAsync
 
         #endregion Methods
     } // end class HttpClientHelper
