@@ -57,12 +57,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.42.1";
+        private const string HeaderValueAppVersionServerCn = "2.43.1";
 
         /// <summary>
         /// The app version header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.24.1";
+        private const string HeaderValueAppVersionServerGlobal = "2.25.0";
 
         /// <summary>
         /// The client type header value for the CN server.
