@@ -1797,8 +1797,9 @@ namespace PaimonTray.Helpers
 
                 var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
 
-                // Get real-time notes from the specific API with a validated GeeTest challenge only if the validated challenge is not provided to avoid an endless iterated function.
-                if (returnCode is ReturnCodeChallengeValidated && string.IsNullOrWhiteSpace(challengeValidated))
+                // Get real-time notes from the specific API with a validated GeeTest challenge for a CN server account's character only if the validated challenge is not provided to avoid an endless iterated function.
+                if (returnCode is ReturnCodeChallengeValidated && string.IsNullOrWhiteSpace(challengeValidated) &&
+                    isServerCn)
                 {
                     Log.Warning(
                         $"Failed to get real-time notes from the specific API because a validated GeeTest challenge is required (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
