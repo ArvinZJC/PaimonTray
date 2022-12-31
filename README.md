@@ -38,11 +38,12 @@ PaimonTray also has some other highlights that may interest you. These include b
 - Multiple accounts<sup id="source2">[2](#footnote2)</sup> with nifty management: all your added accounts can be updated, checked and refreshed, or removed.
 - Only your selected characters: all characters (aka Genshin Impact accounts) linked with a miHoYo/HoYoLAB account are there for you to select whether to allow retrieving real-time notes.
 - Configurable real-time notes refresh interval.
+- Imperceptible security check mechanism<sup id="source3">[3](#footnote3)</sup>.
 - _Real-time notes reminders (will be available in the future)._
 - Date and time rather than duration: e.g., Paimon converts the duration required to complete/fully replenish/... to an estimated date and time to make it clear.
 - Hints for "not yet unlocked" if Paimon can tell you.
 - Dark mode support.
-- Acrylic/Mica support<sup id="source3">[3](#footnote3)</sup>.
+- Acrylic/Mica support<sup id="source4">[4](#footnote4)</sup>.
 - I18n (Internationalisation). Supported languages as follows:
   - English (United Kingdom)
   - English (United States) - default if no matches
@@ -101,7 +102,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 18 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 31 December 2022, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
 
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
@@ -158,4 +159,6 @@ Good luck! 💖
 
 <sub id="footnote2">[2.](#source2) Currently up to 5 accounts due to performance consideration. It may be tweaked, as PaimonTray sharpens itself.</sub>
 
-<sub id="footnote3">[3.](#source3) This feature depends on your Windows version and some system settings. The actual visual effects can vary.</sub>
+<sub id="footnote3">[3.](#source3) Currently, only CN server accounts require this mechanism, which can significantly reduce the frequency of completing a security check manually in the specific section of the Miyoushe app.</sub>
+
+<sub id="footnote4">[4.](#source4) This feature depends on your Windows version and some system settings. The actual visual effects can vary.</sub>

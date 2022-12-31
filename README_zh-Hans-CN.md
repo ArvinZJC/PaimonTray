@@ -38,11 +38,12 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 - 多账号<sup id="source2">[2](#footnote2)</sup>，以及恰到好处的管理：所有您已添加的账号可更新、检查并刷新、移除。
 - 仅关注您已选择的角色：米哈游/ HoYoLAB 账号所有已绑定的角色（指原神账号）都可供您选择是否允许查询实时便笺。
 - 可配置的实时便笺刷新间隔时间。
+- 无感安检机制<sup id="source3">[3](#footnote3)</sup>。
 - _实时便笺提醒（将在未来上线）。_
 - 日期和时间来代替时长：例如，派蒙会将完成/全部恢复/……所需要的时长转换成预计的日期和时间。
 - 派蒙会尽力对“未解锁”事项给予提示。
 - 支持深色模式。
-- 支持云母/亚克力<sup id="source3">[3](#footnote3)</sup>。
+- 支持云母/亚克力<sup id="source4">[4](#footnote4)</sup>。
 - 国际化。支持的语言如下：
   - English (United Kingdom)
   - English (United States) ——无匹配语言时默认
@@ -160,4 +161,6 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 <sub id="footnote2">[2.](#source2) 出于对性能的考虑，当前最多 5 个账号。随着 PaimonTray 越来越棒，这可能会被调整。</sub>
 
-<sub id="footnote3">[3.](#source3) 此功能取决于您的 Windows 版本和一些系统设置。实际视觉效果会根据情况变化。</sub>
+<sub id="footnote3">[3.](#source3) 目前仅国服需要这个能显著降低在米游社应用的特定部分手动完成安检的频率的机制。</sub>
+
+<sub id="footnote4">[4.](#source4) 此功能取决于您的 Windows 版本和一些系统设置。实际视觉效果会根据情况变化。</sub>
