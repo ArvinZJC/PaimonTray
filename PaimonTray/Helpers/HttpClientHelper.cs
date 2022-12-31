@@ -30,6 +30,11 @@ namespace PaimonTray.Helpers
         private const string HeaderNameAppVersion = "x-rpc-app_version";
 
         /// <summary>
+        /// The challenge header name.
+        /// </summary>
+        private const string HeaderNameChallenge = "x-rpc-challenge";
+
+        /// <summary>
         /// The client type header name.
         /// </summary>
         private const string HeaderNameClientType = "x-rpc-client_type";
@@ -52,12 +57,12 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The app version header value for the CN server.
         /// </summary>
-        private const string HeaderValueAppVersionServerCn = "2.42.1";
+        private const string HeaderValueAppVersionServerCn = "2.43.1";
 
         /// <summary>
         /// The app version header value for the global server.
         /// </summary>
-        private const string HeaderValueAppVersionServerGlobal = "2.24.1";
+        private const string HeaderValueAppVersionServerGlobal = "2.25.0";
 
         /// <summary>
         /// The client type header value for the CN server.
@@ -123,21 +128,35 @@ namespace PaimonTray.Helpers
         /// Generate a dynamic secret.
         /// </summary>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
-        /// <param name="query">The query.</param>
+        /// <param name="body">The body. Default: <c>null</c>.</param>
+        /// <param name="query">The query. Default: <c>null</c>.</param>
         /// <returns>The dynamic secret, or <c>null</c> if the operation fails.</returns>
-        private static string GenerateDynamicSecret(bool isServerCn, string query)
+        private static async Task<string> GenerateDynamicSecretAsync(bool isServerCn, HttpContent body = null,
+            string query = null)
         {
-            var dynamicSecretSalt = isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal;
             var randomInt = Random.Shared.Next(100000, 200000);
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            if (string.IsNullOrWhiteSpace(query) || !query.Contains('=')) Log.Warning($"Invalid query ({query}).");
+            if (!string.IsNullOrEmpty(query))
+            {
+                query = query.Trim();
+
+                var indexEqualSign = query.IndexOf('=');
+
+                if (indexEqualSign is -1 or 0 || indexEqualSign == query.Length - 1)
+                {
+                    Log.Warning($"Invalid query ({query}).");
+                    return null;
+                } // end if
+            } // end if
 
             try
             {
                 return $"{timestamp}," +
                        $"{randomInt}," +
-                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes($"salt={dynamicSecretSalt}&t={timestamp}&r={randomInt}&b=&q={query}"))).ToLowerInvariant()}";
+                       $"{Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(
+                           $"salt={(isServerCn ? DynamicSecretSaltServerCn : DynamicSecretSaltServerGlobal)}&t={timestamp}&r={randomInt}&b={(body is null ? string.Empty : await body.ReadAsStringAsync())}&q={query}"
+                       ))).ToLowerInvariant()}";
             }
             catch (Exception exception)
             {
@@ -145,19 +164,53 @@ namespace PaimonTray.Helpers
                 App.LogException(exception);
                 return null;
             } // end try...catch
-        } // end method GenerateDynamicSecret
+        } // end method GenerateDynamicSecretAsync
 
         /// <summary>
-        /// Send an HTTP GET request.
+        /// Send a GET request.
         /// </summary>
         /// <param name="cookies">The cookies.</param>
         /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The full URL.</param>
+        /// <param name="challenge">The validated GeeTest challenge.</param>
         /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret. Default: <c>false</c>.</param>
-        /// <param name="query">The query. Default: <c>null</c>.</param>
-        /// <returns>The HTTP response message content, or <c>null</c> if the operation fails.</returns>
-        public async Task<string> SendGetRequestAsync(string cookies, bool isServerCn, string url,
+        /// <param name="query">The query for generating a dynamic secret. Default: <c>null</c>.</param>
+        /// <returns>The HTTP response body, or <c>null</c> if the operation fails.</returns>
+        public async Task<string> GetAsync(string cookies, bool isServerCn, string url, string challenge = null,
             bool needDynamicSecret = false, string query = null)
+        {
+            return await SendRequestAsync(null, challenge, cookies, true, isServerCn, needDynamicSecret, query, url);
+        } // end method GetAsync
+
+        /// <summary>
+        /// Send a POST request.
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
+        /// <param name="url">The full URL.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret. Default: <c>false</c>.</param>
+        /// <returns>The HTTP response body, or <c>null</c> if the operation fails.</returns>
+        public async Task<string> PostAsync(string cookies, bool isServerCn, string url, HttpContent body = null,
+            bool needDynamicSecret = false)
+        {
+            return await SendRequestAsync(body, null, cookies, false, isServerCn, needDynamicSecret, null, url);
+        } // end method PostAsync
+
+        /// <summary>
+        /// Send a GET/POST request.
+        /// </summary>
+        /// <param name="body">The body. Default: <c>null</c>.</param>
+        /// <param name="challenge">The validated GeeTest challenge.</param>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="isGet">A flag indicating whether the HTTP request method is GET or POST.</param>
+        /// <param name="isServerCn">A flag indicating if an account belongs to the CN server.</param>
+        /// <param name="needDynamicSecret">A flag indicating if the request needs the dynamic secret.</param>
+        /// <param name="query">The query for generating a dynamic secret. Default: <c>null</c>.</param>
+        /// <param name="url">The full URL.</param>
+        /// <returns>The HTTP response body, or <c>null</c> if the operation fails.</returns>
+        private async Task<string> SendRequestAsync(HttpContent body, string challenge, string cookies, bool isGet,
+            bool isServerCn, bool needDynamicSecret, string query, string url)
         {
             if (string.IsNullOrWhiteSpace(url) || !url.StartsWith("http"))
             {
@@ -170,66 +223,45 @@ namespace PaimonTray.Helpers
 
             httpClientHeaders.Clear(); // Clear first.
 
-            if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameCookie, cookies))
-            {
-                Log.Warning($"Failed to add the cookie header (cookies: {cookies}).");
-                return null;
-            } // end if
-
-            var headerValueReferer = isServerCn ? HeaderValueRefererServerCn : HeaderValueRefererServerGlobal;
-
-            if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameReferer, headerValueReferer))
-            {
-                Log.Warning($"Failed to add the referer header (referer: {headerValueReferer}).");
-                return null;
-            } // end if
-
-            if (needDynamicSecret)
-            {
-                var headerValueAppVersion =
-                    isServerCn ? HeaderValueAppVersionServerCn : HeaderValueAppVersionServerGlobal;
-
-                if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameAppVersion, headerValueAppVersion))
-                {
-                    Log.Warning($"Failed to add the app version header (app version: {headerValueAppVersion}).");
-                    return null;
-                } // end if
-
-                var headerValueClientType =
-                    isServerCn ? HeaderValueClientTypeServerCn : HeaderValueClientTypeServerGlobal;
-
-                if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameClientType, headerValueClientType))
-                {
-                    Log.Warning($"Failed to add the client type header (client type: {headerValueClientType}).");
-                    return null;
-                } // end if
-
-                var headerValueDynamicSecret = GenerateDynamicSecret(isServerCn, query);
-
-                if (!httpClientHeaders.TryAddWithoutValidation(HeaderNameDynamicSecret, headerValueDynamicSecret))
-                {
-                    Log.Warning(
-                        $"Failed to add the dynamic secret header (dynamic secret: {headerValueDynamicSecret}).");
-                    return null;
-                } // end if
-            } // end if
-
-            HttpResponseMessage httpResponseMessage;
-
             try
             {
-                httpResponseMessage = await httpClient.GetAsync(new Uri(url));
+                httpClientHeaders.Add(HeaderNameCookie, cookies);
+                httpClientHeaders.Add(HeaderNameReferer,
+                    isServerCn ? HeaderValueRefererServerCn : HeaderValueRefererServerGlobal);
+
+                if (!string.IsNullOrWhiteSpace(challenge)) httpClientHeaders.Add(HeaderNameChallenge, challenge);
+
+                if (needDynamicSecret)
+                {
+                    var dynamicSecret = await GenerateDynamicSecretAsync(isServerCn, body, query);
+
+                    if (string.IsNullOrWhiteSpace(dynamicSecret))
+                    {
+                        Log.Warning($"Invalid dynamic secret ({dynamicSecret}).");
+                        return null;
+                    } // end if
+
+                    httpClientHeaders.Add(HeaderNameDynamicSecret, dynamicSecret);
+                    httpClientHeaders.Add(HeaderNameAppVersion,
+                        isServerCn ? HeaderValueAppVersionServerCn : HeaderValueAppVersionServerGlobal);
+                    httpClientHeaders.Add(HeaderNameClientType,
+                        isServerCn ? HeaderValueClientTypeServerCn : HeaderValueClientTypeServerGlobal);
+                } // end if
+
+                var uri = new Uri(url); // Get the URI from the URL first.
+                var httpResponseMessage =
+                    isGet ? await httpClient.GetAsync(uri) : await httpClient.PostAsync(uri, body);
+
                 httpResponseMessage.EnsureSuccessStatusCode();
+                return await httpResponseMessage.Content.ReadAsStringAsync();
             }
             catch (Exception exception)
             {
-                Log.Error($"The HTTP GET request was unsuccessful (URL: {url}).");
+                Log.Error($"The {(isGet ? "GET" : "POST")} request was unsuccessful (URL: {url}).");
                 App.LogException(exception);
                 return null;
             } // end try...catch
-
-            return await httpResponseMessage.Content.ReadAsStringAsync();
-        } // end method SendGetRequestAsync
+        } // end method SendRequestAsync
 
         #endregion Methods
     } // end class HttpClientHelper

@@ -46,15 +46,6 @@ namespace PaimonTray
 
         #endregion Constructors
 
-        #region Fields
-
-        /// <summary>
-        /// The architecture.
-        /// </summary>
-        public readonly string Architecture = Package.Current.Id.Architecture.ToString().ToLower();
-
-        #endregion Fields
-
         #region Methods
 
         /// <summary>
@@ -239,6 +230,11 @@ namespace PaimonTray
         /// The app version tag.
         /// </summary>
         public string AppVersionTag { get; private set; }
+
+        /// <summary>
+        /// The architecture.
+        /// </summary>
+        public static string Architecture => Package.Current.Id.Architecture.ToString().ToLower();
 
         /// <summary>
         /// The commands view model.

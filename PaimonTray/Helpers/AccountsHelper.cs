@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -125,6 +126,11 @@ namespace PaimonTray.Helpers
         private const string KeyAvatarSideIcon = "avatarSideIcon";
 
         /// <summary>
+        /// The challenge key.
+        /// </summary>
+        private const string KeyChallenge = "challenge";
+
+        /// <summary>
         /// The finished daily commissions key.
         /// </summary>
         private const string KeyCommissionsDailyFinished = "commissionsDailyFinished";
@@ -210,6 +216,11 @@ namespace PaimonTray.Helpers
         private const string KeyDomainsTrounceDiscountsRemainingRaw = "remain_resin_discount_num";
 
         /// <summary>
+        /// The error key.
+        /// </summary>
+        private const string KeyError = "error";
+
+        /// <summary>
         /// The expedition's avatar side icon key for processing JSON data.
         /// </summary>
         private const string KeyExpeditionAvatarSideIconRaw = "avatar_side_icon";
@@ -248,6 +259,26 @@ namespace PaimonTray.Helpers
         /// The remaining expedition time key for processing JSON data.
         /// </summary>
         private const string KeyExpeditionTimeRemainingRaw = "remained_time";
+
+        /// <summary>
+        /// The GeeTest challenge key.
+        /// </summary>
+        public const string KeyGeeTestChallenge = "geetest_challenge";
+
+        /// <summary>
+        /// The key of the GeeTest certificate for the secondary verification.
+        /// </summary>
+        public const string KeyGeeTestSecCode = "geetest_seccode";
+
+        /// <summary>
+        /// The GeeTest validation key.
+        /// </summary>
+        public const string KeyGeeTestValidation = "geetest_validate";
+
+        /// <summary>
+        /// The GT key.
+        /// </summary>
+        private const string KeyGt = "gt";
 
         /// <summary>
         /// The hour key for processing JSON data.
@@ -373,7 +404,7 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// The return code key.
         /// </summary>
-        private const string KeyReturnCode = "retcode";
+        public const string KeyReturnCode = "retcode";
 
         /// <summary>
         /// The second key for processing JSON data.
@@ -421,6 +452,11 @@ namespace PaimonTray.Helpers
         public const string KeyUid = "uid";
 
         /// <summary>
+        /// The character UID key.
+        /// </summary>
+        public const string KeyUidCharacter = "game_uid";
+
+        /// <summary>
         /// The selected character's UID key.
         /// </summary>
         public const string KeyUidCharacterSelected = "uidCharacterSelected";
@@ -429,6 +465,11 @@ namespace PaimonTray.Helpers
         /// The user info key.
         /// </summary>
         private const string KeyUserInfo = "user_info";
+
+        /// <summary>
+        /// The validation key.
+        /// </summary>
+        private const string KeyValidation = "validate";
 
         /// <summary>
         /// The level prefix.
@@ -461,6 +502,11 @@ namespace PaimonTray.Helpers
         public const string PropertyNameUidCharacterRealTimeNotesUpdated = nameof(UidCharacterRealTimeNotesUpdated);
 
         /// <summary>
+        /// The return code for requiring a validated GeeTest challenge.
+        /// </summary>
+        private const int ReturnCodeChallengeValidated = 1034;
+
+        /// <summary>
         /// The disabled return code.
         /// </summary>
         private const int ReturnCodeDisabled = 10102;
@@ -474,6 +520,11 @@ namespace PaimonTray.Helpers
         /// The success return code.
         /// </summary>
         public const int ReturnCodeSuccess = 0;
+
+        /// <summary>
+        /// The success status.
+        /// </summary>
+        private const string StatusSuccess = "success";
 
         /// <summary>
         /// The tag indicating that all enabled characters have updated the real-time notes.
@@ -553,6 +604,18 @@ namespace PaimonTray.Helpers
             "https://upload-os-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_";
 
         /// <summary>
+        /// The base URL for the CN server to create a GeeTest challenge.
+        /// </summary>
+        private const string UrlBaseGeeTestChallengeServerCn =
+            "https://api-takumi-record.mihoyo.com/game_record/app/card/wapi/createVerification?";
+
+        /// <summary>
+        /// The base URL for the CN server to solve a GeeTest challenge.
+        /// </summary>
+        private const string UrlBaseGeeTestChallengeResultServerCn =
+            "https://apiv6.geetest.com/ajax.php?pt=3&client_type=web_mobile&lang=zh-cn&";
+
+        /// <summary>
         /// The base URL for the CN server to get real-time notes.
         /// </summary>
         private const string UrlBaseRealTimeNotesServerCn =
@@ -585,6 +648,12 @@ namespace PaimonTray.Helpers
         /// The miHoYo cookies URL.
         /// </summary>
         public const string UrlCookiesMiHoYo = "https://www.miyoushe.com";
+
+        /// <summary>
+        /// The URL for the CN server to validate the GeeTest challenge result.
+        /// </summary>
+        private const string UrlGeeTestChallengeResultValidationServerCn =
+            "https://api-takumi-record.mihoyo.com/game_record/app/card/wapi/verifyVerification";
 
         /// <summary>
         /// The URL for logging in to HoYoLAB.
@@ -844,7 +913,7 @@ namespace PaimonTray.Helpers
                     propertySetCharacter[KeyNickname] = character.Nickname;
                     propertySetCharacter[KeyRegion] = character.Region;
 
-                    await GetRealTimeNotesFromApiAsync(containerKeyAccount, character.Uid);
+                    await GetRealTimeNotesFromApiAsync(null, containerKeyAccount, character.Uid);
                 } // end foreach
 
                 if (status is TagStatusAdding or TagStatusUpdating)
@@ -994,6 +1063,58 @@ namespace PaimonTray.Helpers
         } // end method CountAccounts
 
         /// <summary>
+        /// Create a GeeTest challenge.
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <returns>A tuple. 1st item: the challenge; 2nd item: the GT.</returns>
+        private async Task<(string, string)> CreateGeeTestChallenge(string cookies)
+        {
+            const string query = "is_high=false";
+            var httpResponseBody = await _app.HttpClientH.GetAsync(cookies, true,
+                $"{UrlBaseGeeTestChallengeServerCn}{query}", null, true, query);
+
+            if (httpResponseBody is null)
+            {
+                Log.Warning("Failed to create a GeeTest challenge due to null HTTP response body.");
+                return (null, null);
+            } // end if
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning("Failed to parse the GeeTest challenge creation response body.");
+                    Log.Information(httpResponseBody);
+                    return (null, null);
+                } // end if
+
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode is not ReturnCodeSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to create a GeeTest challenge (message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                    return (null, null);
+                } // end if
+
+                var data = jsonNodeResponse[KeyData];
+
+                if (data is not null) return ((string)data[KeyChallenge], (string)data[KeyGt]);
+
+                Log.Warning("Failed to get the GeeTest challenge creation data.");
+                return (null, null);
+            }
+            catch (Exception exception)
+            {
+                Log.Error("Failed to parse the GeeTest challenge creation response body.");
+                LogException(exception, httpResponseBody);
+                return (null, null);
+            } // end try...catch
+        } // end method CreateGeeTestChallenge
+
+        /// <summary>
         /// Get the account and its characters from the API.
         /// NOTE: Remember to change the account status to adding/updating.
         /// </summary>
@@ -1016,13 +1137,13 @@ namespace PaimonTray.Helpers
         /// <returns>A tuple. 1st item: the account UID; 2nd item: the avatar; 3rd item: the nickname; 4th item: the return code.</returns>
         public async Task<(string, string, string, int?)> GetAccountFromApiAsync(string cookies, bool isServerCn)
         {
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(cookies, isServerCn,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(cookies, isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal);
 
             if (httpResponseBody is null)
             {
                 Log.Warning(
-                    $"Failed to get the account from the API due to null HTTP response message content (CN server: {isServerCn}, cookies: {cookies}).");
+                    $"Failed to get the account from the API due to null HTTP response body (CN server: {isServerCn}).");
                 return (string.Empty, string.Empty, string.Empty, null);
             } // end if
 
@@ -1033,7 +1154,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                        $"Failed to parse the account response body (CN server: {isServerCn}):");
                     Log.Information(httpResponseBody);
                     return (string.Empty, string.Empty, string.Empty, null);
                 } // end if
@@ -1043,7 +1164,7 @@ namespace PaimonTray.Helpers
                 if (returnCode is not ReturnCodeSuccess)
                 {
                     Log.Warning(
-                        $"Failed to get the account from the specific API (CN server: {isServerCn}, cookies: {cookies}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
+                        $"Failed to get the account from the specific API (CN server: {isServerCn}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}).");
                     return (string.Empty, string.Empty, string.Empty, returnCode);
                 } // end if
 
@@ -1051,7 +1172,7 @@ namespace PaimonTray.Helpers
 
                 if (userInfo is null)
                 {
-                    Log.Warning($"Failed to get the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                    Log.Warning($"Failed to get the user info (CN server: {isServerCn}).");
                     return (string.Empty, string.Empty, string.Empty, returnCode);
                 } // end if
 
@@ -1060,7 +1181,7 @@ namespace PaimonTray.Helpers
                 if (string.IsNullOrWhiteSpace(aUid))
                 {
                     Log.Warning(
-                        $"Failed to get the account UID from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                        $"Failed to get the account UID from the user info (CN server: {isServerCn}).");
                     return (null, string.Empty, string.Empty, returnCode);
                 } // end if
 
@@ -1068,20 +1189,20 @@ namespace PaimonTray.Helpers
 
                 if (string.IsNullOrWhiteSpace(avatar))
                     Log.Warning(
-                        $"Failed to get the avatar from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                        $"Failed to get the avatar from the user info (CN server: {isServerCn}).");
 
                 var nickname = (string)userInfo[KeyNickname];
 
                 if (string.IsNullOrWhiteSpace(nickname))
                     Log.Warning(
-                        $"Failed to get the nickname from the user info (CN server: {isServerCn}, cookies: {cookies}).");
+                        $"Failed to get the nickname from the user info (CN server: {isServerCn}).");
 
                 return (aUid, avatar, nickname, returnCode);
             }
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the account response's body (CN server: {isServerCn}, cookies: {cookies}):");
+                    $"Failed to parse the account response body (CN server: {isServerCn}):");
                 LogException(exception, httpResponseBody);
                 return (string.Empty, string.Empty, string.Empty, null);
             } // end try...catch
@@ -1108,14 +1229,14 @@ namespace PaimonTray.Helpers
             propertySetAccount[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
                 Log.Warning(
-                    $"Failed to get the account from the API due to null HTTP response message content (account container key: {containerKeyAccount}).");
+                    $"Failed to get the account from the API due to null HTTP response body (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return true;
             } // end if
@@ -1127,7 +1248,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
+                        $"Failed to parse the account response body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return true;
@@ -1186,7 +1307,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the account response's body (account container key: {containerKeyAccount}):");
+                    $"Failed to parse the account response body (account container key: {containerKeyAccount}):");
                 LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
             } // end try...catch
@@ -1230,14 +1351,14 @@ namespace PaimonTray.Helpers
             } // end if
 
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
+            var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
                 Log.Warning(
-                    $"Failed to get characters from the API due to null HTTP response message content (account container key: {containerKeyAccount}).");
+                    $"Failed to get characters from the API due to null HTTP response body (account container key: {containerKeyAccount}).");
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
             } // end if
@@ -1250,7 +1371,7 @@ namespace PaimonTray.Helpers
                 if (charactersRaw is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
+                        $"Failed to parse the characters response body (account container key: {containerKeyAccount}):");
                     Log.Information(httpResponseBody);
                     propertySetAccount[KeyStatus] = TagStatusFail;
                     return null;
@@ -1274,7 +1395,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the characters response's body (account container key: {containerKeyAccount}):");
+                    $"Failed to parse the characters response body (account container key: {containerKeyAccount}):");
                 LogException(exception, httpResponseBody);
                 propertySetAccount[KeyStatus] = TagStatusFail;
                 return null;
@@ -1573,11 +1694,13 @@ namespace PaimonTray.Helpers
         /// <summary>
         /// Get the real-time notes from the API.
         /// </summary>
+        /// <param name="challengeValidated">The validated GeeTest challenge.</param>
         /// <param name="containerKeyAccount">The account container key.</param>
         /// <param name="containerKeyCharacter">The character container key.</param>
         /// <param name="isStandalone">A flag indicating if the operation is standalone.</param>
         /// <returns>Void.</returns>
-        private async Task GetRealTimeNotesFromApiAsync(string containerKeyAccount, string containerKeyCharacter,
+        private async Task GetRealTimeNotesFromApiAsync(string challengeValidated, string containerKeyAccount,
+            string containerKeyCharacter,
             bool isStandalone = true)
         {
             if (!ValidateAccountContainerKey(containerKeyAccount)) return;
@@ -1637,16 +1760,18 @@ namespace PaimonTray.Helpers
                 return;
             } // end if
 
+            var cookies = propertySetAccount[KeyCookies] as string;
             var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
-            var httpResponseBody = await _app.HttpClientH.SendGetRequestAsync(propertySetAccount[KeyCookies] as string,
-                isServerCn, $"{urlBaseRealTimeNotes}{query}", true, query); // Send an HTTP GET request when ready.
+            var httpResponseBody = await _app.HttpClientH.GetAsync(cookies, isServerCn,
+                $"{urlBaseRealTimeNotes}{query}", challengeValidated, true,
+                query); // Send an HTTP GET request when ready.
 
             if (httpResponseBody is null)
             {
                 Log.Warning(
-                    $"Failed to get real-time notes from the API due to null HTTP response message content (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+                    $"Failed to get real-time notes from the API due to null HTTP response body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
 
                 if (isStandalone) UidCharacterRealTimeNotesUpdated = uidCharacter;
@@ -1661,7 +1786,7 @@ namespace PaimonTray.Helpers
                 if (jsonNodeResponse is null)
                 {
                     Log.Warning(
-                        $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                        $"Failed to parse the real-time notes response body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
                     Log.Information(httpResponseBody);
                     propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
 
@@ -1671,6 +1796,46 @@ namespace PaimonTray.Helpers
                 } // end if
 
                 var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                // Get real-time notes from the specific API with a validated GeeTest challenge for a CN server account's character only if the validated challenge is not provided to avoid an endless iterated function.
+                if (returnCode is ReturnCodeChallengeValidated && string.IsNullOrWhiteSpace(challengeValidated) &&
+                    isServerCn)
+                {
+                    Log.Warning(
+                        $"Failed to get real-time notes from the specific API because a validated GeeTest challenge is required (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
+
+                    foreach (var time in new[] { "1st", "2nd", "3rd" })
+                    {
+                        var (challenge, gt) = await CreateGeeTestChallenge(cookies);
+
+                        if (string.IsNullOrWhiteSpace(challenge) || string.IsNullOrWhiteSpace(gt))
+                        {
+                            Log.Warning($"Invalid GeeTest challenge (challenge: {challenge}, GT: {gt}).");
+                            continue;
+                        } // end if
+
+                        var validation = await TrySolveGeeTestChallenge(challenge, cookies, gt);
+
+                        if (string.IsNullOrWhiteSpace(validation))
+                        {
+                            Log.Warning($"Invalid GeeTest challenge result (challenge: {challenge}, GT: {gt}).");
+                            continue;
+                        } // end if
+
+                        challengeValidated = await ValidateGeeTestChallengeResult(challenge, cookies, validation);
+
+                        if (string.IsNullOrWhiteSpace(challengeValidated))
+                        {
+                            Log.Warning(
+                                $"Failed to get a validated GeeTest challenge for the {time} time (challenge: {challenge}, GT: {gt}, validation: {validation}).");
+                            continue;
+                        } // end if
+
+                        await GetRealTimeNotesFromApiAsync(challengeValidated, containerKeyAccount,
+                            containerKeyCharacter, isStandalone);
+                        return;
+                    } // end foreach
+                } // end if
 
                 if (returnCode is not ReturnCodeSuccess)
                 {
@@ -1988,7 +2153,7 @@ namespace PaimonTray.Helpers
             catch (Exception exception)
             {
                 Log.Error(
-                    $"Failed to parse the real-time notes response's body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
+                    $"Failed to parse the real-time notes response body (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}):");
                 LogException(exception, httpResponseBody);
                 propertySetRealTimeNotes[KeyStatus] = TagStatusFail;
             } // end try...catch
@@ -2018,7 +2183,7 @@ namespace PaimonTray.Helpers
                      let propertySetCharacter = keyValuePairCharacter.Value.Values
                      where propertySetCharacter[KeyIsEnabled] is true
                      select keyValuePairCharacter)
-                await GetRealTimeNotesFromApiAsync(keyValuePairAccount.Key, keyValuePairCharacter.Key, false);
+                await GetRealTimeNotesFromApiAsync(null, keyValuePairAccount.Key, keyValuePairCharacter.Key, false);
 
             UidCharacterRealTimeNotesUpdated = TagRealTimeNotesUpdatedCharactersAllEnabled;
         } // end method GetRealTimeNotesFromApiForAllEnabledAsync
@@ -2164,7 +2329,7 @@ namespace PaimonTray.Helpers
             propertySetCharacter[KeyIsEnabled] = shouldEnableCharacter;
 
             if (shouldEnableCharacter)
-                _ = GetRealTimeNotesFromApiAsync(containerKeyAccount, containerKeyCharacter);
+                _ = GetRealTimeNotesFromApiAsync(null, containerKeyAccount, containerKeyCharacter);
 
             return true;
         } // end method TryChangeCharacterStatus
@@ -2197,6 +2362,77 @@ namespace PaimonTray.Helpers
         } // end method TrySelectAccountGroupFirstEnabledCharacter
 
         /// <summary>
+        /// Try solving the GeeTest challenge.
+        /// </summary>
+        /// <param name="challenge">The challenge.</param>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="gt">The GT.</param>
+        /// <returns>The GeeTest challenge result, or <c>null</c> if the operation fails.</returns>
+        private async Task<string> TrySolveGeeTestChallenge(string challenge, string cookies, string gt)
+        {
+            var httpResponseBody =
+                await _app.HttpClientH.GetAsync(cookies, true,
+                    $"{UrlBaseGeeTestChallengeResultServerCn}challenge={challenge}&gt={gt}");
+
+            if (httpResponseBody is null)
+            {
+                Log.Warning(
+                    $"Failed to try solving the GeeTest challenge due to null HTTP response body (challenge: {challenge}, gt: {gt}).");
+                return null;
+            } // end if
+
+            // The valid response body may not be a valid JSON string (e.g., ({"data": "XXX"})).
+            var indexCurlyBracketLeft = httpResponseBody.IndexOf('{');
+            var indexCurlyBracketRight = httpResponseBody.LastIndexOf('}');
+
+            if (indexCurlyBracketLeft >= indexCurlyBracketRight)
+            {
+                Log.Warning($"Invalid GeeTest challenge result response body (challenge: {challenge}, gt: {gt}).");
+                Log.Information(httpResponseBody);
+                return null;
+            } // end if
+
+            var jsonResponse = httpResponseBody.Substring(indexCurlyBracketLeft,
+                indexCurlyBracketRight - indexCurlyBracketLeft + 1);
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(jsonResponse);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning(
+                        $"Failed to parse the GeeTest challenge result response body (challenge: {challenge}, gt: {gt}).");
+                    Log.Information(httpResponseBody);
+                    return null;
+                } // end if
+
+                var status = (string)jsonNodeResponse[KeyStatus];
+
+                if (status is not StatusSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to try solving the GeeTest challenge (challenge: {challenge}, error: {jsonNodeResponse[KeyError]}, gt: {gt}, status: {status}).");
+                    return null;
+                } // end if
+
+                var data = jsonNodeResponse[KeyData];
+
+                if (data is not null) return (string)data[KeyValidation];
+
+                Log.Warning($"Failed to get the GeeTest challenge result data (challenge: {challenge}, gt: {gt}).");
+                return null;
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"Failed to parse the GeeTest challenge result response body (challenge: {challenge}, gt: {gt}).");
+                LogException(exception, httpResponseBody);
+                return null;
+            } // end try...catch
+        } // end method TrySolveGeeTestChallenge
+
+        /// <summary>
         /// Validate the account container key.
         /// </summary>
         /// <param name="containerKeyAccount">The account container key.</param>
@@ -2209,6 +2445,64 @@ namespace PaimonTray.Helpers
             Log.Warning($"No such account container key ({containerKeyAccount}).");
             return false;
         } // end method ValidateAccountContainerKey
+
+        /// <summary>
+        /// Validate the GeeTest challenge result.
+        /// </summary>
+        /// <param name="challenge">The challenge.</param>
+        /// <param name="cookies">The cookies.</param>
+        /// <param name="validation">The validation.</param>
+        /// <returns>The validated challenge.</returns>
+        private async Task<string> ValidateGeeTestChallengeResult(string challenge, string cookies, string validation)
+        {
+            var httpResponseBody = await _app.HttpClientH.PostAsync(cookies, true,
+                UrlGeeTestChallengeResultValidationServerCn,
+                JsonContent.Create(new GeeTestChallengeResult(challenge, validation)), true);
+
+            if (httpResponseBody is null)
+            {
+                Log.Warning(
+                    $"Failed to validate the GeeTest challenge result due to null HTTP response body (challenge: {challenge}, validation: {validation}).");
+                return null;
+            } // end if
+
+            try
+            {
+                var jsonNodeResponse = JsonNode.Parse(httpResponseBody);
+
+                if (jsonNodeResponse is null)
+                {
+                    Log.Warning(
+                        $"Failed to parse the GeeTest challenge result validation response body (challenge: {challenge}, validation: {validation}).");
+                    Log.Information(httpResponseBody);
+                    return null;
+                } // end if
+
+                var returnCode = (int?)jsonNodeResponse[KeyReturnCode];
+
+                if (returnCode is not ReturnCodeSuccess)
+                {
+                    Log.Warning(
+                        $"Failed to validate the GeeTest challenge result (challenge: {challenge}, message: {(string)jsonNodeResponse[KeyMessage]}, return code: {returnCode}, validation: {validation}).");
+                    return null;
+                } // end if
+
+                var data = jsonNodeResponse[KeyData];
+
+                if (data is not null) return (string)data[KeyChallenge];
+
+                Log.Warning(
+                    $"Failed to get the GeeTest challenge result validation data (challenge: {challenge}, validation: {validation}).");
+                return null;
+            }
+            catch (Exception exception)
+            {
+                Log.Error(
+                    $"Failed to parse the GeeTest challenge result validation response body (challenge: {challenge}, validation: {validation}).");
+                LogException(exception, httpResponseBody);
+                return null;
+            } // end try...catch
+        } // end method ValidateGeeTestChallengeResult
 
         #endregion Methods
 
