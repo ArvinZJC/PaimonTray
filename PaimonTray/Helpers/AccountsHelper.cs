@@ -1830,8 +1830,8 @@ namespace PaimonTray.Helpers
                             continue;
                         } // end if
 
-                        await GetRealTimeNotesFromApiAsync(challengeValidated, containerKeyAccount, containerKeyAccount,
-                            isStandalone);
+                        await GetRealTimeNotesFromApiAsync(challengeValidated, containerKeyAccount,
+                            containerKeyCharacter, isStandalone);
                         return;
                     } // end foreach
                 } // end if
