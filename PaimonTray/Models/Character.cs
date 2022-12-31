@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using PaimonTray.Helpers;
+using System.Text.Json.Serialization;
 
 namespace PaimonTray.Models
 {
@@ -28,7 +29,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The character UID.
         /// </summary>
-        [JsonPropertyName("game_uid")]
+        [JsonPropertyName(AccountsHelper.KeyUidCharacter)]
         public string Uid { get; init; }
 
         #endregion Properties

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using PaimonTray.Helpers;
 
 namespace PaimonTray.Models
 {
@@ -25,7 +26,7 @@ namespace PaimonTray.Models
         /// <summary>
         /// The response return code.
         /// </summary>
-        [JsonPropertyName("retcode")] // Should be the same as the value of AccountsHelper.KeyReturnCode.
+        [JsonPropertyName(AccountsHelper.KeyReturnCode)]
         public int? ReturnCode { get; set; }
 
         #endregion Properties
