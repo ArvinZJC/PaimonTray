@@ -47,6 +47,7 @@ PaimonTray also has some other highlights that may interest you. These include b
 - I18n (Internationalisation). Supported languages as follows:
   - English (United Kingdom)
   - English (United States) - default if no matches
+  - Indonesia (Indonesia) - primarily contributed by [bimagusti.p](https://crowdin.com/profile/bimagusti.p)
   - 中文（简体，中国）
 
 </details>
@@ -102,7 +103,7 @@ You can get PaimonTray from:
 
 > May I have your attention pls? 🔥
 
-1. By 1 January 2023, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge the following authors/projects.
+1. By 1 January 2023, everything looks good with Visual Studio 2022 (Version: 17.4.3) + .NET 7.0. PaimonTray is built with Windows UI Library (WinUI) 3, which ships with the Windows App SDK. You may find [this link](https://docs.microsoft.com/en-gb/windows/apps/windows-app-sdk/set-up-your-development-environment) useful to load the project. Additionally, I would like to thankfully acknowledge all translators and the following authors/projects.
 
    - API uses credited to [genshin.py](https://github.com/thesadru/genshin.py) and [DGP Studio](https://github.com/DGP-Studio).
    - App icon credited to [Chawong](https://www.pixiv.net/en/artworks/92415888).
@@ -159,6 +160,6 @@ Good luck! 💖
 
 <sub id="footnote2">[2.](#source2) Currently up to 5 accounts due to performance consideration. It may be tweaked, as PaimonTray sharpens itself.</sub>
 
-<sub id="footnote3">[3.](#source3) Currently, only CN server accounts require this mechanism, which can significantly reduce the frequency of completing a security check manually in the specific section of the Miyoushe app.</sub>
+<sub id="footnote3">[3.](#source3) Currently, only CN server accounts require this mechanism, which can significantly reduce the frequency of manually completing a security check in the specific section of the Miyoushe app.</sub>
 
 <sub id="footnote4">[4.](#source4) This feature depends on your Windows version and some system settings. The actual visual effects can vary.</sub>
