@@ -884,7 +884,7 @@ namespace PaimonTray.Helpers
             if (characters is null)
             {
                 Log.Warning($"Failed to store null characters (account container key: {containerKeyAccount}).");
-                propertySetAccount[KeyStatus] = status == TagStatusExpired ? TagStatusExpired : TagStatusFail;
+                propertySetAccount[KeyStatus] = status is TagStatusExpired ? TagStatusExpired : TagStatusFail;
             }
             else if (characters.Count is 0)
             {
@@ -967,9 +967,8 @@ namespace PaimonTray.Helpers
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
             var status = propertySetAccount[KeyStatus] as string;
 
-            if (status != TagStatusAdding && status != TagStatusExpired && status != TagStatusFail &&
-                status != TagStatusReady &&
-                status != TagStatusUpdating) propertySetAccount[KeyStatus] = TagStatusAdding;
+            if (status is not TagStatusAdding and not TagStatusExpired and not TagStatusFail and not TagStatusReady
+                and not TagStatusUpdating) propertySetAccount[KeyStatus] = TagStatusAdding;
 
             var shouldAddUpdateCharacters = true;
 
@@ -1219,7 +1218,7 @@ namespace PaimonTray.Helpers
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
-            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
+            if (propertySetAccount[KeyStatus] as string is TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get the account from the API due to its expired status (account container key: {containerKeyAccount}).");
@@ -1228,7 +1227,7 @@ namespace PaimonTray.Helpers
 
             propertySetAccount[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
-            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
             var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlAccountServerCn : UrlAccountServerGlobal); // Send an HTTP GET request when ready.
@@ -1325,7 +1324,7 @@ namespace PaimonTray.Helpers
             if (!ValidateAccountContainerKey(containerKeyAccount)) return null;
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
-            var urlBaseAvatar = propertySetAccount[KeyServer] as string == TagServerCn
+            var urlBaseAvatar = propertySetAccount[KeyServer] is TagServerCn
                 ? UrlBaseAvatarServerCn
                 : UrlBaseAvatarServerGlobal;
 
@@ -1343,14 +1342,14 @@ namespace PaimonTray.Helpers
 
             var propertySetAccount = ApplicationDataContainerAccounts.Containers[containerKeyAccount].Values;
 
-            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
+            if (propertySetAccount[KeyStatus] is TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get characters from the API due to the specific account's expired status (account container key: {containerKeyAccount}).");
                 return null;
             } // end if
 
-            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
             var httpResponseBody = await _app.HttpClientH.GetAsync(propertySetAccount[KeyCookies] as string,
                 isServerCn,
                 isServerCn ? UrlCharactersServerCn : UrlCharactersServerGlobal); // Send an HTTP GET request when ready.
@@ -1570,7 +1569,7 @@ namespace PaimonTray.Helpers
                                             _ => null
                                         };
 
-                                    if (expeditionStatus != ExpeditionStatusFinished)
+                                    if (expeditionStatus is not ExpeditionStatusFinished)
                                         expeditionExplanation +=
                                             $"{colonAndEstimated}{GetLocalDateTimeString(propertySetExpedition[KeyTimeRemaining] as DateTimeOffset?)}";
 
@@ -1632,7 +1631,7 @@ namespace PaimonTray.Helpers
                                     $"{colonAndEstimated}{GetLocalDateTimeString(propertySetRealTimeNotes[KeyResinOriginalTimeRecovery] as DateTimeOffset?)}";
                         } // end if...else
 
-                        if (realTimeNotesExpeditions.Count == 0)
+                        if (realTimeNotesExpeditions.Count is 0)
                             realTimeNotesExpeditions.Add(new RealTimeNote
                             {
                                 Explanation = resourceLoader.GetString("ExpeditionsNone"),
@@ -1736,7 +1735,7 @@ namespace PaimonTray.Helpers
             propertySetRealTimeNotes[KeyStatus] = TagStatusUpdating;
             propertySetRealTimeNotes[KeyTimeUpdateLast] = DateTimeOffset.UtcNow;
 
-            if (propertySetAccount[KeyStatus] as string == TagStatusExpired)
+            if (propertySetAccount[KeyStatus] is TagStatusExpired)
             {
                 Log.Warning(
                     $"Failed to get real-time notes from the API due to the specific account's expired status (account container key: {containerKeyAccount}, character container key: {containerKeyCharacter}).");
@@ -1761,7 +1760,7 @@ namespace PaimonTray.Helpers
             } // end if
 
             var cookies = propertySetAccount[KeyCookies] as string;
-            var isServerCn = propertySetAccount[KeyServer] as string == TagServerCn;
+            var isServerCn = propertySetAccount[KeyServer] is TagServerCn;
             var query = $"role_id={uidCharacter}&server={region}";
             var urlBaseRealTimeNotes = isServerCn ? UrlBaseRealTimeNotesServerCn : UrlBaseRealTimeNotesServerGlobal;
             var httpResponseBody = await _app.HttpClientH.GetAsync(cookies, isServerCn,
@@ -2147,7 +2146,7 @@ namespace PaimonTray.Helpers
                     } // end if...else
                 } // end if...else
 
-                if (propertySetRealTimeNotes[KeyStatus] as string == TagStatusUpdating)
+                if (propertySetRealTimeNotes[KeyStatus] is TagStatusUpdating)
                     propertySetRealTimeNotes[KeyStatus] = TagStatusReady;
             }
             catch (Exception exception)
@@ -2201,7 +2200,7 @@ namespace PaimonTray.Helpers
 
             return current is 0 && max is 0
                 ? _app.SettingsH.ResLoader.GetString("RealTimeNotesStatusLocked")
-                : current as string == AppFieldsHelper.Unknown && max as string == AppFieldsHelper.Unknown
+                : current is AppFieldsHelper.Unknown && max is AppFieldsHelper.Unknown
                     ? AppFieldsHelper.Unknown
                     : $"{current}/{max}";
         } // end method GetRealTimeNoteStatus
