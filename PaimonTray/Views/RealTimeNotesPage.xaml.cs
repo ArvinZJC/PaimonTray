@@ -45,20 +45,20 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if ((e.PropertyName == AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
+            if ((e.PropertyName is AccountsHelper.PropertyNameIsAccountCharacterUpdated &&
                  _app.AccountsH.IsAccountCharacterUpdated) ||
-                (e.PropertyName == AccountsHelper.PropertyNameIsAccountGroupUpdated &&
+                (e.PropertyName is AccountsHelper.PropertyNameIsAccountGroupUpdated &&
                  _app.AccountsH.IsAccountGroupUpdated) ||
-                e.PropertyName == AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
+                e.PropertyName is AccountsHelper.PropertyNameIsManaging) ToggleStatusVisibility();
 
             var uidCharacterRealTimeNotesUpdated = _app.AccountsH.UidCharacterRealTimeNotesUpdated;
 
-            if (e.PropertyName != AccountsHelper.PropertyNameUidCharacterRealTimeNotesUpdated ||
+            if (e.PropertyName is not AccountsHelper.PropertyNameUidCharacterRealTimeNotesUpdated ||
                 string.IsNullOrWhiteSpace(uidCharacterRealTimeNotesUpdated)) return;
 
             if (ListViewAccountGroups.SelectedItem is not AccountCharacter accountCharacter) return;
 
-            if (uidCharacterRealTimeNotesUpdated != AccountsHelper.TagRealTimeNotesUpdatedCharactersAllEnabled &&
+            if (uidCharacterRealTimeNotesUpdated is not AccountsHelper.TagRealTimeNotesUpdatedCharactersAllEnabled &&
                 uidCharacterRealTimeNotesUpdated != accountCharacter.UidCharacter) return;
 
             UpdateRealTimeNotesArea(accountCharacter.Key, accountCharacter.UidCharacter);
@@ -158,7 +158,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the real-time notes page's loaded event.
@@ -337,14 +337,14 @@ namespace PaimonTray.Views
                 _app.AccountsH.GetRealTimeNotes(containerKeyAccount, containerKeyCharacter);
 
             GridCharacterRealTimeNotesStatusDisabled.Visibility =
-                realTimeNotesStatus == AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
+                realTimeNotesStatus is AccountsHelper.TagStatusDisabled ? Visibility.Visible : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusFail.Visibility =
                 realTimeNotesStatus is null or AccountsHelper.TagStatusFail ? Visibility.Visible : Visibility.Collapsed;
-            GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus == AccountsHelper.TagStatusReady
+            GridCharacterRealTimeNotesStatusReady.Visibility = realTimeNotesStatus is AccountsHelper.TagStatusReady
                 ? Visibility.Visible
                 : Visibility.Collapsed;
             GridCharacterRealTimeNotesStatusUpdating.Visibility =
-                realTimeNotesStatus == AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
+                realTimeNotesStatus is AccountsHelper.TagStatusUpdating ? Visibility.Visible : Visibility.Collapsed;
             ListViewCharacterRealTimeNotesExpeditions.ItemsSource = realTimeNotesExpeditionNotes;
             ListViewCharacterRealTimeNotesGeneral.ItemsSource = realTimeNotesGeneralNotes;
             ListViewHeaderItemCharacterRealTimeNotesExpeditions.Visibility = Visibility.Visible;

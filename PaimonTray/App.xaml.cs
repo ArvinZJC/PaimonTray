@@ -91,7 +91,7 @@ namespace PaimonTray
                 if (int.TryParse(
                         registryKeyVersionWindows.GetValue(AppFieldsHelper.RegistryNameVersionRevisionWindows)
                             ?.ToString(), out var versionRevisionWindows))
-                    return Environment.OSVersion.Version.Major == AppFieldsHelper.VersionMajorWindows10Or11 &&
+                    return Environment.OSVersion.Version.Major is AppFieldsHelper.VersionMajorWindows10Or11 &&
                            ((Environment.OSVersion.Version.Build is >= AppFieldsHelper.VersionBuildMinWindows10Elevation
                                  and < AppFieldsHelper.VersionBuildMinWindows11 &&
                              versionRevisionWindows >= AppFieldsHelper.VersionRevisionMinWindows10Elevation) ||
@@ -168,7 +168,7 @@ namespace PaimonTray
                     LogException(initialiseTask.Result.ExtendedError);
                     _ = new Window(); // Exiting the app takes no effect if no window instances (Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/5931). Put it here to avoid an access violation exception.
 
-                    if (initialiseTask.Result.ExtendedError.HResult == AppFieldsHelper.HResultAccessDenied &&
+                    if (initialiseTask.Result.ExtendedError.HResult is AppFieldsHelper.HResultAccessDenied &&
                         DetermineElevatedAppRestart())
                     {
                         Log.Information("Restarting the app elevated to try fixing the deployment failure.");

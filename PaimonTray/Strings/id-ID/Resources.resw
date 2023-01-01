@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Tentang</value>
+  </data>
+  <data name="AccountAddConfirmation" xml:space="preserve">
+    <value>Tambahkan akun Anda?</value>
+    <comment>Used as the confirmation content dialogue's title. Keep short.</comment>
+  </data>
+  <data name="AccountAddNoCharacterExplanation" xml:space="preserve">
+    <value>Tidak ada karakter yang ditautkan dengan akun Anda. Apakah Anda masih ingin menambahkan akun?</value>
+  </data>
+  <data name="AccountAddNoCharacterSuccess" xml:space="preserve">
+    <value>Akun yang ditautkan tanpa karakter berhasil ditambahkan.</value>
+  </data>
+  <data name="AccountAddReachLimit" xml:space="preserve">
+    <value>Jumlah akun Anda yang ditambahkan telah mencapai batas limit.</value>
+  </data>
+  <data name="AccountAddReachLimitExtraInfo" xml:space="preserve">
+    <value>Anda masih dapat masuk ke akun tambahan Anda untuk memperbaruinya.</value>
+  </data>
+  <data name="AccountAddUpdate" xml:space="preserve">
+    <value>Tambah/Perbarui akun</value>
+  </data>
+  <data name="AccountGroupCheckRefresh" xml:space="preserve">
+    <value>Periksa dan segarkan akun dan (karakter) tertautnya</value>
+  </data>
+  <data name="AccountGroupNoCharacter" xml:space="preserve">
+    <value>Ups, tidak ada karakter! Anda perlu menambahkan akun.</value>
+  </data>
+  <data name="AccountGroupNoCharacterEnabled" xml:space="preserve">
+    <value>Ups, tidak ada karakter yang diizinkan mengambil catatan waktu nyata. Anda dapat menambahkan/memperbarui akun, atau pergi ke pengaturan untuk mengelola akun(-akun) Anda yang ditambahkan.</value>
+  </data>
+  <data name="AccountGroupRemove" xml:space="preserve">
+    <value>Hapus akun dan (karakter) tertautnya</value>
+  </data>
+  <data name="AccountGroupRemoveExplanation" xml:space="preserve">
+    <value>Setelah akun dan (karakter) tertautnya dihapus, Anda hanya dapat menambahkannya kembali dengan masuk ke akun lagi.</value>
+  </data>
+  <data name="AccountGroupsCheckRefresh" xml:space="preserve">
+    <value>Periksa dan segarkan semua akun dan karakter</value>
+  </data>
+  <data name="AccountGroupsCheckRefreshWhenAppStarts" xml:space="preserve">
+    <value>Periksa dan segarkan semua akun dan karakter saat aplikasi dimulai</value>
+  </data>
+  <data name="AccountGroupsRemove" xml:space="preserve">
+    <value>Hapus semua akun dan karakter</value>
+  </data>
+  <data name="AccountGroupsRemoveExplanation" xml:space="preserve">
+    <value>Setelah semua akun dan karakter dihapus, Anda hanya dapat menambahkannya kembali dengan masuk ke (akun) lagi.</value>
+  </data>
+  <data name="AccountNoCharacter" xml:space="preserve">
+    <value>Tidak ada karakter yang ditautkan dengan akun.</value>
+  </data>
+  <data name="AccountRemoveConfirmation" xml:space="preserve">
+    <value>Hapus akun?</value>
+  </data>
+  <data name="Accounts" xml:space="preserve">
+    <value>Akun</value>
+  </data>
+  <data name="AccountsManagement" xml:space="preserve">
+    <value>Akun (Anda)</value>
+  </data>
+  <data name="AccountsManagementExplanation" xml:space="preserve">
+    <value>Kelola akun Anda ditambahkan dan pilih karakter untuk memungkinkan pengambilan catatan waktu nyata (jika status abnormal akun tidak dapat diselesaikan dengan memeriksa dan menyegarkan akun, Anda dapat masuk ke akun lagi)</value>
+  </data>
+  <data name="AccountsRemoveConfirmation" xml:space="preserve">
+    <value>Hapus semua akun?</value>
+  </data>
+  <data name="AccountStatusAdding" xml:space="preserve">
+    <value>Menambahkan akun Anda</value>
+  </data>
+  <data name="AccountStatusAddingUpdatingExplanation" xml:space="preserve">
+    <value>Akun sedang ditambahkan/diperbarui</value>
+  </data>
+  <data name="AccountStatusExpiredExplanation" xml:space="preserve">
+    <value>Cookie akun telah kedaluwarsa</value>
+  </data>
+  <data name="AccountStatusFailExplanation" xml:space="preserve">
+    <value>Terjadi kesalahan saat mengambil informasi akun</value>
+  </data>
+  <data name="AccountStatusReadyExplanation" xml:space="preserve">
+    <value>Informasi akun telah berhasil diambil</value>
+  </data>
+  <data name="AccountStatusUpdating" xml:space="preserve">
+    <value>Menambahkan akun Anda</value>
+  </data>
+  <data name="AccountUpdated" xml:space="preserve">
+    <value>Akun Anda baru saja diperbarui.</value>
+  </data>
+  <data name="AccountUpdatedExtraInfo" xml:space="preserve">
+    <value>Itu sudah ditambahkan sebelumnya.</value>
+  </data>
+  <data name="AcknowledgementApiUses" xml:space="preserve">
+    <value>Penggunaan API dikreditkan ke</value>
+  </data>
+  <data name="AcknowledgementAppIcon" xml:space="preserve">
+    <value>Ikon aplikasi dikreditkan ke</value>
+  </data>
+  <data name="AcknowledgementInspiration" xml:space="preserve">
+    <value>Terinspirasi oleh</value>
+  </data>
+  <data name="And" xml:space="preserve">
+    <value>dan</value>
+  </data>
+  <data name="AppIconAuthor" xml:space="preserve">
+    <value>Chawong</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="CharacterSwitch" xml:space="preserve">
+    <value>Beralih karakter</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Bersihkan</value>
+  </data>
+  <data name="Colon" xml:space="preserve">
+    <value>: </value>
+    <comment>Include a space if necessary.</comment>
+  </data>
+  <data name="CommissionsDaily" xml:space="preserve">
+    <value>Komisi harian</value>
+  </data>
+  <data name="CommissionsDailyIncomplete" xml:space="preserve">
+    <value>Jumlah komisi yang diselesaikan hari ini tidak mencukupi</value>
+  </data>
+  <data name="CommissionsDailyLocked" xml:space="preserve">
+    <value>Anda perlu menyelesaikan World Quest "Every Day a New Adventure"</value>
+  </data>
+  <data name="CommissionsDailyRewardsBonusClaimed" xml:space="preserve">
+    <value>Komisi selesai dan hadiah bonus diklaim hari ini</value>
+  </data>
+  <data name="CommissionsDailyRewardsBonusUnclaimed" xml:space="preserve">
+    <value>Komisi selesai tetapi hadiah bonus tidak diklaim hari ini</value>
+  </data>
+  <data name="CommissionsDailyRewardsBonusUnknown" xml:space="preserve">
+    <value>Komisi diselesaikan hari ini (gagal menentukan klaim hadiah bonus)</value>
+  </data>
+  <data name="Cookies" xml:space="preserve">
+    <value>cookies</value>
+    <comment>Primarily used for the alternative login method header "&lt;login place&gt; cookies".</comment>
+  </data>
+  <data name="CookiesCopy" xml:space="preserve">
+    <value>Salin cookie</value>
+  </data>
+  <data name="CookiesHowToGet" xml:space="preserve">
+    <value>Lihat panduan tentang cara mendapatkan cookie Anda</value>
+  </data>
+  <data name="CookiesStatusProcessing" xml:space="preserve">
+    <value>Memproses cookie</value>
+  </data>
+  <data name="CookiesView" xml:space="preserve">
+    <value>Lihat cookie</value>
+  </data>
+  <data name="CurrencyRealm" xml:space="preserve">
+    <value>Mata Uang Alami</value>
+  </data>
+  <data name="CurrencyRealmLimitReached" xml:space="preserve">
+    <value>Batas tercapai</value>
+  </data>
+  <data name="CurrencyRealmLocked" xml:space="preserve">
+    <value>Anda perlu mendapatkan dan menjelajahi Pot Serenitea</value>
+  </data>
+  <data name="DomainsTrounceDiscounts" xml:space="preserve">
+    <value>Catatan Musuh</value>
+  </data>
+  <data name="DomainsTrounceDiscountsExplanation" xml:space="preserve">
+    <value>Peluang diskon separuh harga Resin Asli yang tersisa minggu ini</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Masuk</value>
+  </data>
+  <data name="Estimated" xml:space="preserve">
+    <value>estimasi.</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Keluar</value>
+  </data>
+  <data name="ExpeditionComplete" xml:space="preserve">
+    <value>Selesai</value>
+  </data>
+  <data name="Expeditions" xml:space="preserve">
+    <value>Ekspedisi</value>
+  </data>
+  <data name="ExpeditionsExplanation" xml:space="preserve">
+    <value>Karakter game dikirim dalam ekspedisi</value>
+  </data>
+  <data name="ExpeditionsNone" xml:space="preserve">
+    <value>Tidak ada ekspedisi yang dikirim</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Umum</value>
+  </data>
+  <data name="GiteeRepo" xml:space="preserve">
+    <value>Repositori Gitee (cadangan)</value>
+  </data>
+  <data name="GitHubRepo" xml:space="preserve">
+    <value>Repositori GitHub</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Bantuan</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>jam</value>
+  </data>
+  <data name="HoYoLab" xml:space="preserve">
+    <value>HoYoLAB</value>
+  </data>
+  <data name="Issues" xml:space="preserve">
+    <value>Masalah</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="LanguageApplied" xml:space="preserve">
+    <value>en-US</value>
+  </data>
+  <data name="LanguageAppliedLater" xml:space="preserve">
+    <value>Perubahan bahasa akan diterapkan saat aplikasi dimulai lagi.</value>
+  </data>
+  <data name="LanguageExplanation" xml:space="preserve">
+    <value>Ubah bahasa aplikasi</value>
+  </data>
+  <data name="LaunchAtWindowsStartup" xml:space="preserve">
+    <value>Luncurkan saat memulai Windows</value>
+  </data>
+  <data name="LaunchAtWindowsStartupExplanation" xml:space="preserve">
+    <value>Ubah pengaturan konfigurasi aktif Anda, apakah akan memulai aplikasi saat Anda masuk ke Windows</value>
+  </data>
+  <data name="LaunchAtWindowsStartupLinkText" xml:space="preserve">
+    <value>Ubah pengaturan mulai</value>
+  </data>
+  <data name="Licence" xml:space="preserve">
+    <value>Lisensi</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Masuk</value>
+  </data>
+  <data name="LoginAlternativeAlways" xml:space="preserve">
+    <value>Selalu gunakan metode login alternatif</value>
+  </data>
+  <data name="LoginAlternativeAlwaysAppliedLater" xml:space="preserve">
+    <value>Perubahan ke server bawaan akan diterapkan saat berikutnya, halaman akan menambahkan/memperbarui akun saat masuk.</value>
+  </data>
+  <data name="LoginAlternativeAlwaysExplanation" xml:space="preserve">
+    <value>Saat diaktifkan, aplikasi akan selalu meminta Anda memasukkan cookie secara manual untuk menambah/memperbarui akun Anda, bahkan jika metode login halaman web tersedia</value>
+  </data>
+  <data name="LoginAlternativeAutomatically" xml:space="preserve">
+    <value>Metode login alternatif digunakan secara otomatis.</value>
+  </data>
+  <data name="LoginAlternativeAutomaticallyExtraInfo" xml:space="preserve">
+    <value>Microsoft Edge WebView2 Runtime tidak dapat ditemukan. Anda dapat mengunduhnya dan menginstal runtime atau mengubah pengaturan untuk selalu menggunakan metode ini, agar tidak pernah menampilkan pesan ini lagi saat halaman dimuat lagi.</value>
+  </data>
+  <data name="LoginCompleteConfirm" xml:space="preserve">
+    <value>Konfirmasikan penyelesaian login Anda untuk masuk di halaman web</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>Gagal masuk ke akun Anda.</value>
+  </data>
+  <data name="LoginFailExtraInfo" xml:space="preserve">
+    <value>Anda dapat mencoba lagi.</value>
+  </data>
+  <data name="LoginHeaderWebPage" xml:space="preserve">
+    <value>Masuk ke akun Anda di halaman web</value>
+  </data>
+  <data name="LoginWebPageReturn" xml:space="preserve">
+    <value>Kembali ke halaman web login</value>
+  </data>
+  <data name="LogsShow" xml:space="preserve">
+    <value>Tampilkan log di File Explorer</value>
+  </data>
+  <data name="MainMenuButtonTooltip" xml:space="preserve">
+    <value>Pengaturan dan lainnya</value>
+  </data>
+  <data name="MainWindowHide" xml:space="preserve">
+    <value>Sembunyikan jendela utama</value>
+  </data>
+  <data name="MainWindowShow" xml:space="preserve">
+    <value>Menampilkan jendela utama</value>
+  </data>
+  <data name="MainWindowShowWhenAppStarts" xml:space="preserve">
+    <value>Tampilkan jendela utama saat aplikasi dimulai</value>
+  </data>
+  <data name="MainWindowTopNavigationPane" xml:space="preserve">
+    <value>Gunakan panel navigasi atas di jendela utama</value>
+  </data>
+  <data name="MainWindowTopNavigationPaneExplanation" xml:space="preserve">
+    <value>Saat diaktifkan, panel navigasi di jendela utama akan ditampilkan di bagian atas, bukan di sisi kiri</value>
+  </data>
+  <data name="MiHoYo" xml:space="preserve">
+    <value>miHoYo</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>menit</value>
+  </data>
+  <data name="NameGitHubRepoApiUsesPrimary" xml:space="preserve">
+    <value>genshin.py</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="NameGitHubRepoApiUsesSecondary" xml:space="preserve">
+    <value>DGP Studio</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="NameGitHubRepoInspiration" xml:space="preserve">
+    <value>PaimonMenuBar</value>
+    <comment>No need to translate.</comment>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Tidak</value>
+  </data>
+  <data name="NotificationClear" xml:space="preserve">
+    <value>Hapus pemberitahuan saat aplikasi keluar</value>
+  </data>
+  <data name="NotificationGreeting" xml:space="preserve">
+    <value>Kirim pemberitahuan salam saat aplikasi dimulai</value>
+  </data>
+  <data name="NotificationGreetingContent" xml:space="preserve">
+    <value>Jika ikon menghilang dari sudut bilah tugas, Anda dapat menyeretnya kembali dari menu luapan sudut bilah tugas.</value>
+  </data>
+  <data name="NotificationGreetingTitle" xml:space="preserve">
+    <value>Sekarang, Paimon ada di "system tray" Anda!</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Pemberitahuan</value>
+  </data>
+  <data name="NotificationsExplanation" xml:space="preserve">
+    <value>Ubah pengaturan pemberitahuan Anda</value>
+  </data>
+  <data name="NotificationsLinkText" xml:space="preserve">
+    <value>Ubah pengaturan pemberitahuan</value>
+  </data>
+  <data name="NotificationsNotice" xml:space="preserve">
+    <value>Harap dicatat bahwa pengaturan berikut mengenai pengiriman pemberitahuan berlaku setelah Anda mengizinkan pemberitahuan dari aplikasi di pengaturan pemberitahuan.</value>
+  </data>
+  <data name="RealTimeNotes" xml:space="preserve">
+    <value>Catatan waktu sebenarnya</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefresh" xml:space="preserve">
+    <value>Interval penyegaran catatan waktu nyata</value>
+  </data>
+  <data name="RealTimeNotesIntervalRefreshExplanation" xml:space="preserve">
+    <value>Pilih interval umum antara pembaruan terpadu pada catatan waktu nyata untuk semua karakter yang dipilih untuk memungkinkan pengambilan catatan waktu nyata</value>
+  </data>
+  <data name="RealTimeNotesStatusDisabledExplanation" xml:space="preserve">
+    <value>Anda belum mengaktifkan catatan waktu nyata karakter</value>
+  </data>
+  <data name="RealTimeNotesStatusFailExplanation" xml:space="preserve">
+    <value>Terjadi kesalahan saat mengambil catatan waktu nyata karakter</value>
+  </data>
+  <data name="RealTimeNotesStatusLocked" xml:space="preserve">
+    <value>Belum dapat dibuka</value>
+  </data>
+  <data name="RealTimeNotesStatusReadyExplanation" xml:space="preserve">
+    <value>Catatan waktu nyata karakter telah berhasil diambil</value>
+  </data>
+  <data name="RealTimeNotesStatusUpdatingExplanation" xml:space="preserve">
+    <value>Catatan waktu nyata karakter sedang diperbarui</value>
+  </data>
+  <data name="RegionCnBilibili" xml:space="preserve">
+    <value>Irminsul</value>
+  </data>
+  <data name="RegionCnOfficial" xml:space="preserve">
+    <value>Celestia</value>
+  </data>
+  <data name="RegionGlobalAmerica" xml:space="preserve">
+    <value>Amerika</value>
+  </data>
+  <data name="RegionGlobalAsia" xml:space="preserve">
+    <value>Asia</value>
+  </data>
+  <data name="RegionGlobalEurope" xml:space="preserve">
+    <value>Eropa</value>
+  </data>
+  <data name="RegionGlobalSars" xml:space="preserve">
+    <value>TW, HK, MO</value>
+  </data>
+  <data name="ReleaseNotes" xml:space="preserve">
+    <value>Catatan rilis</value>
+  </data>
+  <data name="ResinOriginal" xml:space="preserve">
+    <value>Resin Asli</value>
+  </data>
+  <data name="ResinOriginalReplenishedFully" xml:space="preserve">
+    <value>Sepenuhnya di isi ulang</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="ServerCn" xml:space="preserve">
+    <value>CN</value>
+  </data>
+  <data name="ServerDefault" xml:space="preserve">
+    <value>Server bawaan</value>
+  </data>
+  <data name="ServerDefaultAppliedLater" xml:space="preserve">
+    <value>Perubahan ke server bawaan akan diterapkan saat berikutnya, halaman akan menambahkan/memperbarui akun saat masuk.</value>
+  </data>
+  <data name="ServerDefaultExplanation" xml:space="preserve">
+    <value>Pilih server bawaan untuk masuk (Anda masih dapat mengubah server saat menambahkan/memperbarui akun Anda, dan aplikasi akan secara otomatis mengenali wilayah permainan)</value>
+  </data>
+  <data name="ServerExplanation" xml:space="preserve">
+    <value>Pilih server untuk login (aplikasi akan secara otomatis mengenali wilayah game)</value>
+  </data>
+  <data name="ServerGlobal" xml:space="preserve">
+    <value>Dunia</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>lokasi</value>
+    <comment>Primarily used for the help item "&lt;app name&gt; site".</comment>
+  </data>
+  <data name="StatusLoading" xml:space="preserve">
+    <value>Memuat</value>
+  </data>
+  <data name="SystemDefault" xml:space="preserve">
+    <value>Gunakan bawaan sistem</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Gelap</value>
+  </data>
+  <data name="ThemeExplanation" xml:space="preserve">
+    <value>Pilih tema aplikasi yang akan ditampilkan</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Terang</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>hari ini</value>
+  </data>
+  <data name="Tomorrow" xml:space="preserve">
+    <value>besok</value>
+  </data>
+  <data name="TransformerParametric" xml:space="preserve">
+    <value>Transformator Parametrik</value>
+  </data>
+  <data name="TransformerParametricCooldown" xml:space="preserve">
+    <value>Jeda waktu sedang berlangsung</value>
+  </data>
+  <data name="TransformerParametricLocked" xml:space="preserve">
+    <value>Anda perlu menyelesaikan World Quest "Tianqiu Treasure Trail"</value>
+  </data>
+  <data name="TransformerParametricReady" xml:space="preserve">
+    <value>Siap</value>
+  </data>
+  <data name="TransformerParametricUsable" xml:space="preserve">
+    <value>Dapat digunakan</value>
+  </data>
+  <data name="UpdatedLast" xml:space="preserve">
+    <value>Terakhir diperbarui</value>
+  </data>
+  <data name="UserManual" xml:space="preserve">
+    <value>Panduan pengguna</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versi</value>
+  </data>
+  <data name="WebView2RuntimeDownload" xml:space="preserve">
+    <value>Unduh WebView2 Runtime</value>
+  </data>
+  <data name="WindowsAppSdkRuntimeDownloadConfirmation" xml:space="preserve">
+    <value>Unduh runtime Windows App SDK?</value>
+  </data>
+  <data name="WindowsAppSdkRuntimeDownloadExplanation" xml:space="preserve">
+    <value>PaimonTray tidak dapat menyelesaikan kegagalan penerapan. Anda harus menginstal runtime Windows App SDK secara manual untuk menjalankan aplikasi.</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ya</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>kemarin</value>
+  </data>
+</root>

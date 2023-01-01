@@ -128,6 +128,7 @@ namespace PaimonTray.Views
             {
                 SettingsHelper.TagLanguageEnGb => ComboBoxItemLanguageEnGb,
                 SettingsHelper.TagLanguageEnUs => ComboBoxItemLanguageEnUs,
+                SettingsHelper.TagLanguageIdId => ComboBoxItemLanguageIdId,
                 SettingsHelper.TagLanguageZhHansCn => ComboBoxItemLanguageZhHansCn,
                 SettingsHelper.TagSystem => ComboBoxItemLanguageSystem,
                 _ => null
@@ -216,6 +217,7 @@ namespace PaimonTray.Views
             CheckBoxNotificationGreeting.Content = resourceLoader.GetString("NotificationGreeting");
             ComboBoxItemLanguageEnGb.Content = new CultureInfo(SettingsHelper.TagLanguageEnGb).NativeName;
             ComboBoxItemLanguageEnUs.Content = new CultureInfo(SettingsHelper.TagLanguageEnUs).NativeName;
+            ComboBoxItemLanguageIdId.Content = new CultureInfo(SettingsHelper.TagLanguageIdId).NativeName;
             ComboBoxItemLanguageSystem.Content = resourceLoader.GetString("SystemDefault");
             ComboBoxItemLanguageZhHansCn.Content = new CultureInfo(SettingsHelper.TagLanguageZhHansCn).NativeName;
             ComboBoxItemThemeDark.Content = resourceLoader.GetString("ThemeDark");

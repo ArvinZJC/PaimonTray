@@ -47,6 +47,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 - 国际化。支持的语言如下：
   - English (United Kingdom)
   - English (United States) ——无匹配语言时默认
+  - Indonesia (Indonesia) ——主要由 [bimagusti.p](https://crowdin.com/profile/bimagusti.p) 贡献
   - 中文（简体，中国）
 
 </details>
@@ -102,7 +103,7 @@ PaimonTray 还有一些其他可能会吸引您的亮点，包括但不限于：
 
 > 敲黑板了！敲黑板了！🔥
 
-1. 截至 2023 年 1 月 1 日，使用 Visual Studio 2022（版本：17.4.3）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢以下作者/项目：
+1. 截至 2023 年 1 月 1 日，使用 Visual Studio 2022（版本：17.4.3）+ .NET 7.0 开发表现良好。PaimonTray 使用随附 Windows 应用 SDK 的 Windows UI 库（WinUI）3 构建。您可能会觉得[此链接](https://docs.microsoft.com/zh-cn/windows/apps/windows-app-sdk/set-up-your-development-environment)对载入项目有用。此外，我要特别感谢所有译者和以下作者/项目：
 
    - 接口用法参考于 [genshin.py](https://github.com/thesadru/genshin.py) 和 [DGP Studio](https://github.com/DGP-Studio)。
 

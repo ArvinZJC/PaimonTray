@@ -138,15 +138,15 @@ namespace PaimonTray.Converters
                     : Visibility.Collapsed,
                 ParameterStatusAddingUpdatingExplanation => resourceLoader?.GetString(
                     "AccountStatusAddingUpdatingExplanation"),
-                ParameterStatusExpired => accountCharacter.Status == AccountsHelper.TagStatusExpired
+                ParameterStatusExpired => accountCharacter.Status is AccountsHelper.TagStatusExpired
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusExpiredExplanation => resourceLoader?.GetString("AccountStatusExpiredExplanation"),
-                ParameterStatusFail => accountCharacter.Status == AccountsHelper.TagStatusFail
+                ParameterStatusFail => accountCharacter.Status is AccountsHelper.TagStatusFail
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusFailExplanation => resourceLoader?.GetString("AccountStatusFailExplanation"),
-                ParameterStatusReady => accountCharacter.Status == AccountsHelper.TagStatusReady
+                ParameterStatusReady => accountCharacter.Status is AccountsHelper.TagStatusReady
                     ? Visibility.Visible
                     : Visibility.Collapsed,
                 ParameterStatusReadyExplanation => resourceLoader?.GetString("AccountStatusReadyExplanation"),

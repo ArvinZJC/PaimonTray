@@ -169,7 +169,7 @@ namespace PaimonTray.Views
         // Handle the main window view model's property changed event.
         private void MainWindowViewModel_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
+            if (e.PropertyName is MainWindowViewModel.PropertyNameNavViewPaneDisplayMode) SetPageSize();
         } // end method MainWindowViewModel_OnPropertyChanged
 
         // Handle the alternative login text box's text changed event.
@@ -393,12 +393,12 @@ namespace PaimonTray.Views
                     UseAlternativeLoginMethod();
                 } // end try...catch
 
-            var serverDefault = propertySetSettings[SettingsHelper.KeyServerDefault] as string;
-
-            if (serverDefault == AccountsHelper.TagServerCn) ComboBoxServer.SelectedItem = ComboBoxItemServerCn;
-            else if (serverDefault == AccountsHelper.TagServerGlobal)
-                ComboBoxServer.SelectedItem = ComboBoxItemServerGlobal;
-            else ComboBoxServer.SelectedItem = null;
+            ComboBoxServer.SelectedItem = propertySetSettings[SettingsHelper.KeyServerDefault] switch
+            {
+                AccountsHelper.TagServerCn => ComboBoxItemServerCn,
+                AccountsHelper.TagServerGlobal => ComboBoxItemServerGlobal,
+                _ => null
+            };
         } // end method ChooseLoginMethodAsync
 
         /// <summary>

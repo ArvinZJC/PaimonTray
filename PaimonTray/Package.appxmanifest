@@ -10,7 +10,7 @@
   <Identity
     Name="12436ArvinZJC.40085CBC45AEE"
     Publisher="CN=ArvinZJC-dev"
-    Version="1.2.101.0" />
+    Version="1.2.200.0" />
   <Properties>
     <DisplayName>PaimonTray</DisplayName>
     <PublisherDisplayName>ArvinZJC</PublisherDisplayName>
@@ -22,6 +22,7 @@
   <Resources>
     <Resource Language="en-GB"/>
     <Resource Language="en-US"/>
+    <Resource Language="id-ID"/>
     <Resource Language="zh-Hans-CN"/>
   </Resources>
   <Applications>

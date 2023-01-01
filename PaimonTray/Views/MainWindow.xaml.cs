@@ -48,7 +48,7 @@ namespace PaimonTray.Views
         // Handle the accounts helper's property changed event.
         private void AccountsHelper_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == AccountsHelper.PropertyNameIsAddingUpdating)
+            if (e.PropertyName is AccountsHelper.PropertyNameIsAddingUpdating)
                 NavigationViewItemBodyRealTimeNotes.IsEnabled = !_app.AccountsH.IsAddingUpdating;
         } // end method AccountsHelper_OnPropertyChanged
 
