@@ -120,6 +120,11 @@ namespace PaimonTray.Helpers
         public const string TagLanguageEnUs = "en-US";
 
         /// <summary>
+        /// The Indonesian (Indonesia) language tag.
+        /// </summary>
+        public const string TagLanguageIdId = "id-ID";
+
+        /// <summary>
         /// The Chinese (Simplified, China) language tag.
         /// </summary>
         public const string TagLanguageZhHansCn = "zh-Hans-CN";
@@ -214,7 +219,7 @@ namespace PaimonTray.Helpers
         {
             LanguageSelectionApplied = PropertySetSettings[KeyLanguage] as string;
 
-            var languagePrimary = LanguageSelectionApplied == TagSystem ? string.Empty : LanguageSelectionApplied;
+            var languagePrimary = LanguageSelectionApplied is TagSystem ? string.Empty : LanguageSelectionApplied;
 
             ApplicationLanguages.PrimaryLanguageOverride = languagePrimary;
             ResLoader = ResourceLoader.GetForViewIndependentUse();
@@ -222,11 +227,12 @@ namespace PaimonTray.Helpers
             var languageApplied = ResLoader.GetString("LanguageApplied");
 
             CultureApplied =
-                new CultureInfo(languageApplied is TagLanguageEnGb or TagLanguageEnUs or TagLanguageZhHansCn
-                    ? languageApplied
-                    : languagePrimary == string.Empty
-                        ? TagLanguageEnUs
-                        : languagePrimary ?? TagLanguageEnUs);
+                new CultureInfo(
+                    languageApplied is TagLanguageEnGb or TagLanguageEnUs or TagLanguageIdId or TagLanguageZhHansCn
+                        ? languageApplied
+                        : languagePrimary == string.Empty
+                            ? TagLanguageEnUs
+                            : languagePrimary ?? TagLanguageEnUs);
         } // end method ApplyLanguageSelection
 
         /// <summary>
@@ -328,8 +334,10 @@ namespace PaimonTray.Helpers
             {
                 var language = PropertySetSettings[KeyLanguage] as string;
 
-                if (language != TagLanguageEnGb && language != TagLanguageEnUs && language != TagLanguageZhHansCn &&
-                    language != TagSystem) InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
+                if (language is not TagLanguageEnGb and not TagLanguageEnUs and not TagLanguageIdId
+                    and not TagLanguageZhHansCn
+                    and not TagSystem)
+                    InitialiseSetting(KeyLanguage, "Language setting", TagSystem);
             } // end if
 
             if (!PropertySetSettings.ContainsKey(KeyLoginAlternativeAlways) ||
@@ -361,11 +369,11 @@ namespace PaimonTray.Helpers
             {
                 var realTimeNotesIntervalRefresh = PropertySetSettings[KeyRealTimeNotesIntervalRefresh] as int?;
 
-                if (realTimeNotesIntervalRefresh != TagRealTimeNotesIntervalRefreshOptionOther1 &&
-                    realTimeNotesIntervalRefresh != TagRealTimeNotesIntervalRefreshOptionOther2 &&
-                    realTimeNotesIntervalRefresh != TagRealTimeNotesIntervalRefreshOptionOther3 &&
-                    realTimeNotesIntervalRefresh != TagRealTimeNotesIntervalRefreshOptionOther4 &&
-                    realTimeNotesIntervalRefresh != TagRealTimeNotesIntervalRefreshResinOriginal)
+                if (realTimeNotesIntervalRefresh is not TagRealTimeNotesIntervalRefreshOptionOther1
+                    and not TagRealTimeNotesIntervalRefreshOptionOther2
+                    and not TagRealTimeNotesIntervalRefreshOptionOther3
+                    and not TagRealTimeNotesIntervalRefreshOptionOther4
+                    and not TagRealTimeNotesIntervalRefreshResinOriginal)
                     InitialiseSetting(KeyRealTimeNotesIntervalRefresh, "Real-time notes refresh interval setting",
                         TagRealTimeNotesIntervalRefreshResinOriginal);
             } // end if
@@ -374,7 +382,7 @@ namespace PaimonTray.Helpers
             {
                 var serverDefault = PropertySetSettings[KeyServerDefault] as string;
 
-                if (serverDefault != AccountsHelper.TagServerCn && serverDefault != AccountsHelper.TagServerGlobal)
+                if (serverDefault is not AccountsHelper.TagServerCn and not AccountsHelper.TagServerGlobal)
                     InitialiseSetting(KeyServerDefault, "The setting for the default server",
                         AccountsHelper.TagServerCn);
             } // end if
@@ -383,7 +391,7 @@ namespace PaimonTray.Helpers
 
             var theme = PropertySetSettings[KeyTheme] as string;
 
-            if (theme != TagSystem && theme != TagThemeDark && theme != TagThemeLight)
+            if (theme is not TagSystem and not TagThemeDark and not TagThemeLight)
                 InitialiseSetting(KeyTheme, "Theme setting", TagSystem);
         } // end method InitialiseSettings
 
